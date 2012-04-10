@@ -10,4 +10,4 @@ tags: []
 LoveLangをリニューアルしましたので、ここにお知らせいたします。
 
 
-http://lovelang.heroku.com/
+[lovelang](http://lovelang.heroku.com/)
