@@ -40,6 +40,19 @@ module JB
   end #Path
 end #JB
 
+desc "deploy static files in _site directory to Github"
+task :deploy, :repo do |t, args|
+  repo_url = args.repo ? args.repo : "git@github.com:melborne/melborne.github.com.git"
+  cd "_site/" do
+    system "git init"
+    system "git add ."
+    system "git commit -m 'set static files for github deploy'"
+    system "git remote add origin #{repo_url}"
+    system "git push origin master --force"
+  end
+  puts 'static files in _site directory deployed'
+end
+
 # Usage: rake post title="A Title" [date="2012-02-09"]
 desc "Begin a new post in #{CONFIG['posts']}"
 task :post do
