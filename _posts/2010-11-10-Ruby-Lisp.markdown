@@ -1,0 +1,566 @@
+---
+layout: post
+title: ((Rubyで) 書く (Lisp) インタプリタ)
+date: 2010-11-10
+comments: true
+categories:
+---
+
+
+[Peter Norvig](http://norvig.com/)さんの[](http://www.aoky.net/articles/peter_norvig/lispy.htm)[link](http://www.aoky.net/articles/peter_norvig/lispy.htm:bookmark)
+という記事(青木靖さん訳)がすごい
+100行ほどのPythonコードで
+Schemeのインタプリタの基本部分を書いている
+Pythonのコードは見た目がRubyのコードとよく似ているので
+Rubyしか知らない僕でも何となく読める
+
+この記事を解読してRuby版Schemeインタプリタを書いたら
+インタプリタ　Pyhon　Scheme　それからRubyのことも
+もう少し分かるようになるかもしれない
+こんなお得な勉強方法はないぞ　きっと
+
+そんなわけで...
+
+以下では上記記事を参照しながら
+Ruby版Schemeインタプリタを書いていきます
+本文では適宜Norvigさんの解説およびコードを引用しつつ
+自分の理解とRubyのコードを
+pythonのコードと対応させていきます
+Rubyのインタプリタ名はlisr.rbとします
+
+###インタプリタ
+インタプリタはSchemeのプログラムを文字の列として読み込み
+それを言語の構文規則に沿って
+内部表現へ変換する「構文解析(parse)」と
+変換した内部表現を言語の意味論規則に基づいて
+処理する「実行(eval)」の２つの部分からなります
+
+###構文解析（パーサ)
+Schemeの構文はカッコ付きの前置記法である
+リストを基本としています
+PythonによるパーサがSchemeのリストを
+pythonのリストに変換するのと同じ方法で
+RubyのArrayへ変換するパーサを作ります
+
+###トークン生成
+パーサはまず読込んだプログラムの文字列を
+その構文要素であるトークン(token)に分割します
+
+Pythonのコード
+{% highlight python %}
+def tokenize(s):
+    "文字列をトークンのリストに変換する。"
+    return s.replace('(',' ( ').replace(')',' ) ').split()
+{% endhighlight %}
+カッコの前後に空白を挿入してsplitによる分割が
+うまくいくように前処理している点がポイントです
+
+同じことをRubyで実現します
+{% highlight ruby %}
+def tokenize(s)
+  s.gsub(/[()]/, ' \0 ').split
+end
+tokenize "(define plus1 (lambda (n) (+ n 1)))"
+  #=> ["(", "define", "plus1", "(", "lambda", "(", "n", ")", "(", "+", "n", "1", ")", ")", ")"]
+{% endhighlight %}
+やり方は同じですがここでは
+String#gsubに正規表現を渡すことで両カッコの前処理を一度にしています
+
+###トークン列の解析
+次にトークンに分割された文字列を
+内部で処理できる表現に変換します
+
+PythonではSchemeのリスト　数　シンボルをそれぞれ
+Pythonのリスト　数　文字列で表現しています
+
+Pythonのコード
+{% highlight python %}
+def read_from(tokens):
+    "トークンの列から式を読み込む。"
+    if len(tokens) == 0:
+        raise SyntaxError('unexpected EOF while reading')
+    token = tokens.pop(0)
+    if '(' == token:
+        L = []
+        while tokens[0] != ')':
+            L.append(read_from(tokens))
+        tokens.pop(0) # pop off ')'
+        return L
+    elif ')' == token:
+        raise SyntaxError('unexpected )')
+    else:
+        return atom(token)
+{% endhighlight %}
+このコードは一件複雑そうですが例外処理を除いて
+よく見れば処理の構造が見えてきます
+基本的にread_fromはトークンのリストを受け取り
+先頭から１つづつ再帰的にトークンを解析します
+
+具体的にはその先頭が開きカッコか否かを判定します
+そうでない場合それは数かシンボルなのでelse節のatomで
+トークンをpythonの対応する表現に変換して返します
+
+開きカッコである場合はリストを用意し
+閉じカッコが現れるまでのトークンをここに入れますが
+ここでread_fromを再帰的に呼び出すことによって
+後続のトークンが適切に処理されるようにします
+つまり後続のトークンの先頭が開きカッコである場合は
+上記同様リストが用意されてそこに後続トークンを入れる処理がされ
+そうでない場合はatomでpythonの表現に変換されます
+
+このコードは再帰を使ったエレガントで強力なアルゴリズムです
+以上の処理によりschemeのリストはpythonのリストに変換されます
+
+同じことをRubyでも実現します
+RubyではSchemeのリスト　数　シンボルをそれぞれ
+RubyのArray　数　シンボルで表現します
+{% highlight ruby %}
+def read_from(tokens)
+  raise SytaxError, 'unexpected EOF while reading' if tokens.length == 0
+  case token = tokens.shift
+  when '('
+    l = []
+    until tokens[0] == ')'
+      l.push read_from(tokens)
+    end
+    tokens.shift
+    l
+  when ')'
+    raise SyntaxError, 'unexpected )'
+  else
+    atom(token)
+  end
+end
+{% endhighlight %}
+コードはほぼPythonと同じですがここでは
+if文に代えてcase式を使っています
+「閉じカッコが来るまで」はwhileよりもuntilを使うと自然になります
+
+###トークン変換
+次にトークンをインタプリタの表現に変換する関数atomを見ます
+
+Pythonのコード
+{% highlight python %}
+def atom(token):
+    "数は数にし、それ以外のトークンはシンボルにする。"
+    try: return int(token)
+    except ValueError:
+        try: return float(token)
+        except ValueError:
+            return Symbol(token)
+{% endhighlight %}
+最初にトークンのintへの変換を試み
+次にfloatへの変換を試み
+最後にSymbolへの変換を試みています
+
+対応するRubyのコード
+{% highlight ruby %}
+module Kernel
+  def Symbol(obj); obj.intern end
+end
+def atom(token, type=[:Integer, :Float, :Symbol])
+  send(type.shift, token)
+rescue ArgumentError
+  retry
+end
+{% endhighlight %}
+同様の書き方もできますがここでは
+rescue節でretryを使うことでコードを簡潔にしました
+ただSymbolという関数メソッドが未定義なのでこれを用意しています
+
+###パーサ・インタフェース
+これらを統合したパーサのインタフェースは次のようになります
+Pythonのコード
+{% highlight python %}
+def read(s):
+    "文字列からScheme式を読み込む。"
+    return read_from(tokenize(s))
+parse = read
+{% endhighlight %}
+
+Rubyのコード
+{% highlight ruby %}
+def read(s)
+  read_from tokenize(s)
+end
+alias :parse :read
+{% endhighlight %}
+Rubyでは関数(メソッド)はオブジェクトではないので
+そのまま変数に代入することはできません
+別名を付ける場合はalias文かModule#alias_methodを使います
+Rubyではあまりこういう書き方を見ない気がするのですが
+Pythonでは一般的な手法なのでしょうか
+
+さてパーサが完成しました
+成果を見てみましょう
+{% highlight ruby %}
+% irb1.9 -rlisr
+>> parse "(+ 3 (* 4 5))"
+  # => [:+, 3, [:*, 4, 5]]
+>> parse "(define plus1 (lambda (n) (+ n 1)))"
+  # => [:define, :plus1, [:lambda, [:n], [:+, :n, 1]]]
+>> parse "(define area (lambda (r) (* 3.141592653 (* r r))))"
+  # => [:define, :area, [:lambda, [:r], [:*, 3.141592653, [:*, :r, :r]]]]
+{% endhighlight %}
+うまくいっているようです{% fn_ref 1 %}
+
+余分ですがStringのメソッド群を使った
+強引な(?)パーサ版(brute_parse)も書いてみました
+{% highlight ruby %}
+def brute_parse(s)
+  s = tokenize(s).map { |token| 
+        if token =~ /[()]/ then token.tr('()', '[]')
+        elsif token == '=' then ":'='"
+        elsif atom(token).instance_of?(Symbol) then ":#{token}"
+        else  token
+        end
+       }.join(",").gsub('[,', '[')
+  eval s
+end
+{% endhighlight %}
+tokenizeメソッドでプログラムをトークンに分割した後
+mapメソッド内で各トークンに適切な処理を施します
+カッコは角カッコに変換し
+数字以外のトークンはRubyのシンボルに変換します
+Rubyでは代入=のシンボル表記:=は許されていないので
+表記方法を少し変えています
+これらの変換されたトークンをカンマで接続します
+最後に開き角カッコの後の不要なカンマを削除します{% fn_ref 2 %}
+一応動作しますがやはり元のパーサのほうがエレガントです
+
+###実行(eval)
+パーサが完成したので次にevalです
+
+このSchemeには３つの構文的構成物つまり
+変数　定数(数)　手続き呼出しと
+６つの特殊形式つまり
+クォート(quote)　条件式(if)　代入(set!)
+定義(define)　手続き(lambda)　逐次式(begin) しかありません
+特殊形式は(set! x y)のように先頭に
+上記の何れかのキーワードを持ったリストの形式をとります
+リストの先頭が上記キーワードに該当しない場合(例えば(area 3))
+それは手続き呼出しとして扱われます
+
+pythonのコード
+{% highlight python %}
+def eval(x, env=global_env):
+    "環境の中で式を評価する。"
+    if isa(x, Symbol):             # 変数参照
+        return env.find(x)[x]
+    elif not isa(x, list):         # 定数リテラル
+        return x                
+    elif x[0] == 'quote':          # (quote exp)
+        (_, exp) = x
+        return exp
+    elif x[0] == 'if':             # (if test conseq alt)
+        (_, test, conseq, alt) = x
+        return eval((conseq if eval(test, env) else alt), env)
+    elif x[0] == 'set!':           # (set! var exp)
+        (_, var, exp) = x
+        env.find(var)[var] = eval(exp, env)
+    elif x[0] == 'define':         # (define var exp)
+        (_, var, exp) = x
+        env[var] = eval(exp, env)
+    elif x[0] == 'lambda':         # (lambda (var*) exp)
+        (_, vars, exp) = x
+        return lambda *args: eval(exp, Env(vars, args, env))
+    elif x[0] == 'begin':          # (begin exp*)
+        for exp in x[1:]:
+            val = eval(exp, env)
+        return val
+    else:                          # (proc exp*)
+        exps = [eval(exp, env) for exp in x]
+        proc = exps.pop(0)
+        return proc(*exps)
+ 
+isa = isinstance
+ 
+Symbol = str
+{% endhighlight %}
+evalの中身はif文による
+上記の９ケースの場合分け処理になっています
+evalに与えられた内部表現(パースされたプログラム文字列)が
+リストである場合
+特殊形式の何れかの処理でその構成要素が再帰的にeval処理されます
+そしてeval対象がシンボルであれば
+環境を定義したenvオブジェクトを参照してその実体を返します
+シンボルでもリストでもない場合は
+数字などの定数としてそのまま返します
+eval対象が特殊形式でないリストである場合(else節)
+これを手続きとしてその内容を実行します
+
+なおevalの第２引数は環境オブジェクトenvを取ります
+これは内部表現を評価する際に
+それが定義された環境を区別する必要があるためです
+これによって
+ローカル変数がグローバルに評価されるようなことがなくなります
+初期値はグローバル環境にセットされます
+
+対応するRubyのevaluate{% fn_ref 3 %}は以下のようになりました
+{% highlight ruby %}
+def evaluate(x, env=$global_env)
+  case x
+  when Symbol
+    env.find(x)[x]
+  when Array
+    case x.first
+    when :quote
+      _, exp = x
+      exp
+    when :if
+      _, test, conseq, alt = x
+      evaluate((evaluate(test, env) ? conseq : alt), env)
+    when :set!
+      _, var, exp = x
+      env.find(var)[var] = evaluate(exp, env)
+    when :define
+      _, var, exp = x
+      env[var] = evaluate(exp, env)
+      nil
+    when :lambda
+      _, vars, exp = x
+      lambda { |*args| evaluate(exp, Env.new(vars, args, env)) }
+    when :begin
+      x[1..-1].inject(nil) { |val, exp| val = evaluate(exp, env) }
+    else
+      proc, *exps = x.inject([]) { |mem, exp| mem << evaluate(exp, env) }
+      proc[*exps]
+    end
+  else
+    x
+  end
+end
+{% endhighlight %}
+Rubyではcase式を使って条件分岐を行いました
+手続き呼出し(内側のelse節)はPythonではリスト内包を使っていますが
+Rubyにはそのような構文はないので代わりに
+Enumerable#injectを使います
+proc[*exps]はproc.call(*exps)と等価でprocの実行です
+Python同様Rubyでも多重代入が便利に使えます
+
+###環境クラス定義
+次に環境オブジェクトのためのクラスを定義します
+Pythonのコード
+{% highlight python %}
+class Env(dict):
+    "環境: ペア{'var':val}のdictで、外部環境(outer)を持つ。"
+    def __init__(self, parms=(), args=(), outer=None):
+        self.update(zip(parms,args))
+        self.outer = outer
+    def find(self, var):
+        "var が現れる一番内側のEnvを見つける。"
+        return self if var in self else self.outer.find(var)
+{% endhighlight %}
+環境クラスENVはdictのサブクラスで
+オブジェクト生成時に与えられた変数とその実体を
+辞書として保持します
+zip関数で変数のリストと実体のリストから辞書を生成しマージします
+そのオブジェクトが内部環境を構築するつまり
+外部環境を持っている場合
+それを第３引数として渡してオブジェクトを生成します
+これはeval関数内のlambdaにおける処理で使われています
+
+findメソッドは与えられた変数に対応する実体を返します
+その環境で変数が定義されていない場合
+その１つ外側の環境で対応する実体を探します
+
+対応するRubyコード
+{% highlight ruby %}
+class Env < Hash
+  def initialize(parms=[], args=[], outer=nil)
+    h = Hash[parms.zip(args)]
+    self.merge!(h)
+    @outer = outer
+  end
+  
+  def find(key)
+    self.has_key?(key) ? self : @outer.find(key)
+  end
+end
+{% endhighlight %}
+外部環境outerは
+オブジェクトの外からアクセスする必要はないので
+インスタンス変数@outerに保持します
+Rubyのif修飾子ではelse節を書けないので
+代わりに３項演算子?:を使います
+
+###グローバル環境オブジェクト
+環境クラスが定義できたので
+これを使ってグローバル環境オブジェクトを生成します
+グローバル環境にはSchemeの組込み手続きを含めます
+
+pythonのコード
+{% highlight python %}
+def add_globals(env):
+    "環境にScheme標準の手続きをいくつか追加する"
+    import math, operator as op
+    env.update(vars(math)) # sin, sqrt, ...
+    env.update(
+     {'+':op.add, '-':op.sub, '*':op.mul, '/':op.div, 'not':op.not_,
+      '>':op.gt, '<':op.lt, '>=':op.ge, '<=':op.le, '=':op.eq, 
+      'equal?':op.eq, 'eq?':op.is_, 'length':len, 'cons':lambda x,y:[x]+y,
+      'car':lambda x:x[0],'cdr':lambda x:x[1:], 'append':op.add,  
+      'list':lambda *x:list(x), 'list?': lambda x:isa(x,list), 
+      'null?':lambda x:x==[], 'symbol?':lambda x: isa(x, Symbol)})
+    return env
+ 
+global_env = add_globals(Env())
+{% endhighlight %}
+add_globals関数は環境オブジェクトに
+Schemeの組込み手続きを追加します
+この外部環境オブジェクトは
+グローバル変数global_envで参照できるようにセットされ
+その結果どこからでもアクセスできるようになります
+
+対応するRubyのコードです
+{% highlight ruby %}
+def add_globals(env)
+  env.merge!({
+     :+     => ->x,y{x+y},      :-      => ->x,y{x-y},
+     :*    => ->x,y{x*y},       :/     => ->x,y{x/y},
+     :not    => ->x{!x},        :>    => ->x,y{x>y}, 
+     :<     => ->x,y{x<y},      :>=     => ->x,y{x>=y},
+     :<=   => ->x,y{x<=y},      :'='   => ->x,y{x==y},
+     :equal? => ->x,y{x.equal?(y)}, :eq?   => ->x,y{x.eql? y},
+     :length => ->x{x.length},  :cons => ->x,y{[x,y]},
+     :car   => ->x{x[0]},       :cdr    => ->x{x[1..-1]},
+     :append => ->x,y{x+y},     :list  => ->*x{[*x]},
+     :list?  => ->*x{x.instance_of?(Array)},
+     :null? => ->x{x.empty?},   :symbol? => ->x{x.instance_of?(Symbol)}
+    })
+  env
+end
+$global_env = add_globals(Env.new)
+{% endhighlight %}
+RubyではPythonのmathモジュールのようなものはないので
+すべてlambdaで生成しています
+Ruby1.9で導入された->表記がこういうところでは便利です
+Rubyではグローバル変数は変数名の前に$を前置します
+
+ただRubyではあまりこういう書き方は見ません
+Rubyistならブロックを使うでしょう
+{% highlight ruby %}
+class Env < Hash
+  def initialize(parms=[], args=[], outer=nil)
+    h = Hash[parms.zip(args)]
+    self.merge!(h)
+    self.merge!(yield) if block_given?
+    @outer = outer
+  end
+  
+  def find(key)
+    self.has_key?(key) ? self : @outer.find(key)
+  end
+end
+$global_env = Env.new do
+  {
+   :+     => ->x,y{x+y},      :-      => ->x,y{x-y},
+   :*    => ->x,y{x*y},       :/     => ->x,y{x/y},
+   :not    => ->x{!x},        :>    => ->x,y{x>y}, 
+   :<     => ->x,y{x<y},      :>=     => ->x,y{x>=y},
+   :<=   => ->x,y{x<=y},      :'='   => ->x,y{x==y},
+   :equal? => ->x,y{x.equal?(y)},
+   :eq?   => ->x,y{x.eql? y}, :length => ->x{x.length},
+   :cons => ->x,y{[x,y]},     :car   => ->x{x[0]},
+   :cdr    => ->x{x[1..-1]},  :append => ->x,y{x+y},
+   :list  => ->*x{[*x]},
+   :list?  => ->*x{x.instance_of?(Array)},
+   :null? => ->x{x.empty?},
+   :symbol? => ->x{x.instance_of?(Symbol)}
+   }
+end
+{% endhighlight %}
+###対話的Lispインタプリタ
+最後に対話的インタプリタつまり
+ユーザからSchemeプログラムの入力に対して
+その評価結果をLispの文字列にして出力するものを追加します
+
+Pythonのコード
+{% highlight python %}
+def to_string(exp):
+    "PythonオブジェクトをLispの読める文字列に戻す。"
+    return '('+' '.join(map(to_string, exp))+')' if isa(exp, list) else str(exp)
+ 
+def repl(prompt='lis.py> '):
+    "read-eval-print-loopのプロンプト"
+    while True:
+        val = eval(parse(raw_input(prompt)))
+        if val is not None: print to_string(val)
+{% endhighlight %}
+to_string関数はインタプリタからの出力を
+Lisp形式の文字列に変換します
+raw_input関数は組み込み関数でpromptを表示して
+ユーザの入力を促し入力があった場合それを返します
+
+対応するRubyのコード
+{% highlight ruby %}
+def to_string(exp)
+  puts (exp.instance_of?(Array)) ? '(' + exp.map(&:to_s).join(" ") + ')' : "#{exp}"
+end
+require "readline"
+def lepl
+  while line = Readline.readline("lisr> ", true)
+    val = evaluate(parse line)
+    to_string(val) unless val.nil?
+  end
+end
+{% endhighlight %}
+Rubyではraw_inputの代わりにReadlineライブラリを使います
+
+以上でRuby版Lispインタプリタの完成です！
+早々norvigさんの記事にある演算を試してみましょう
+{% highlight ruby %}
+% ruby1.9 lisr.rb
+lisr> (define area (lambda (r) (* 3.141592653 (* r r))))
+lisr> (area 3)
+28.274333877
+lisr> (define fact (lambda (n) (if (<= n 1) 1 (* n (fact (- n 1))))))
+lisr> (fact 10)
+3628800
+lisr> (fact 100)
+933262154439441526816992388562667004907159682643816214685929638952175999932299156089414639761565182862536979208272237582
+51185210916864000000000000000000000000
+lisr> (area (fact 10))
+41369087198016.19
+lisr> 
+{% endhighlight %}
+うまくいきました！
+
+ところが...
+{% highlight ruby %}
+lisr> (define first car)
+lisr> (define rest cdr)
+lisr> (define count (lambda (item L) (if L (+ (equal? item (first L)) (count item (rest L))) 0)))
+lisr> (count 0 (list 0 1 2 3 0 0))
+lisr.rb:17:in `block in add_globals': undefined method `+' for false:FalseClass (NoMethodError)
+        from lisr.rb:57:in `[]'
+{% endhighlight %}
+これがうまくいきません...
+というかcountの定義が僕には理解できません{% fn_ref 4 %}
+
+自分のcountの定義で試してみると
+{% highlight ruby %}
+lisr> (define first car)
+lisr> (define rest cdr)
+lisr> (define count (lambda (item L) (if (= 0 (length L)) 0 (if (= item (first L)) (+ 1 (count item (rest L))) (count item (rest L))))))
+lisr> (count 0 (list 0 1 2 3 0 0))
+3
+lisr> (count (quote the) (quote (the more the merrier the bigger the better)))
+4
+{% endhighlight %}
+これはうまくいくのですが...
+最後にちょっとすっきりしませんけど
+十分に勉強になったので
+まあいいとしますか
+
+(追記：2010-11-13) Ruby実装の本格的なLispインタプリタを書いている方がいました。gem install nendoでインストールし、nendoで対話型インタプリタが実行できます。すごい！
+   [Nendo -- * Nendo programming languag](http://oldtype.sumibi.org/show-page/Nendo)e 
+
+{% gist 670793 lisr.rb %}
+
+{% footnotes %}
+   {% fn 自分の環境のirbでは:+, :*の表示には問題がありました %}
+   {% fn 閉じ角カッコの前のカンマはRubyインタプリタでは無視されます %}
+   {% fn Rubyの組み込み関数evalをbrute_parseで使っているため名前を変えている %}
+   {% fn ちなみにcsi(Chicken Scheme Interpreter)でもerrorがでました %}
+{% endfootnotes %}

@@ -1,0 +1,81 @@
+---
+layout: post
+title: Rubyで日本の色でお絵かきしようよ!
+date: 2011-11-20
+comments: true
+categories:
+---
+
+
+日本の色の名前がクールだって
+いま巷で話題になっているよ
+
+[日本の色名カッコよすぎワロタｗｗｗｗｗｗｗｗｗ | うましかニュース](http://umashika-news.jp/archives/51967828.html)
+[日本の伝統色 和色大辞典 - Traditional Japanese Color Names](http://www.colordic.org/w/)
+
+臙脂(えんじ) 
+黄丹(おうに) 
+麹塵(きくじん)
+黄櫨染(こうろぜん) 
+猩々緋(しょうじょうひ) 
+雄黄(ゆうおう) 
+紛紅(まがいべに) 
+枡花色(ますはないろ) 
+鶸萌黄(ひわもえぎ) 
+唐棣色(はねずいろ) 
+榛色(はしばみいろ) 
+木賊色(とくさいろ) 
+蘇芳色(すおういろ) 
+     ...
+
+確かにカッコよすぎで笑っちゃうね!
+
+でもColor Loverとしては
+これを笑ってるだけで見過ごす
+というわけにはいかないんだよ
+
+そんなわけで..
+
+先の和色大辞典のデータをベースにして
+和色465色のカラーコードを取得する
+wairoというライブラリをRubyで書いたよ ^^;
+
+###wairoの使い方
+以下のサイトからライブラリを取得して
+次のように使うよ
+
+https://github.com/melborne/wairo
+
+{% highlight ruby %}
+require "wairo"
+Wairo::Wairo.color_names(true) # => ["桜色(さくらいろ)", "薄桜(うすざくら)", "桜鼠(さくらねず)", "鴇鼠(ときねず)", "虹色(にじいろ)", "珊瑚色(さんごいろ)", "一斤染(いっこんぞめ)", "宍色(ししいろ)", "紅梅色(こうばいいろ)", "薄紅(うすべに)", "甚三紅(じんざもみ)", "桃色(ももいろ)", "鴇色(ときいろ)", "撫子色(なでしこいろ)", "灰梅(はいうめ)", "灰桜(はいざくら)", "淡紅藤(あわべにふじ)" ... "素鼠(すねずみ)", "鼠色(ねずみいろ)", "源氏鼠(げんじねず)", "灰色(はいいろ)", "鉛色(なまりいろ)", "鈍色(にびいろ)", "墨(すみ)", "丼鼠(どぶねずみ)", "消炭色(けしずみいろ)", "藍墨茶(あいすみちゃ)", "羊羹色(ようかんいろ)", "蝋色(ろういろ)", "黒(くろ)", "烏羽色(からすばいろ)", "鉄黒(てつぐろ)", "濡羽色(ぬればいろ)", "黒檀(こくたん)", "憲法黒茶(けんぽうくろちゃ)", "暗黒色(あんこくしょく)"]
+{% endhighlight %}
+{% highlight ruby %}
+ouni = Wairo::Wairo.color("黄丹") # => #<struct Wairo::Color series=:wairo, name="黄丹", hex="#ee7948", rgb=nil, subname="おうに", url="http://www.colordic.org/colorsample/2248.html", notes=nil>
+ouni.members # => [:series, :name, :hex, :rgb, :subname, :url, :notes]
+ouni.name # => "黄丹"
+ouni.subname # => "おうに"
+ouni.hex # => "#ee7948"
+ouni.url # => "http://www.colordic.org/colorsample/2248.html"
+{% endhighlight %}
+{% highlight ruby %}
+Wairo::Wairo.colors.select { |c| c.subname.match(/みどり/) }.map { |c| "#{c.name}(#{c.subname}):#{c.hex}" } # => ["黒緑(くろみどり):#333631", "黄緑(きみどり):#b8d200", "若緑(わかみどり):#98d98e", "浅緑(あさみどり):#88cb7f", "薄緑(うすみどり):#69b076", "千歳緑(ちとせみどり):#316745", "緑(みどり):#3eb370", "常磐緑(ときわみどり):#028760", "深緑(ふかみどり):#00552e", "青緑(あおみどり):#00a497", "紅碧(べにみどり):#8491c3", "灰黄緑(はいきみどり):#e6eae3"]
+{% endhighlight %}
+
+で
+このライブラリを使って
+以前作ったCrayovasというお絵かきツール
+に和色(wairo)を追加してみたよ :)
+
+[Crayovas](http://crayovas.heroku.com/)
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20111120/20111120222334.png)
+
+絵心のある人がこれらの和色を使って
+日本画でも描いてくれたらうれしいよ
+
+Crayovasの使い方については以下を読んでね
+
+[Ruby製クレヨンでお絵描きしようよ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20110209/p1)
+[Crayovasで塗り絵しようよ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20110212/p1)
+
+https://github.com/melborne/crayovas

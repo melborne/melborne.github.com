@@ -1,0 +1,321 @@
+---
+layout: post
+title: Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！
+date: 2011-01-24
+comments: true
+categories:
+---
+
+
+「Why Functional Programming Matters:なぜ関数プログラミングは重要か」(原著者：John Huges 邦訳：山下伸夫)という論文があります
+
+[](http://www.sampou.org/haskell/article/whyfp.html)[link](http://www.sampou.org/haskell/article/whyfp.html:bookmark) 
+
+これはMirandaという関数型言語を使って
+プログラマにとって
+関数プログラミングがいかに重要であるかを論証したものです
+これが書かれてからの年数{% fn_ref 1 %}と被ブクマ数を見れば
+極めて有益でmust_readであることは明らかでしょうが
+自分にとっては高度な内容で読み解くのにかなり苦労しています
+
+リストを使った関数の貼り合せ(3.の前半)までについて
+Rubyでこれに近いことを記述し
+自分の解釈でその骨子を説明してみました
+関数プログラミングの妙味と
+Rubyの記述も簡潔でパワフルであるということを示せればと思います
+きっと理解不足による間違いが含まれていると思いますが..
+
+###なぜ関数プログラミングは重要か
+モジュール化設計がプログラミングを成功させる鍵である
+見過ごされがちだがプログラミング言語において
+コードを自由にモジュール化するためには
+それらを結合する糊が極めて重要な役割を担う
+プログラマの目標は小さく　簡潔で　汎用的なモジュールを
+貼り合せてプログラムを構成することにある
+関数プログラミングには二種類の強力な糊
+つまり関数の貼り合せをする糊(高階関数)と
+プログラムの貼り合せをする糊(遅延評価)がある
+
+###関数の貼り合せ
+Rubyにおける関数の貼り合せの能力を示すために
+最初にリストの処理を見ていく
+
+Rubyにはリスト処理のためのArrayクラスがあるので
+ここでは各関数をArrayクラスのメソッドとして定義していく
+前処理として関数言語風にhead(リストの先頭要素)と
+tail(リストの先頭要素を除いた残り)を定義する
+さらにリストに要素を結合するconsを定義する
+{% highlight ruby %}
+class Array
+  alias head first
+  def tail
+    drop 1
+  end
+  
+  def cons(a)
+    [a] + self
+  end
+end
+ls = Array[1,2,3,4,5] # => [1, 2, 3, 4, 5]
+ls.head # => 1
+ls.tail # => [2, 3, 4, 5]
+ls.cons(0) # => [0, 1, 2, 3, 4, 5]
+{% endhighlight %}
+
+最初にリストの要素を足し合わせるsum0を定義する
+これは再帰を使って以下のように書くことができる
+{% highlight ruby %}
+class Array
+  def sum0
+    return 0 if empty?
+    head + tail.sum0
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.sum0 # => 15
+{% endhighlight %}
+
+つまり空リストに対しては0を返すようにし
+それ以外ではリストの最初の要素を
+残りの要素の和に足していくことで結果を得る
+
+ここで
+この定義における加算に固有の要素
+つまり0と+を一般化すると
+リスト処理の汎用メソッドreduceができ上がる{% fn_ref 2 %}
+{% highlight ruby %}
+class Array
+  def reduce(f, a)
+    return a if empty?
+    f[head, tail.reduce(f, a)]
+  end
+end
+{% endhighlight %}
+
+Rubyでは
+メソッドはそのままでは引数として渡すことができないので
+ここではfとしてProcオブジェクトを受けるようにし
+Proc#[]で実行するようにしている{% fn_ref 3 %}
+
+今度はreduceとaddメソッドを使ってsumを再定義しよう
+{% highlight ruby %}
+class Array
+  def sum
+    reduce add, 0
+  end
+  private
+  def add
+    ->a,b{ a + b }　# lambda{ |a,b| a + b } と同じ
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.sum # => 15
+{% endhighlight %}
+
+addメソッドはa,bを引数に取るProcオブジェクト
+つまり手続きを返す高階関数である
+
+同様にしてreduceとmultiplyメソッドを使って
+要素を掛け合わせるproductを定義する{% fn_ref 4 %}
+{% highlight ruby %}
+class Array
+  def product
+    reduce multiply, 1
+  end
+  private
+  def multiply
+    ->a,b{ a * b }
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.product # => 120
+{% endhighlight %}
+
+また真理値リストの要素のうち何れかが真かを検査するany_trueと
+すべての要素が真であることを検査するall_trueを同様に定義する
+{% highlight ruby %}
+class Array
+  def any_true
+    reduce method(:or), false
+  end
+  def all_true
+    reduce method(:and), true
+  end
+  private
+  def or(a,b)
+    a or b
+  end
+  def and(a,b)
+    a and b
+  end
+end
+tf1 = Array[false, true, false]
+tf2 = Array[true, true, true]
+tf1.any_true # => true
+tf2.any_true # => true
+tf1.all_true # => false
+tf2.all_true # => true
+{% endhighlight %}
+
+Rubyにおいてorとandは予約語なので
+そのままの形では引数として渡すことができない
+ここではこの問題を回避するため
+orとandをMethodオブジェクト化して渡している
+
+さてここでreduce(f, a)をcons(a)との対比で理解してみよう
+リスト[1,2,3]はconsを使って以下のように作ることができる
+{% highlight ruby %}
+[].cons(3).cons(2).cons(1) # => [1, 2, 3]
+{% endhighlight %}
+
+reduce(f,a)は上の式のconsをすべてfに置き換え
+[]をaに置き換えたものとみなすことができる
+{% highlight ruby %}
+a.f(3).f(2).f(1)
+{% endhighlight %}
+
+その結果先のsumのreduce add, 0と
+productのreduce multiply, 1は
+それぞれ以下のように理解できる
+{% highlight ruby %}
+0.add(3).add(2).add(1)
+1.multiply(3).multiply(2).multiply(1)
+{% endhighlight %}
+
+そうするとreduce cons, []は
+リストを複写するものであることが理解できるだろう
+consをreduceに渡せるように
+少し改良して複写メソッドdupを定義する
+{% highlight ruby %}
+class Array
+  def cons
+    ->(a,ls=self){ [a] + ls }
+  end
+  def reduce(f, a)
+    return a if empty?
+    f[head, tail.reduce(f, a)]
+  end
+  def dup
+    reduce cons, []
+  end
+end
+[1,2,3].dup # => [1, 2, 3]
+{% endhighlight %}
+consは他の補助メソッドと同様に２つの引数を取るようにし
+かつ[]メソッドで実行されるようProcオブジェクト化する
+
+ここでdupにおけるreduceの第二引数にリストを渡せるようにすれば
+リストを結合するappendが定義できる
+後にappendは関数合成しやすいように高階関数としよう
+{% highlight ruby %}
+class Array
+  def append
+    ->(ls,s=self){ ls.reduce cons, s }
+  end
+end
+[4,5,6].append[ls] # => [1, 2, 3, 4, 5, 6]
+{% endhighlight %}
+
+続いてリストの要素を２倍するメソッドdouble_allを定義しよう
+double_allはreduceとdouble_and_consを
+使って次のように書くことができる
+{% highlight ruby %}
+  def double_all
+    reduce double_and_cons, []
+  end
+  private
+  def double_and_cons
+    ->num,ls{ cons[2*num, ls] }
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.double_all # => [2, 4, 6, 8, 10]
+{% endhighlight %}
+
+ここでdouble_and_consはさらに
+doubleとf_and_consにモジュール化することができる
+{% highlight ruby %}
+class Array
+  def double_all
+    reduce f_and_cons[double], []
+  end
+  
+  private
+  def double
+    ->num{ 2 * num }
+  end
+  
+  def f_and_cons
+    ->f,el,ls{ cons[f[el], ls] }.curry
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.double_all # => [2, 4, 6, 8, 10]
+{% endhighlight %}
+
+double_allにおいてreduceはその第1引数として
+Procオブジェクトを受け取る必要がある
+ここではf_and_consをカリー化することにより
+それがdoubleのみを取って
+Procオブジェクトを返せるよう工夫している
+このような方法を関数の部分適用という
+
+また2つの関数を合成するcomposeメソッドを定義することにより
+consとdoubleを合成する方法がある
+{% highlight ruby %}
+class Array
+  def double_all
+    reduce compose(cons, double), []
+  end
+  private
+  def double
+    ->num{ 2 * num }
+  end
+  
+  def compose(f,g)
+    ->x,y{ f[g[x],y] }
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.double_all # => [2, 4, 6, 8, 10]
+{% endhighlight %}
+
+double_allはconsと合成する関数を一般化することによって
+更にモジュール化を進めることができる
+{% highlight ruby %}
+class Array
+  def double_all
+    map double
+  end
+  def map(f)
+    reduce compose(cons, f), []
+  end
+end
+ls = Array[1,2,3,4,5]
+ls.double_all # => [2, 4, 6, 8, 10]
+{% endhighlight %}
+
+mapは任意のメソッドfをリストのすべての要素に適用する
+mapはreduceと並ぶもう一つの汎用的なメソッドである{% fn_ref 5 %}
+{% highlight ruby %}
+[1,2,3,4,5].map ->x{ x ** 2 } # => [1, 4, 9, 16, 25]
+%w(ruby haskell scheme).map ->s{ s.upcase } # => ["RUBY", "HASKELL", "SCHEME"]
+{% endhighlight %}
+
+このようにしてメソッドを高階関数と
+いくつかの単純なメソッドの合成としてモジュール化することにより
+リストのための多数のメソッドを効果的に定義することができる
+
+(続く？){% fn_ref 6 %}
+
+(追記：2011-1-29)appendの記述を修正しました。
+(追記：2011-2-1)続きを書きました。
+[](http://d.hatena.ne.jp/keyesberry/20110129/p1)
+{% footnotes %}
+   {% fn 1984年 %}
+   {% fn 同じ目的で既にEnumerable#reduceが存在します %}
+   {% fn Proc#.callまたはProc#.()という呼びだし方法もあります %}
+   {% fn Arrayには別の目的のためのproductメソッドがあるので警告がでます %}
+   {% fn 同じ目的のArray#mapが存在するので警告がでます %}
+   {% fn この先は難しくて自分にはちょっと厳しいかも.. %}
+{% endfootnotes %}

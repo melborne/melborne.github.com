@@ -1,0 +1,74 @@
+---
+layout: post
+title: Sinatraに別構文があってもいいじゃないか！
+date: 2011-06-05
+comments: true
+categories:
+---
+
+
+前の投稿でSinatraはRubyそのものでDSLじゃないと言いました
+
+[SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！](http://d.hatena.ne.jp/keyesberry/20110603/p1)[link](http://d.hatena.ne.jp/keyesberry/20110603/p1:bookmark)
+
+確かに内部DSLというのはそういうものなのかもしれません
+でも言語といったら独自の構文くらいはもっていたい
+それで
+コードをそのままRubyに通したら
+Syntaxエラーになってほしい
+
+ちょっと意味不明ですけど...
+
+そんなわけで...
+
+独自構文を持つSinatra
+Chinatra を作りました ^^;{% fn_ref 1 %}
+(ネタ注意！)
+
+###使い方
+{% highlight ruby %}
+#myroute.rb
+get /
+  haml :index
+get /hi
+  'hi, my friend!'
+get /:name
+  hello(params[:name])
+helpers
+  - hello(name)
+    "Wow you are #{name}!" -
+{% endhighlight %}
+独自の構文です！
+これはそのままRubyには通りません
+
+以下のファイルを用意します
+{% highlight ruby %}
+#app.rb
+require_relative 'chinatra'
+require 'myroute'
+{% endhighlight %}
+chinatraライブラリをrequireして
+さらに先のmyroute.rbをrequireします
+そしてこのapp.rbをrubyで実行します
+
+{% highlight sh %}
+$ ruby app.rb
+== Sinatra/1.2.6 has taken the stage on 4567 for development with backup from Thin
+>> Thin web server (v1.2.11 codename Bat-Shit Crazy)
+>> Maximum connections set to 1024
+>> Listening on 0.0.0.0:4567, CTRL+C to stop
+{% endhighlight %}
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110605/20110605170347.png)
+
+
+独自構文のSinatraができました！
+
+関連記事：[内部DSLを使って、RubyのWebフレームワークを書こう！](http://d.hatena.ne.jp/keyesberry/20110607/p1)[link](http://d.hatena.ne.jp/keyesberry/20110607/p1:bookmark)
+
+{% gist 1008708 chinatra.rb %}
+
+.rbさえつけなければとてもいいと思います！> tkawaさん<br>ありがとうございます！.rbのところちょっとだけ直しました。
+{% footnotes %}
+   {% fn 支那虎ということで... %}
+{% endfootnotes %}

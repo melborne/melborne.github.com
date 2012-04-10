@@ -1,0 +1,201 @@
+---
+layout: post
+title: Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)
+date: 2011-02-01
+comments: true
+categories:
+---
+
+
+[引き続き](http://d.hatena.ne.jp/keyesberry/20110129/p1)「なぜ関数プログラミングは重要か」を
+Rubyを使って解釈し自分の理解に基づいて解説してみます
+誤解が有るかも知れません
+いやきっとあります
+ご指摘いただければ助かります
+
+###プログラムの貼り合せ(遅延評価)
+次に関数プログラミングの２つ目の強力な糊
+つまりプログラムを貼り合せる糊について説明する
+
+いま２つのプログラムｆとｇがあって
+入力inputをこれらに適用する場合を考える
+{% highlight ruby %}
+g (f input)
+{% endhighlight %}
+
+プログラムｆは入力inputを受け取ってその出力を計算し
+その出力はプログラムｇの入力として使われる
+
+一般的なプログラム言語ではｆからの出力を
+一時的にメモリーに蓄えることでその実装を可能とするが
+ケースによってはメモリー占有量が膨大になり得る
+
+関数プログラミングではプログラムｆとｇは厳密な同期の上で走る
+つまりプログラムｆはプログラムｇが必要とする分だけ
+実行されて残りは破棄される
+このことからプログラムｆは
+無限に出力を生成し続けるものであってもよい
+これによってプログラムの停止条件は
+ループ本体と切り離すことができ
+強力なモジュール化が可能になる
+
+このようなプログラムの評価方式は「遅延評価」と呼ばれる
+
+###ニュートンーラプソン法による平方根
+遅延評価の力を使って
+ニュートンーラプソン法による平方根のアルゴリズムを求めてみよう
+この方法でnの平方根を求めるとき任意の近似値xを選び
+xとn/xの平均を取っていくことでより良い近似値xを得る
+これを繰り返し十分に良い近似値が得られたら処理を終える
+良い近似値かの判断は隣接する近似値の差が
+許容誤差eps以下であるかにより判断する
+
+Rubyにおける一般的な実装は以下のようになるだろう
+{% highlight ruby %}
+ EPS = 0.0001    # 許容誤差
+ A0 = 1.0        # 初期近似値
+ def sqrt(n, x=A0, eps = EPS)
+   loop do
+     y = x
+     x = (x + n/x) / 2.0           # 次の近似値
+     return x if (x-y).abs < eps
+   end
+ end
+ sqrt 2 # => 1.4142135623746899
+ sqrt 5 # => 2.236067977499978
+ sqrt 8 # => 2.8284271250498643
+{% endhighlight %}
+
+この実装ではループの停止条件は
+ループに組み込まれてしまって分離できない
+遅延評価を使うことによって実装のモジュール化を行い
+その部品が他の場面でも使えることを示そう
+
+基本的にRubyの関数(メソッド)は正格評価であり遅延評価されない
+しかし関数をProcやEnumeratorオブジェクトとすることによって
+その評価のタイミングを遅らせる
+つまり遅延評価させることができる
+
+まず次の近似値を計算するnext_valを定義しよう
+{% highlight ruby %}
+ def next_val
+   ->n,x{ (x + n/x) / 2.0 }.curry
+ end
+{% endhighlight %}
+
+next_val{% fn_ref 1 %}は
+求める平方根の数値nと近似値xを取って次の近似値を返すが
+これをcurry化されたProcオブジェクトを返すように実装する
+これによって
+２つの引数を渡すタイミングをコントロールできるようになる
+つまり数値nだけを先に渡すことによってnext_valは
+１つの引数xを受ける関数に変わる
+
+例を示そう
+{% highlight ruby %}
+ next_for_five = next_val[5]
+ nx = next_for_five[1.0] # => 3.0
+ nx = next_for_five[nx] # => 2.3333333333333335
+ nx = next_for_five[nx] # => 2.238095238095238
+ nx = next_for_five[nx] # => 2.2360688956433634
+{% endhighlight %}
+
+次に初期値に任意の関数を繰り返し適用して
+その結果のリストを返す汎用関数repeatを定義しよう
+{% highlight ruby %}
+ def repeat(f, x)
+   Enumerator.new { |y| loop { y << x; x = f[x] } }
+ end
+{% endhighlight %}
+
+repeat関数は１つの引数を取って１つの結果を返す関数ｆと
+ｆの初期値となるxを取りEnumeratorオブジェクトを返す
+Enumeratorのブロックの中では
+loopによってxを関数ｆに適用した結果が
+繰り返しｙつまりEnumerator::Yielderオブジェクトに渡されるが
+これはEnumeratorオブジェクトが呼び出されるまで実行されず
+そのため無限ループにはならない
+
+このrepeat関数に先のnext_val関数を渡すことによって
+平方根nの近似値のリストが得られる
+{% highlight ruby %}
+ approxs = repeat next_val[5], 1.0 # => #<Enumerator: #<Enumerator::Generator:0x0a4aec>:each>
+ ls = []
+ 5.times { ls << approxs.next }
+ ls # => [1.0, 3.0, 2.3333333333333335, 2.238095238095238, 2.2360688956433634]
+{% endhighlight %}
+
+Enumeratorオブジェクトはその呼び出し{% fn_ref 2 %}の度に
+ループを１つ回して結果を１つ返す
+repeatはその出力を利用する関数と同期して
+それが必要とされる分だけ評価される
+つまりrepeatそれ自体は繰り返し回数の制限を持たない
+
+次に関数with_inを定義しよう
+with_inは許容誤差と近似値のリスト{% fn_ref 3 %}を引数に取り
+許容誤差よりも小さい２つの連続する近似値を探す
+{% highlight ruby %}
+ def with_in(eps, enum)
+   a, b = enum.next, enum.peek
+   return b if (a-b).abs <= eps
+   with_in(eps, enum)
+ end
+{% endhighlight %}
+
+最初の行でEnumeratorオブジェクトの返す
+最初の２つの値をnextとpeekでa, bに取る
+Enumerator#peekはカーソルを進めないで先頭要素を取る
+２行目の終了条件が満たされない限り
+処理は再帰的に繰り返えされる
+
+最後にこれらの部品を使って
+平方根を求める関数sqrtを定義しよう
+{% highlight ruby %}
+ EPS = 0.0001    # 許容誤差
+ A0 = 1.0        # 初期近似値
+ def sqrt(n, a0=A0, eps=EPS)
+   with_in eps, repeat(next_val[n], a0)
+ end
+ sqrt 2 # => 1.4142135623746899
+ sqrt 3 # => 1.7320508100147274
+ sqrt 5 # => 2.236067977499978
+ sqrt 8 # => 2.8284271250498643
+{% endhighlight %}
+
+sqrt関数はこのようにしてモジュール化された３つの汎用部品
+next_val repeat with_inを貼り合せて作ることができた
+
+sqrt関数はモジュールを合成して構成されているので
+プログラムの基本的な構造を変えることなく変更が容易に行える
+
+今度は
+２つの連続する近似値の差がゼロに近づくという条件の代わりに
+２つの近似値の比が１に近づくという条件に変えてみよう
+これは非常に小さいまたは非常に大きい数に対しては
+より適切な結果を出す
+
+この目的を達成するには
+関数with_inに代わる関数relativeを定義するだけでよい
+{% highlight ruby %}
+ def relative(eps, enum)
+   a, b = enum.next, enum.peek
+   return b if (a-b).abs <= eps*b.abs
+   relative(eps, enum)
+ end
+ def sqrt(n, a0=A0, eps=EPS)
+   relative eps, repeat(next_approx[n], a0)
+ end
+ sqrt 2 # => 1.4142135623746899
+ sqrt 3 # => 1.7320508100147274
+ sqrt 5 # => 2.236067977499978
+ sqrt 8 # => 2.8284271250498643
+{% endhighlight %}
+
+他の部品を変えることなく新しいsqrt関数ができた
+
+(続く？)
+{% footnotes %}
+   {% fn nextはRubyの予約語なので使えない %}
+   {% fn ここではnext %}
+   {% fn 正確にはリストではなくEnumeratorオブジェクト %}
+{% endfootnotes %}

@@ -1,0 +1,113 @@
+---
+layout: post
+title: Rubyでデータをオブジェクト化して集計する
+date: 2011-12-20
+comments: true
+categories:
+---
+
+
+Javaでデータを集計する処理について書かれたブログを読んだよ
+
+[リストを項目ごとに集計する - 日々常々](http://d.hatena.ne.jp/irof/20111203/p1#c)(id:irof:20111203)
+
+内容は次のようなデータがあって
+|*code|*name|*value|
+|A01|hoge|100|
+|A01|piyo|200|
+|A02|hoge|300|
+|A03|hoge|400|
+|A03|piyo|500|
+
+次のような集計の結果を得たいというものだよ
+|*code|*value|
+|A01|300|
+|A02|300|
+|A03|900|
+
+僕はRubyしか知らないからRubyでやってみるけど
+RubyにはEnumerable#injectがあるから
+集計処理は簡単にできるよ
+ここではデータの読み込みからやってみることにするよ
+先のデータがテキストファイルにあると仮定するよ
+
+まずはデータを読み込んでlabelとdataの配列に格納しよう
+{% highlight ruby %}
+label, *data = ARGF.map do |line|
+  line.split.map(&:strip).map { |d| d.match(/^[\d,]+$/) ? d.delete(',').to_i : d.intern }
+end
+label # => [:code, :name, :value]
+data # => [[:A01, :hoge, 100], [:A01, :piyo, 200], [:A02, :hoge, 300], [:A03, :hoge, 400], [:A03, :piyo, 500]]
+{% endhighlight %}
+ここでは次のような処理をしているよ
+1. 引数として渡されるデータファイルをARGFに読み込む
+1. データの各ラインに対して、splitでデータを分ける
+1. データが数値文字なら数値に変換し、それ以外ならシンボルに変換する
+1. 先頭行の結果をlabelに、残りをdataに代入する
+
+次にこの配列データをオブジェクト化するよ
+{% highlight ruby %}
+Product = Struct.new(*label)
+products = data.map { |d| Product.new(*d) }
+products # => [#<struct Product code=:A01, name=:hoge, value=100>, #<struct Product code=:A01, name=:piyo, value=200>, #<struct Product code=:A02, name=:hoge, value=300>, #<struct Product code=:A03, name=:hoge, value=400>, #<struct Product code=:A03, name=:piyo, value=500>]
+{% endhighlight %}
+属性だけのオブジェクトを作るのはStructが便利だね
+
+そして集計するよ
+{% highlight ruby %}
+puts products.inject(Hash.new(0)) { |h, pr| h[pr.code] += pr.value; h }
+# >> {:A01=>300, :A02=>300, :A03=>900}
+{% endhighlight %}
+これはもう見慣れたコードだよね
+ハッシュは0で初期化されるようにして
+それからinjectはハッシュhを返すように
+
+コードをまとめると次のようになるよ
+
+{% gist 1499895 account.rb %}
+
+
+このコードはわりと汎用性があるんだよ
+たとえば次のようなデータに適用する場合
+|*date|*category|*sub|*expense|
+|2011/1|食費|肉類|4,289|
+|2011/1|食費|魚介類|4,036|
+|2011/1|食費|野菜・果物|3,332|
+|2011/1|光熱費|電気代|6,689|
+|2011/1|光熱費|ガス代|4,792|
+|2011/1|光熱費|水道代|4,290|
+|2011/1|娯楽費|ゲーム・CD等|2,913|
+|2011/1|娯楽費|入場料|191|
+|2011/1|娯楽費|ピアノ|1200|
+|2011/1|娯楽費|その他|1,376|
+|2011/1|交通費|電車代|1,286|
+|2011/1|交通費|バス代|350|
+|2011/1|交通費|タクシー|1270|
+|2011/1|医療費|治療代|913|
+|2011/1|医療費|薬代|945|
+|2011/2|食費|肉類|2,186|
+|2011/2|食費|魚介類|1,111|
+|2011/2|光熱費|電気代|3,645|
+|2011/2|光熱費|ガス代|6,912|
+|2011/2|光熱費|水道代|4,123|
+|2011/2|娯楽費|ゲーム・CD等|5,900|
+|2011/2|娯楽費|ピアノ|1200|
+|2011/2|娯楽費|その他|3,034|
+|2011/2|交通費|電車代|2,286|
+|2011/2|交通費|バス代|450|
+|2011/2|交通費|タクシー|0|
+|2011/2|医療費|治療代|1,988|
+|2011/2|医療費|薬代|650|
+
+集計コードのラベルだけを変えればいいんだ
+{% highlight ruby %}
+puts products.inject(Hash.new(0)) { |h, pr| h[pr.category] += pr.expense; h }
+# >> {:食費=>14954, :光熱費=>30451, :娯楽費=>15814, :交通費=>5642, :医療費=>4496}
+{% endhighlight %}
+
+月毎の支出を見たい場合はこうするよ
+{% highlight ruby %}
+puts products.inject(Hash.new(0)) { |h, pr| h[pr.date] += pr.expense; h }
+# >> {:"2011/1"=>37872, :"2011/2"=>33485}
+{% endhighlight %}
+Rubyは便利だね!

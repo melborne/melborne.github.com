@@ -1,0 +1,264 @@
+---
+layout: post
+title: Rubyでソート・アルゴリズムを表現しよう!
+date: 2010-10-12
+comments: true
+categories:
+---
+
+
+アルゴリズムとその実装には往々にして乖離があります
+アルゴリズムが理解できてもその実装が複雑で
+理解に苦しむ　ということが少なくありません
+原因の１つはプログラミング言語の記述力にあると思います
+
+Rubyは極めて記述力が高い言語です
+人間の意志をコードで表現する上での制約が極めて少ないのです
+これが動く疑似コードと言われる所以です
+
+ソート・アルゴリズムは配列によるデータ構造を操作します
+RubyのArrayクラスは強力だから
+Rubyの記述力を証明するいい題材になります
+早速　挿入ソート　選択ソート　バブルソート
+クイックソート　マージソートをRubyで表現してみましょう
+
+###挿入ソート
+挿入ソートはデータの並びを維持しつつ
+新たなデータをそこに挿入することでソートを行うアルゴリズムです
+具体的には以下の手順を行います
+1. ソート済みデータ群を格納するデータ構造を用意する
+1. 未整列のデータ群から１つデータをピックアップする
+1. そのデータをソート済みデータ群の並びの正しい位置に挿入する
+1. 未整列データ群が無くなるまで2-3を繰り返す
+
+これをRubyのArrayクラスに実装してみましょう
+{% highlight ruby %}
+class Array
+  def insert_sort
+    inject([]) { |mem, var| mem.insert_with_order(var) }
+  end
+  def insert_with_order(item)
+    pos = find_index { |n| item <= n } || length
+    insert(pos, item)
+  end
+end
+{% endhighlight %}
+このコードではinjectメソッドの引数で配列を用意し
+injectのブロックに順次渡されるデータを
+insert_with_orderメソッドに渡しています
+そしてinsert_with_orderにおいてこのデータを
+並びの正しい位置に挿入しています
+正しい位置はArray#find_indexで求まります
+
+###選択ソート
+選択ソートは未整列のデータ群から順次
+最小のデータを選択することでソートを行うアルゴリズムです
+具体的には以下の手順を行います
+1. ソート済みデータ群を格納するデータ構造を用意する
+1. 未整列のデータ群から最小(最大)のデータをピックアップする
+1. そのデータをソート済みデータ群の端に挿入する
+1. 未整列データ群が無くなるまで2-3を繰り返す
+
+Rubyで実装してみましょう
+{% highlight ruby %}
+class Array
+  def select_sort
+    tmp = self.dup
+    res = []
+    res.push tmp.delete_min until tmp.empty?
+    res
+  end
+  def delete_min
+    min_idx = find_index { |item| item == self.min }
+    delete_at(min_idx)
+  end
+end
+{% endhighlight %}
+このコードではresで参照できる配列を用意し
+未整列のデータ群からdelete_minメソッドにより
+最小のデータを取り出して用意した配列の末尾に順次格納します
+最小値はArray#minで求まります
+なおArray#dupで元データは変更しないようにしています
+
+###バブルソート
+バブルソートは隣り合うデータを比較して入替えを行い
+データ構造の末端に最小(最大)のデータを移動させて
+ソートを行うアルゴリズムです
+具体的には以下の手順を行います
+1. ソート済みデータ群を格納するデータ構造を用意する
+1. 未整列のデータ群に対して最小(最大)のデータが末端に来るようバブリングする
+1. バブリングでは端から順に隣り合うデータの比較・入替えを行う
+1. 末端に来たデータをソート済みデータ群の端に挿入する
+1. 未整列データ群が無くなるまで2-4を繰り返す
+
+Rubyで実装してみましょう
+{% highlight ruby %}
+class Array
+  def bubble_sort
+    tmp = self.dup
+    res = []
+    res.push tmp.bubbling until tmp.empty?
+    res
+  end
+  def bubbling
+    (length-1).times do |i|
+      self[i], self[i+1] = self[i+1], self[i] if self[i] < self[i+1]
+    end
+    delete_at(-1)
+  end
+end
+{% endhighlight %}
+このコードではresで参照できる配列を用意し
+未整列のデータ群に対してbubblingメソッドを実行し
+最小のデータが末尾に来るようにしています
+末尾のデータはArray#delete_atで取り出し
+用意した配列の末尾に挿入します
+
+###クイックソート
+クイックソートは１つのデータを基準に
+未整列のデータ群を大小２つに分けることを
+そのデータ群が１つになるまで繰り返すことで
+ソートを行うアルゴリズムです
+具体的には以下の手順を行います
+1. 未整列のデータ群から任意の１つを取り出す
+1. これを基準に未整列のデータ群を大小２つに分ける
+1. 分割したデータ群について1－2を繰り返す
+1. データ群が分割できなくなったところで結果を連結する
+
+Rubyで実装してみましょう
+{% highlight ruby %}
+class Array
+  def quick_sort
+    return self if length <= 1
+    base = pop
+    smaller, bigger = partition { |e| e < base }
+    push base
+    smaller.quick_sort + [base] + bigger.quick_sort
+  end
+end
+{% endhighlight %}
+このコードではArray#partitionでデータを大小に分割し
+各分割データsmaller,biggerについて
+quick_sortを再帰的に繰り返しています
+なおオリジナルを維持するために分割後push baseしています
+
+###マージソート
+マージソートは未整列のデータを一旦多数に分割し
+各分割データ群でソート・統合を繰り返して
+最終的に全体のソートを行うアルゴリズムです
+
+具体的には以下の手順を行います
+1. 未整列のデータ群を半分に分ける操作を繰り返す
+1. データ群が分割できなくなったところで今度は分割データのマージを繰り返す
+1. マージはデータが整列するよう行う
+
+Rubyで実装してみましょう
+{% highlight ruby %}
+class Array
+  def merge_sort
+    tmp = self.dup
+    return tmp if tmp.length <= 1
+    a, b = self.half.map { |e| e.merge_sort }
+    merge(a, b)
+  end
+  def half
+    mid = length/2
+    return slice(0...mid), slice(mid..-1)
+  end
+  
+  def merge(a, b)
+    res = []
+    until a.empty? && b.empty?
+      res <<
+        case
+        when a.empty? then b.shift
+        when b.empty? then a.shift
+        when a.first < b.first then a.shift
+        else b.shift
+        end
+    end
+    res
+  end
+end
+{% endhighlight %}
+このコードではhalfメソッドでデータ群を二分割し
+分割した各データ群についてmerge_sortを呼ぶことでこれを繰り返します
+分割によって双方の配列要素が１になるとa,bが返り
+次にmergeメソッドが呼ばれて分割データのマージが始まります
+mergeメソッドではcase式によって整列された配列データが得られます
+###テスト
+これらのアルゴリズムのテストを用意しました
+ここでは速度の比較も行っています
+{% highlight ruby %}
+require "test/unit"
+require "sorts"
+@@result = {}
+class TestSorts < Test::Unit::TestCase
+  def setup
+    num = 1000
+    @list = []
+    num.times { @list << rand(num)  }
+  end
+  def time(name)
+    t = Time.now
+    res = yield
+    @@result[name] = Time.now - t
+    res
+  end
+  def test_insert_sort
+    assert_equal(@list.sort, time(:Insert){ @list.insert_sort })
+  end
+  
+  def test_select_sort
+    assert_equal(@list.sort, time(:Select){ @list.select_sort })
+  end
+  
+  def test_bubble_sort
+    assert_equal(@list.sort, time(:Bubble){ @list.bubble_sort })
+  end
+  
+  def test_quick_sort
+    assert_equal(@list.sort, time(:Quick){ @list.quick_sort })
+  end
+  
+  def test_merge_sort
+    assert_equal(@list.sort, time(:Merge){ @list.merge_sort })
+  end
+  def test_sort
+    assert_equal(@list.sort, time(:Sort){ @list.sort })
+  end
+  # def test_keep_self
+  #   original = @list.dup
+  #   %w(insert select bubble quick merge).each do |name|
+  #     @list.send("#{name}_sort")
+  #     assert_equal(original, @list)
+  #   end
+  # end
+end
+END{
+  END{
+    res = @@result.map { |k, v| [k, v, (v/@@result[:Sort]).to_i ] }.sort_by { |e| e[2] }
+    res.each { |k, v, n| puts "#{k}\t=>\t#{v} (#{n})" }
+  }
+}
+{% endhighlight %}
+{% highlight ruby %}
+Loaded suite sorts
+Started
+......
+Finished in 42.917957 seconds.
+6 tests, 6 assertions, 0 failures, 0 errors, 0 skips
+Test run options: --seed 43474
+Sort    =>      0.000432(1)
+Quick   =>      0.007363(17)
+Merge   =>      0.026338(60)
+Insert  =>      0.080093(185)
+Bubble  =>      0.782067(1810)
+Select  =>      42.0075(97239)
+{% endhighlight %}
+クイックソートが最速でArray#sortの17倍
+選択ソートが最も遅くsortの97239倍でした
+速度はともかく
+Rubyの記述力はやっぱりすごいですね
+
+[gist: 622151 - GitHub](http://gist.github.com/622151)

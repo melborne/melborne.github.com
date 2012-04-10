@@ -1,0 +1,141 @@
+---
+layout: post
+title: LISPはＳ式(丸括弧)でできている、RubyはＲ式[角括弧]でできている
+date: 2011-12-21
+comments: true
+categories:
+---
+
+
+Rubyは許容可能なLISPと言われている
+
+[なぜRubyは許容可能なLISPなのか - 翡翠はコンピュータに卵を生むか](http://d.hatena.ne.jp/masatoi/20101102/1288654204)
+
+著者は
+1. RubyはLISPよりも濃い関数型言語であり
+1. LISPマクロでしたいことの大半はRubyでできる
+という事実から
+Rubyは許容可能なLISPであると結論している
+
+しかし私は今日別の理由
+つまりRubyがなぜ許容可能なLISPであるのかの
+新たな解釈を発見した
+
+私は「許容可能なLISP」とは
+LISPerが「LISPの継承者と名乗っても差し支えなかろう」
+と認めた言語をいうものと理解する
+そしてLISPは括弧(Ｓ式)でできていることが
+最大の特徴であることから
+括弧を多産しないつまりこれでもかというくらいに
+括弧が大量に現れない言語は
+LISPerをしてLISP継承言語と認められないものと理解する
+
+Rubyではメソッド定義や呼び出しの括弧を
+省略できたりするものだから
+この点からすればRubyを許容可能なLISPと
+呼ぶことは到底できない
+
+しかしそれはRubyの一側面に過ぎない
+次のRubyのオブジェクト呼び出しコードを見ていただきたい
+{% highlight ruby %}
+ R[:name][:age]['charlie'][21]['charlie'][0][:name][0,4] # => "char"
+{% endhighlight %}
+
+括弧括弧括弧
+括弧だらけである
+そしてこれは
+Rubyの正しい構文に基づいて書かれており
+しかもなんのトリックも施されていない
+正真正銘のRubyなのである
+
+Rubyに覚えのある方は暫し
+この呼び出しを実現する
+オブジェクトの実装を考えていただきたい
+
+確かにネストした丸括弧と
+シーケンシャルな角括弧という違いはあるものの
+これだけ括弧を並べることができるなら
+Rubyを許容可能なLISPと言っても差し支えないであろう
+
+このような角括弧の連なり構文が可能なのは
+実はRubyにおいて角括弧は
+再定義可能なメソッド呼び出しに過ぎないからなのである
+
+{% highlight ruby %}
+class Hash
+  def [](arg)
+    "I don't know."
+  end
+end
+h = {:name => 'charlie', :age => 21}
+h[:name] # => "I don't know."
+{% endhighlight %}
+
+つまりこれは多数のクラスが
+各クラスの文脈に基づいて
+角括弧メソッドを自由に定義し得るということを意味する
+もちろん独自クラスにも角括弧を定義できる
+{% highlight ruby %}
+class CALC
+  def self.[](exp)
+    eval exp
+  end
+end
+CALC['40 - 32 / 2'] # => 24
+{% endhighlight %}
+
+さてそろそろ先のコードの実装を示そう
+もちろん独自の角括弧メソッドの定義などはしていない
+{% highlight ruby %}
+R = ->a,b{
+  _ = Struct.new(a, b)
+  ->x,y{ Hash[x, Array[ _[x, y] ]] }.curry
+}.curry
+R[:name][:age]['charlie'][21]['charlie'][0][:name][0,4] # => "char"
+{% endhighlight %}
+
+どうであろう
+ここでも多数の角括弧が使われていることが見て取れる
+しかもネストしている
+ここで使われている角括弧は
+Hash.[ ] Array.[ ] Struct.[]である
+
+説明すると定数Rはカリー化された
+Procオブジェクトを参照している
+このProcオブジェクトは2つの引数a,bを取り
+カリー化されたProcオブジェクトを返す
+このProcオブジェクトは2つの引数x,yを取りハッシュを返す
+ハッシュはxをkey 配列をvalueとする
+配列の要素はa,bをプロパティとするStructのサブクラス_
+から生成されるx,yを値とするStructオブジェクトである
+
+そしてRの呼び出し側において
+最初の4つの括弧[:name][:age]['charlie'][21]は
+Proc#[]メソッドを呼んでいる
+次の括弧['charlie']はHash#[]を
+次の括弧[0]はArray#[]を
+次の括弧[:name]はStruct#[]を
+最後の括弧[0,4]はString#[]を
+それぞれ呼んでいる
+
+各角括弧の返り値を見れば理解が容易になるだろう
+{% highlight ruby %}
+R # => #<Proc:0x0000010085dc88 (lambda)>
+R[:name] # => #<Proc:0x0000010085cec8 (lambda)>
+R[:name][:age] # => #<Proc:0x0000010085c888 (lambda)>
+R[:name][:age]['charlie'] # => #<Proc:0x0000010085c108 (lambda)>
+R[:name][:age]['charlie'][21] # => {"charlie"=>[#<struct name="charlie", age=21>]}
+R[:name][:age]['charlie'][21]['charlie'] # => [#<struct name="charlie", age=21>]
+R[:name][:age]['charlie'][21]['charlie'][0] # => #<struct name="charlie", age=21>
+R[:name][:age]['charlie'][21]['charlie'][0][:name] # => "charlie"
+R[:name][:age]['charlie'][21]['charlie'][0][:name][0,4] # => "char"
+{% endhighlight %}
+
+このようなことから私は
+Rubyにおける角括弧をR式と命名し
+RubyがR式でできている
+したがってRubyは許容可能なLISPである
+と結論する次第である
+
+以上
+推論が妥当でないように思われます．<br>媒概念不周延の虚偽と呼ばれる詭弁ではないでしょうか．>m11mさん<br>コメントありがとうございます。ええ、そのとおりなんです。推論が妥当であったらネタになりませんからね。ネタでしたか．<br>失礼しました．>m11mさん<br>いえ、いえ:)

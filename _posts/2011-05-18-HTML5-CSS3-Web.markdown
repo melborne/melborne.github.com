@@ -1,0 +1,310 @@
+---
+layout: post
+title: HTML5+CSS3でWebの未来を開こうよ！
+date: 2011-05-18
+comments: true
+categories:
+---
+
+
+GoogleがHTML5+CSS3に本気のようです
+
+[Chrome ウェブストア日本版スタート！ はてブディレクターがGoogleに聞いてみた - はてなブックマークニュース](http://b.hatena.ne.jp/articles/201105/3570)
+
+Googleが本気ならWebの未来はそちらにあるのでしょう
+ここはひとつ
+バスに乗り遅れないようにしたいですね！
+
+HTML5+CSS3は複雑なJavaScriptのコードを書かずに
+手軽にインタラクティブなサイトの実現を可能にします
+以下のGoogleのサイトがとても参考になります
+
+[HTML5 Rocks - A resource for open web HTML5 developers](http://www.html5rocks.com/)
+
+なるほどWebの新しい可能性にわくわくしますね！
+
+というわけで...
+
+上のサイトを参考にして
+自分でもCSS3の簡単なデモページを作ってみました
+ChromeかSafariで見てください
+
+[CSS3DEMO](http://css3demo.heroku.com/)
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110518/20110518220916.png)
+
+
+基本的にやっていることは
+ボタンの押下に反応してテキストのCSSを切り替えているだけです
+
+###デモの説明
+以下ではデモで使ったCSS3の各機能を簡単に説明します
+なおJavaScriptはjQueryとCoffeeScriptを
+HTMLはhaml　CSSはscssを使って書いています
+これらの簡易言語を使うことによって
+極めて少ない記述で効果的なWebページが作成できます
+
+ベースとなるindex.hamlは以下の通りです
+
+index.haml
+{% highlight html %}
+%header
+  %h1 CSS3 DEMO
+#main
+  .navibox
+    %input#slider{:type => 'range', :min => 1, :max => 4, :value => 1}
+    -%w(Web\ Font Text\ Stroke Gradient Shadow Transition Transform Navi\ Position).each do |navi|
+      .button{:id => "#{navi.downcase.delete(' ')}"}= navi
+  %p.textbox
+    %strong Alice
+    was beginning to get very tired of sitting by her... the use of a book,' thought
+    %a{:href => "http://alice..."} Alice
+    'without pictures or conversation?' So she was considering... when suddenly a White 
+    %a{:href => "http://rabbit..."} Rabbit
+    with pink eyes ran close by her. There was nothing so VERY... it-hole under the hedge...
+{% endhighlight %}
+HTML5ではinputタグのtype属性がいろいろ拡張されますが
+ここではrangeを使ってスライダーコントロールを実現しています
+
+###Rounded Corners
+テキストボックスとボタンに角丸を適用します
+角丸はborder-radiusプロパティで指定します
+
+style.scss
+{% highlight css %}
+  p.textbox { border-radius: 18px; }
+  .button {
+    border-radius: 3px;
+    &:hover { border-radius: 16px; }
+  }
+{% endhighlight %}
+
+###Selectors + Data URL
+新たなセレクタとData URLを使って
+テキスト内のリンクに画像を埋め込みます
+
+style.scss
+{% highlight css %}
+  a { text-decoration: none; }
+  a[href^="http"]:after {
+    content: url(data:image/png;base64,R0lGODlhCQAMAMQAAPr7/Cpdi6 ... GMHACSeDwKAQA7);
+    padding-left: 2px;
+  }
+  a + a { color: #fc601b; }
+  a + a + a { color: #33c87c; }
+{% endhighlight %}
+属性セレクタを使って
+httpで始まるhrefプロパティを持ったaタグを対象にしています
+そしてafter擬似要素でイメージを挿入する位置を指定しています
+URLスキームにdataを使い
+base64でエンコードした画像を埋め込みます
+＋連結接合子で色付けするリンクを指定します
+
+###Columns
+スライダーコントロールを操作することで
+テキストのコラム数を変化させます
+
+app.coffee
+{% highlight javascript %}
+$ ->
+  tbox = $(".textbox")
+  $("#slider").change (event)->
+    tbox.css 'webkitColumnCount', event.target.value
+{% endhighlight %}
+javascriptを使って
+スライダーのchangeイベントが発生したときに
+tboxのwebkitColumnCountプロパティの値に
+スライダーの値がセットされるようにします
+
+###Web Fonts
+Webフォントを使うことによって
+機種依存のないタイプフェイスを実現します
+利用するフォントをcssで指定するために
+@font-face規則を使います
+
+style.scss
+{% highlight css %}
+  @font-face {
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Droid Sans'), url('http://playground.html5rocks.com/samples/html5_misc/Droid_Sans.ttf') format('truetype');
+  }
+{% endhighlight %}
+
+ボタン操作で複数のWebフォントを切り替えています
+
+app.coffee
+{% highlight javascript %}
+  ttexts = $(".textbox, .textbox>*")
+  fonts = ['Molengo', 'Vollkorn', 'Droid Sans', 'Verdana']
+  $(".button#webfont").toggle(
+    -> ttexts.css('font-family', fonts[0]); $(this).text fonts[0]
+    -> ttexts.css('font-family', fonts[1]); $(this).text fonts[1]
+    -> ttexts.css('font-family', fonts[2]); $(this).text fonts[2]
+    -> ttexts.css('font-family', fonts[3]); $(this).text 'Web Font'
+  )
+{% endhighlight %}
+
+###Text Stroke
+Text Strokeを使っていわゆる袋文字を実現します
+あらかじめText Strokeを適用したクラスを用意し
+javascriptでこのクラスをテキストに適用するようにします
+
+style.scss
+{% highlight css %}
+  p.textstroke {
+    -webkit-text-fill-color: orange;
+    -webkit-text-stroke-color: red;
+    -webkit-text-stroke-width: 1px;
+  }
+{% endhighlight %}
+
+app.coffee
+{% highlight javascript %}
+  $(".button#textstroke").toggle(
+    -> tbox.addClass('textstroke');    $(this).text 'Stroked'
+    -> tbox.removeClass('textstroke'); $(this).text 'Text Stroke'
+  )
+{% endhighlight %}
+
+###Gradients
+ -webkit-gradient属性を使って
+ボタンとテキストにグラデーションを与えます
+
+style.scss
+{% highlight css %}
+  .button {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+    &:hover {
+      background: -webkit-gradient(linear, left top, left bottom, from(#ccc0f6), to(#cfe4fa));
+    }
+  }
+{% endhighlight %}
+
+app.coffee
+{% highlight javascript %}
+  $(".button#gradient").toggle(
+    ->
+      tbox.css 'background', '-webkit-gradient(linear, left top, left bottom, from(#49b9e9), to(#cceedd), color-stop(0.5, #ccc0f6))'
+      $(this).text '#1'
+    ->
+      tbox.css 'background', '-webkit-gradient(radial, center center, 0, center center, 800, to(#cceedd), from(#49b9ff), color-stop(0.5, #ccc0f6) )'
+      $(this).text '#2'
+    ->
+      tbox.css 'background', '-webkit-gradient(linear, left center, right center, from(#49b9e9), to(#cceedd), color-stop(0.5, #cceedd), color-stop(0.5, #49b9e9))'
+      $(this).text '#3'
+    ->
+      tbox.css 'background', '#eed'
+      $(this).text 'Gradient'
+  )
+{% endhighlight %}
+ボタンのtoggleイベントを使って
+テキストのグラデーションの色や方向を切り替えています
+
+###Text and Box Shadow
+ボタンの押下でテキストとそのボックスに影を付けます
+
+style.scss
+{% highlight css %}
+  .shadow {
+    text-shadow: rgba(64, 64, 64, 0.5) 6px 6px 4px;
+    -webkit-box-shadow: rgba(0, 0, 128, 0.5) 6px 6px 6px;
+  }
+{% endhighlight %}
+
+app.coffee
+{% highlight javascript %}
+  $(".button#shadow").toggle(
+    -> elm.addClass("shadow") for elm in [tbox, $(this)]
+    -> elm.removeClass("shadow") for elm in [tbox, $(this)]
+  )
+{% endhighlight %}
+
+###Transitions
+ -webkit-transitionを使えば
+CSS切り替え時の遷移をなめらかにすることができます
+
+style.scss
+{% highlight css %}
+  p.textbox { -webkit-transition: 1s ease-in-out; }
+{% endhighlight %}
+上の例のように
+ -webkit-transitionの第1引数に対象の属性を指定しないと
+transitionがすべての属性に対して適用されることになります{% fn_ref 1 %}
+ -webkit-transition-propertyで
+属性を指定することもできます{% fn_ref 2 %}
+
+app.coffee
+{% highlight javascript %}
+  $(".button#transition").toggle(
+    ->
+      tbox.css 'margin', '0 0 0 100px'
+      $(this).text 'left100'
+    ->
+      tbox.css 'margin', '0 0 0 -200px'
+      $(this).text 'left-200'
+    ->
+      tbox.css 'margin', '0 0 0 0'
+      $(this).text 'Transision'
+  )
+{% endhighlight %}
+
+###2d Transforms
+ -webkit-transform属性でテキストの形状をコントロールしています
+先のtransitionがここでも適用されているため
+動作がスムーズになっています
+
+app.coffee
+{% highlight javascript %}
+  $(".button#transform").toggle(
+    ->
+      $(this).text 'rotate'
+      tbox.css '-webkit-transform', 'rotate(-45deg)'
+    ->
+      $(this).text 'rotate2'
+      tbox.css '-webkit-transform', 'rotate(210deg)'
+    ->
+      $(this).text 'scale'
+      tbox.css '-webkit-transform', 'scaleX(0.7)'
+    ->
+      $(this).text 'skew'
+      tbox.css '-webkit-transform', 'skewX(30deg)'
+    ->
+      $(this).text 'Transform'
+      tbox.css '-webkit-transform', 'none'
+  )
+{% endhighlight %}
+
+###Flex Box Model
+ -webkit-boxを使うことによって
+ボタンの横並びを実現します
+
+style.scss
+{% highlight css %}
+  .navibox {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+  }
+{% endhighlight %}
+
+javascriptで並びの向きと配置を切り替えます
+app.coffee
+{% highlight javascript %}
+  navbox = $(".navibox")
+  $("#naviposition").toggle(
+    -> navbox.css {'-webkit-box-orient': 'vertical', 'position': 'absolute', 'top': '120px', 'left': '30px'}
+    -> navbox.css {'-webkit-box-orient': 'horizontal', 'position': 'relative', 'top': '0px', 'left': '0px'}
+  )
+{% endhighlight %}
+
+以上です
+ソースは以下にあります
+
+[melborne/CSS3DEMO - GitHub](https://github.com/melborne/CSS3DEMO)
+{% footnotes %}
+   {% fn コラムの切り替えに遅延があるのはこのためです %}
+   {% fn 複数の属性指定がうまく動作しませんでした %}
+{% endfootnotes %}

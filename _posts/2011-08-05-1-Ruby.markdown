@@ -1,0 +1,106 @@
+---
+layout: post
+title: 1から始めるRuby(その３)
+date: 2011-08-05
+comments: true
+categories:
+---
+
+
+[1から始めるRuby(その２)](http://d.hatena.ne.jp/keyesberry/20110801/p1)の続きです
+###クラスメソッド定義(続き)
+bonjourメソッド内でselfを使うことで
+このメソッドがそれぞれのクラスでの呼び出しに対し
+適切に応答するようになった
+
+しかしできればbonjourメソッドは
+Fixnum専用のものにして
+他のクラスでは呼び出せないようにしたい
+Classクラスはすべてのクラスのクラスだったから
+そこに定義したbonjourメソッドはすべてのクラスで
+呼び出せるようになってしまった
+仮にFixnumのためだけのクラスがあれば
+そこにbonjourメソッドを定義して問題は解決しそうである
+
+期待通りRubyにはそのようなクラスが存在する
+しかしなぜかひっそりと..
+
+早速このクラスを使って目的を果たそう
+{% highlight ruby %}
+>> class << Fixnum
+>>   def bonjour
+>>     "Bonjour from Fixnum with love!"
+>>   end
+>> end
+=> nil
+>> Fixnum.bonjour
+=> "Bonjour from Fixnum with love!"
+>> String.bonjour
+NoMethodError: undefined method `bonjour' for String:Class
+>> Array.bonjour
+NoMethodError: undefined method `bonjour' for Array:Class
+>> Class.bonjour
+NoMethodError: undefined method `bonjour' for Class:Class
+{% endhighlight %}
+
+class << Fixnum という構文は
+Fixnumオブジェクト専用の名無しのクラスを定義する
+この構文を見慣れないRuby使いもきっといるだろう
+Rubyにひっそりと存在するものだから
+その呼び方すら確定していない
+ある人はSingletonクラスといい
+ある人はEigenクラスといい
+またある人は特異クラスという{% fn_ref 1 %}
+私は是非ともステルスクラスと呼びたいが
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110805/20110805221956.gif)
+:w360]
+
+実はこの構文には別の書き方が３種ある
+そしてこちらの書き方のほうが広く知られている
+{% highlight ruby %}
+ class Fixnum
+   class << self     # Fixnumクラス定義の中でselfを使って
+     def bonjour
+       "Bonjour from Fixnum with love!"
+     end
+   end
+ end
+ def Fixnum.bonjour   # メソッド定義でFixnumを前置して
+   "Bonjour from Fixnum with love!"
+ end
+ class Fixnum
+   def self.bonjour   # Fixnumクラス内のメソッド定義でselfを前置して
+     "Bonjour from Fixnum with love!"
+   end
+ end
+{% endhighlight %}
+
+最初の構文は元の構文を
+Fixnumクラス定義内に配置したものだ
+Fixnumクラス内でselfはFixnumを返す
+次の構文はメソッド定義をするときに
+その適用対象オブジェクト(ここではFixnum)
+を限定するやり方だ
+最後の構文はこのメソッド式構文を
+クラス定義内に配置したものだ
+
+なぜ同じ事をやるのに
+４種もの書き方があるのかというと
+RubyはPerlの流れを汲むTMTOWTDIの言語だからだ
+
+TMTOWTDIを最初見たとき私は
+「TiMe TO WheTher Die or Ill」の略だと思ったのだが
+正しくは
+「There's More Than One Way To Do It」の略だそうである
+（やり方はいくらあってもええじゃないか）
+長い割には面白くない答えだったので
+別の答えを用意した
+{% highlight ruby %}
+ /Today's (Mon|Tue) Or (Wed|Thu) Day/I
+{% endhighlight %}
+
+(続く？)
+{% footnotes %}
+   {% fn ruby1.9ではsingletonを使っているようです. class<<1;end %}
+{% endfootnotes %}

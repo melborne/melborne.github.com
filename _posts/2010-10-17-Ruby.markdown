@@ -1,0 +1,388 @@
+---
+layout: post
+title: Rubyで文字列検索アルゴリズムを表現しよう!
+date: 2010-10-17
+comments: true
+categories:
+---
+
+
+文字列中のパターンを探し出すメソッドとして
+RubyにはString#indexが用意されています
+{% highlight ruby %}
+text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+text.index("velit") # => 285
+{% endhighlight %}
+またRubyの標準ライブラリにはStringScannerクラスがあるので
+これを使って以下のようにインデックスを求めることもできます
+{% highlight ruby %}
+require "strscan"
+text = StringScanner.new(text)
+text.skip_until(/.?(?=#{Regexp.escape("velit")})/) # => 285
+{% endhighlight %}
+ですから今更
+文字列検索のアルゴリズムを実装する価値はありません
+しかしアルゴリズムを理解してそれを実装する能力は
+プログラムする上での基礎力として必須と言われているので{% fn_ref 1 %}
+ここで勉強しておきたいと思います
+
+以下では
+文字列検索として代表的なアルゴリズムである
+力まかせ検索　ボイヤー-ムーア(ＢＭ)検索
+クヌース-モリス-プラット(ＫＭＰ)検索　N-gramインデックス検索
+ラビン-カープ(RK)検索の各検索アルゴリズムをRubyで実装します
+なお各アルゴリズムはWikipediaその他のネット上の情報{% fn_ref 2 %}を参考に
+独自解釈して構成したものです
+間違いがあるかも知れません
+いやきっとあるでしょう
+
+###力まかせ検索
+力まかせ検索はテキストの先頭から
+検索パターンを１文字ずつずらして照合を行う検索アルゴリズムです
+具体的には以下の手順を行います
+1. テキストの先頭文字から検索パターンの各文字を照合
+1. 一致しない場合照合位置を１つずらす
+1. 1-2を一致するまで繰り返す
+
+これをRubyのStringクラスに実装してみます
+{% highlight ruby %}
+class String
+  def power_search(pattern)
+    pos = 0
+    until pos > length-pattern.length
+      match = compare(pattern, pos)
+      return match if match
+      pos += 1
+    end
+  end
+  def compare(pattern, pos)
+    pattern.each_char.with_index do |chr, i|
+      return nil unless chr == self[pos+i]
+    end
+    pos
+  end
+end
+{% endhighlight %}
+compareメソッドではパターンとテキストの対応箇所を
+先頭から一文字ずつ比較してそのすべてが一致した場合に
+先頭のインデックスを返します
+
+StringScannerクラスを使ったcompareメソッドの例も示しておきます
+{% highlight ruby %}
+  def compare_with_scanner(pattern, pos)
+    str = StringScanner.new(self)
+    str.pos = pos
+    pattern.each_char do |chr|
+      return nil unless str.scan /#{Regexp.escape(chr)}/
+    end
+    pos
+  end
+{% endhighlight %}
+StringScanner#scanメソッドはマッチする場合には
+自動でポインタを進めるので繰り返しのための記述が簡潔になります
+
+###ボイヤー-ムーア(ＢＭ)検索
+ＢＭ検索は検索パターンとの照合をパターン末尾から行い
+パターン内文字と不一致文字との照合を行うことによって
+照合回数を減らす工夫をした検索アルゴリズムです
+具体的には以下の手順を行います
+1. テキストの先頭文字から検索パターンの各文字を後方から照合
+1. 一致しない場合その不一致文字がパターン前方にあるか調べる
+1. ある場合照合位置をその位置までずらす
+1. ない場合照合位置を不一致文字の後ろにずらす
+1. 1-4を一致するまで繰り返す
+ＢＭ検索では次の照合位置を
+後方から調べた不一致位置までずらすことができるので
+効率が大変いいです
+
+Rubyで実装してみます
+{% highlight ruby %}
+class String
+  def bm_search(pattern)
+    pos = 0
+    until pos > length-pattern.length
+      match, pos = bm_compare(pattern, pos)
+      return match if match
+    end
+  end
+  def bm_compare(pattern, pos)
+    (pattern.length-1).downto(0) do |i|
+      if self[pos+i] != pattern[i]
+        shift = pattern[0...i].bm_shift(self[pos+i]) || i + 1
+        return nil, pos + shift
+      end
+    end
+    pos
+  end
+  def bm_shift(chr)
+    length.times { |pos| return pos + 1 if self[-1-pos] == chr }
+    nil
+  end
+end
+{% endhighlight %}
+bm_compareではFixnum#downtoメソッドで
+インデックスを降順にして
+比較をパターン後方から行うようにしています
+また力まかせ検索ではパターンのずらし量は１に固定されていましたが
+ここではbm_shiftメソッドの結果でその量を決定しています
+
+###クヌース-モリス-プラット(ＫＭＰ)検索
+ＫＭＰ検索は検索パターン内に存在する文字パターンを利用して
+照合回数を減らす工夫をした検索アルゴリズムです
+具体的には以下の手順を行います
+1. テキストの先頭文字から検索パターンの各文字を照合
+1. 先頭文字で不一致が生じた場合、パターンを１つずらす
+1. ２文字目以降で不一致が生じた場合、不一致箇所以前の部分においてその先頭文字列の繰り返し文字列の有無を調べる
+1. 繰り返し文字列がなければ、不一致箇所にパターンをずらす
+1. 繰り返し文字列がある場合は、その位置にパターンをずらすと共に照合開始位置を繰り返し文字列の次にセットする
+1. 2-5を一致するまで繰り返す
+上記よりＫＭＰ検索では検索パターンが繰り返し文字列を含んでおらず
+照合の不一致がパターンの後方で多く発生する場合に
+効果が大きくなることが分かります
+ですから通常の文字列検索ではあまり効率がよくありません
+
+Rubyで実装してみます
+{% highlight ruby %}
+class String
+  def kmp_search(pattern)
+    pos, from = 0, 0
+    until pos > length-pattern.length
+      match, pos, from = kmp_compare(pattern, pos, from)
+      return match if match
+    end
+  end
+  def kmp_compare(pattern, pos, from)
+    (from..(pattern.length-1)).each do |i|
+      if self[pos+i] != pattern[i]
+        return nil, pos+1, 0 if i == 0
+        shift, from = pattern[0...i].count_sequence
+        if shift
+          return nil, pos+i-shift, from
+        else
+          return nil, pos+i, 0
+        end
+      end
+    end
+    pos
+  end
+  def count_sequence
+    shift = 1
+    until shift >= length
+      if self[0] == self[shift] 
+        match = 1
+        until shift+match >= length
+          self[match] == self[shift+match] ? match += 1 : break
+        end
+        return length-shift, match
+      end
+      shift += 1
+    end
+  end
+end
+{% endhighlight %}
+このコードではcount_sequenceメソッドにおいて
+繰り返し文字列の有無を調べています
+そして繰り返し文字列の長さに応じて
+次の照合の再開位置(from)を決定します
+場合分けが多く若干コードが複雑になっていますが
+その割に検索の効率が上がらないのが残念です
+
+###N-gramインデックス検索
+N-gramインデックス検索はテキスト内文字のインデックスを使って
+照合回数を減らす工夫をした検索アルゴリズムです
+具体的には以下の手順を行います
+1. テキストのすべての文字の出現位置を記録した索引を作る
+1. 索引を参照して検索パターンの先頭文字と同じ文字の出現位置を調べる
+1. 照合位置を出現位置に移動して照合を行う
+1. 2-3を一致するまで繰り返す
+N-gramインデックス検索では照合箇所を
+パターンの先頭文字の出現位置だけに限定できるので
+照合回数を激減させることができます
+一方で
+インデックスの作成のためのコストが大きくかかる問題があります
+
+Rubyで実装してみましょう
+{% highlight ruby %}
+class String
+  def ngi_search(pattern, n=1)
+    indices = index_table(n)[pattern[0...n]]
+    until indices.empty?
+      match = ngi_compare(pattern, indices.shift)
+      return match if match
+    end
+  end
+  def index_table(n)
+    q = Hash.new{ |h, k| h[k] = [] }
+    self.split(//).each_cons(n).with_index { |chr, i| q[chr.join] << i }
+    q
+  end
+  def ngi_compare(pattern, pos)
+    pattern.length.times do |i|
+      return nil if self[pos+i] != pattern[i]
+    end
+    pos
+  end
+end
+{% endhighlight %}
+
+インデックスの作成はindex_tableで行い
+結果はHashに格納しています
+デフォルトでインデックスは１文字ですが
+複数文字(n)を指定することもできます
+パターンのずらし回数はindicesの要素数で決まります
+
+###ラビン-カープ検索(RK)検索
+ＲＫ検索は検索パターンとの照合を個々の文字列で行うのではなく
+それらのハッシュ値で行うことによって
+照合に掛かる時間を効率化する検索アルゴリズムです
+パターンのずらし量は１文字ずつで力まかせ検索と同じです
+具体的には以下の手順を行います
+1. 検索パターンとその対応箇所のハッシュ値を求め照合する
+1. 一致しない場合テキストの次の照合箇所のハッシュ値を求める
+1. 照合位置を１つずらす
+1. 2-3を一致するまで繰り返す
+なお次のハッシュ値の生成はその生成効率を上げるため
+前のハッシュ値を利用したローリングハッシュ値{% fn_ref 3 %}の演算を用います
+またハッシュ値が一致しても
+生文字列が一致しない場合があるのでその確認もします
+
+Rubyで実装してみます
+{% highlight ruby %}
+class String
+  def rk_search(pattern)
+    pos = 0
+    h_self = self[0...pattern.length].rhash
+    h_pattern = pattern.rhash
+    until pos > length-pattern.length
+      match, h_self = hash_compare(h_self, h_pattern, pattern.length, pos)
+      return match if match && self[pos...pos+pattern.length] == pattern
+      pos += 1
+    end
+  end
+  def rhash(base=101)
+    (0...length).inject(0) { |mem, i| mem + self[length-1-i].ord*base**(i) }
+  end
+  def hash_compare(h_self, h_pattern, len, pos)
+    h_self == h_pattern ? pos : [nil, next_hash(h_self, len, pos)]
+  end
+  def next_hash(h_self, len, pos, base=101)
+    return nil unless self[pos+len]
+    (h_self - self[pos].ord*base**(len-1))*base + self[pos+len].ord
+  end
+end
+{% endhighlight %}
+ハッシュ値の計算はrhashメソッドで行うようにし
+ここでは素数であるbaseを基数とした各文字の
+文字コードを足し合わせたものを用います
+hash_compareメソッドでハッシュ値が一致しない場合に
+next_hashメソッドで次のハッシュ値を求めています
+ここでは前のハッシュ値h_selfから先頭文字のハッシュ値を引き
+基数を一つずらしてから次の文字のハッシュ値を足しています
+
+###テスト
+これらのアルゴリズムをテストしてみます
+各メソッドにクラス変数を挟んで照合回数を計算し
+同時に各実行時間も求めます
+{% highlight ruby %}
+@@time = []
+class TestSearchs < Test::Unit::TestCase
+  def setup
+    @text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ABC ABCDAB ABCDABCDABDE susususususumsu abcdefgabcdefghijabcdefghijk axacacdae sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&" * 100
+    @words = ["Lorem", "sum", "fugiat", "ut aliquip", "&", "t, c", " m", "o ", "ABCDABD", "acac"]
+    @nowords = ["hello", "ipsumd", "Velit", "&.", "t D", "veniam,,", "abcdefghijkabcdefghijk"]
+    @st = Time.now
+  end
+  def teardown
+    @@time << Time.now - @st
+  end
+  def test_power_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.power_search(wd))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.power_search(wd))
+    end
+  end
+  
+  def test_bm_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.bm_search(wd))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.bm_search(wd))
+    end
+  end
+  
+  def test_kmp_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.kmp_search(wd))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.kmp_search(wd))
+    end
+  end
+  
+  def test_ngi_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.ngi_search(wd))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.ngi_search(wd))
+    end
+  end
+  def test_rk_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.rk_search(wd))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.rk_search(wd))
+    end
+  end
+end
+class String
+  def self.method_added(name)
+    class_variable_set("@@#{$`}", 0) if name =~ /_search$/
+  end
+  def self.counter
+    class_variables.sort.inject({}) { |h, cv| h[cv[/\w+/]] = class_variable_get(cv); h }
+  end
+end
+END{END{
+  res = String.counter
+  res.each do |k, v| 
+    print "%s\t%8d times(%.4f) %.4f sec\n" % [k, v, v*1.0/res["power"], @@time.shift]
+  end
+}}
+{% endhighlight %}
+
+結果は以下の通りです
+{% highlight ruby %}
+Loaded suite /Users/keyes/Dropbox/workspace/searchs
+Started
+..... 
+Finished in 16.116971 seconds.
+5 tests, 85 assertions, 0 failures, 0 errors, 0 skips
+bm         96236 times(0.2480) 1.3565 sec
+kmp       382275 times(0.9850) 2.4872 sec
+ngi        29977 times(0.0772) 5.3435 sec
+power     388089 times(1.0000) 2.6198 sec
+rk        370185 times(0.9539) 4.2976 sec
+{% endhighlight %}
+このテストではN-gramインデックス検索(ngi)の
+照合回数が際立って少ないことが分かります
+しかしインデックス作成のために実行時間は最も遅いです
+ハッシュ値で比較するラビン-カープ(RK)検索では
+思ったほど比較回数が少なくならず
+その結果ハッシュ値生成のためのコストが響いています
+
+ボイヤー-ムーア(ＢＭ)検索が照合回数も少なく最速で
+力まかせ(power)検索の倍の速度が出ています
+一方で力まかせ検索の結果もそれほど悪くないという印象です
+
+{% gist 630347 searchs.rb %}
+
+{% footnotes %}
+   {% fn http://itpro.nikkeibp.co.jp/article/Watcher/20070924/282781/ %}
+   {% fn 文字列探索 - Wikipedia http://ja.wikipedia.org/wiki/%E6%96%87%E5%AD%97%E5%88%97%E6%8E%A2%E7%B4%A2 %}
+   {% fn ラビン-カープ文字列検索アルゴリズム - Wikipedia http://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%93%E3%83%B3-%E3%82%AB%E3%83%BC%E3%83%97%E6%96%87%E5%AD%97%E5%88%97%E6%A4%9C%E7%B4%A2%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0 %}
+{% endfootnotes %}

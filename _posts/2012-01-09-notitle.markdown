@@ -1,0 +1,126 @@
+---
+layout: post
+title: 新ソートアルゴリズム「配列挿入ソート」だ!
+date: 2012-01-09
+comments: true
+categories:
+---
+
+
+(追記:2012-1-10) id:m11m さんのコメントによりこのソートはバケットソート{% fn_ref 1 %})と呼ばれる既知のソートアルゴリズムであることがわかりました ^^;　追記によりお詫び申し上げます
+
+(追記:2012-1-12) 記事に対するアクセスが異常なので調べてみると、dankogai氏のネタにされていたという名誉を受けていたことが判明しました^^; 光栄です
+ [404 Blog Not Found:algorithm - bucket sort - 比較しなければソートは相当速い](http://blog.livedoor.jp/dankogai/archives/51764496.html)
+------------------------------------
+以前にスリープソートという
+ソートアルゴリズムが発見されたよね
+
+[常識を覆すソートアルゴリズム！その名も"sleep sort"！ - Islands in the byte stream](http://d.hatena.ne.jp/gfx/20110519/1305810786)
+
+で僕はこれに対抗してランニングソート
+っていうアルゴリズムを見つけたんだよ
+まあ失敗したんだけど..
+
+[sleep sortに対抗してrunning sortだ！（Ruby版｜失敗に終わる編） - hp12c](http://d.hatena.ne.jp/keyesberry/20110628/p1)
+
+で今回また新たなソートアルゴリズムを発見したから
+みんなに紹介するよ
+
+その名も「配列挿入ソート」!
+
+これはいわば挿入ソートの簡易版だよ
+
+まずはRubyで挿入ソートを書いてみるよ
+だいたいこんな感じになるよ
+{% highlight ruby %}
+class Array
+  def insert_sort
+    inject([]) { |mem, var| mem.insert_with_order(var) }
+  end
+  def insert_with_order(item)
+    pos = find_index { |n| item <= n } || length
+    insert(pos, item)
+  end
+end
+require "mathn"
+l = Prime.take(10).sort_by { rand } # => [7, 2, 3, 11, 17, 19, 29, 5, 23, 13]
+l.insert_sort # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+{% endhighlight %}
+
+これに対して配列挿入ソートはこうだよ
+{% highlight ruby %}
+class Array
+  def array_insert_sort
+    inject([]) { |mem, var| mem[var] = var; mem }.compact
+  end
+end
+require "mathn"
+l = Prime.take(10).sort_by { rand } # => [7, 2, 3, 11, 17, 19, 29, 5, 23, 13]
+l.array_insert_sort # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+{% endhighlight %}
+なんてことはない
+ただ要素を配列のインデックスに対応付けて
+配置し直しただけだよ
+この前投稿した[Rubyで連続数字をハイフンでつなぐよ](http://d.hatena.ne.jp/keyesberry/20120107/p1)
+のときに気が付いたんだ
+
+でちょっと改良すれば文字のソートにも対応できるんだよ
+{% highlight ruby %}
+class Array
+  def array_insert_sort
+    inject([]) { |mem, var| mem[var.ord] = var; mem }.compact
+  end
+end
+require "mathn"
+l = Prime.take(10).sort_by { rand } # => [13, 3, 29, 5, 17, 2, 11, 7, 19, 23]
+l.array_insert_sort # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+c = "The quick brown fox jumps over the lazy dog".scan(/\w/) # => ["T", "h", "e", "q", "u", "i", "c", "k", "b", "r", "o", "w", "n", "f", "o", "x", "j", "u", "m", "p", "s", "o", "v", "e", "r", "t", "h", "e", "l", "a", "z", "y", "d", "o", "g"]
+c.array_insert_sort # => ["T", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+{% endhighlight %}
+
+まあ文字列と重複要素には使えないけどね..
+
+念のため実行速度を見てみるね
+比較対象はRuby標準のsort
+挿入ソート　クイックソートだよ
+クイックソートの実装は次の通りだよ
+{% highlight ruby %}
+class Array
+  def quick_sort
+    return self if length <= 1
+    base = pop
+    smaller, bigger = partition { |e| e < base }
+    push base
+    smaller.quick_sort + [base] + bigger.quick_sort
+  end
+end
+{% endhighlight %}
+
+さあベンチマークを取るよ
+{% highlight ruby %}
+require "benchmark"
+Benchmark.bmbm do |bm|
+  l = Prime.take(10000).sort_by { rand }
+  bm.report { l.sort }
+  bm.report { l.quick_sort }
+  bm.report { l.insert_sort }
+  bm.report { l.array_insert_sort }
+end
+# >> Rehearsal ------------------------------------
+# >>    0.000000   0.000000   0.000000 (  0.002726)
+# >>    0.050000   0.000000   0.050000 (  0.049841)
+# >>    3.560000   0.000000   3.560000 (  3.565532)
+# >>    0.010000   0.010000   0.020000 (  0.007513)
+# >> --------------------------- total: 3.630000sec
+# >> 
+# >>        user     system      total        real
+# >>    0.000000   0.000000   0.000000 (  0.002579)
+# >>    0.050000   0.000000   0.050000 (  0.049816)
+# >>    3.550000   0.000000   3.550000 (  3.561074)
+# >>    0.010000   0.000000   0.010000 (  0.006725)
+{% endhighlight %}
+こりゃ素晴らしい!
+このアルゴリズムをバケットソート，あるいはビンソートと呼びます．>m11mさん<br>コメントありがとうございます。既知のアルゴリズムだったとは無知を晒してしまいました。^^;情報ありがたいです。
+{% footnotes %}
+   {% fn [バケットソート - Wikipedia](http://ja.wikipedia.org/wiki/%E3%83%90%E3%82%B1%E3%83%83%E3%83%88%E3%82%BD%E3%83%BC%E3%83%88 %}
+{% endfootnotes %}

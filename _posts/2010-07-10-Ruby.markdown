@@ -1,0 +1,107 @@
+---
+layout: post
+title: Rubyでスキャニメーションを作ろう！
+date: 2010-07-10
+comments: true
+categories:
+---
+
+
+「ギャロップ！！」という仕掛け絵本があります
+本を開くと窓の向こうに見える馬が走り出します
+
+{% youtube oDSigzI6YKw %}
+
+仕組みとしては
+連続画像を重ねて作った一枚の絵の上に
+スリット入りのマスクを配置し
+これを動かすことによって絵が動いているように見せています
+この技術はスキャニメーションと呼ばれています
+
+１年くらい前にRubyとShoesを使って
+この絵とマスクを作る方法を紹介しました
+これでコンピュータ上でスキャニメーションが実現できます
+
+[Ruby+Shoesでスキャニメーションを作ろう！ - hp12c](http://d.hatena.ne.jp/keyesberry/20090425/p1) 
+
+でもこの方法は工程が多くて不便でした
+そこで今回はRubyだけでこの絵とマスクを作れるようにしました
+
+スキャニメーションの画像ができれば
+以下のようなサイトを作ることができます
+
+[World of ScanAnimation](http://scananimation.heroku.com/) 
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100710/20100710134022.png)
+
+
+###画像の作り方
+###*(1)スクリプトをダウンロードする
+以下のサイトにある拙作scanimake.rbと
+scaniviewer.rbスクリプトをダウンロードします
+
+[melborne's scanimaker at master - GitHub](http://github.com/melborne/scanimaker) 
+
+使用に際してはImageMagickとRMagickライブラリが必要になります
+
+###*(2)連続画像を用意する
+画像編集ソフトを使うなどして以下のような連続画像を用意します
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100710/20100710134023.png)
+
+
+画像の作成・編集にはMacであれば
+GimpをベースにしたSeaShoreがおすすめです
+
+[Seashore](http://seashore.sourceforge.net/The_Seashore_Project/About.html) 
+
+[melborne's scanimaker at master - GitHub](http://github.com/melborne/scanimaker) にはサンプルの画像データも置いてあります
+
+###*(3)Rubyスクリプトで画像を生成する
+ダウンロードしたscanimake.rbスクリプトに引数として
+作成した複数の画像データを渡します
+
+{% highlight ruby %}
+ $ ruby scanimake.rb images/horse1.png images/horse2.png images/horse3.png ...
+{% endhighlight %}
+
+これによって画像データのディレクトリに
+out.png mask_out.pngという画像が生成されます
+
+scanimake.rbスクリプトのif __FILE__ == $0以降を変更することで
+出力ファイル名(ex. horse.png mask_horse.png)と
+マスクにおけるスリットの向き(:horizontal)を変えられます
+
+{% highlight ruby %}
+if __FILE__ == $0
+  sm = Scanimake.new(ARGV)
+  path = File.expand_path(File.dirname(ARGV[0]))
+  sm.create_layered_image(:horizontal).write("#{path}/horse.png")
+  sm.create_mask_image(:horizontal).write("#{path}/mask_horse.png")
+  exit
+end
+{% endhighlight %}
+
+###*(4)画像を確認する
+このスクリプトで作成した画像は
+scaniviewer.rbスクリプトで再生することができます
+このスクリプトはRubyのGUI frameworkであるShoes用です
+Shoesのダウンロードは以下から行います
+
+[Downloads for shoes's shoes - GitHub](http://github.com/shoes/shoes/downloads) 
+
+Shoesでこのスクリプトを起動し
+最初に開いたダイアログで画像(ex. out.png)を開き
+次に開いたダイアログでマスク(ex. mask_out.png)を開きます
+画像に問題がなければ絵が動いて見えます
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100710/20100710140613.png)
+
+
+さあ　Rubyでスキャニメーションしましょう！
+
+{{ 0761147632 | amazon_large_image }}
+
+{{ 0761147632 | amazon_link }}
+
+{{ 0761147632 | amazon_authors }}

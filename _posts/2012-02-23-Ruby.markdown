@@ -1,0 +1,98 @@
+---
+layout: post
+title: Rubyの四則演算をもっと便利にしたいよ!
+date: 2012-02-23
+comments: true
+categories:
+---
+
+
+この間RubyのEnumerable#mapを便利にした
+Enumerable#mappを紹介したよ
+
+[RubyのEnumerable#mapをもっと便利にしたいよ - hp12c](http://d.hatena.ne.jp/keyesberry/20120211/p1)
+{% highlight ruby %}
+module Enumerable
+  def mapp(op=nil, *args, &blk)
+    op ? map { |e| op.intern.to_proc[e, *args]} : map(&blk)
+  end
+end
+langs = ["Ruby", "Python", "Lisp", "Haskell"]
+langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
+[1, 2, 3].mapp(:+, 10) # => [11, 12, 13]
+(1..5).mapp(:**, 2) # => [1, 4, 9, 16, 25]
+[[1,2,3,4], [5,6,7,8], [9,10,11,12]].mapp(:last, 2) # => [[3, 4], [7, 8], [11, 12]]
+["ruby", "python", "lisp", "haskell"].mapp(:[], -2, 2) # => ["by", "on", "sp", "ll"]
+{% endhighlight %}
+
+で今日またこれに関連して
+別のアイディアを思いついたよ
+ 
+それはここまで来たらもうmappは
+要らないんじゃないかってことなんだ
+
+
+つまり四則演算に限定されちゃうけど
+以下の構文でmapp相当のことができたら{% fn_ref 1 %}
+面白いと思ったんだ
+{% highlight ruby %}
+%w(Ruby Python Lisp Haskel) + 'ist' # => ["Rubyist", "Pythonist", "Lispist", "Haskelist"]
+[1, 2, 3, 4] + 10 # => [11, 12, 13, 14]
+[1, 2, 3, 4] + 5.5 # => [6.5, 7.5, 8.5, 9.5]
+[1, 2, 3, 4] - 10 # => [-9, -8, -7, -6]
+[1, 2, 3, 4] * 2 # => [2, 4, 6, 8]
+[1, 2, 3, 4] / 2.0 # => [0.5, 1.0, 1.5, 2.0]
+[1, 2, 3, 4] ** 2 # => [1, 4, 9, 16]
+{% endhighlight %}
+割と違和感がないと思うんだけどどうかな？
+
+実装はこんな感じだよ
+{% highlight ruby %}
+class Array
+  {:+ => :plus, :- => :minus, :* => :multi}.each do |op, rep|
+    alias :"__#{rep}__" :"#{op}"
+    define_method(op) do |other|
+      case other
+      when String, Numeric
+        map { |elm| elm.send(op, other) }
+      else
+        self.send("__#{rep}__", other)
+      end
+    end
+  end
+  %w(/ **).each do |op|
+    define_method(op) do |other|
+      map { |elm| elm.send(op, other) }
+    end
+  end
+end
+{% endhighlight %}
+まあ元のArray#*(Integer)が死んじゃうんだけど..
+
+ちなみにネストした配列でも有効だよ
+{% highlight ruby %}
+[[1,2],[3,4]] ** 2 # => [[1, 4], [9, 16]]
+[%w(child neighbor), %w(brother false)] + 'hood' # => [["childhood", "neighborhood"], ["brotherhood", "falsehood"]]
+{% endhighlight %}
+
+ついでに逆も定義してみるよ
+{% highlight ruby %}
+class String
+  alias :__plus__ :+
+  def +(other)
+    case other
+    when Array
+      other.map { |o| self + o }
+    else
+      self.__plus__(other)
+    end
+  end
+end
+'ruby' + 'ist' # => "rubyist"
+'ruby' + ['ist', 'er', 'mate'] # => ["rubyist", "rubyer", "rubymate"]
+{% endhighlight %}
+
+まあネタ止まりかな..
+{% footnotes %}
+   {% fn this is footnote %}
+{% endfootnotes %}

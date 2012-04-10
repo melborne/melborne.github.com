@@ -1,0 +1,279 @@
+---
+layout: post
+title: Ruby、同じことの繰り返しは君に任せるよ ～ 再帰でハノイの塔を解こう！～
+date: 2008-07-08
+comments: true
+categories:
+---
+
+
+もし問題が同じパターンの繰り返しを含んでいて
+その極限の解が明らかならば
+その問題の解決には再帰が使えるかもしれない
+
+再帰はある問題の答えの中にその問題自体を含む不思議な構造だ
+「GNU」は「GNU's Not UNIX」の頭文字からなる略称だ
+ここで「GNU」は問題であり
+その答え「GNU's Not UNIX」の中に問題自体が含まれている
+だからGNUは明らかに再帰だ
+
+「これじゃ答えになってない」
+「つまり再帰は問題解決の役には立たない」
+そういう声が聞こえてきそうだ
+
+つまりあなたは「GNU's Not UNIX」が
+「(GNU's Not UNIX)'s Not UNIX」になることを知っており
+「((((GNU's Not UNIX)'s Not UNIX)'s Not UNIX)'s Not UNIX)'s Not UNIX」になることも知っており
+したがって”どこまで行っても望みの答えは得られない”
+ということに既に気がついているということだ
+その通り！素晴らしい！
+
+確かにGNUの意味はどこまで行っても得られないけど
+それは再帰における極限の解が明らかにされていないからだ
+仮にGNUの再帰を100回繰り返せば
+「GNUはUNIXになる」とでもいう極限条件が与えられれば
+答えは一応得られる(釈然とはしないけれども…)
+
+GNUのことは諦めて「階乗」のことについて考えてみよう
+
+「階乗」は自然数nに対する1からnまでの自然数の総乗を言う{% fn_ref 1 %})
+つまり5の階乗5!は
+> 
+> 5! = 1 * 2 * 3 * 4 * 5 = 120
+
+となる
+
+これをRuby1.9では以下のように書ける
+<pre class="cobalt" style="background-color:#002444;color:#e6e1dc"><span class="line-numbers">   1 </span> <span style="color:#FF9D00;">class</span> <span style="color:#FFDD00;">Integer</span>
+<span class="line-numbers">   2 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FF9D00;">!</span>
+<span class="line-numbers">   3 </span>     <span style="color:#E1EFFF;">(</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">.</span><span style="color:#E1EFFF;">.</span><span style="color:#FF80E1;">self</span><span style="color:#E1EFFF;">)</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">inject</span></span><span style="color:#E1EFFF;">(</span><span style="color:#FF628C;"><span style="color:#E1EFFF;">:</span>*</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   4 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   5 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   6 </span> 
+<span class="line-numbers">   7 </span> puts <span style="color:#FF628C;">5</span><span style="color:#E1EFFF;">.</span>!
+<span class="line-numbers">   8 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 120</span>
+</pre>
+
+一方
+5の階乗は以下のようにも表現できる
+> 
+> 5! = 5 * 4!
+
+つまり5の階乗は5に4の階乗を掛けたものとして表現できる
+
+これはGNUの場合と同様に答えになっていない
+5!がわからないのと同様に4!なんてものもわからないからだ
+でもそう
+これこそが再帰のマジックなんだ
+
+幸いなことにGNUの場合と異なって
+階乗の極限値ははっきりしている
+> 
+> 1! = 1
+
+だから階乗計算は再帰で解くことが出来るんだ
+
+Rubyではこれらの式をそのまま書ける
+<pre class="cobalt" style="background-color:#002444;color:#e6e1dc"><span class="line-numbers">   1 </span> <span style="color:#FF9D00;">class</span> <span style="color:#FFDD00;">Integer</span>
+<span class="line-numbers">   2 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">factorial</span>
+<span class="line-numbers">   3 </span>     <span style="color:#FF9D00;">return</span> <span style="color:#FF628C;">1</span> <span style="color:#FF9D00;">if</span> <span style="color:#FF80E1;">self</span> <span style="color:#FF9D00;">==</span> <span style="color:#FF628C;">1</span>
+<span class="line-numbers">   4 </span>     <span style="color:#FF80E1;">self</span> <span style="color:#FF9D00;">*</span> <span style="color:#E1EFFF;">(</span><span style="color:#FF80E1;">self</span><span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">)</span><span style="color:#E1EFFF;">.</span>factorial
+<span class="line-numbers">   5 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   6 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   7 </span> 
+<span class="line-numbers">   8 </span> puts <span style="color:#FF628C;">5</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">factorial</span></span>
+<span class="line-numbers">   9 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 120</span>
+</pre>
+
+もう少し凝って以下のようにしてもいい
+<pre class="cobalt" style="background-color:#002444;color:#e6e1dc"><span class="line-numbers">   1 </span> <span style="color:#FF9D00;">class</span> <span style="color:#FFDD00;">Integer</span>
+<span class="line-numbers">   2 </span>   <span style="color:#FF9D00;">def</span> 階乗
+<span class="line-numbers">   3 </span>     <span style="color:#FF80E1;">self</span> <span style="color:#FF9D00;">*</span> <span style="color:#E1EFFF;">(</span><span style="color:#FF80E1;">self</span> <span style="color:#FF9D00;">==</span> <span style="color:#FF628C;">1</span> <span style="color:#FF9D00;">?</span> <span style="color:#FF628C;">1</span> <span style="color:#E1EFFF;">:</span> <span style="color:#E1EFFF;">(</span><span style="color:#FF80E1;">self</span><span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">)</span><span style="color:#E1EFFF;">.</span>階乗<span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   4 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   5 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">   6 </span> 
+<span class="line-numbers">   7 </span> puts <span style="color:#FF628C;">5</span><span style="color:#E1EFFF;">.</span>階乗
+<span class="line-numbers">   8 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 120</span>
+</pre>
+
+でも
+階乗計算なんて
+会計用電卓のhp12cにだって簡単にできるんだから
+ちっともうれしくない
+
+それじゃあもう一歩進んで
+「ハノイの塔」をやってみよう！
+
+「ハノイの塔」は3本のポールと
+サイズの異なる複数枚のドーナツ円盤を使ったパズルだ
+スタートのポールに重ねられたすべての円盤を
+予備のポールを活用しながら
+ゴールとなるポールにすべて移動できれば正解だ
+移動は一枚ずつ行い
+如何なるときも
+小さい円盤を大きい円盤の下に置いてはいけない{% fn_ref 2 %})
+
+最小の円盤を1として
+ポールの名前を(Start, Goal, Temp)とした場合
+2枚の円盤(1、2)のハノイの答えは次のようになる
+> 
+> +円盤1をStartからTempへ移動する
+> +円盤2をStartからGoalへ移動する
+> +円盤1をTempからGoalへ移動する
+
+
+3枚の円盤(1、2、3)のハノイの答えは次のようになる
+> 
+> +円盤1をStartからGoalへ移動する
+> +円盤2をStartからTempへ移動する
+> +円盤1をGoalからTempへ移動する
+> +円盤3をStartからGoalへ移動する
+> +円盤1をTempからStartへ移動する
+> +円盤2をTempからGoalへ移動する
+> +円盤1をStartからGoalへ移動する
+
+
+まずはハノイの塔が再帰でいけるか検討してみる
+答えの中に問いが含まれており
+極限の答えがはっきりしていれば再帰でいける
+
+例えば、円盤3枚の場合の問いをhanoi(3)とした場合
+> 
+> hanoi(3) = 3 * hanoi(2)
+
+のような
+答えの中に問いが含まれている形になればいい
+
+一方
+極限の答えはわかっている
+円盤が0のとき(n=0)は動かすものが何もないのだから
+> 
+> hanoi(0) = 何もしない
+
+となる
+
+じゃあ円盤が1枚(n=1)のときはどうなるだろう
+> 
+> hanoi(1) = ”円盤1をStartからGoalに移動する”
+
+円盤が1枚しかない場合の最適な移動はこれ以外にない
+
+そうすると円盤が複数枚(n枚)ある場合の移動に関して
+以下のような手順が見えてくる
+> 
+> +Startにある一番下の円盤nをGoalに移動できるようにするため、その前の手順として、他のすべての円盤(1～n-1)の束をどうにかしてTempに一旦移動させる
+> +そして、Startにある一番下の円盤nをGoalに移動する
+> +その後、Tempに置いた他の円盤(1～n-1)の束をすべてどうにかしてGoalに移動させる
+
+ここで
+1.に注目すると
+これはまさにn-1枚の円盤を
+StartからTempに移動させるというハノイの問題だ！
+また
+3.に注目すると
+これもまたn-1枚の円盤を
+TempからGoalに移動させるというハノイの問題だ！
+
+つまりハノイの問題は
+その答えにハノイの問題を含んだ再帰的なものになる！
+そしてその極限の値n=0の答えは明らかだ
+よって「ハノイの塔」は再帰で解くことができる！
+
+これをもう少しまとめると
+hanoi(n)の答えは以下のようになる
+{% highlight bash %}
+hanoi(n) =
+         1. n = 0 のときは何もしない,
+         2. hanoi(n-1)を求める。但し移動はStart => Temp,
+         3. "円盤nをStartからGoalへ移動する”,
+         4. hanoi(n-1)を求める。但し移動はTemp => Goal
+{% endhighlight %}
+
+これをRubyで記述してみる
+<pre class="cobalt" style="background-color:#002444;color:#e6e1dc"><span class="line-numbers">   1 </span> <span style="color:#CCCCCC;">POLES</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">[</span><span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Start<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">,</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Goal<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">,</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Temp<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">   2 </span> 
+<span class="line-numbers">   3 </span> <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">hanoi</span><span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;">n<span style="color:#E1EFFF;">,</span> from<span style="color:#FF9D00;">=</span><span style="color:#CCCCCC;">POLES</span><span style="color:#E1EFFF;">[</span><span style="color:#FF628C;">0</span><span style="color:#E1EFFF;">]</span><span style="color:#E1EFFF;">,</span> to<span style="color:#FF9D00;">=</span><span style="color:#CCCCCC;">POLES</span><span style="color:#E1EFFF;">[</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">]</span></span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   4 </span>   temp <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;">POLES</span> <span style="color:#FF9D00;">-</span> <span style="color:#E1EFFF;">[</span>from<span style="color:#E1EFFF;">,</span> to<span style="color:#E1EFFF;">]</span><span style="color:#E1EFFF;">)</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">to_s</span></span>
+<span class="line-numbers">   5 </span>   <span style="color:#FF9D00;">return</span> <span style="color:#FF9D00;">if</span> n <span style="color:#FF9D00;">==</span> <span style="color:#FF628C;">0</span>
+<span class="line-numbers">   6 </span>   <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span>n<span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">,</span> from<span style="color:#E1EFFF;">,</span> temp<span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   7 </span>   puts <span style="color:#3AD900;"><span style="color:#E1EFFF;">&quot;</span>move <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>n<span style="color:#E1EFFF;">}</span></span> <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>from<span style="color:#E1EFFF;">}</span></span> =&gt; <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>to<span style="color:#E1EFFF;">}</span></span><span style="color:#E1EFFF;">&quot;</span></span>
+<span class="line-numbers">   8 </span>   <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span>n<span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">,</span> temp<span style="color:#E1EFFF;">,</span> to<span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   9 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  10 </span> 
+<span class="line-numbers">  11 </span> <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span><span style="color:#FF628C;">3</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  12 </span> 
+<span class="line-numbers">  13 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 1 Start =&gt; Goal</span>
+<span class="line-numbers">  14 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 2 Start =&gt; Temp</span>
+<span class="line-numbers">  15 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 1 Goal =&gt; Temp</span>
+<span class="line-numbers">  16 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 3 Start =&gt; Goal</span>
+<span class="line-numbers">  17 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 1 Temp =&gt; Start</span>
+<span class="line-numbers">  18 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 2 Temp =&gt; Goal</span>
+<span class="line-numbers">  19 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; move 1 Start =&gt; Goal</span>
+</pre>
+
+せっかくだから
+円盤をA,B,C,…として
+Hanoiクラスも書いてみよう
+<pre class="cobalt" style="background-color:#002444;color:#e6e1dc"><span class="line-numbers">   1 </span> <span style="color:#FF9D00;">class</span> <span style="color:#FFDD00;">Hanoi</span>
+<span class="line-numbers">   2 </span>   <span style="color:#CCCCCC;">POLES</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">[</span><span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Start<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">,</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Goal<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">,</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Temp<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">   3 </span>   <span style="color:#CCCCCC;">DISCS</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">(</span><span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>A<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">.</span><span style="color:#E1EFFF;">.</span><span style="color:#3AD900;"><span style="color:#E1EFFF;">'</span>Z<span style="color:#E1EFFF;">'</span></span><span style="color:#E1EFFF;">)</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">to_a</span></span>
+<span class="line-numbers">   4 </span> 
+<span class="line-numbers">   5 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">initialize</span><span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;">n</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">   6 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>n</span> <span style="color:#FF9D00;">=</span> n
+<span class="line-numbers">   7 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>from</span> <span style="color:#FF9D00;">=</span> <span style="color:#CCCCCC;">POLES</span><span style="color:#E1EFFF;">[</span><span style="color:#FF628C;">0</span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">   8 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>to</span> <span style="color:#FF9D00;">=</span> <span style="color:#CCCCCC;">POLES</span><span style="color:#E1EFFF;">[</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">   9 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>cnt</span> <span style="color:#FF9D00;">=</span> <span style="color:#FF628C;">0</span>
+<span class="line-numbers">  10 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>result</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">[</span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">  11 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  12 </span>   
+<span class="line-numbers">  13 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">steps</span>
+<span class="line-numbers">  14 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>result</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">[</span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">  15 </span>     <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>n</span><span style="color:#E1EFFF;">,</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>from</span><span style="color:#E1EFFF;">,</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>to</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  16 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  17 </span>   
+<span class="line-numbers">  18 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">to_s</span>
+<span class="line-numbers">  19 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>result</span> <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">[</span><span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">  20 </span>     answer <span style="color:#FF9D00;">=</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">&quot;</span><span style="color:#E1EFFF;">&quot;</span></span>
+<span class="line-numbers">  21 </span>     result <span style="color:#FF9D00;">=</span> <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>n</span><span style="color:#E1EFFF;">,</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>from</span><span style="color:#E1EFFF;">,</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>to</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  22 </span>     result<span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">each_with_index</span></span> <span style="color:#FF9D00;">do </span><span style="color:#E1EFFF;">|</span>(<span style="color:#CCCCCC;">disc</span><span style="color:#E1EFFF;">,</span><span style="color:#CCCCCC;">from</span><span style="color:#E1EFFF;">,</span><span style="color:#CCCCCC;">to</span>)<span style="color:#E1EFFF;">,</span> <span style="color:#CCCCCC;">i</span><span style="color:#E1EFFF;">|</span>
+<span class="line-numbers">  23 </span>       answer <span style="color:#FF9D00;">&lt;&lt;</span> <span style="color:#3AD900;"><span style="color:#E1EFFF;">&quot;</span><span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>i<span style="color:#FF9D00;">+</span><span style="color:#80FF82;">1</span><span style="color:#E1EFFF;">}</span></span>: move <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span><span style="color:#EDEF7D;">DISCS</span><span style="color:#E1EFFF;">[</span>disc<span style="color:#FF9D00;">-</span><span style="color:#80FF82;">1</span><span style="color:#E1EFFF;">]</span><span style="color:#E1EFFF;">}</span></span> <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>from<span style="color:#E1EFFF;">}</span></span> =&gt; <span style="color:#9EFF80;"><span style="color:#E1EFFF;">#{</span>to<span style="color:#E1EFFF;">}</span></span><span style="color:#80FF82;">\n</span><span style="color:#E1EFFF;">&quot;</span></span>
+<span class="line-numbers">  24 </span>     <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  25 </span>     answer
+<span class="line-numbers">  26 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  27 </span>   
+<span class="line-numbers">  28 </span>   <span style="color:#FF9D00;">private</span>
+<span class="line-numbers">  29 </span>   <span style="color:#FF9D00;">def</span> <span style="color:#FFDD00;">hanoi</span><span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;">n<span style="color:#E1EFFF;">,</span> from<span style="color:#E1EFFF;">,</span> to</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  30 </span>     tmp <span style="color:#FF9D00;">=</span> <span style="color:#E1EFFF;">(</span><span style="color:#CCCCCC;">POLES</span> <span style="color:#FF9D00;">-</span> <span style="color:#E1EFFF;">[</span>from<span style="color:#E1EFFF;">,</span> to<span style="color:#E1EFFF;">]</span><span style="color:#E1EFFF;">)</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">to_s</span></span>
+<span class="line-numbers">  31 </span>     <span style="color:#FF9D00;">return</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>result</span> <span style="color:#FF9D00;">if</span> n <span style="color:#FF9D00;">==</span> <span style="color:#FF628C;">0</span>
+<span class="line-numbers">  32 </span>     <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span>n<span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">,</span> from<span style="color:#E1EFFF;">,</span> tmp<span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  33 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>cnt</span> <span style="color:#FF9D00;">+=</span> <span style="color:#FF628C;">1</span>
+<span class="line-numbers">  34 </span>     <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">@</span>result</span> <span style="color:#FF9D00;">&lt;&lt;</span> <span style="color:#E1EFFF;">[</span>n<span style="color:#E1EFFF;">,</span> from<span style="color:#E1EFFF;">,</span> to<span style="color:#E1EFFF;">]</span>
+<span class="line-numbers">  35 </span>     <span style="color:#FFEE80;"><span style="color:#FFDD00;">hanoi</span></span><span style="color:#E1EFFF;">(</span>n<span style="color:#FF9D00;">-</span><span style="color:#FF628C;">1</span><span style="color:#E1EFFF;">,</span> tmp<span style="color:#E1EFFF;">,</span> to<span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  36 </span>   <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  37 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  38 </span> 
+<span class="line-numbers">  39 </span> <span style="color:#FF9D00;">if</span> <span style="color:#FF80E1;">__FILE__</span> <span style="color:#FF9D00;">==</span> <span style="color:#CCCCCC;"><span style="color:#E1EFFF;">$</span>0</span>
+<span class="line-numbers">  40 </span>   h <span style="color:#FF9D00;">=</span> <span style="color:#80FFBB;">Hanoi</span><span style="color:#FFEE80;"><span style="color:#E1EFFF;">.</span><span style="color:#FFDD00;">new</span></span><span style="color:#E1EFFF;">(</span><span style="color:#FF628C;">3</span><span style="color:#E1EFFF;">)</span>
+<span class="line-numbers">  41 </span>   puts h
+<span class="line-numbers">  42 </span> <span style="color:#FF9D00;">end</span>
+<span class="line-numbers">  43 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 1: move A Start =&gt; Goal</span>
+<span class="line-numbers">  44 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 2: move B Start =&gt; Temp</span>
+<span class="line-numbers">  45 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 3: move A Goal =&gt; Temp</span>
+<span class="line-numbers">  46 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 4: move C Start =&gt; Goal</span>
+<span class="line-numbers">  47 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 5: move A Temp =&gt; Start</span>
+<span class="line-numbers">  48 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 6: move B Temp =&gt; Goal</span>
+<span class="line-numbers">  49 </span> <span style="color:#0088FF;font-style:italic;"><span style="color:#E1EFFF;">#</span> &gt;&gt; 7: move A Start =&gt; Goal</span>
+</pre>
+
+Rubyを使って再帰とハノイの塔を勉強したので
+それをまとめてみました
+参考になればうれしいです
+
+(参考サイト)
+[再帰的アルゴリズム](http://www2.cc.niigata-u.ac.jp/~takeuchi/tbasic/BackGround/Hanoi.html)
+[第１７章 再帰的手続き](http://web.hc.keio.ac.jp/~fujimura/2002/lang/lec-n17.html)　他
+(追記:2008/7/10)Hanoiクラスを少し修正しました
+{% footnotes %}
+   {% fn [階乗 - Wikipedia](http://ja.wikipedia.org/wiki/%E9%9A%8E%E4%B9%97 %}
+   {% fn [ハノイの塔 - Wikipedia](http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%8E%E3%82%A4%E3%81%AE%E5%A1%94 %}
+{% endfootnotes %}

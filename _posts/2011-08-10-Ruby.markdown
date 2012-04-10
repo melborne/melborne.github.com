@@ -1,0 +1,197 @@
+---
+layout: post
+title:  + (足す)から始めるRuby
+date: 2011-08-10
+comments: true
+categories:
+---
+
+## + (足す)から始めるRuby
+数学の世界で + は演算子である
+5歳の子供でもそれを知っている
+そして私やあなたが老いて死にゆくまで
+ + は演算子であり
+そこに疑念の入る余地はない
+
+プログラミングの世界でもふつう
+ + は演算子である
+CでもJavaでもPerlでも
+ + は演算子であり
+それ以上でもそれ以下でもない
+
+ところが驚くべきことに
+Rubyの世界では
+ + は演算子ではないのである
+
+嘘だと思うなら
+エディタを立ち上げて{% fn_ref 1 %}
+次のようにしてみるといい
+{% highlight ruby %}
+class Fixnum
+  def +(other)
+    Integer("#{self}"+"#{other}")
+  end
+end
+1 + 2 # => 12
+123 + 456 # => 123456
+{% endhighlight %}
+
+あなたは今
+Fixnum#+ メソッドを再定義した
+そうしたら1 + 2は12という答えを返した
+そうRubyの世界で + は演算子ではなく
+ユーザが再定義可能な
+ひとつのメソッドに過ぎないのだ
+
+つまり 1 + 2 や 123 + 456 の構文は
+以下のシンタックスシュガーである
+{% highlight ruby %}
+1.+(2) # => 12
+123.+(456) # => 123456
+{% endhighlight %}
+
+疑い深いあなたは
+これだけでは納得しないかも知れない
+そしてきっと
+他の演算子についても試してみるのだろう
+{% highlight ruby %}
+class Fixnum
+  def +(other)
+    Integer("#{self}"+"#{other}")
+  end
+  alias :minus :-
+  def -(other)
+    res = self.minus(other)
+    res > 0 ? res : "unknown world for me."
+  end
+  def *(other)
+    "#{self}".center(other, "*")
+  end
+  def /(other)
+    "#{self}".count("#{other}")
+  end
+  def **(other)
+    self * other * other
+  end
+end
+1 + 2 # => 12
+123 + 456 # => 123456
+9 - 4 # => 5
+21 - 34 # => "unknown world for me."
+12345 * 20 # => "******##*******"
+3333456456 / 3 # => 4
+3333456456 / 5 # => 2
+12345 ** 7 # => "##*12345**12345**12345**12345**12345**12345*"
+{% endhighlight %}
+
+納得した？
+
+そうRubyの世界では + だけでなく
+演算子のほとんどがメソッド呼び出しなのである
+
+演算子をメソッドにする利点は２つある
+１つは今見たようにそれが再定義可能であることだ
+しかしより大きな利点は２つ目にある
+
+上で再定義したFixnum#+の中身を
+注意深く見てほしい
+ + の定義の中で + が使われているのが分かるだろう
+通常このような定義は
+定義が定義を呼び出すことになってうまく働かない
+しかしここでは問題なく動いている
+
+もうあなたは気付いているに違いない
+そうFixnum#+の定義の中の + は
+Fixnumの+を呼び出しているのではなく
+Stringの+を呼び出しているのだ
+そしてString#+は文字列を結合するべく定義されている
+再定義されたFixnum#**の結果が理解できるなら
+あなたはこれを正しく理解している
+
+これで演算子をメソッドにする
+２つ目の利点が分かっただろう
+つまりRubyでは異なる種類のオブジェクトごとに
+同じ演算子を持てるのだ
+そして各オブジェクトの演算子は
+その属するクラスにおいてそれぞれ適切に定義される
+
+Rubyにおいて + 演算子は数と文字列だけでなく
+配列と時間のオブジェクトでも標準で使える
+{% highlight ruby %}
+[1,2,3] + [4,5,6] # => [1, 2, 3, 4, 5, 6]
+now = Time.now # => 2011-08-10 17:36:10 +0900
+now + 60*60 # => 2011-08-10 18:36:10 +0900
+{% endhighlight %}
+
+もちろん標準クラスのメソッドを
+改変することのリスクをあなたは理解するだろう
+それはすべてに影響する
+しかしその影響を最小限に抑えて
+機能を拡張するような改変は許容できるだろう
+
+文字に整数を足したり引いたりして
+文字コードにおける並びの文字を返すよう
+拡張した例を示そう
+{% highlight ruby %}
+class String
+  alias __plus__ +
+  def +(other)
+    if other.is_a? Integer
+      return (self.ord + other).chr
+    end
+    __plus__(other)
+  end
+  def -(other)
+    case other
+    when String
+      self.ord - other.ord
+    when Integer
+      (self.ord - other).chr
+    else
+      raise ArgumentError
+    end
+  end
+end
+'a' + 'b' # => "ab"
+'a' + 5 # => "f"
+'f' - 'a' # => 5
+'f' - 5 # => "a"
+{% endhighlight %}
+String#+はその引数に文字列が渡されたときは
+標準の動作に従って文字列を結合する
+数字が渡されたときには
+文字コードにおいてその分シフトした文字列を返す
+
+もちろんあなたのオブジェクトにも
+ + 演算子を自由に定義できる
+早速やってみよう
+{% highlight ruby %}
+class City
+  attr_reader :name
+  def initialize(name)
+    @name = name
+  end
+  def +(other)
+    City.new(name+other.name)
+  end
+end
+c1 = City.new('buda') # => #<City:0x00000100869e20 @name="buda">
+c2 = City.new('pest') # => #<City:0x000001008699c0 @name="pest">
+c3 = c1 + c2 # => #<City:0x00000100869600 @name="budapest">
+c3.name # => "budapest"
+{% endhighlight %}
+
+２つのCityオブジェクトを合わせると
+新しい都市が生まれた!
+
+このようにしてRubyでは
+通常の算術演算子を
+その対象のオブジェクトに応じて
+それに則した用途として定義できる
+これはプログラミングを
+極めて直感的なものにするのである
+
+姉妹シリーズ「[1から始めるRuby](http://d.hatena.ne.jp/keyesberry/20110727/p1)[link](http://d.hatena.ne.jp/keyesberry/20110727/p1:bookmark)」もよろしくね:)
+{% footnotes %}
+   {% fn irbではうまくいきません %}
+{% endfootnotes %}

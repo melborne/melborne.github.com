@@ -1,0 +1,247 @@
+---
+layout: post
+title: Rubyで富豪的プログラミングで８クイーンに挑戦そして玉砕
+date: 2012-01-12
+comments: true
+categories:
+---
+
+
+８クイーンというパズル問題があるよ
+
+簡単に説明すると8x8のチェス盤があって
+ここに飛車角の動きをする8つのクイーンを
+互いが取り合わない位置に配置する問題だよ
+
+[エイト・クイーン - Wikipedia](http://ja.wikipedia.org/wiki/%E3%82%A8%E3%82%A4%E3%83%88%E3%83%BB%E3%82%AF%E3%82%A4%E3%83%BC%E3%83%B3)
+
+８クイーンの組合せは全部で92通りあるそうだよ
+それでループとか再帰とか
+バックトラックとか動的計画とかの
+アルゴリズムの手法を駆使して
+その解法をプログラミングするというのが
+プログラマーたちの頭の体操になっているんだ
+ちょっと検索すれば大量の模範解答が得られるよ
+
+で　僕もRubyを使って
+この問題を解いてみようと思うんだけど
+どうもこの手のアルゴリズムが
+僕は嫌いというか苦手みたいで
+解法を試行錯誤したり
+他の人の書いた模範解答を解読する気が
+どうしても起きないんだよ
+まあ僕の能力不足としか言いようがないんだけど..
+
+それでも暫くその理由を考えてみたら
+なんとなく原因が分かったんだよ
+それはこの手の問題では
+問と実装コードとの間に大きな隔たりがあるってことなんだ
+つまり問と実装コードとの間には
+「実装者の工夫の大きな塊」が存在していて
+それが問と実装コードとの隔たりを大きくしてる
+そう僕は感じるんだ
+
+で　この「工夫の大きな塊」は
+その実装者毎にまちまちで
+結果実装コードはその実装者固有のものになっている
+これは言い換えれば
+８クイーン問題をうまく抽象化できていない
+とも言えると思うんだけど
+
+できれば僕は自分の働きをできるだけ小さくして
+Rubyにもっともっと働いて欲しいと願ってるんだけど..
+
+そんなわけで..
+
+問と実装コードとの間の隔たりをできるだけ小さくした
+抽象度の高い富豪的プログラミングで
+エイトクイーンに挑戦してみたよ:)
+まあ最初から玉砕するのは分かってるんだけどね..
+
+ここではチェス盤のサイズとクイーンの数を
+８に限定しない実装を試みるよ
+クラス名をQueenSolverとして初期化時に
+盤サイズとクイーン数を指定できるようにしよう
+そしてsolveメソッドで解答の組合せを出力するよ
+{% highlight ruby %}
+# queen_solver.rb
+class QueenSolver
+  def initialize(nth=8, queens=8)
+    @nth = nth
+    @queens = queens
+  end
+  
+  def solve
+  end
+end
+QueenSolver.new.solve # => 
+{% endhighlight %}
+
+さてsolveの中身なんだけど
+ここでは富豪的アプローチでいくから
+すべての可能な配置の組み合わせを用意して
+そこから条件を満たさないつまり
+一対でも衝突のあるクイーンのある組を取り除くことで
+有効な組み合わせを見つけ出すよ
+
+だからsolveメソッドの中身は
+こんな感じになるよ
+{% highlight ruby %}
+class QueenSolver
+  def solve
+    all_combinations.reject do |pattern|
+      pattern.combination(2).any? { |a, b| conflict?(a, b) }
+    end
+  end
+end
+{% endhighlight %}
+
+all_combinationsですべての組合せを作って
+そこからrejectで不適合なパターンの組を除くんだ
+rejectのブロックではそのパターン中のクイーン相互の衝突を見て
+その一つでも衝突があったらそのパターンを除外するよ
+そのためにcombinationしてるよ
+
+で　あとはsolveの補助関数としての
+all_combinationsとconflict?を定義すればいいよ
+まずはall_combinationsから
+
+ここでちょっと
+盤サイズ3x3　クイーン数2の簡単な例を考えてみるよ
+盤の座標は次の9つになるよね
+{% highlight ruby %}
+ [[0,0],[0,1],[0,2],
+  [1,0],[1,1],[1,2],
+  [2,0],[2,1],[2,2]]
+{% endhighlight %}
+この盤における2つのクイーンの配置の組合せは
+9C2となって36通りあるよ
+> 
+> 9C2 = 9! / 2(9-2)! = 36
+
+
+この考えに従ってall_combinationsをRubyで表現すると
+次のようになるんだ
+{% highlight ruby %}
+class QueenSolver
+  def all_combinations
+    board_coordinates.combination(@queens)
+  end
+end
+{% endhighlight %}
+
+で盤の座標board_coordinatesは
+repeated_permutationを使って次のように書けるよ
+{% highlight ruby %}
+class QueenSolver
+  def all_combinations
+    board_coordinates.combination(@queens)
+  end
+  def board_coordinates
+    [*0..@nth-1].repeated_permutation(2).to_a
+  end
+end
+qs = QueenSolver.new(3,2)
+qs.board_coordinates # => [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
+qs.all_combinations.to_a # => [[[0, 0], [0, 1]], [[0, 0], [0, 2]], [[0, 0], [1, 0]], [[0, 0], [1, 1]], [[0, 0], [1, 2]], [[0, 0], [2, 0]], [[0, 0], [2, 1]], [[0, 0], [2, 2]], [[0, 1], [0, 2]], [[0, 1], [1, 0]], [[0, 1], [1, 1]], [[0, 1], [1, 2]], [[0, 1], [2, 0]], [[0, 1], [2, 1]], [[0, 1], [2, 2]], [[0, 2], [1, 0]], [[0, 2], [1, 1]], [[0, 2], [1, 2]], [[0, 2], [2, 0]], [[0, 2], [2, 1]], [[0, 2], [2, 2]], [[1, 0], [1, 1]], [[1, 0], [1, 2]], [[1, 0], [2, 0]], [[1, 0], [2, 1]], [[1, 0], [2, 2]], [[1, 1], [1, 2]], [[1, 1], [2, 0]], [[1, 1], [2, 1]], [[1, 1], [2, 2]], [[1, 2], [2, 0]], [[1, 2], [2, 1]], [[1, 2], [2, 2]], [[2, 0], [2, 1]], [[2, 0], [2, 2]], [[2, 1], [2, 2]]]
+{% endhighlight %}
+
+次にconflict?を定義しよう
+クイーンは飛車角の動きをするから
+縦　横　斜めの何れかでの衝突をもって
+適合の判定をするよ
+{% highlight ruby %}
+class QueenSolver
+  def conflict?(a, b)
+    conflict_x?(a, b) || conflict_y?(a, b) || conflict_cross?(a, b)
+  end
+end
+{% endhighlight %}
+
+conflict_x?とconflict_y?は
+クイーンのxまたはy座標を比較すればいいから簡単だね
+conflict_cross?の判定にはちょっと工夫がいるけど
+それはx-y座標の和と差を比較することで判定できるんだよ
+だからこれらのコードは次のようになるよ
+{% highlight ruby %}
+class QueenSolver
+  def conflict_x?(a, b)
+    a[0] == b[0]
+  end
+  def conflict_y?(a, b)
+    a[1] == b[1]
+  end
+  def conflict_cross?(a, b)
+    a.inject(:-) == b.inject(:-) || a.inject(:+) == b.inject(:+)
+  end
+end
+{% endhighlight %}
+
+さあこれでQueenSolverの完成だよ
+コードを再掲するよ
+
+{% gist 1597459 queen_solver.rb %}
+
+
+さてちゃんと動作するかテストするよ
+Wikipediaによれば2クイーンと3クイーンには解がなくて
+4には2つ　5には10　6には4つの解があるそうだよ
+
+{% gist 1597459 queen_solver_spec.rb %}
+
+
+まずは2x2から4x4のテスト
+{% highlight ruby %}
+% rspec queen_solver_spec.rb -c -fd -l5
+Run filtered including {:line_number=>5}
+QueenSolver
+  solve 2x2 to 4x4
+    solve 2x2
+    solve 3x2
+    solve 3x3
+    solve 4x4
+Finished in 0.02028 seconds
+4 examples, 0 failures
+{% endhighlight %}
+うまくいってるね!
+
+次は5x5
+{% highlight ruby %}
+% rspec queen_solver_spec.rb -c -fd -l31
+Run filtered including {:line_number=>31}
+QueenSolver  solve 5x5
+Finished in 0.37836 seconds
+1 example, 0 failures
+{% endhighlight %}
+これもパスした
+
+次は6x6
+{% highlight ruby %}
+% rspec queen_solver_spec.rb -c -fd -l35
+Run filtered including {:line_number=>35}
+QueenSolver  solve 6x6
+Finished in 15.05 seconds
+1 example, 0 failures
+{% endhighlight %}
+これもOKだよ
+ただ実行時間が15秒と結構掛かってるね..
+
+さあ
+いよいよエイトクイーン8x8をテストするよ
+{% highlight ruby %}
+% rspec queen_solver_spec.rb -c -fd -l39
+Run filtered including {:line_number=>39}
+QueenSolver
+.....
+{% endhighlight %}
+やっぱり帰ってこない!
+
+8x8におけるall_combinationsの数は
+64C8だから..
+{% highlight ruby %}
+64C8 = 64! / 8!(64-8)! = 4426165368
+{% endhighlight %}
+44億パターン!
+
+あと3年くらい経ったらこれくらいの計算は
+Rubyでもさっと解けるようになるのかな..

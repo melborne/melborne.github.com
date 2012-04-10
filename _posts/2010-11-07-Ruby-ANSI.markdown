@@ -1,0 +1,334 @@
+---
+layout: post
+title: RubyでANSIカラーシーケンスを学ぼう！
+date: 2010-11-07
+comments: true
+categories:
+---
+
+
+CUIの世界は地味な世界です
+真っ黒なターミナル画面に単一色の文字列
+それが却って落ち着くという向きもありますが
+今となってはその地味さは際立っています
+
+ターミナルで色を使う方法を学ぶことで
+新しい世界が開けるかも知れません
+ようこそANSIカラーの世界へ
+###エスケープシーケンス
+ターミナルで色を使うためには
+エスケープシーケンスというものを利用します
+エスケープシーケンスはターミナル上で色を含む特定の制御を
+実現するための特殊な文字列です
+{% highlight ruby %}
+print "\e[31mhello\e[0m"
+{% endhighlight %}
+これによりターミナル上に青文字で「hello」と出力されます
+この"\e[31m" "\e[0m"の部分がエスケープシーケンスです
+"\e[31m"はそれ以降を青文字で出力する制御命令
+"\e[0m"はそれ以降を初期状態へリセットする制御命令です
+
+シーケンス中の数字において
+30~37は文字色　40~47は背景色
+0~9は文字装飾に割り振られています
+>|
+Text attributes
+0	All attributes off
+1	Bold on
+4	Underscore (on monochrome display adapter only)
+5	Blink on
+7	Reverse video on
+8	Concealed on
+Foreground colors
+30	Black
+31	Red
+32	Green
+33	Yellow
+34	Blue
+35	Magenta
+36	Cyan
+37	White
+Background colors
+40	Black
+41	Red
+42	Green
+43	Yellow
+44	Blue
+45	Magenta
+46	Cyan
+47	White 
+|<
+[ASCII Table - ANSI Escape sequences](http://ascii-table.com/ansi-escape-sequences.php)
+
+１つの文字列に複数のシーケンスを適用することもできます
+{% highlight ruby %}
+print "\e[31m\e[43m\e[5mhello\e[0m"
+{% endhighlight %}
+これで黄色の背景色上で赤いhelloが点滅します
+セミコロンで区切って
+複数のシーケンスコードを適用することもできます
+これは上のシーケンスと等価です
+{% highlight ruby %}
+print "\e[31;43;5mhello\e[0m"
+{% endhighlight %}
+エスケープシーケンスは端末依存で
+端末によって使えないものもあります
+
+###ターミナルカラー・ライブラリ
+Rubyでカラーシーケンスを使う場合
+そのままでは扱いづらいので
+定数などへのマッピングが必要になるでしょう
+また文字列終端での復帰にも対応しなければいけません
+自作する手もありますが
+Rubyには既に便利なライブラリがいくつかあります
+
+###HighLine
+[HighLine](https://github.com/JEG2/highline)はターミナルの入出力を支援するツール群です
+その中にカラーシーケンスを扱うHighLine#colorがあります
+gem install highlineでインストールして
+以下のように使います
+{% highlight ruby %}
+require 'highline'
+h = HighLine.new
+puts h.color("hello", :green)
+{% endhighlight %}
+色属性として複数の引数を取ることもできます
+{% highlight ruby %}
+puts h.color("Ruby World", :red, :on_cyan, :underline)
+{% endhighlight %}
+
+###TermColor
+[TermColor](https://github.com/jugyo/termcolor)は文字列中のカラータグを
+エスケープシーケンスに変換するライブラリです
+gem install termcolorでインストールして
+以下のように使います
+{% highlight ruby %}
+require 'termcolor'
+puts TermColor.parse("<green>hello</green>")
+puts TermColor.parse("<red><on_white><blink>ruby is fun!</blink></on_white></red>")
+{% endhighlight %}
+
+色指定は１つしかできませんが以下のように使うこともできます
+{% highlight ruby %}
+puts TermColor.colorize("hello", :green)
+{% endhighlight %}
+
+またString#termcolorが用意されているので
+以下のようにもできます
+{% highlight ruby %}
+puts "<red><bold>Ruby is red!</bold></red>".termcolor
+{% endhighlight %}
+TermColorは[Termtter](http://termtter.org/)のjugyoさん作で
+Termtterでのカラー表示に使われています
+
+###Rainbow
+[Rainbow](https://github.com/sickill/rainbow)はStringクラスに
+color(foreground), background,bright, blink, inverseなどの
+エスケープシーケンスに対応したメソッドを追加します
+gem install rainbowでインストールして
+以下のように使います
+{% highlight ruby %}
+require 'rainbow'
+puts "hello".color(:red)
+puts "hello".color(255, 0, 0)
+puts "hello".color(:red).background(:green)
+puts "hello".bright.background(:blue).blink
+{% endhighlight %}
+
+###Term-ANSIColor
+[Term-ANSIColor](https://github.com/flori/term-ansicolor)は多様な使い方ができるライブラリで
+エスケープシーケンスをモジュール関数化したり
+Stringクラスのインスタンスメソッドにしたりできます
+gem install term-ansicolorでインストールして
+以下のように使います
+
+まずはクラスメソッドとして
+{% highlight ruby %}
+require 'term/ansicolor'
+class Color
+  extend Term::ANSIColor
+end
+print Color.red, Color.bold, "No Namespace cluttering:", Color.clear, "\n"
+print Color.green + "green" + Color.clear, "\n"
+print Color.on_red(Color.green("green")), "\n"
+print Color.yellow { Color.on_black { "yellow on_black" } }, "\n\n"
+{% endhighlight %}
+次にTerm::ANSIColorのインスタンスメソッドとして
+{% highlight ruby %}
+c = Term::ANSIColor
+print c.red, c.bold, "No Namespace cluttering (alternative):", c.clear, "\n"
+print c.green + "green" + c.clear, "\n"
+print c.on_red(c.green("green")), "\n"
+print c.yellow { c.on_black { "yellow on_black" } }, "\n\n"
+{% endhighlight %}
+関数的に
+{% highlight ruby %}
+include Term::ANSIColor
+print red, bold, "Usage as constants:", reset, "\n"
+print red("red"),  on_red("on_red"), "\n"
+print red { bold { "Usage as block forms:" } }, "\n"
+{% endhighlight %}
+Stringのメソッドとして
+{% highlight ruby %}
+class String
+  include Term::ANSIColor
+end
+print "Usage as String Mixins:".red.bold, "\n"
+print "Hello, World\n".blue.on_yellow.blink
+{% endhighlight %}
+
+###Wirble
+[Wirble](https://github.com/blackwinter/wirble)はirb(Interactive Ruby)の支援ツールで
+Rubyのシンタックスに合わせたカラーリングすなわち
+Syntax Highlightingを実現します
+ライブラリとして使う場合は以下のようにします
+{% highlight ruby %}
+require "wirble"
+w = Wirble::Colorize
+puts w.colorize_string("Hello, Ruby", :light_cyan)
+puts w.colorize("hello, :hello, [1, 2, 3], {:a => 1, :b => 2}")
+{% endhighlight %}
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083741.png)
+
+colorizeメソッドでRubyのオブジェクトに応じた
+カラーリングが実現できているのが分かります
+
+なおirbで使う場合は.irbrcで以下のように指定します
+{% highlight ruby %}
+  require 'wirble'
+  Wirble.init
+  Wirble.colorize
+{% endhighlight %}
+
+###Coderay
+[CodeRay](http://coderay.rubychan.de/)は複数の言語に対応したSyntax Highlightingライブラリです
+Rubyのコードをターミナルでカラーリングする場合は
+以下のようにします
+{% highlight ruby %}
+require "coderay"
+puts CodeRay.scan("5.times do\n puts 'hello, ruby'\nend", :ruby).term
+{% endhighlight %}
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083742.png)
+
+
+ファイルから読込んでHTML出力するようなこともできます
+{% highlight ruby %}
+puts CodeRay.scan_file("code.rb").div(:line_numbers => :table)
+{% endhighlight %}
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083743.png)
+
+
+素晴らしいですね！
+###Paint
+Paintはライブラリでの使い勝手と拡張性を売りにした
+非常にユニークな使い方ができるライブラリです
+gem install paintでインストールして
+以下のように使います
+
+まずはPaint.[]クラスメソッドを使う例です
+{% highlight ruby %}
+ require 'paint'
+ Paint['Ruby', :red] #=> "\e[31mRuby\e[0m"
+ Paint['Ruby', :red, :bright, :underline] #=> "\e[31;1;4mRuby\e[0m"
+ Paint['Ruby', :red, :blue] #=> "\e[31;44mRuby\e[0m"
+{% endhighlight %}
+第3引数以降に現れるカラーは背景色用です
+
+色の指定は多様な方法でできます
+{% highlight ruby %}
+ Paint['Ruby', [100, 255, 5]] #=> "\e[38;5;118mRuby\e[0m"
+ Paint['Ruby', "gold", "snow"] #=> "\e[38;5;226;48;5;231mRuby\e[0m"
+ Paint['Ruby', "#123456"] #=> "\e[38;5;24mRuby\e[0m"
+ Paint['Ruby', "fff"] #=> "\e[38;5;231mRuby\e[0m"
+{% endhighlight %}
+
+第2引数以下を省略すると色指定がランダムになり
+:inverseをしていすると前景色と背景色を入れ替えます
+{% highlight ruby %}
+ Paint['Ruby'] #=> "\e[37mRuby\e[0m" 
+ Paint['Ruby', :inverse] #=> "\e[7mRuby\e[0m"
+{% endhighlight %}
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110721/20110721203131.png)
+
+
+PaintがユニークなのはPaint::SHORTCUTSを使った
+ユーザカラー定義です
+{% highlight ruby %}
+ Paint::SHORTCUTS[:mycolor] = {
+     :white => Paint.color(:black),
+     :red   => Paint.color(:red, :bright),
+     :title => Paint.color(:underline)
+   } #=> {:white=>"\e[30m", :red=>"\e[31;1m", :title=>"\e[4m"}
+{% endhighlight %}
+
+上のように登録することで
+Paint::Mycolorの名前空間で
+white red titleの各クラスメソッドが有効になります
+{% highlight ruby %}
+ Paint::Mycolor.red "Ruby" #=> "\e[31;1mRuby\e[0m"
+ Paint::Mycolor.white #=> "\e[30m"
+ Paint::Mycolor.title "Ruby" #=> "\e[4mRuby\e[0m"
+ include Paint::Mycolor #=> Object
+ red "Ruby" #=> "\e[31;1mRuby\e[0m"
+ white "Ruby" #=> "\e[30mRuby\e[0m"
+{% endhighlight %}
+
+それだけでなく
+Paint::Mycolor::Stringモジュールをincludeすることにより
+あらゆるオブジェクトをユーザ定義に従い
+色つき文字列化することもできます
+{% highlight ruby %}
+ include Paint::Mycolor::String #=> Object
+ "Ruby".red #=> "\e[1;31mRuby\e[0m"
+ "Ruby".title #=> "\e[4mRuby\e[0m"
+ 5.red #=> "\e[31;1m5\e[0m"
+ [1, 2].red #=> "\e[31;1m[1, 2]\e[0m"
+{% endhighlight %}
+ちょっとやり過ぎな気もしますが..
+
+グローバルな名前空間が汚染されることを避けたいなら
+プレフィクスとして任意のメソッド名を指定することもできます
+{% highlight ruby %}
+ include Paint::Mycolor::Prefix::C #=> Object
+ "Ruby".c(:red) #=> "\e[31;1mRuby\e[0m"
+ "Ruby".c(:title) #=> "\e[4mRuby\e[0m"
+ [1, 2].c(:red) #=> "\e[31;1m[1, 2]\e[0m"
+{% endhighlight %}
+なんかスゴイですね！
+
+ご想像のとおりPaintモジュールの内部は
+メタプログラミングばりばりです:)
+
+###IRC(Interactive Colors)
+最後に上のライブラリを使って
+ターミナル上でインタラクティブにカラーチェックができる
+irc.rbという簡単なツールを作りました
+Term-ANSIColorライブラリを使っています
+
+ruby irc.rbで立上げると
+welcomeメッセージに続きirbのようにpromptモードになります
+red on_greenなどの色属性をタイプすると
+その属性に制御された文字列が表示されます
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101107/20101107152015.png)
+
+
+文字列をリセットしたい場合は
+'='に続いて文字列をタイプします
+入力できる属性はhelp(h, colors, attrs)で確認できます
+終了はexit(q, quit, bye)です
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101107/20101107152016.png)
+
+
+使ってくれる人がいたらうれしいです
+
+(追記：2010-11-8) rainbow commandを追加しました。GNU Readlineに対応しました。
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101108/20101108075820.png)
+
+
+(追記：2010-11-12) WirbleとCodeRayライブラリの記載を追加しました。
+(追記：2011-7-20) Paintライブラリの記載を追加しました。
+
+[melborne/irc - GitHub](https://github.com/melborne/irc)

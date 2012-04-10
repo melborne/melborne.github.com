@@ -1,0 +1,118 @@
+---
+layout: post
+title: Rubyでフィボナッチ、トリボナッチ、テトラナッチ！そして僕はヒトリボッチ
+date: 2009-01-11
+comments: true
+categories:
+---
+
+
+<a href="http://d.hatena.ne.jp/torikobito/20090108/1231398740">ぴえろっちが問題をくれた。その１ - とりこびとの雑記</a>
+> 
+> フィボナッチ数列の項は前の2つの項の和である。最初の2項を 1, 2 とすれば、最初の10項は以下の通りである。 
+> 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
+> 数列の項が400万を超えない範囲で、偶数の項の総和を求めよ。
+
+<a href="http://d.hatena.ne.jp/rurar/20090109/1231505507">配列を入れたら最初の項を好きなのにできるようにしてみた。 - るーごん☆151☆</a>
+
+刺激を受けてやってみた
+{% highlight ruby %}
+ def fibo_even_sum(max, a=1, b=2)
+   sum = 0
+   loop do
+     break if a >= max
+     sum += a if a.even?
+     a, b = b, a + b
+   end
+   sum
+ end
+ fibo_even_sum 400_0000 # => 4613732
+{% endhighlight %}
+
+一旦フィボナッチ数列を求めてから版
+{% highlight ruby %}
+ def fibo_by_max(max, seq=[1,2])
+   loop do
+     _next = seq[-2] + seq[-1]
+     break if _next >= max
+     seq << _next
+   end
+   seq
+ end
+ fibo_by_max 400_0000 # => [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578]
+ fibo_by_max(400_0000).inject(0) { |mem, var| var.even? ? mem + var : mem } # => 4613732
+{% endhighlight %}
+
+フィボナッチの仲間に
+トリボナッチ、テトラナッチというのがあるそうだ
+> 
+> フィボナッチ数列が「前の2項の和」なのに対し、トリボナッチ数列は「前の3項の和」である。
+> フィボナッチ数列が「前の2項の和」、トリボナッチ数列が「前の3項の和」なのに対し、テトラナッチ数列は「前の4項の和」である。
+>    -Wikipediaより
+
+
+それらに対応した版
+{% highlight ruby %}
+ def fibo_tribo_tetra_by_max(max, *seq)
+   seq = [0, 1] if seq.empty?
+   l = seq.length
+   loop do
+     _next = seq[-l..-1].inject(:+)
+     break if _next >= max
+     seq << _next
+   end
+   seq
+ end
+ #fibonacci
+ fibo_tribo_tetra_by_max 400_0000 # => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578]
+ #tribonacci
+ fibo_tribo_tetra_by_max 400_0000, 0, 0, 1 # => [0, 0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890, 66012, 121415, 223317, 410744, 755476, 1389537, 2555757]
+ #tetranacci
+ fibo_tribo_tetra_by_max 400_0000, 0, 0, 0, 1 # => [0, 0, 0, 1, 1, 2, 4, 8, 15, 29, 56, 108, 208, 401, 773, 1490, 2872, 5536, 10671, 20569, 39648, 76424, 147312, 283953, 547337, 1055026, 2033628, 3919944]
+{% endhighlight %}
+
+ついでにｎ項目のフィボナッチ数を求める版
+{% highlight ruby %}
+ def fibo_by_nth(nth, a=0, b=1)
+   nth.times do |n|
+     a, b = b, a + b
+   end
+   a
+ end
+ fibo_by_nth 33 # => 3524578
+{% endhighlight %}
+
+その再帰版
+{% highlight ruby %}
+ def fibo_by_nth(nth, a=0, b=1)
+   case nth
+   when 0
+     a
+   when 1
+     b
+   else
+     fibo_by_nth(nth-1) + fibo_by_nth(nth-2)
+   end
+ end
+ fibo_by_nth 33 # => 3524578
+{% endhighlight %}
+再帰版は遅い
+
+再帰でｎ項目までのフィボナッチ数列を求める版
+こちらのほうが早い
+{% highlight ruby %}
+ def fibo_by_nth(nth)
+   case nth
+   when 0
+     [0]
+   when 1
+     [0, 1]
+   else
+     result = fibo_by_nth(nth-1)
+     result << result[-2] + result[-1]
+   end
+ end
+ fibo_by_nth2 33 # => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578]
+{% endhighlight %}
+
+[フィボナッチ数 - Wikipedia](http://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%9C%E3%83%8A%E3%83%83%E3%83%81%E6%95%B0)

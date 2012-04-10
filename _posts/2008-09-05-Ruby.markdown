@@ -1,0 +1,220 @@
+---
+layout: post
+title: Rubyのオブジェクトは生物なんかじゃない、トップレベルこそが生物なんだ！
+date: 2008-09-05
+comments: true
+categories:
+---
+
+
+RubyのTopLevelは不思議だ
+Rubyはオブジェクト指向言語だから
+普通まずクラスでオブジェクトを定義し
+これをインスタンス化し
+この生まれたオブジェクトにメッセージを送る
+という手続きを経てプログラムが組成される
+{% highlight ruby %}
+  class Person
+    def initialize(name)
+      @name = name
+    end
+    def name
+      @name
+    end
+  end
+  me = Person.new("Charlie")
+  me.name # => "Charlie"
+{% endhighlight %}
+でもTopLevelではそんな手続きを吹っ飛ばして
+いきなりメソッドが実行できたり書けたりする
+{% highlight ruby %}
+  rand(10) # => 4
+  def hello(name)
+    puts "hello, #{name}"
+  end
+  hello("Charlie")
+        # >> hello, Charlie
+{% endhighlight %}
+なぜ？
+メソッドのレシーバは誰？
+此処は一体どこ？
+
+それを知るにはselfが使える
+{% highlight ruby %}
+  self  #  => main
+{% endhighlight %}
+ここはどうやらmainらしい
+Rubyの操作対象はすべてオブジェクトだから
+mainもきっとオブジェクトに違いない
+とすればIDを持っているはずだ
+{% highlight ruby %}
+  self.object_id # => 107690
+{% endhighlight %}
+やはりオブジェクトだった
+そうなると当然に
+その基となるクラスが存在するはずだ
+{% highlight ruby %}
+  self.class  # => Object
+{% endhighlight %}
+クラスはObjectクラスだった
+mainはObjectクラスのインスタンスなんだ
+だからObjectクラスに定義されたinstanceメソッドが使えるんだな
+他にも使えるメソッドを調べてみよう
+{% highlight ruby %}
+  self.methods.sort # => ["==", "===", "=~", "__id__", "__send__", "class", "clone", "display", "dup", "enum_for", "eql?", "equal?", "extend", "freeze", "frozen?", "hash", "id", "include", "inspect", "instance_eval", "instance_exec", "instance_of?", "instance_variable_defined?", "instance_variable_get", "instance_variable_set", "instance_variables", "is_a?", "kind_of?", "method", "methods", "nil?", "object_id", "private", "private_methods", "protected_methods", "public", "public_methods", "respond_to?", "send", "singleton_methods", "taint", "tainted?", "tap", "to_a", "to_enum", "to_s", "type", "untaint"]
+{% endhighlight %}
+ずいぶんあるけどちょっと変だな
+さっき使ったrandも定義したhelloもこのリストにはないぞ
+レシーバがはっきりしたんだから
+もう一度レシーバを明示してメソッドを呼んでみよう
+{% highlight ruby %}
+  main.rand(10) # => 
+      # ~> -:10: undefined local variable or method `main' for main:Object (NameError)
+  main.hello("Charlie") # => 
+      # ~> -:10: undefined local variable or method `main' for main:Object (NameError)
+{% endhighlight %}
+だめだ
+selfでどうかな
+{% highlight ruby %}
+  self.hello("Charlie") # => 
+      # ~> -:10: private method `hello' called for main:Object (NoMethodError)
+  self.rand(10) # => 
+      # ~> -:10: private method `rand' called for main:Object (NoMethodError)
+{% endhighlight %}
+あれ？
+randもhelloもprivateメソッドて書いてあるぞ！
+privateメソッドっていうのは確か
+レシーバを明示しては呼び出せないメソッドだったよね
+じゃあmainのprivateメソッドのリストを見てみようか
+{% highlight ruby %}
+  self.private_methods.sort # => ["Array", "Float", "Integer", "String", "__method__", "`", "abort", "at_exit", "autoload", "autoload?", "binding", "block_given?", "callcc", "caller", "catch", "chomp", "chomp!", "chop", "chop!", "eval", "exec", "exit", "exit!", "fail", "fork", "format", "getc", "gets", "global_variables", "gsub", "gsub!", "hello", "initialize", "initialize_copy", "iterator?", "lambda", "load", "local_variables", "loop", "method_missing", "open", "p", "print", "printf", "proc", "putc", "puts", "raise", "rand", "readline", "readlines", "remove_instance_variable", "require", "scan", "select", "set_trace_func", "singleton_method_added", "singleton_method_removed", "singleton_method_undefined", "sleep", "split", "sprintf", "srand", "sub", "sub!", "syscall", "system", "test", "throw", "trace_var", "trap", "untrace_var", "warn"]
+{% endhighlight %}
+リストが長くて見つけられないなあ
+じゃあスーパークラスのものを除外して表示してみよう
+{% highlight ruby %}
+  self.private_methods(false) # => ["initialize", "hello"]
+{% endhighlight %}
+helloがあったぞ！
+でもずいぶんときれいさっぱり他のメソッドが無くなっちゃったね
+randも見つからないし
+スーパークラスにあるのかな？
+あれ？ちょっと待った
+mainのクラスはObjectだったよね
+それにスーパークラスなんてあるの？
+{% highlight ruby %}
+  Object.superclass # => nil
+{% endhighlight %}
+やっぱり無い{% fn_ref 1 %}
+じゃあさっきの長いメソッドリストはどこから来たの？
+そうか！
+きっとモジュールだよ
+Objectクラスには他のモジュールがMix-inされていて
+そのモジュールにさっきのメソッドたちが定義されてるんだ
+調べてみよう
+{% highlight ruby %}
+  Object.included_modules # => [Kernel]
+{% endhighlight %}
+KernelというモジュールがMix-inされている
+じゃあKernelに定義されているprivateなInstanceメソッドをリストしてみよう
+{% highlight ruby %}
+  Kernel.private_instance_methods.sort # => ["Array", "Float", "Integer", "String", "__method__", "`", "abort", "at_exit", "autoload", "autoload?", "binding", "block_given?", "callcc", "caller", "catch", "chomp", "chomp!", "chop", "chop!", "eval", "exec", "exit", "exit!", "fail", "fork", "format", "getc", "gets", "global_variables", "gsub", "gsub!", "initialize_copy", "iterator?", "lambda", "load", "local_variables", "loop", "method_missing", "open", "p", "print", "printf", "proc", "putc", "puts", "raise", "rand", "readline", "readlines", "remove_instance_variable", "require", "scan", "select", "set_trace_func", "singleton_method_added", "singleton_method_removed", "singleton_method_undefined", "sleep", "split", "sprintf", "srand", "sub", "sub!", "syscall", "system", "test", "throw", "trace_var", "trap", "untrace_var", "warn"]
+{% endhighlight %}
+今度は目を凝らしてみつけるぞ
+randがあったぞ！
+randはKernelモジュールに定義されたprivateメソッドだったんだ
+するとここに並んでいるメソッドはTopLevelで使えるんだね
+じゃあKernelにメソッドを定義して
+TopLevelで呼べるか試してみよう
+{% highlight ruby %}
+  module Kernel
+    private
+    def kernel_private_hello
+      "hello of Kernel Private called from #{self}"
+    end
+  end
+  kernel_private_hello # => "hello of Kernel Private called from main"
+{% endhighlight %}
+うまくいった
+
+でも不思議だなあ
+mainはオブジェクトなのに
+Kernelのprivateメソッドがなぜ使えるんだろう
+ここがObjectクラス内だったら分かるんだけど…
+それからなぜオブジェクトにhelloメソッドが定義できたんだろう
+メソッド定義はクラスにしかできないと思ってたのに…
+
+もしかして…
+そうかSingletonメソッドがあるじゃないか
+helloはきっとmainのSingletonメソッドになってるんだよ
+{% highlight ruby %}
+  self.singleton_methods # => ["public", "to_s", "include", "private"]
+{% endhighlight %}
+違った…
+なんか違うの出てきちゃったな
+
+試しにSingletonメソッドをTopLevelで定義して
+ここにリストアップされるか見てみよう
+{% highlight ruby %}
+  def self.toplevel_singleton_hello
+    "hello of TopLevl Singleton from #{self}}"
+  end
+  class << self
+    def toplevel_singleton_class_hello
+      "hello of TopLevel Singleton Class from #{self}"
+    end
+  end
+  toplevel_singleton_hello # => "hello of TopLevl Singleton from main}"
+  toplevel_singleton_class_hello # => "hello of TopLevel Singleton Class from main"
+  self.singleton_methods # => ["public", "toplevel_singleton_class_hello", "to_s", "include", "toplevel_singleton_hello", "private"]
+{% endhighlight %}
+ちゃんとリストアップされるなあ
+やっぱりここはmainオブジェクトだよ
+
+まさか…
+
+ここはObjectクラス？
+試しにObjectクラスが持っているprivateなinstanceメソッドを調べてみよう
+{% highlight ruby %}
+  Object.private_instance_methods(false) # => ["initialize", "hello"]
+{% endhighlight %}
+あっ！
+TopLevelで定義したhelloがある！
+つまりここは…
+Objectクラスの中なんだ！
+これでprivateメソッドが呼べるのにも筋が通る
+
+よしもう一つ確かめてみよう
+ここがObjectクラスの中なら
+そこに定義されるクラスはネストされたクラスになるはずだ
+{% highlight ruby %}
+  class Nested
+  
+  end
+  Object::Nested # => Nested
+  ::Nested # => Nested
+  Object::Nested.new # => #<Nested:0x1bf58>
+  Object.constants.detect{ |c| c =~ /^Ne/ } # => "Nested"
+{% endhighlight %}
+確かにObjectにネストされているぞ
+
+これで答えが出た
+
+RubyのTopLevelは
+Objectクラスであり
+かつ
+そのインスタンスであるmainオブジェクトだったんだ！
+だからそこでクラスとしてinstanceメソッドを定義でき
+しかもそのメソッドをそのインスタンスとして呼び出せる
+
+つまり自身で自身を作るという自己増殖の機能を備えている！
+
+そうRubyのTopLevelは…
+
+生物だったんだ！
+
+不思議の国Rubyでは
+ClassクラスがClassクラスを生成するように
+TopLevelがTopLevelを生成していたんだ！
+{% footnotes %}
+   {% fn Ruby1.9ではBasicObjectがある %}
+{% endfootnotes %}

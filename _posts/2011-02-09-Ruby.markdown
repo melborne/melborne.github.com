@@ -1,0 +1,105 @@
+---
+layout: post
+title: Ruby製クレヨンでお絵描きしようよ！
+date: 2011-02-09
+comments: true
+categories:
+---
+
+
+<a href="http://www.flickr.com/photos/somewhatfrank/3442601259/" title="Crayolas by Frank Gruber, on Flickr"><img src="http://farm4.static.flickr.com/3327/3442601259_11703f3e84_m.jpg" width="240" height="180" alt="Crayolas" /></a>
+
+米国にCrayolaというクレヨンの老舗メーカーがあります{% fn_ref 1 %})
+創業以来その色数を増やしていって
+現在ではその標準カラーは133色もあるそうです
+さらに12以上のスペシャルセットがあって
+それらを合わせると色数は300を超えます
+
+ウィキペディアにCrayola社クレヨンのページがあって
+そこにほぼ全色のカラーコードが掲載されていることを
+情報サイト{% fn_ref 2 %}を通して知りました
+
+[](http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors)
+
+ファンタスティック！
+Color Loverとしてはこれを無視できません
+
+そんなわけで..
+
+Rubyの勉強を兼ねましてこれらのカラーコードを取得する
+crayolaというライブラリをRubyで書きました (‥;)
+混色など一部は対象外ですが9セット275色に対応しています
+
+###crayolaの使い方
+以下のように使います
+{% highlight ruby %}
+>> Crayola::Crayola.color_names
+=> ["Almond", "Antique Brass", "Apricot", "Aquamarine", "Asparagus", "Atomic Tangerine", "Banana Mania", "Beaver", "Bittersweet", "Black", "Blizzard Blue", "Blue", "Blue Bell", "Blue Gray", "Blue Green", "Blue Violet", "Blush", "Brick Red", "Brown", "Burnt Orange", "Burnt Sienna", "Cadet Blue", "Canary", "Caribbean Green", "Carnation Pink" ... "Eerie Black", "Black Shadows", "Fiery Rose", "Sizzling Sunset", "Heat Wave", "Lemon Glacier", "Spring Frost", "Absolute Zero", "Winter Sky", "Frostbite"]
+{% endhighlight %}
+
+{% highlight ruby %}
+>> wild_strawberry = Crayola::Crayola.color('Wild Strawberry')
+=> #<struct Crayola::Color series="Standard Colors", name="Wild Strawberry", hex="#FF43A4", rgb=[255, 67, 164], issue=1990, retired=nil, notes=nil>
+>> wild_strawberry.members #=> [:series, :name, :hex, :rgb, :issue, :retired, :notes]
+>> wild_strawberry.series #=> "Standard Colors"
+>> wild_strawberry.name #=> "Wild Strawberry"
+>> wild_strawberry.hex #=> "#FF43A4"
+>> wild_strawberry.rgb #=> [255, 67, 164]
+>> wild_strawberry.issue #=> 1990
+>> 
+{% endhighlight %}
+{% highlight ruby %}
+>> Crayola::Crayola.series
+=> ["Standard Colors", "Silver Swirls", "Magic Scent", "Gem Tones", "Pearl Brite", "Metallic FX", "Silly Scents", "Heads 'n Tails", "Extreme Twistables Colors"]
+>> 
+{% endhighlight %}
+{% highlight ruby %}
+>> Crayola::Crayola.colors_in_series("Gem Tones").map(&:name)
+=> ["Amethyst", "Citrine", "Emerald", "Jade", "Jasper", "Lapis Lazuli", "Malachite", "Moonstone", "Onyx", "Peridot", "Pink Pearl", "Rose Quartz", "Ruby", "Sapphire", "Smokey Topaz", "Tiger's Eye"]
+>> Crayola::Crayola.color("Ruby").hex #=> "#DC0646"
+>> 
+{% endhighlight %}
+
+EggplantとかJazzberry JamとかPiggy Pinkとか
+Quick SilverとかTulipとかBig Foot Feetとか
+Princess PerfumeとかOrange SodaとかDeep Space Sparkleとか
+一体どんな色が出てくるのかワクワクしますね
+
+これらたくさんの色を使って
+お絵描きができたらさぞ楽しいでしょうね..
+
+そんなわけで..
+
+crayolaカラーを使ったお絵描きデモを作ってみました
+どっちかって言うとHTML5のデモのような気もしますが..
+
+[](http://crayovas.heroku.com/)
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110209/20110209105103.png)
+
+
+右上の絵はもちろんルビーです
+説明するまでもありません
+
+###crayovasの使い方
+1. キャンバス上でマウスを一度クリックし、クリックを離した状態でマウスを移動して線を描きます
+1. 終了点で再度クリックして描画を終えます
+1. よくあるマウスドラッグ中に描画する方式ではないので、最初は戸惑うかも知れません
+1. キャンバス下のカラーパレットで任意の色をクリックして色を選びます
+1. 初期状態でStandard Colorsのカラーパレットが表示されています。他のシリーズを表示するにはそのシリーズ名をクリックします
+1. 線の太さは右上の太さを示す数字をクリックして選択します
+1. 消しゴムは右上のERASEをクリックして、ペンと同じように開始点でクリック、終了点でクリックして使います。RESETですべての絵を消します
+1. 直近に使用したカラーは上に表示されます。表示をクリックしても色を選択できます
+
+遊んでくれたらうれしいです
+
+ソースコードは以下にあります
+
+[](https://github.com/melborne/crayola)
+[](https://github.com/melborne/crayovas)
+
+(追記：2011-2-10) crayovasのupdateに合せて記述を変更しました。
+{% footnotes %}
+   {% fn [](http://www.crayola.com/ %}
+   {% fn http://www.tommyjp.com/2011/02/html.html %}
+{% endfootnotes %}

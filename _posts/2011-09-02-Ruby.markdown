@@ -1,0 +1,267 @@
+---
+layout: post
+title: Rubyでもリスト内包表記したい？
+date: 2011-09-02
+comments: true
+categories:
+---
+
+
+PythonやHaskellやErlangにはリスト内包表記と呼ばれる
+リストの中で新たなリストを生成する構文があるよ
+例えばRubyでリストの要素の値を倍にしたい場合は
+Array#mapを使うよね
+{% highlight ruby %}
+ l = [*1..10]
+ l.map { |i| i*2 } # => [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+{% endhighlight %}
+
+これをErlangのリスト内包表記では以下のように書けるんだ
+{% highlight erlang %}
+ L = lists:seq(1,10).
+ [X*2 || X <- L].  % => [2,4,6,8,10,12,14,16,18,20]
+{% endhighlight %}
+リストLからXを選び出しそれに2を掛けたものを返す
+つまり || の左辺には出力となる式を
+右辺には限定子を書く
+X <- LはErlangではGeneratorと呼ぶらしいよ
+
+次にリストから偶数だけを選んで
+それらを倍にしたい場合を考えるよ
+Rubyなら次のように書くよね
+{% highlight ruby %}
+ l.select(&:even?).map { |i| i*2 } # => [4, 8, 12, 16, 20]
+{% endhighlight %}
+またはこう書くよ
+{% highlight ruby %}
+ l.map { |i| i*2 if i.even? }.compact # => [4, 8, 12, 16, 20]
+{% endhighlight %}
+
+これがErlangではこう書けるんだよ
+{% highlight erlang %}
+ [X*2 || X <- L, X rem 2 =:= 0].  % => [4,8,12,16,20]
+{% endhighlight %}
+リストの最後の項がfilterになって
+選び出されるXを限定する
+Rubyもいい線いってるけど
+リスト内包のほうが宣言的でわかりやすいかな
+
+さらに
+リストから偶数かつ5より大きい数だけを選んで
+倍にする場合をやってみるよ
+まずはRuby
+{% highlight ruby %}
+ l.select { |i| i.even? && i > 5 }.map { |i| i*2 } # => [12, 16, 20]
+{% endhighlight %}
+または
+{% highlight ruby %}
+ l.map { |i| i*2 if i.even? && i > 5 }.compact # => [12, 16, 20]
+{% endhighlight %}
+
+Erlangだと次のようになるよ
+{% highlight erlang %}
+ [X*2 || X <- L, X rem 2 =:= 0, X > 5]. # => [12,16,20]
+{% endhighlight %}
+複数のfilterをカンマ区切りで指定できる
+簡潔だよね
+
+さらにもう一歩進んでみよう
+3つの異なる範囲のリスト(l1=1～5, l2=3～7, l3=5～9)があって
+それらから一つずつ選択された数の合計が11になるものを求めるよ
+[前の記事](http://d.hatena.ne.jp/keyesberry/20110831/p1)で紹介したように
+RubyではArray#productを使えば簡単にできるよね
+{% highlight ruby %}
+l1 = [1,2,3,4,5]
+l2 = [3,4,5,6,7]
+l3 = [5,6,7,8,9]
+l1.product(l2, l3).select { |a,b,c| a + b + c == 11  }
+# => [[1, 3, 7], [1, 4, 6], [1, 5, 5], [2, 3, 6], [2, 4, 5], [3, 3, 5]]
+{% endhighlight %}
+
+これをErlangのリスト内包表記では次のように書けるんだ
+{% highlight erlang %}
+ L1 = [1,2,3,4,5].
+ L2 = [3,4,5,6,7].
+ L3 = [5,6,7,8,9].
+ [{A,B,C} || A <- L1, B <- L2, C <- L3, A + B + C =:= 11].
+ % => [{1,3,7},{1,4,6},{1,5,5},{2,3,6},{2,4,5},{3,3,5}]
+{% endhighlight %}
+わかりやすいね
+つまりリスト内包では複数のgeneratorを指定できて
+それらから要素が良しなに取り出されて
+filterの条件にマッチする組だけが生成される
+
+Rubyのproductも簡潔ではあるけれども
+あらかじめすべての組み合わせが生成されてしまう
+という点がイマイチかな
+###Rubyで実装を試みる
+そんなわけで
+Rubyでなんとかリスト内包表記っぽいことが
+できないか考えてみたよ(ネタとして)
+
+最初に考えた構文は次のとおりだよ
+{% highlight ruby %}
+class Array
+  def %(ary)
+    map(&ary[0]).compact
+  end
+end
+list = [*1..10]
+list % [->x{x*2 if x.even?}] # => [4, 8, 12, 16, 20]
+{% endhighlight %}
+Array#%を定義してその引数として
+Procオブジェクトを一つ含む配列を取る
+そして渡すProcの中でgeneratorとfilterを指定するよ
+
+ary[0]とするのがダサいよね
+
+ということで
+次のようなものも考えてみたよ
+{% highlight ruby %}
+list = [*1..10]
+list. <=[->x{x*2 if x.even?}] # => [4, 8, 12, 16, 20]
+{% endhighlight %}
+
+一瞬でこの実装がわかる人はいる？
+ちょっと凝ってみたんだけど..
+
+実装は次のとおりだよ
+{% highlight ruby %}
+class Array
+  def <=
+    ->x { map { |e| x[e] }.compact }
+  end
+end
+{% endhighlight %}
+つまりArray#<=を引数なしで呼んで
+それが返したProcオブジェクトを
+Proc#[]でcallしてる
+->x{x*2 if x.even?}はその引数となるProcオブジェクトだよ
+<=[]とするとProcの呼び出しに全く見えないよね
+
+でもまだ->x{x*2 if x.even?}がイケテない
+せめてgeneratorとfilterに分けたい
+それで次のようにしてみたよ
+{% highlight ruby %}
+class Array
+  def <=
+    ->gen,*preds {
+      select { |e| preds.all? { |pred| pred[e] } }
+      .map { |e| gen[e] }
+    }
+  end
+end
+list = [*1..10]
+list. <=[->x{x*2}, ->x{x.even?}, ->x{x>5}] # => [12, 16, 20]
+{% endhighlight %}
+こうすれば
+filterをカンマ区切りでいくつでも追加できる
+
+でも正直->x{ }がいくつも連続するのはヒドすぎるねー
+{% highlight ruby %}
+list. <=[x*2, x.even?, x>5] # => [12, 16, 20]
+{% endhighlight %}
+のように出来ればいいんだけど
+xは未定義だから構文エラーになっちゃう
+それに複数のgeneratorを渡すこともできないから
+先の3つのリストの合計を取るような問題にも対応できない..
+
+###RBridge
+で諦めかけたそのとき..
+
+全く別のアプローチに気が付いたんだよ!
+
+次のコードは先の３つのリストの合計を取る例を
+関数sum_toとして実装してるんだ
+{% highlight ruby %}
+def sum_to(n, a, b, c, x=<<-ERL)
+  [ {A, B, C} ||
+      A <- #{a},
+      B <- #{b},
+      C <- #{c},
+      A + B + C =:= #{n}
+  ]
+  ERL
+  x.evarl
+end
+a = [1,2,3,4,5]
+b = [3,4,5,6,7]
+c = [5,6,7,8,9]
+sum_to(11, a, b, c)
+# => [[1, 3, 7], [1, 4, 6], [1, 5, 5], [2, 3, 6], [2, 4, 5], [3, 3, 5]]
+{% endhighlight %}
+関数sum_toの中身はErlangのコードそのままだよ
+ヒアドキュメントによりErlangのコードを文字列化し
+これにevarlメソッドを送ってる
+
+もう気が付いた人もいると思うけど..
+
+そう　裏でErlangサーバーを起動して
+Rubyから呼んでいるのでした!
+String#evarlの実装は次のとおりだよ
+{% highlight ruby %}
+require "rbridge"
+class String
+  def evarl
+    @@erl ||= RBridge.new(nil, "localhost", 9900)
+    @@erl.erl self
+  end
+end
+{% endhighlight %}
+RBridgeというRubyからErlangサーバに接続できる
+拡張ライブラリが実はあるんだよ!
+
+gem install rbridgeでインストールして
+シェルでrulangコマンドを実行してサーバを起動する
+デフォルトの待ち受けポートは9900になるよ{% fn_ref 1 %}
+
+そして先のコードのように指定ポートで
+RBridgeのインスタンスを生成し
+RBridge#erlにErlangのコードを含む文字列を渡す
+するとbeamというErlangのエミュレータでこれを解析し
+結果をRubyの形式で返すよ
+
+便利なものを作ってくれる人が
+世の中にはいるもんだね!
+
+###id:ku-ma-meさんによるRubyの内包表記
+で世の中には他にもすごい人がいるんだよ{% fn_ref 2 %}
+Rubyで実用レベルのリスト内包表記
+類似の構文ができてるんだ
+
+[Ruby で内包表記 - まめめも](http://d.hatena.ne.jp/ku-ma-me/20070623/p2)
+{% highlight ruby %}
+# [ x^2 | x <- [0..10] ] みたいなもの
+p list{ x ** 2 }.where{ x.in(0..10) }
+  #=> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+# [ [x, y] | x <- [0..2], y <- [0..2], x <= y ] みたいなもの
+p list{ [ x, y ] }.where{ x.in(0..2); y.in(0..2); x <= y }
+  #=> [[0, 0], [0, 1], [0, 2], [1, 1], [1, 2], [2, 2]]
+# sieve (x:xs) = x:sieve [ y | y <- xs, y `mod` x /= 0 ] みたいなもの
+def sieve(x, *xs)
+	ys = list{ y }.where{ y.in(xs); y % x != 0 }
+	[x] + (ys.empty? ? [] : sieve(*ys))
+end
+p sieve(*(2..50))
+  #=> [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+{% endhighlight %}
+
+すごいよね
+で　この構文を見て実装がどうなっているか
+想像できる人はどれくらいいるのかな
+もう僕にはまったく歯が立たなかったよ
+変数x yは一体..
+
+そしてその実装を見ても..
+
+まだまだ僕は精進が必要だよ
+
+ちなみにRuby1.9だと
+continuationをrequireする必要があるよ
+
+参考サイト:
+[Rulang BridgeでRubyからErlangを呼び出してみた - うなの日記](http://d.hatena.ne.jp/unageanu/20071120/1195562775)(現在の実装はこの記述とは少し異なっています)
+{% footnotes %}
+   {% fn サーバの停止はps aux | grep rulangなどとしてPIDを見つけてkill PIDしてください %}
+   {% fn 改めて言うまでもありませんが.. %}
+{% endfootnotes %}

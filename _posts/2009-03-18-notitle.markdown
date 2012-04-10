@@ -1,0 +1,311 @@
+---
+layout: post
+title: 再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！
+date: 2009-03-18
+comments: true
+categories:
+---
+
+
+「{{ 489471163X | amazon_link }}」で
+末尾再帰というものを知ったので勉強しました
+自分の理解を書いてみます
+
+###再帰
+再帰呼び出しとはある手続きの中で
+再びその手続き自身を呼び出すことと定義される{% fn_ref 1 %})
+でもこの定義は正確じゃない
+なぜなら再帰呼び出しは自分自身を呼んでいないからだ
+
+階乗を考えてみよう
+階乗は数学的にこう定義できる
+> 
+> [tex:n!=n * (n-1)!]
+> 但し、自然数n=1のときは1
+
+
+ふつうRubyで階乗メソッドはこう書く
+{% highlight ruby %}
+ def fact(n)
+   if n == 1
+     1
+   else
+     n * fact(n-1)
+   end
+ end
+ 
+ fact 5 #> 120
+{% endhighlight %}
+factメソッドの中でfactメソッドが呼ばれているので
+自分自身が呼ばれているように見える
+でもそうじゃない
+
+最初の引数5を受け取ったfactメソッド(彼をfact5と呼ぼう)は
+引数4と共に自分が呼んだfactメソッド(fact4)の結果を
+待たなきゃならない
+なぜならその結果と5をあとで掛けなきゃならないからだ
+fact4もfact3もfact2も同じだ
+自分が呼んだメソッドの結果を待たなきゃならない
+
+人間が待ちながらその要求に答える
+なんて芸当ができないのと同様に
+Rubyにだってそんなことはできない
+こういうときは誰か他の人に頼むしかない
+だからfact4メソッドはfact5とは別人なんだ
+fact3もfact2もfact1も全部別人なんだ
+
+つまり上のコードはメソッド呼び出しに関して
+次のコードとほぼ等価だ
+{% highlight ruby %}
+ def fact5
+   5 * fact4
+ end
+ 
+ def fact4
+   4 * fact3
+ end
+ 
+ def fact3
+   3 * fact2
+ end
+ 
+ def fact2
+   2 * fact1
+ end
+ 
+ def fact1
+   1
+ end
+ 
+ fact5 #> 120
+{% endhighlight %}
+このコードではfact1が結果を返すまで
+他のメソッドはRuby空間に止まってることははっきりしてる
+これは再帰でも同じだ
+各factメソッドは内容は同じだけれども
+別のメソッドとしてRuby空間に置かれる
+
+これはちょうど同じ文字列が
+Rubyでは別のオブジェクトとして扱われるのと似ている
+{% highlight ruby %}
+ 5.times do
+   s = 'factorial'
+   puts "#{s}(id:#{s.__id__})"
+ end
+ 
+ # >> factorial(id:72570)
+ # >> factorial(id:72580)
+ # >> factorial(id:72560)
+ # >> factorial(id:72530)
+ # >> factorial(id:72500)
+{% endhighlight %}
+
+つまりふつうの再帰は自分ではなく
+自分とそっくりな人
+そう
+分身を呼んでいるんだ
+
+###再帰の問題点
+同じことをするのに反復手続きがあるのに
+なぜ再帰を使う必要があるんだろう
+
+反復手続きによる階乗メソッドを見てみよう
+{% highlight ruby %}
+ def fact(n)
+   p = 1
+   while n > 1
+     p *= n
+     n -= 1
+   end
+   p
+ end
+ 
+ p fact 5
+{% endhighlight %}
+
+これを見れば理由はわかる
+そう反復手続きはエレガントじゃない
+再帰では階乗の数学的表現をそのまま自然に記述できる
+反復手続きではそうはいかない
+
+でも再帰はその度に別の手続きを呼び出すのと等価だから
+深い再帰では手続きでRuby空間が溢れるという問題が生じる
+{% highlight ruby %}
+fact 10000 #> `fact': stack level too deep (SystemStackError)
+{% endhighlight %}
+
+###末尾再帰で階乗
+そこで末尾再帰の出番だ
+
+ふつうの再帰による階乗を再掲しよう
+{% highlight ruby %}
+ def fact(n)
+   if n == 1
+     1
+   else
+     n * fact(n-1)
+   end
+ end
+ 
+ fact 5 #> 120
+{% endhighlight %}
+
+再帰では手続きが次の手続きの結果を必要としてる
+だからRuby空間で結果を待たなきゃならない
+上のコードではelse節のnが掛けられるのを待ってる
+それが問題になる
+
+ならば待たないようにすればいい
+つまりnを一緒に次のfactに投げちゃえばいい
+それで知らぬ顔をしてRuby空間からおさらばする
+そうすると困るのは最後のfact(fact1)だけだから
+彼に後処理を全部やってもらえばいい
+
+この考えに基づいたコードはこうなる
+{% highlight ruby %}
+ def fact(n, mem=[])
+   if n == 1
+     mem.inject(:*)     #fact1が配列の要素を全部掛けて返す
+   else
+     mem << n
+     fact(n-1, mem)   #nを配列に入れて次のfactに順次渡す
+   end
+ end
+{% endhighlight %}
+これによって処理の末尾が再帰だけになるので
+値を渡した手続きはもう結果を待たなくていい
+最終的な結果は最後の手続きが返してくれる
+つまり手続きを呼び出した手続きは
+もう必要なくなるので呼び出した手続きとして使える
+そう自分自身を使える！
+
+だから末尾再帰こそが真の再帰で
+その名に値するんだ
+
+fact1にすべてをさせるのが酷というなら
+各人が自分のところの計算をやって
+その結果を投げるようにすればいい
+{% highlight ruby %}
+ def fact(n, mem=n)
+   if n == 1
+     mem
+   else
+     fact(n-1, mem*(n-1))
+   end
+ end
+ 
+ fact 5 #> 120
+{% endhighlight %}
+
+実は残念ながらSchemeとは違って
+現在のRubyの実装では
+この末尾再帰のメリットは受けられないようだ
+{% highlight ruby %}
+ fact 10000 #> `fact': stack level too deep (SystemStackError)
+{% endhighlight %}
+
+###末尾再帰によるフィボナッチ
+Rubyで末尾再帰を使っても
+ふつうの再帰と同様に分身が呼ばれるようだ
+
+それでもRubyで末尾再帰するメリットはある
+
+フィボナッチ数を考えよう
+n番目のフィボナッチ数は数学的に次のように定義できる
+> 
+> [tex:fn = 0] : n = 0のとき
+> [tex:fn = 1] : n = 1のとき
+> [tex:fn = f(n-1) + f(n-2)] : それ以外のとき
+
+
+これをRubyで書くとこうなる
+{% highlight ruby %}
+ def fib(n)
+   if n == 0
+     0
+   elsif n == 1
+     1
+   else
+     fib(n-1) + fib(n-2)
+   end
+ end
+ 
+ fib 10 #> 55
+{% endhighlight %}
+
+これは数学的記述に従ったエレガントなコードだけれども
+末尾再帰になっていない上に末尾の＋メソッドは
+2つの再帰メソッドfibの結果を待たなきゃならない
+呼び出された各メソッドfibはそれぞれにまた2つのfibを呼び
+この数はフィボナッチ数的に増える
+
+すると高々20番目のフィボナッチ数を求めるのに
+fibメソッドは21891回も呼ばれることになる
+> 
+> % _ruby -rprofile fib.rb
+> % cumulative self self total time seconds seconds calls  ms/call  ms/call  name
+>  69.45     2.16      2.16    21891     0.10     1.93  Object#fib
+>  15.76     2.65      0.49    39601     0.01     0.01  Fixnum#==
+>  10.61     2.98      0.33    21890     0.02     0.02  Fixnum#-
+>   4.18     3.11      0.13    10945     0.01     0.01  Fixnum#+
+>   0.00     3.11      0.00        1     0.00     0.00  Module#method_added
+>   0.00     3.11      0.00        2     0.00     0.00  IO#set_encoding
+>   0.00     3.11      0.00        1     0.00  3110.00  #toplevel
+
+
+fibメソッドを末尾再帰で書けたなら
+fibメソッドの呼び出し回数は21回で済む
+だからRubyでも検討する価値がある
+
+今8番目のフィボナッチ数を求める演算をfib8とすると
+これは以下のように展開できる
+> 
+> fib8 = 1*fib8 + 0*fib7
+> = 1*fib7 + 1*fib6 = (fib6 + fib5) + fib6
+> = 2*fib6 + 1*fib5
+> = 3*fib5 + 2*fib4
+> = 5*fib4 + 3*fib3
+> = 8*fib3 + 5*fib2
+> =13*fib2 + 8*fib1
+> = 21*fib1 + 13*fib0 = 21
+
+
+各項の係数をそれぞれa, bとすると
+各ステップでbには前のステップのaの値が
+aにはa+bの値が与えられていることがわかる
+また最後のステップをみると
+fib0が0なので第2項の演算結果は
+結果的に答えに反映されないことがわかる
+だから１つのfibメソッドにa、bを渡していき
+fib1に達したところでaの値を返すようにすればいい
+{% highlight ruby %}
+ def fib(n, a=1, b=0)
+   if n == 0
+     0
+   elsif n == 1
+     a
+   else
+     fib(n-1, a+b, a)
+   end
+ end
+ 
+ fib 8 #> 21
+{% endhighlight %}
+
+これでフィボナッチを末尾再帰で実現できた
+これなら1000番目のフィボナッチ数だって直ぐ求められる
+{% highlight ruby %}
+ t = Time.now
+ p fib 1000
+ p Time.now - t
+ #>43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875
+ 0.001581
+{% endhighlight %}
+
+関連：[Ruby、同じことの繰り返しは君に任せるよ ～ 再帰でハノイの塔を解こう！～](http://d.hatena.ne.jp/keyesberry/20080708/p1)
+
+（訂正：末尾再帰であることはfibメソッドの呼び出し回数とは直接関係しないことが分かりましたので訂正します）
+末尾再帰かどうかとfibの呼び出し回数には関係ないですよ。<br>アルゴリズムの違いが呼び出し回数に関係してます。<br>例えば、効率の悪い方のアルゴリズムを使って以下のように末尾再帰でfibを書けます。<br>def fib(n)<br>  fib_loop([n], 0)<br>end<br><br>def fib_loop(arr, sum)<br>  if arr.length == 0<br>    sum<br>  elsif arr[0] <= 1<br>    fib_loop(arr[1..-1], sum+1)<br>  else<br>    fib_loop([arr[0]-1, arr[0]-2] + arr[1..-1], sum)<br>  end<br>end>Mozkさん<br>なるほど、僕の理解が違ってました。ご指摘助かります。
+{% footnotes %}
+   {% fn [再帰：Wikipediaより](http://ja.wikipedia.org/wiki/再帰 %}
+{% endfootnotes %}

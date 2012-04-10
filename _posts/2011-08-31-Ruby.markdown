@@ -1,0 +1,405 @@
+---
+layout: post
+title: Rubyで論理プログラミングしようよ!
+date: 2011-08-31
+comments: true
+categories:
+---
+
+
+人生は選択の連続だよ
+１つの選択が君の未来を変えるよ
+そして残念なことに
+後からその失敗に気がついても
+選択をやり直すことは人生ではできないんだよ..
+
+コンピュータプログラムにも似たようなところがあるよ
+プログラムは一度走り出したら止まらないから
+途中の分岐で選ばれた選択を
+後から変えるのは得意じゃないんだ
+
+###問題１
+例えば次のような問題を考えてみるよ
+> 
+>  xが1,2,3の何れかで yが4,5,6の何れかであるとき
+>  x + y = 7
+>  となるx, yの組みを求めよ
+
+x, yには複数の選択肢があって
+xの決定はyの決定に影響を与えるから
+その組み合わせを決めるためには
+人間がするのと同様の試行錯誤が必要になりそうだよね
+どうやってプログラムしたらいいか
+ちょっと戸惑うよね
+
+こういったはっきりと決まっていない事実に基づいて
+答えを求めることを非決定性の問題と言うらしいよ
+なるほどそうすると人生は差し詰め
+非決定性の連立方程式を解くようなものなんだろうね
+
+さて君ならこの問題どうコーディングするのかな
+
+確かにコンピュータプログラムは人間と似ているけど
+大きく違うところが２つあるよ
+それはその計算量と記憶力だよ
+コンピュータは短時間で膨大な量の計算をこなして
+その結果を忘れずにしっかりと記憶することができる
+そのパワーを活用すれば
+未来を決定づけるすべての選択肢を用意して
+成功の道だけを選ぶようにすることができる
+
+ここでもしこの問題の解法に
+ループを考えたとしたら君は負け組だよ
+
+なぜならRubyにはすべての選択肢を生成する
+Array#productがあるんだから
+{% highlight ruby %}
+xl = [1, 2, 3]
+yl = [4, 5, 6]
+xl.product(yl).tap{|t| p t}.select { |x, y| x + y == 7 } # => [[1, 6], [2, 5], [3, 4]]
+# >> [[1, 4], [1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 4], [3, 5], [3, 6]]
+{% endhighlight %}
+ほらできた!
+
+tapの出力を見れば
+Array#productがx yの
+すべての組み合わせを生成しているのが分かるよね
+そしてArray#selectで
+x + y = 7の条件を満たすものだけを選択してる
+
+###問題２
+じゃあ次はピタゴラスをやってみようよ
+説明するまでもないけどピタゴラス数は
+[tex:A^2 + B^2 = C^2]
+を満たす整数A B Cの組のことだよ
+A B Cをすべての整数とすると答えは無限にあるだろうから
+ここでは辺の総和(A+B+C)がN以下であるものを求めてみるよ
+{% highlight ruby %}
+def pythag(n)
+  al, bl, cl = [*1..n], [*1..n], [*1..n]
+  al.product(bl, cl).select do |a, b, c|
+    a + b + c <= n && a**2 + b**2 == c**2
+  end
+end
+pythag(30) # => [[3, 4, 5], [4, 3, 5], [5, 12, 13], [6, 8, 10], [8, 6, 10], [12, 5, 13]]
+{% endhighlight %}
+あっという間に答えが出た
+辺の総和が30以下のピタゴラス数は6組あるんだね
+
+上の条件で各辺の範囲は1～Nで同じだから
+Array#repeated_permutationを使ってもいいよね
+{% highlight ruby %}
+def pythag(n)
+  [*1..n].repeated_permutation(3).select { |a,b,c| a + b + c <= n && a**2 + b**2 == c**2 }
+end
+pythag(30) # => [[3, 4, 5], [4, 3, 5], [5, 12, 13], [6, 8, 10], [8, 6, 10], [12, 5, 13]]
+{% endhighlight %}
+
+###問題３
+次はもう少し論理問題っぽいものをやってみるよ
+> 
+> baker(パン屋)、cooper(桶屋)、fletcher(矢屋)、miller(粉屋)、smith(鍛冶屋)が５階建てのアパートの別々の階に住んでいる。bakerは最上階には住んでない。cooperは地上階には住んでない。fletcherは最上階にも地上階にも住んでない。millerはcooperよりも上の階に住んでいる。smithはfletcherに接する階には住んでない。fletcherはcooperに接する階には住んでない。誰がどこに住んでいるか？
+> [計算機プログラムの構造と解釈/４章/３より(一部改変しました){% fn_ref 1 %}
+
+有名な問題だから知ってる人もいると思うけど
+知らなかったらちょっと考えてみてね
+
+Array#productを使えば造作無いよね
+{% highlight ruby %}
+baker_, cooper_, fletcher_, miller_, smith_ = [[*1..5]] * 5
+ans = baker_.product(cooper_, fletcher_, miller_, smith_).detect do |baker, cooper, fletcher, miller, smith|
+  [baker,cooper,fletcher,miller,smith].uniq.size == 5 &&
+  baker != 5 &&
+  cooper != 1 &&
+  fletcher != 1 &&
+  fletcher != 5 &&
+  miller > cooper &&
+  (smith - fletcher).abs != 1 &&
+  (fletcher - cooper).abs != 1 
+end
+"baker => %i, cooper => %i, fletcher => %i, miller => %i, smith => %i" % ans # => "baker => 3, cooper => 2, fletcher => 4, miller => 5, smith => 1"
+{% endhighlight %}
+detect内の条件が増えると
+見た目が綺麗じゃないよね
+補助関数を作ってもう少し良くしてみるよ
+
+{% highlight ruby %}
+def rule(*rules)
+  rules.all?
+end
+ans = [*1..5].permutation(5).tap{|t| p t}.detect do |baker, cooper, fletcher, miller, smith|
+  rule baker != 5,
+        cooper != 1,
+        fletcher != 1,
+        fletcher != 5,
+        miller > cooper,
+        (smith - fletcher).abs != 1,
+        (fletcher - cooper).abs != 1 
+end
+"baker => %i, cooper => %i, fletcher => %i, miller => %i, smith => %i" % ans # => "baker => 3, cooper => 2, fletcher => 4, miller => 5, smith => 1"
+# >> #<Enumerator: [1, 2, 3, 4, 5]:permutation(5)>
+{% endhighlight %}
+rule関数はEnumerable#all?を使って
+各条件の&&を取るよ
+これでいくらかすっきりしたね
+ちなみにこういうのもDSLって呼んでいいのかな？
+
+さらにここではArray#permutationを使ったよ
+５人の選択範囲が同じだからね{% fn_ref 2 %}
+productとpermutationは似たメソッドだけど
+実はその返り値に大きな違いがあるんだよ
+productはそのすべての組み合わせを生成して返すけど
+permutationはEnumeratorを返すつまり
+この段階では組み合わせを生成しないんだ
+そしてselectが呼ばれたときその条件に従って
+はじめて内容を評価つまり遅延評価するんだ
+これは効率上きっと有利だろうね
+
+###継続
+さてArray#productを使った先の解法は
+コンピュータパワーを使った
+富豪的プログラミングと言えるかも知れないね
+例えば先のピタゴラスにおける
+productで生成される組の数を見てみよう
+{% highlight ruby %}
+def pythag(n)
+  al, bl, cl = [*1..n], [*1..n], [*1..n]
+  al.product(bl, cl).tap{ |t| p t.size }.select do |a, b, c|
+    a + b + c <= n && a**2 + b**2 == c**2
+  end
+end
+pythag(30) # => [[3, 4, 5], [4, 3, 5], [5, 12, 13], [6, 8, 10], [8, 6, 10], [12, 5, 13]]
+pythag(100) # => [[3, 4, 5], [4, 3, 5], [5, 12, 13], [6, 8, 10], [7, 24, 25], [8, 6, 10], [8, 15, 17], [9, 12, 15], [9, 40, 41], [10, 24, 26], [12, 5, 13], [12, 9, 15], [12, 16, 20], [12, 35, 37], [15, 8, 17], [15, 20, 25], [15, 36, 39], [16, 12, 20], [16, 30, 34], [18, 24, 30], [20, 15, 25], [20, 21, 29], [21, 20, 29], [21, 28, 35], [24, 7, 25], [24, 10, 26], [24, 18, 30], [24, 32, 40], [28, 21, 35], [30, 16, 34], [32, 24, 40], [35, 12, 37], [36, 15, 39], [40, 9, 41]]
+# >> 27000
+# >> 1000000
+{% endhighlight %}
+N=30とした場合
+その組み合わせの数は27000組になる
+そしてN=100とするとその数は100万組!
+ちょっと気になる数字だよね
+
+この例では各辺の選択範囲は同じだから
+Array#permutationを使えば問題は解決するけど
+選択範囲が異なる場合はpermutationが使えない
+それにコンピュータはもっと人間の思考を
+シミュレートしたものであるべきだって意見もあるだろうね
+つまり一つ試しては戻り一つ試しては戻るという
+動作を繰り返しながら一つづつ答えを見つける
+そんな試行錯誤型の解法があってもいいよね
+
+Rubyでは継続(Continuation)を使ったプログラミングにより
+それが実現できるんだ
+Rubyにおける継続はKernel#callccの呼び出しで
+「今」を持ち運び可能なオブジェクトにして
+未来のどこかでそれを再度呼び出す(callする)
+つまり「過去」に戻ることを実現可能にする
+
+ちょっと例を示すよ
+{% highlight ruby %}
+require "continuation"
+time_machine = nil
+my_vocabularies = 
+  [:be_my_wife?, :i_love_you, :i_need_you, :present_for_you, :i_always_love_you]
+print "I met her...\n\n"
+sleep 1
+propose = callcc { |t| time_machine = t; my_vocabularies.shift }
+print "I said.. #{propose}.\n"
+sleep 1
+print "and she said..\n"
+sleep 2
+puts answer =
+    case propose
+    when :i_always_love_you
+      "yes!"
+    when :i_love_you, :i_need_you
+      "hmm..."
+    else
+      "goodbye"
+    end
+sleep 2
+puts
+unless answer == "yes!"
+  print "Back to the past\n\n"
+  time_machine.call(my_vocabularies.shift)
+else
+  print "Y.E.S!\n"
+  exit
+end
+# >> I met her...
+# >> 
+# >> I said.. be_my_wife?.
+# >> and she said..
+# >> goodbye
+# >> 
+# >> Back to the past
+# >> 
+# >> I said.. i_love_you.
+# >> and she said..
+# >> hmm...
+# >> 
+# >> Back to the past
+# >> 
+# >> I said.. i_need_you.
+# >> and she said..
+# >> hmm...
+# >> 
+# >> Back to the past
+# >> 
+# >> I said.. present_for_you.
+# >> and she said..
+# >> goodbye
+# >> 
+# >> Back to the past
+# >> 
+# >> I said.. i_always_love_you.
+# >> and she said..
+# >> yes!
+# >> 
+# >> Y.E.S!
+{% endhighlight %}
+暇なら手元にコピーして実行してみてくれる？
+
+さて自分でRubyの継続を使って
+先の問題を解きたいところなんだけど
+どうにも僕の頭がついていかなくて
+継続を使いこなすにはまだ時間が掛かりそうなんだよ
+
+そこで継続を使ったRubyの拡張ライブラリAmbの
+助けを借りることにするよ
+Ambを使うとより宣言的に論理問題の条件を記述できるんだ
+
+gem install ambでインストールして次のように使うよ{% fn_ref 3 %}
+まずはピタゴラスから
+{% highlight ruby %}
+require 'amb'
+def pythag(n)
+  q = []
+  amb = Class.new{include Amb}.new
+  a = amb.choose *(1..n)
+  b = amb.choose *(1..n)
+  c = amb.choose *(1..n)
+  
+  amb.assert a + b + c <= n
+  amb.assert a**2 + b**2 == c**2
+  q << [a, b, c]
+  amb.failure
+rescue
+  q
+end
+pythag(30) # => [[3, 4, 5], [4, 3, 5], [5, 12, 13], [6, 8, 10], [8, 6, 10], [12, 5, 13]]
+{% endhighlight %}
+Ambはモジュールだからクラスにincludeして使うよ
+Amb#chooseで選択肢をセットするんだけど
+このとき裏ではcalccが呼ばれているよ
+Amb#assertで条件を定義して
+a b cを呼び出せば答えが得られる
+Amb#failureはすべての答えが得られるまで
+継続をcallして答えがなくなるとエラーを送出するんだ
+failureを呼ばなければ最初の答えだけが得られる
+
+同じことはAMB.solve_allクラスメソッドでも実現できるよ
+{% highlight ruby %}
+n = 30
+AMB = Class.new{include Amb}
+AMB.solve_all do |amb|
+  a = amb.choose *(1..n)
+  b = amb.choose *(1..n)
+  c = amb.choose *(1..n)
+  amb.assert a + b + c <= n
+  amb.assert a**2 + b**2 == c**2
+  p [a, b, c]
+end
+# >> [3, 4, 5]
+# >> [4, 3, 5]
+# >> [5, 12, 13]
+# >> [6, 8, 10]
+# >> [8, 6, 10]
+# >> [12, 5, 13]
+# >> No More Solutions
+{% endhighlight %}
+
+じゃあアパート住人の問題もAmbで解いてみるよ
+{% highlight ruby %}
+AMB = Class.new{include Amb}
+AMB.solve do |amb|
+  baker = amb.choose(1, 2, 3, 4, 5)
+  cooper = amb.choose(1, 2, 3, 4, 5)
+  fletcher = amb.choose(1, 2, 3, 4, 5)
+  miller = amb.choose(1, 2, 3, 4, 5)
+  smith = amb.choose(1, 2, 3, 4, 5)
+  amb.assert [baker, cooper, fletcher, miller, smith].uniq.size == 5
+  amb.assert baker != 5
+  amb.assert cooper != 1
+  amb.assert fletcher != 1 && fletcher != 5
+  amb.assert miller > cooper
+  amb.assert (smith - fletcher).abs != 1
+  amb.assert (fletcher - cooper).abs != 1
+  puts "baker => %i, cooper => %i, fletcher => %i, miller => %i, smith => %i" % [baker, cooper, fletcher, miller, smith]
+end
+# >> baker => 3, cooper => 2, fletcher => 4, miller => 5, smith => 1
+{% endhighlight %}
+なんか宣言的でいいよね!
+
+最後にベンチマークを取ってみるよ
+N=100でビタゴラスを求めたときの結果だよ
+{% highlight ruby %}
+require "benchmark"
+require "amb"
+def pythag(n)
+  al, bl, cl = [*1..n], [*1..n], [*1..n]
+  al.product(bl, cl).select do |a, b, c|
+    a + b + c <= n && a**2 + b**2 == c**2
+  end
+end
+def pythag_with_permutation(n)
+  [*1..n].repeated_permutation(3).select { |a,b,c| a + b + c <= n && a**2 + b**2 == c**2 }
+end
+def pythag_with_amb(n)
+  q = []
+  amb = Class.new{include Amb}.new
+  a = amb.choose *(1..n)
+  b = amb.choose *(1..n)
+  c = amb.choose *(1..n)
+  
+  amb.assert a + b + c <= n
+  amb.assert a**2 + b**2 == c**2
+  q << [a, b, c]
+  amb.failure
+rescue
+  q
+end
+Benchmark.bmbm do |bm|
+  n = 100
+  bm.report { pythag(n) }
+  bm.report { pythag_with_permutation(n) }
+  bm.report { pythag_with_amb(n) }
+end
+# >> Rehearsal ------------------------------------
+# >>    0.510000   0.050000   0.560000 (  0.594200)
+# >>    0.360000   0.000000   0.360000 (  0.361962)
+# >>   12.240000   0.600000  12.840000 ( 12.879879)
+# >> -------------------------- total: 13.760000sec
+# >> 
+# >>        user     system      total        real
+# >>    0.540000   0.010000   0.550000 (  0.549009)
+# >>    0.340000   0.000000   0.340000 (  0.349040)
+# >>   12.210000   0.530000  12.740000 ( 12.763450)
+{% endhighlight %}
+うわっAmb遅っ!
+
+参考サイト:
+[お気楽 Ruby プログラミング入門](http://www.geocities.jp/m_hiroi/light/abcruby17.html)
+[日本Rubyの会 公式Wiki - KansaiWorkshop16](http://jp.rubyist.net/?KansaiWorkshop16#l12)
+[関西オープンソース2005発表 , 非決定性計算 , KOF宴会 - Journal InTime(2005-10-29)](http://shugo.net/jit/20051029.html)
+[Rubyの「継続(Continuation)」(1) - バリケンのRuby日記 - Rubyist](http://rubyist.g.hatena.ne.jp/muscovyduck/20070601/p1)
+[継続でバックトラックを Ruby で - Tociyuki::Diary](http://d.hatena.ne.jp/tociyuki/20070320/1174403351)
+[なんでも継続](http://practical-scheme.net/docs/cont-j.html)
+
+(追記:2011-9-1) 参考サイトのリンクを追記しました。一部コードを修正しました。
+(追記:2011-11-27) 一部Array#permutationをArray#repeated_permutationに変更しました。
+ans = [*1..5].permutation(5)tap{|t| p t}.select do |baker, cooper, fletcher, miller, smith|<br><br>tapの前の.が抜け落ちている。<br><br>ans = [*1..5].permutation(5).tap{|t| p t}.select do |baker, cooper, fletcher, miller, smith|>kumonopanyaさん<br>ありがとう！訂正しました
+{% footnotes %}
+   {% fn http://www.mokehehe.com/assari/index.php?%B7%D7%BB%BB%B5%A1%A5%D7%A5%ED%A5%B0%A5%E9%A5%E0%A4%CE%B9%BD%C2%A4%A4%C8%B2%F2%BC%E1%2F%A3%B4%BE%CF%2F%A3%B3 %}
+   {% fn 各値が異なることが保証されるので、最初の条件も不要になる %}
+   {% fn loaderroが出た場合lib/amb.rb内のパスを修正してください %}
+{% endfootnotes %}
