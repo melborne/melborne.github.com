@@ -105,7 +105,7 @@ mapの代わりとしても使えるよ
 まあ折角書いたから..
 ゴメンナサイm(__)m
 
-関連記事:[RubyのSymbol#to_procを考えた人になってみる - hp12c](http://d.hatena.ne.jp/keyesberry/20080917/p1)
+関連記事:[RubyのSymbol#to_procを考えた人になってみる](/2008/09/17/Ruby-Symbol-to_proc/)
 
 (追記:2012-2-14)Twitterを通してすごい荒業を知ったよ{% fn_ref 2 %}
 {% highlight ruby %}

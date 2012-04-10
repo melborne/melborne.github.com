@@ -119,7 +119,7 @@ size=:smallで表示数が4件になる(:largeは8)
  *グラフはクリックすると拡大します
 
 関連記事：
-[Rubyでアニメーション・グラフを作ろう！ - hp12c](http://d.hatena.ne.jp/keyesberry/20100203/p1)
-[Rubyのランダムをグラフ化しよう！ - hp12c](http://d.hatena.ne.jp/keyesberry/20100206/p1)
+[Rubyでアニメーション・グラフを作ろう！](/2010/02/03/Ruby/)
+[Rubyのランダムをグラフ化しよう！](/2010/02/06/Ruby/)
 
 <script src="http://gist.github.com/296691.js"></script>

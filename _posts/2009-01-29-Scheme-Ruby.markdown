@@ -302,7 +302,7 @@ letを使えば最初にa,bを定義できる
 Rubyではローカル変数はメソッドを透過できないので
 明示的に引数で受け渡す必要がある
 
-関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20080809/p1)
+関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！](/2008/08/09/Ruby-Mix-in/)
 
 {{ 489471163X | amazon_large_image }}
 

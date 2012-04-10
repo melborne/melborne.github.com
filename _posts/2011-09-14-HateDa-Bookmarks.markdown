@@ -83,7 +83,7 @@ Bookmarks#totalメソッドで総ブックマーク数が得られます
 なおこのツールには以前紹介した
 はてダの記事一覧を取得するツールも含まれています
 
-[Rubyではてダの記事一覧を取得してまとめ頁を作ろう！ - hp12c](http://d.hatena.ne.jp/keyesberry/20110127/p1)
+[Rubyではてダの記事一覧を取得してまとめ頁を作ろう！](/2011/01/27/Ruby/)
 
 ###Hatena Bookmarkers in Visual
 折角なのでこのツールで取得した情報を

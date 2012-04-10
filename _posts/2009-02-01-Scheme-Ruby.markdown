@@ -7,7 +7,7 @@ categories:
 ---
 
 
-[前回](http://d.hatena.ne.jp/keyesberry/20090131/p1)に引き続き「[rakuten:book:10825992:title]」を使って
+[前回](/2009/01/31/notitle/)に引き続き「[rakuten:book:10825992:title]」を使って
 今度はSchemeとRubyにおける
 データ抽象の違いを見ていこうと思います
 なおSchemeのコードは本書からの抜粋で

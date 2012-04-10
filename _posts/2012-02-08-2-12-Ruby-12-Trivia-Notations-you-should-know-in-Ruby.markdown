@@ -10,7 +10,7 @@ categories:
 半年くらい前にちょっとトリビアだけど
 知っていると意外と便利なRubyの記法を21個紹介したよ
 
-[知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby - hp12c](http://d.hatena.ne.jp/keyesberry/20110622/p1)[link](http://d.hatena.ne.jp/keyesberry/20110622/p1:bookmark)
+[知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby](/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
 
 今回はその第2弾だよ!
 ちょっと数が少ないけど

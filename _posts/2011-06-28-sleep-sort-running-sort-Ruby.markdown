@@ -185,7 +185,7 @@ r2 == s.sort # => false
 いい線いってるんだけどなー...
 ファジーソートとかってカテゴリないかな..
 
-関連記事：[Rubyでソート・アルゴリズムを表現しよう!](http://d.hatena.ne.jp/keyesberry/20101012/p1)
+関連記事：[Rubyでソート・アルゴリズムを表現しよう!](/2010/10/12/Ruby/)
 {% footnotes %}
    {% fn 対sleep sort比 %}
    {% fn Array#minを使うのはちょっとルール違反だけど大目にね %}

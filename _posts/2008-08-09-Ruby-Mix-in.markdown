@@ -463,9 +463,9 @@ sendメソッドはメソッド名と共に
 1. 外部状態を閉じ込めた簡易オブジェクトあるいはクロージャーである
 
 関連記事：
-[Rubyのシンボルは文字列の皮を被った整数だ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20080802/p1)
-[Rubyのyieldは羊の皮を被ったevalだ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20080812/p1)
-[Rubyのクラスはオブジェクトの母、モジュールはベビーシッター - hp12c](http://d.hatena.ne.jp/keyesberry/20080816/p1)
+[Rubyのシンボルは文字列の皮を被った整数だ！](/2008/08/02/Ruby/)
+[Rubyのyieldは羊の皮を被ったevalだ！](/2008/08/12/Ruby-yield-eval/)
+[Rubyのクラスはオブジェクトの母、モジュールはベビーシッター](/2008/08/16/Ruby/)
 
 {{ 4873113679 | amazon_large_image }}
 

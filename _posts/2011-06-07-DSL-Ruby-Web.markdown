@@ -9,7 +9,7 @@ categories:
 
 Sinatraのようなベース言語の構文を使って実現するDSLを
 内部DSLといいます
-前回僕が書いた[Chinatra](http://d.hatena.ne.jp/keyesberry/20110605/p1)は一見内部DSLにみえるけど
+前回僕が書いた[Chinatra](/2011/06/05/Chinatra/)は一見内部DSLにみえるけど
 ベース言語とは異なる構文を使った外部DSLです
 
 でも時代の風は内部DSLに向いています
@@ -107,8 +107,8 @@ CRUDのC U D も多分動くと思います
 Rubyの内部DSLであなたも**natraしてみませんか？
 
 関連記事：
-1. [SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！](http://d.hatena.ne.jp/keyesberry/20110603/p1)[link](http://d.hatena.ne.jp/keyesberry/20110603/p1:bookmark)
-1. [Sinatraに別構文があってもいいじゃないか！](http://d.hatena.ne.jp/keyesberry/20110605/p1)[link](http://d.hatena.ne.jp/keyesberry/20110605/p1:bookmark)
+1. [SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！](/2011/06/03/Sinatra-DSL-Ruby/)
+1. [Sinatraに別構文があってもいいじゃないか！](/2011/06/05/Sinatra/)
 
 {% gist 1008708 shynatra.rb %}
 

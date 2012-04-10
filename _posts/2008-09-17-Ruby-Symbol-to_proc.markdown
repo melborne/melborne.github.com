@@ -248,7 +248,7 @@ mappメソッドとして書いてみる
 mapを再定義して上記を実装するとうまくいかない
 自分の理解の限界に来たのでここまでとします
 
-関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！ - hp12c](http://d.hatena.ne.jp/keyesberry/20080809/p1)
+関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！](/2008/08/09/Ruby-Mix-in/)
 {% footnotes %}
    {% fn [instance method Enumerable#inject](http://doc.loveruby.net/refm/api/view/method/Enumerable/i/inject %}
 {% endfootnotes %}

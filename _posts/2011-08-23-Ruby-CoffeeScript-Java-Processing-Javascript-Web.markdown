@@ -313,9 +313,9 @@ https://github.com/melborne/ProcessingDemo
 [CoffeeScript + Processing.js == Crazy Delicious](http://dry.ly/2011/02/21/coffeescript--processingjs--crazy-delicious/)
 
 関連記事:
-[Processingアプレットをはてダに貼り付けよう！ - hp12c](http://d.hatena.ne.jp/keyesberry/20110204/p1)
-[fun of Processing - hp12c](http://d.hatena.ne.jp/keyesberry/20110131/p1)
-[fun of Processing! - hp12c](http://d.hatena.ne.jp/keyesberry/20110130/p1)
+[Processingアプレットをはてダに貼り付けよう！](/2011/02/04/Processing/)
+[fun of Processing](/2011/01/31/fun-of-Processing/)
+[fun of Processing!](/2011/01/30/fun-of-Processing/)
 {% footnotes %}
    {% fn Rubyしか知らない個人の感想です %}
    {% fn http://www.stat.go.jp/data/jinsui/2009np/index.htm %}

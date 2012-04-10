@@ -237,7 +237,7 @@ Octoberの15日をクリックします
 コードは以下にあります
 [gist: 104362 - GitHub](http://gist.github.com/104362)
 
-[前回](http://d.hatena.ne.jp/keyesberry/20090425/p1)と[前々回](http://d.hatena.ne.jp/keyesberry/20090407/p1)のチュートリアルで作成した
+[前回](/2009/04/25/notitle/)と[前々回](/2009/04/07/notitle/)のチュートリアルで作成した
 アプリケーションのURLも貼っておきます
 
 ScanAnimation

@@ -46,7 +46,7 @@ Termtterってやっぱり便利ですね!
 
 <del datetime="2010-03-03T19:05:08+09:00">残念ながら日本のマーケットには対応していませんorz..</del>
 (追記:2010/3/3)日本のマーケットに対応しました！
-[Ruby製ノコギリで株価を切り刻もう! - hp12c](http://d.hatena.ne.jp/keyesberry/20100302/p1)
+[Ruby製ノコギリで株価を切り刻もう!](/2010/03/02/Ruby/)
 
 使用にはyahoo_stock libraryが必要です
 gem install yahoo_stock してください

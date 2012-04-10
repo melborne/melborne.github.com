@@ -7,7 +7,7 @@ categories:
 ---
 
 ##Termtterでmoreしようよ
-[前回](http://d.hatena.ne.jp/keyesberry/20100208/p1) Termtterのlistコマンドとsearchコマンドを改良して
+[前回](/2010/02/08/notitle/) Termtterのlistコマンドとsearchコマンドを改良して
 {% highlight ruby %}
 > list #2
 > search #2
@@ -30,7 +30,7 @@ moreを繰り返せば
 
 これはなかなか便利！
 
-さらに[TermtterならGoogle検索だってできる - hp12c](http://d.hatena.ne.jp/keyesberry/20100207/p1) 
+さらに[TermtterならGoogle検索だってできる](/2010/02/07/Termtter-Google/) 
 で追加したgoogle検索にもmoreを対応させたよ(追記:2010/2/9)
 
 {% gist 297408 default_replace.rb %}
@@ -39,8 +39,8 @@ moreを繰り返せば
 以前の投稿でTermtterのsearchなどのDefaultの挙動を
 直接Termtterのコードを書き換えることで行った
 
-[Termtterでuriを開こう！ - uri-openの紹介と改良 - hp12c](http://d.hatena.ne.jp/keyesberry/20100125/p1)
-[Termtterで検索しよう! - hp12c](http://d.hatena.ne.jp/keyesberry/20100203/p2)
+[Termtterでuriを開こう！ - uri-openの紹介と改良](/2010/01/25/Termtter-uri-uri-open/)
+[Termtterで検索しよう!](/2010/02/03/Termtter/)
 
 だけどこの方法はよくない
 トラブル回避のために元のコードをどこかに保存しなきゃいけないし

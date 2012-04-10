@@ -145,8 +145,8 @@ indexのpartial viewとして、views/flickrディレクトリに_photo.rhtmlを
 -18. 完成
 ブラウザをリロードし試してみてください。僕の環境ではちょっと動作が重いですが、なかなか楽しめそうです。enjoy!
 
-関連記事：[Flickr on Railsをいじる(その１)](http://d.hatena.ne.jp/keyesberry/20060810/p1)
-　　　　　[Flickr on Railsをいじる(その２)](http://d.hatena.ne.jp/keyesberry/20060811/p1)
+関連記事：[Flickr on Railsをいじる(その１)](/2006/08/10/Flickr-on-Rails/)
+　　　　　[Flickr on Railsをいじる(その２)](/2006/08/11/Flickr-on-Rails/)
 
 追記(2006/10/28)：flickrライブラリ(flickr.rb)の仕様が変わったようで、現時点(2006/10/28)では上記はうまく動きませんね。今の仕様ではflickr api keyはflickr.rb内に記述するようになっていますので、以下を試してください。
 1./usr/local/lib/ruby/gems/1.8/gems/flickr-1.0.0にあるflickr.rb内の仮のapi keyを取得したapi keyに書き換える。

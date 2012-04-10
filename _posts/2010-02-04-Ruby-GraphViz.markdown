@@ -13,7 +13,7 @@ GraphVizを使ったグラフ作りは楽しい
 
 GraphVizで使える色は豊富だけれども
 豊富過ぎて名前を見ただけでは色がわからない
-だから[前回](http://d.hatena.ne.jp/keyesberry/20100203/p1)作ったGraphAzで
+だから[前回](/2010/02/03/notitle/)作ったGraphAzで
 色見本を作ってみた
 これで色選びもばっちり！
 

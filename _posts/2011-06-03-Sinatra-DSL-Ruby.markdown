@@ -254,8 +254,8 @@ SinatraはほんとうはRubyそのものなんだけど
 もう僕はダマされないぞ！
 
 関連記事：
-1. [Sinatraに別構文があってもいいじゃないか！](http://d.hatena.ne.jp/keyesberry/20110605/p1)[link](http://d.hatena.ne.jp/keyesberry/20110605/p1:bookmark)
-1. [内部DSLを使って、RubyのWebフレームワークを書こう！](http://d.hatena.ne.jp/keyesberry/20110607/p1)[link](http://d.hatena.ne.jp/keyesberry/20110607/p1:bookmark)
+1. [Sinatraに別構文があってもいいじゃないか！](/2011/06/05/Sinatra/)
+1. [内部DSLを使って、RubyのWebフレームワークを書こう！](/2011/06/07/DSL-Ruby-Web/)
 Try http://github.com/padrino/padrino-framework>Dexterさん<br>情報どうもです
 {% footnotes %}
    {% fn http://www.eonet.ne.jp/~human-being/sub2.html %}

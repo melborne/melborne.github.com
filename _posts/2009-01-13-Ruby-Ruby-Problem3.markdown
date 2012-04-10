@@ -60,7 +60,7 @@ primes.last # => 6857
 >  1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
 > 数列の項が400万を超えない範囲で、偶数の項の総和を求めよ。
 
-[先日解いた問題](http://d.hatena.ne.jp/keyesberry/20090111/p1)はここの問題だった
+[先日解いた問題](/2009/01/11/notitle/)はここの問題だった
 {% highlight ruby %}
 def fibo_even_sum(max, a=1, b=2)
   sum = 0

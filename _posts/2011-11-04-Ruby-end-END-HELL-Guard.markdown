@@ -30,7 +30,7 @@ defと打つと私のエディタが勝手にendと補完するので
 結局未熟な私はendの悟りを開くことができず
 かつて誤った道に足を踏み入れた
 
-[Ruby1.9でもEND HELLを解消したい！ - hp12c](http://d.hatena.ne.jp/keyesberry/20110719/p1)
+[Ruby1.9でもEND HELLを解消したい！](/2011/07/19/Ruby1-9-END-HELL/)
 
 ###endの必要性
 しかし私は対称性という様式美の観点から
