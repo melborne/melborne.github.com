@@ -81,7 +81,7 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 
 誰でも考えそうだから既出のアイディアだったらゴメンね。
 
-って、もっと高度なことをまめさんがしてました\^\^;
+って、もっと高度なことをまめさんがしてました^ ^;
 
 [map が面倒なので DelegateMap - まめめも](http://d.hatena.ne.jp/ku-ma-me/20090312/p1)
 

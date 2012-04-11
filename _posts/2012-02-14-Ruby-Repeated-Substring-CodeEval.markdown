@@ -7,7 +7,7 @@ categories:
 ---
 
 ##RubyでRepeated Substringを解く-CodeEval
-バグ入りで80点\^\^;
+バグ入りで80点^ ^;
 
 入出力情報少なすぎてバグ特定できない..まあいっか。str.gsub(substr).to_aという技を閃いた。
 

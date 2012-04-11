@@ -27,7 +27,7 @@ Array#permutationを使って。
 
 
 ##RubyでLongest Common Subsequenceを解く-CodeEval
-StringScannerを使って再帰的に。どこかにバグがあるようで50点\^\^;
+StringScannerを使って再帰的に。どこかにバグがあるようで50点^ ^;
 
 ２つのアルファベット列に共通する最長の並び。並びは連続していなくてもいい。
 {% gist 1697463 lcs.rb %}

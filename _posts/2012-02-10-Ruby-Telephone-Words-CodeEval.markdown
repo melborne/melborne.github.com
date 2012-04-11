@@ -7,7 +7,7 @@ categories:
 ---
 
 ##RubyでTelephone Wordsを解く-CodeEval
-Array#productを使って\^\^;
+Array#productを使って^ ^;
 
 与えられた7桁の電話番号に対する、各数字に割り当てられたアルファベットでの全組み合わせ。
 {% gist 1697463 telephone_words.rb %}

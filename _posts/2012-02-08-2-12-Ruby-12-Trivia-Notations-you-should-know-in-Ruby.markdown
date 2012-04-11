@@ -223,7 +223,7 @@ need_japanese.scan(/[[:word:]]+/) # => ["this", "日本語", "is", "_really_", "
 {% endhighlight %}
 
 ###10.String#match
-もう一つ正規表現を\^\^;
+もう一つ正規表現を^ ^;
 String#matchはMatchDataオブジェクトを返すから次のように使えるよね。
 {% highlight ruby %}
 date = "2012february14"
@@ -277,7 +277,7 @@ __END__
 
 今回はこれで終わりだよ
 
-ほんとは21個溜めてから出したかったんだけど、今朝Peter Cooperさんのビデオを見てたら、同じトリビアが出てたから慌てて出してるんだよ\^\^;
+ほんとは21個溜めてから出したかったんだけど、今朝Peter Cooperさんのビデオを見てたら、同じトリビアが出てたから慌てて出してるんだよ^ ^;
 
 [Ruby Trick Shots: A Video of 24 Ruby Tips and Tricks](http://rubyreloaded.com/trickshots/)
 
