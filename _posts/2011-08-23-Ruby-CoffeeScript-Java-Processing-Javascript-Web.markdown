@@ -77,7 +77,7 @@ WebのCanvas上でビジュアライジング・データを実現します
 Webブラウザで実行できるようにしたデモを紹介します
 WebフレームワークはSinatra
 開発環境はMac OSX Snow Leopardです
-CoffeeScriptの書き方がたぶんイマイチなのはご容赦ください^^;
+CoffeeScriptの書き方がたぶんイマイチなのはご容赦ください^ ^;
 デモをHerokuにアップしたので
 まずは見てやってください
 
@@ -305,7 +305,7 @@ config.ruでその指定をします
 
 説明が大雑把で詳細が掴めないと思いますが
 ソースコードを添付しますので
-そちらを参照頂ければ助かります^^;
+そちらを参照頂ければ助かります^ ^;
 
 https://github.com/melborne/ProcessingDemo
 

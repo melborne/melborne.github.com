@@ -6,56 +6,42 @@ comments: true
 categories:
 ---
 
+次のような名前のリストがあって、
 
-次のような名前のリストがあって
 {% highlight ruby %}
 langs = ["ruby", "python", "lisp", "haskell"]
 {% endhighlight %}
-名前の先頭を大文字にするとしたら
-君ならどうする？
 
-そう普通Enumerable#mapを使って
-次のようにするよね
+名前の先頭を大文字にするとしたら、君ならどうする？
+
+そう普通Enumerable#mapを使って次のようにするよね。
 {% highlight ruby %}
 langs = ["ruby", "python", "lisp", "haskell"]
 langs.map { |lang| lang.capitalize } # => ["Ruby", "Python", "Lisp", "Haskell"]
 {% endhighlight %}
-Enumerable#mapってほんと死ぬほど便利だよ
-僕はRubyの魅力の80％は
-mapが占めてるんじゃないかって
-たまに感じることがあるよ.. :)
 
-でもただ先の例で
-大文字にするだけなのにブロックって
-ちょっと大げさすぎると思わない？
+Enumerable#mapってほんと死ぬほど便利だよ。僕はRubyの魅力の80％はmapが占めてるんじゃないかって、たまに感じることがあるよ.. :)
 
-もちろんそうなんだよ
-そう思うRubyistが沢山いたから
-mapは次のように書けるようにもなってるんだ
+でもただ先の例で大文字にするだけなのにブロックって、ちょっと大げさすぎると思わない？
+
+もちろんそうなんだよ。そう思うRubyistが沢山いたからmapは次のように書けるようにもなってるんだ。
+
 {% highlight ruby %}
 langs = ["ruby", "python", "lisp", "haskell"]
 langs.map(&:capitalize) # => ["Ruby", "Python", "Lisp", "Haskell"]
 {% endhighlight %}
-シンボルに&を付けてmapに渡すと
-暗黙的にSymbol#to_procが呼ばれて
-そこで配列の各要素にcapitalizeが適用されるよ
-この記法のお陰でmapは一層使い勝手が良くなってるよ
+シンボルに&を付けてmapに渡すと暗黙的にSymbol#to_procが呼ばれて、そこで配列の各要素にcapitalizeが適用されるよ。この記法のお陰でmapは一層使い勝手が良くなってるよ。
 
-じゃあ今度は先の言語名のリストから
-その「言語使いのリスト」に変換してほしいんだけど..
-つまり言語名の後に'ist'を付けてほしいんだ{% fn_ref 1 %}
+じゃあ今度は先の言語名のリストから、その「言語使いのリスト」に変換してほしいんだけど..つまり言語名の後に'ist'を付けてほしいんだ{% fn_ref 1 %}
 
-そう次のようにするよね
+そう次のようにするよね。
 {% highlight ruby %}
 langs = ["ruby", "python", "lisp", "haskell"].map(&:capitalize)
 langs.map { |lang| lang + 'ist' } # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 {% endhighlight %}
-これって悔しいよね
-'ist'を足すだけなのに
-またブロックを書かなきゃいけない
+これって悔しいよね。'ist'を足すだけなのに、またブロックを書かなきゃいけない。
 
-同じように次のような場合も
-ブロックを書かなきゃいけない
+同じように次のような場合もブロックを書かなきゃいけない。
 {% highlight ruby %}
 [1, 2, 3].map { |i| i + 10 } # => [11, 12, 13]
 (1..5).map { |i| i**2 } # => [1, 4, 9, 16, 25]
@@ -76,8 +62,7 @@ module Enumerable
 end
 langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 {% endhighlight %}
-つまりmappでは引数にメソッドと
-その引数が取れるんだ
+つまりmappでは引数にメソッドとその引数が取れるんだ。
 
 {% highlight ruby %}
 [1, 2, 3].mapp(:+, 10) # => [11, 12, 13]
@@ -86,8 +71,7 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 ["ruby", "python", "lisp", "haskell"].mapp(:[], -2, 2) # => ["by", "on", "sp", "ll"]
 {% endhighlight %}
 
-ブロックを渡せばmapに処理を投げるから
-mapの代わりとしても使えるよ
+ブロックを渡せばmapに処理を投げるからmapの代わりとしても使えるよ。
 {% highlight ruby %}
 [1, 2, 3].mapp { |i| i + 10 } # => [11, 12, 13]
 (1..5).mapp { |i| i**2 } # => [1, 4, 9, 16, 25]
@@ -95,14 +79,14 @@ mapの代わりとしても使えるよ
 ["ruby", "python", "lisp", "haskell"].mapp { |lang| lang[-2, 2] } # => ["by", "on", "sp", "ll"]
 {% endhighlight %}
 
-誰でも考えそうだから
-既出のアイディアだったらゴメンね
+誰でも考えそうだから既出のアイディアだったらゴメンね。
 
-って
-もっと高度なことをまめさんがしてました^^;
+って、もっと高度なことをまめさんがしてました\^\^;
+
 [map が面倒なので DelegateMap - まめめも](http://d.hatena.ne.jp/ku-ma-me/20090312/p1)
 
 まあ折角書いたから..
+
 ゴメンナサイm(__)m
 
 関連記事:[RubyのSymbol#to_procを考えた人になってみる](/2008/09/17/Ruby-Symbol-to_proc/)
@@ -111,10 +95,8 @@ mapの代わりとしても使えるよ
 {% highlight ruby %}
  [1,2,3].map(&1.method(:+)) #=> [2,3,4]
 {% endhighlight %}
-スゴイね!
-でもメソッド呼び出しのオブジェクトが
-引数と入れ替わっちゃってるから:+, :*くらいしか
-用途がなさそうだけどね..
+スゴイね!でもメソッド呼び出しのオブジェクトが引数と入れ替わっちゃってるから、:+, :*くらいしか用途がなさそうだけどね..
+
 {% footnotes %}
    {% fn 怒らないで! %}
    {% fn https://twitter.com/tmaeda/statuses/168380640734085120 %}

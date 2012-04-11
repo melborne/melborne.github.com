@@ -69,5 +69,5 @@ numbers.map { |num| num2alpha num }
 
 <script src="https://gist.github.com/1534213.js"> </script>
 {% footnotes %}
-   {% fn Array#rotate! #shuffle #cycleのことです^^; %}
+   {% fn Array#rotate! #shuffle #cycleのことです^ ^; %}
 {% endfootnotes %}

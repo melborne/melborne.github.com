@@ -108,7 +108,7 @@ Processing.jsを使って作ってみました:)
 データ取得がうまくいっていません
 ローカルでは問題ないのですがHeroku上では
 Threadがうまく生成されていないようです..
-どなたか解決策が分かりましたら教えて下さい^^;
+どなたか解決策が分かりましたら教えて下さい^ ^;
 
 一応サイトのコードも置いておきます
 [melborne/hdbmkrs - GitHub](https://github.com/melborne/hdbmkrs)

@@ -8,8 +8,7 @@ categories:
 {% include JB/setup %}
 
 
-この間RubyのEnumerable#mapを便利にした
-Enumerable#mappを紹介したよ
+この間、RubyのEnumerable#mapを便利にしたEnumerable#mappを紹介したよ。
 
 [RubyのEnumerable#mapをもっと便利にしたいよ](/2012/02/11/Ruby-Enumerable-map/)
 {% highlight ruby %}
@@ -26,16 +25,13 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 ["ruby", "python", "lisp", "haskell"].mapp(:[], -2, 2) # => ["by", "on", "sp", "ll"]
 {% endhighlight %}
 
-で今日またこれに関連して
-別のアイディアを思いついたよ
+で今日またこれに関連して別のアイディアを思いついたよ。
  
-それはここまで来たらもうmappは
-要らないんじゃないかってことなんだ
+それはここまで来たらもうmappは要らないんじゃないかってことなんだ。
 
 
-つまり四則演算に限定されちゃうけど
-以下の構文でmapp相当のことができたら
-面白いと思ったんだ
+つまり四則演算に限定されちゃうけど、以下の構文でmapp相当のことができたら面白いと思ったんだ。
+
 {% highlight ruby %}
 %w(Ruby Python Lisp Haskel) + 'ist' # => ["Rubyist", "Pythonist", "Lispist", "Haskelist"]
 [1, 2, 3, 4] + 10 # => [11, 12, 13, 14]
@@ -45,9 +41,11 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 [1, 2, 3, 4] / 2.0 # => [0.5, 1.0, 1.5, 2.0]
 [1, 2, 3, 4] ** 2 # => [1, 4, 9, 16]
 {% endhighlight %}
+
 割と違和感がないと思うんだけどどうかな？
 
-実装はこんな感じだよ
+実装はこんな感じだよ。
+
 {% highlight ruby %}
 class Array
   {:+ => :plus, :- => :minus, :* => :multi}.each do |op, rep|
@@ -68,15 +66,18 @@ class Array
   end
 end
 {% endhighlight %}
+
 まあ元のArray#*(Integer)が死んじゃうんだけど..
 
-ちなみにネストした配列でも有効だよ
+ちなみにネストした配列でも有効だよ。
+
 {% highlight ruby %}
 [[1,2],[3,4]] ** 2 # => [[1, 4], [9, 16]]
 [%w(child neighbor), %w(brother false)] + 'hood' # => [["childhood", "neighborhood"], ["brotherhood", "falsehood"]]
 {% endhighlight %}
 
-ついでに逆も定義してみるよ
+ついでに逆も定義してみるよ。
+
 {% highlight ruby %}
 class String
   alias :__plus__ :+
