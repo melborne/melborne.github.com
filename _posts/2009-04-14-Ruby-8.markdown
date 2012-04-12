@@ -6,71 +6,55 @@ comments: true
 categories:
 ---
 
-
-先のスクリプトにわたしは何の不満もありません
-でもリファクタリングはクセになります
-3行目のsortのブロックが
-気になる人には気になります
+先のスクリプトにわたしは何の不満もありません。でもリファクタリングはクセになります。3行目のsortのブロックが気になる人には気になります。
 {% highlight ruby %}
  p DICTIONARY.sort { |a, b| b[1] <=> a[1] }[0...30]
 {% endhighlight %}
-###Version04
-少し直しましょう
+##Version04
+少し直しましょう。
 {% highlight ruby %}
  WORDS = ARGF.read.downcase.scan(/[a-z]+/)
  DICTIONARY = WORDS.inject(Hash.new(0)) { |dic, word| dic[word] += 1 ; dic }
  p DICTIONARY.sort_by { |key, val| val }.slice(-30..-1)
 {% endhighlight %}
 
-sortに代えてsort_byを使いました
-辞書の要素数が多ければこちらのほうが速度的に有利です
-これは好みの問題かもしれませんが
-[]に代えてsliceを使いました
-sort_byが昇順ソートになっているので
-sliceの範囲オブジェクトは最後尾(-1)から指定しています
+sortに代えてsort_byを使いました。辞書の要素数が多ければこちらのほうが速度的に有利です。これは好みの問題かもしれませんが。\[\]に代えてsliceを使いました。sort_byが昇順ソートになっているので、sliceの範囲オブジェクトは最後尾(-1)から指定しています。
 
-###Version05
-でも次の方がもっとすっきりします
+##Version05
+でも次の方がもっとすっきりします。
 {% highlight ruby %}
  WORDS = ARGF.read.downcase.scan(/[a-z]+/)
  DICTIONARY = WORDS.inject(Hash.new(0)) { |dic, word| dic[word] += 1 ; dic }
  p DICTIONARY.sort_by { |key, val| -val }.take(30)
 {% endhighlight %}
 
-valを負数にすれば降順ソートになります
-takeメソッドは先頭から30要素を取ります
+valを負数にすれば降順ソートになります。takeメソッドは先頭から30要素を取ります。
 
-###TMTOWTDI
-「同じことをやるのに複数のやり方があっていい」
-というのがPerlの流れを汲むRubyの流儀です{% fn_ref 1 %})
-ですからRubyではこのように
-同じ処理を複数の方法で実現できます
+##TMTOWTDI
+「同じことをやるのに複数のやり方があっていい」というのがPerlの流れを汲むRubyの流儀です。{% fn_ref 1 %})ですからRubyではこのように同じ処理を複数の方法で実現できます。
 
-この「同じことをやるのに複数のやり方があっていい」
-という考え方は
-英語では -TMTOWTDI- といいます
-There's More Than One Way To Do It だそうです
-最初に見たとき
-TiMe TO WheTher Die or Ill かと思いました
+この「同じことをやるのに複数のやり方があっていい」という考え方は、英語では -TMTOWTDI- といいます。
 
-でもいま
-本当の答えに気が付きました
- -TMTOWTDI- は正規表現だったんです
+> There's More Than One Way To Do It
 
-/Today's (Mon|Tue) Or (Wed|Thu) Day/I
+だそうです。最初に見たとき、
 
-###Version06
-やり方が複数あることに最初は戸惑うかもしれません
-でもジブンノカタチニコダワル派には麻薬になります
+> TiMe TO WheTher Die or Ill
+
+かと思いました。
+
+でもいま、本当の答えに気が付きました。 -TMTOWTDI- は正規表現だったんです。
+
+> /Today's (Mon|Tue) Or (Wed|Thu) Day/I
+
+##Version06
+やり方が複数あることに最初は戸惑うかもしれません。でもジブンノカタチニコダワル派には麻薬になります。
 
 ではもう少しコダワッテ...
 
-この「ハッシュをソートして端からいくつか取る」というのは
-汎用性がありそうです
-標準メソッドに似たようなtake_whileというのはあるのですが
-目的のものはありません
+この「ハッシュをソートして端からいくつか取る」というのは、汎用性がありそうです。標準メソッドに似たようなtake_whileというのはあるのですが、目的のものはありません。
 
-ではこれをtake_byメソッドとしてHashクラスに作りましょう
+では、これをtake_byメソッドとしてHashクラスに作りましょう。
 {% highlight ruby %}
  class Hash
    def take_by(nth)
@@ -87,19 +71,11 @@ TiMe TO WheTher Die or Ill かと思いました
  [["rained", 1], ["grows", 1], ["pearly", 1], ["hinder", 1], ["overturn", 1], ["interpose", 1], ["infuse", 1], ["prescribes", 1], ["escaping", 1], ["guinness", 1], ["belch", 1], ["humbling", 1], ["appropriately", 1], ["luminous", 1], ["frailty", 1], ["rightful", 1], ["nods", 1], ["purple", 1], ["sepulcher", 1], ["hollow", 1], ["rivaled", 1], ["pearls", 1], ["eyed", 1], ["judaizing", 1], ["fulton", 1], ["taylor", 1], ["coincidence", 1], ["apocalypticae", 1], ["clime", 1], ["atoning", 1]]
 {% endhighlight %}
 
-これでDICTIONARYに対する
-メソッド呼び出しが１つで済むようになりました
+これでDICTIONARYに対するメソッド呼び出しが１つで済むようになりました。
 
-ちょっと分かりづらいかもしれませんが
-キモはメソッド定義中のyieldです
-yieldがあるとメソッド呼び出しの際に
-ブロックを取れるようになります
-メソッドが呼び出されて実行がyieldに達すると
-ブロックが実行されます
+ちょっと分かりづらいかもしれませんが、キモはメソッド定義中のyieldです。yieldがあるとメソッド呼び出しの際に、ブロックを取れるようになります。メソッドが呼び出されて実行がyieldに達すると、ブロックが実行されます。
 
-上の例ではsort_byのブロック引数elemに
-ハッシュの最初の要素つまりkey, valueの組が渡されると
-yieldがtake_byに付けられたブロックの中身-valになります
+上の例ではsort_byのブロック引数elemに、ハッシュの最初の要素つまりkey, valueの組が渡されると、yieldがtake_byに付けられたブロックの中身-valになります。
 
 ([次回に続く](/2009/04/15/Ruby-9/))
 {% footnotes %}
