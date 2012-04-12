@@ -21,8 +21,8 @@ categories:
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20061213/20061213173016.jpg)
 :w200
 
-{{ B000KFDO3A | amazon_large_image }}
+{{ 'B000KFDO3A' | amazon_large_image }}
 
-{{ B000KFDO3A | amazon_link }}
+{{ 'B000KFDO3A' | amazon_link }}
 
-{{ B000KFDO3A | amazon_authors }}
+{{ 'B000KFDO3A' | amazon_authors }}

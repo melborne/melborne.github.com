@@ -33,8 +33,8 @@ categories:
 Wiiをまだ入手できてない人は、[joystiqのサイト](http://www.joystiq.com/media/2006/10/mii.swf)で挑戦してね！
 
 
-{{ B000KFDO3A | amazon_large_image }}
+{{ 'B000KFDO3A' | amazon_large_image }}
 
-{{ B000KFDO3A | amazon_link }}
+{{ 'B000KFDO3A' | amazon_link }}
 
-{{ B000KFDO3A | amazon_authors }}
+{{ 'B000KFDO3A' | amazon_authors }}

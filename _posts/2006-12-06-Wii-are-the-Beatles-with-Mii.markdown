@@ -25,11 +25,11 @@ categories:
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20061206/20061206105013.jpg)
 
 
-{{ B000KFDO3A | amazon_large_image }}
+{{ 'B000KFDO3A' | amazon_large_image }}
 
-{{ B000KFDO3A | amazon_link }}
+{{ 'B000KFDO3A' | amazon_link }}
 
-{{ B000KFDO3A | amazon_authors }}
+{{ 'B000KFDO3A' | amazon_authors }}
 ##Wii News from the World!
 海外のメディアでもクリスマスシーズンに向けて任天堂Wiiが紹介されているよ！やっぱりWiiリモコンは話題性十分だね。
 The Nintendo Wii is the BIG Headline（たぶんアメリカ）
@@ -59,8 +59,8 @@ Wii on Channel Ten TV Australia（たぶんオーストラリア）
 Wii on Today Show（たぶんオーストラリア）
 {% youtube 2efs78aEjqE %}
 
-{{ B000KFDO3A | amazon_large_image }}
+{{ 'B000KFDO3A' | amazon_large_image }}
 
-{{ B000KFDO3A | amazon_link }}
+{{ 'B000KFDO3A' | amazon_link }}
 
-{{ B000KFDO3A | amazon_authors }}
+{{ 'B000KFDO3A' | amazon_authors }}

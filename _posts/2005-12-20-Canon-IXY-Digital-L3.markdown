@@ -10,8 +10,8 @@ categories:
 拝啓　キヤノン様。　美しさでいって、あなた以外の選択肢はありません。しかし、望遠端の開放F値が5.4というのはどうなんだろう。料理は苦手ということか。とにかく僕を惑わせないでください。　敬具
 http://arena.nikkeibp.co.jp/rev/20051124/114391/index.shtml
 
-{{ B000BGEAR2 | amazon_medium_image }}:small
-{{ B000BGEAR2 | amazon_link }}
+{{ 'B000BGEAR2' | amazon_medium_image }}
+{{ 'B000BGEAR2' | amazon_link }}
 ##ちず窓がなかなかよいかも？な件について
 拝啓　昭文社ちず窓制作委員会様。　古くて新しいGoogle様のGoogle localやGoogle Earthには随分と驚かされました。しかし、あなたもなかなかやるじゃないですか。男というものは、何故か地図が大好きなのです。　敬具
 

@@ -15,11 +15,11 @@ Agile Web Development with Rails -Second Edition-のPDF版が昨日updateされ�
 
 ぼくたちの洗脳社会を読み終わったとき、僕の思考はDisplay上の活字の向こうに見えたそんな妄想に沈んでいった。
 
-{{ 402256928X | amazon_large_image }}
+{{ '402256928X' | amazon_large_image }}
 
-{{ 402256928X | amazon_link }}
+{{ '402256928X' | amazon_link }}
 
-{{ 402256928X | amazon_authors }}
+{{ '402256928X' | amazon_authors }}
 ##パラダイムシフトと負債
 なぜ変化に対応できないのか
 それは過去の負債があるからだ
