@@ -7,7 +7,7 @@ categories:
 ---
 
 
-引き続き「{{ 489471163X | amazon_link }}」を使って
+引き続き「{{ '489471163X' | amazon_link }}」を使って
 SchemeとRubyでリストの接続インタフェース{% fn_ref 1 %}
 としての使用について見ていこうと思います
 なおSchemeのコードは本書からの抜粋で
@@ -394,11 +394,11 @@ Rubyのオブジェクトを使った接続インタフェースでは
 左から右へ順次流れていくので
 より構造の把握がしやすい
 
-{{ 489471163X | amazon_large_image }}
+{{ '489471163X' | amazon_large_image }}
 
-{{ 489471163X | amazon_link }}
+{{ '489471163X' | amazon_link }}
 
-{{ 489471163X | amazon_authors }}
+{{ '489471163X' | amazon_authors }}
 {% footnotes %}
    {% fn conventional interface:訳書では公認インタフェースとなっています %}
    {% fn not (pair? tree %}

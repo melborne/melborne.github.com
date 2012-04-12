@@ -7,7 +7,7 @@ categories:
 ---
 
 
-「{{ 489471163X | amazon_link }}」という本を図書館で借りた
+「{{ '489471163X' | amazon_link }}」という本を図書館で借りた
 プログラマー必読の名著で
 Amazonによればこれ1冊でコンピュータのすべてがわかるらしい
 主著者はLISPの一方言であるSchemeという言語を作った人で
@@ -304,11 +304,11 @@ Rubyではローカル変数はメソッドを透過できないので
 
 関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！](/2008/08/09/Ruby-Mix-in/)
 
-{{ 489471163X | amazon_large_image }}
+{{ '489471163X' | amazon_large_image }}
 
-{{ 489471163X | amazon_link }}
+{{ '489471163X' | amazon_link }}
 
-{{ 489471163X | amazon_authors }}
+{{ '489471163X' | amazon_authors }}
 (追記:2009/2/1）タイトルを「RubyでSchemeの高階関数を学ぼう」から「SchemeでRubyの高階関数を学ぼう」に変えました
 (追記:2009/2/5)　タイトルを「SchemeでRubyの高階関数を学ぼう」から「SchemeとRubyで高階関数を学ぼう」に変えました
 {% footnotes %}

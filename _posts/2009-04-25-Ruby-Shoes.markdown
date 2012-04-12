@@ -7,7 +7,7 @@ categories:
 ---
 
 
-本屋にいったら「{{ 4499282292 | amazon_link }}」という
+本屋にいったら「{{ '4499282292' | amazon_link }}」という
 絵本がありました
 表紙に窓があって中に馬の絵が描かれています
 ページを開いていくとその馬が突然走り出しました
@@ -54,8 +54,8 @@ Shoesのスクリプトで図とマスクを作り
 [昔の子供用絵本　ギャロップ - ５５２２の眼](http://blog.goo.ne.jp/5522eyes/e/e5ef5edfeca340b38fbf4489486c9bc7)
 [らばQ:このアイデアに脱帽、動き出す紙の本『Gallop!』](http://labaq.com/archives/51062608.html)
 
-{{ 4499282292 | amazon_large_image }}
+{{ '4499282292' | amazon_large_image }}
 
-{{ 4499282292 | amazon_link }}
+{{ '4499282292' | amazon_link }}
 
-{{ 4499282292 | amazon_authors }}
+{{ '4499282292' | amazon_authors }}

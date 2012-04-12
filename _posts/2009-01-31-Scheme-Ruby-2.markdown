@@ -7,7 +7,7 @@ categories:
 ---
 
 
-[前回](/2009/01/29/notitle/)に引き続き「[rakuten:book:10825992:title]」を使って
+[前回](/2009/01/29/Scheme-Ruby/)に引き続き「{{ 489471163X || amazon_link }}」を使って
 SchemeとRubyで平方根の求め方と
 手続きを出力とする高階手続きをまとめてみました
 なおSchemeのコードは本書からの抜粋で

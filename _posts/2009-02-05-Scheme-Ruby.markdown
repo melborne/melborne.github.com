@@ -7,7 +7,7 @@ categories:
 ---
 
 
-引き続き「{{ 489471163X | amazon_link }}」を使って
+引き続き「{{ '489471163X' | amazon_link }}」を使って
 今度はSchemeとRubyでのリストの操作を見ていこうと思います
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です
@@ -380,11 +380,11 @@ Arrayクラスを継承してListクラスを定義する
 injectを使うのはちょっとずるっぽいけど
 まあいいか
 
-{{ 489471163X | amazon_large_image }}
+{{ '489471163X' | amazon_large_image }}
 
-{{ 489471163X | amazon_link }}
+{{ '489471163X' | amazon_link }}
 
-{{ 489471163X | amazon_authors }}
+{{ '489471163X' | amazon_authors }}
 {% footnotes %}
    {% fn not (pair? tree %}
    {% fn null? tree) `( %}

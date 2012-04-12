@@ -7,7 +7,7 @@ categories:
 ---
 
 
-引き続き「{{ 489471163X | amazon_link }}」を使って
+引き続き「{{ '489471163X' | amazon_link }}」を使って
 SchemeとRubyで写像の入れ子を見ていきます
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です
@@ -178,11 +178,11 @@ RubyのArrayクラスにはpermutationというメソッドが既にある
  List[1, 2, 3].permutation.to_a # => [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
 {% endhighlight %}
 
-{{ 489471163X | amazon_large_image }}
+{{ '489471163X' | amazon_large_image }}
 
-{{ 489471163X | amazon_link }}
+{{ '489471163X' | amazon_link }}
 
-{{ 489471163X | amazon_authors }}
+{{ '489471163X' | amazon_authors }}
 {% footnotes %}
    {% fn 2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7) (6 1 7) (6 5 11 %}
    {% fn 1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1 %}

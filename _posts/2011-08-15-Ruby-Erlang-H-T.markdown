@@ -10,11 +10,11 @@ categories:
 「プログラミングErlang」(Joe Armstrong著/榊原一矢訳)
 という本でちょっとErlangの世界を覗いているよ
 
-{{ 4274067149 | amazon_large_image }}
+{{ '4274067149' | amazon_large_image }}
 
-{{ 4274067149 | amazon_link }}
+{{ '4274067149' | amazon_link }}
 
-{{ 4274067149 | amazon_authors }}
+{{ '4274067149' | amazon_authors }}
 
 Erlangのような関数型言語はリスト処理に優れていて
 便利な構文がいろいろとあるんだね

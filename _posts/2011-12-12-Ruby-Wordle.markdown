@@ -32,11 +32,11 @@ Wordleのアルゴリズムについては
 「Beautiful Visualization」という
 データビジュアライゼーションの本に解説があるよ
 
-{{ 4873115043 | amazon_large_image }}
+{{ '4873115043' | amazon_large_image }}
 
-{{ 4873115043 | amazon_link }}
+{{ '4873115043' | amazon_link }}
 
-{{ 4873115043 | amazon_authors }}
+{{ '4873115043' | amazon_authors }}
 
 Wordleはすばらしいんだけど一点だけ不満があるよ
 それはその単語の大きさがそのテキストの特徴を

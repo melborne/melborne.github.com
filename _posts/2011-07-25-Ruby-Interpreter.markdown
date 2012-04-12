@@ -11,11 +11,11 @@ categories:
 GoFの23あるデザインパターンのうちの14個について
 Rubyによる実装とその解説を試みた書籍です
 
-{{ 4894712857 | amazon_large_image }}
+{{ '4894712857' | amazon_large_image }}
 
-{{ 4894712857 | amazon_link }}
+{{ '4894712857' | amazon_link }}
 
-{{ 4894712857 | amazon_authors }}
+{{ '4894712857' | amazon_authors }}
 
 ###Interpreterパターン
 その中にInterpreterパターンを取り扱った章(15)があります

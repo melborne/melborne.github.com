@@ -10,11 +10,11 @@ categories:
 「ビジュアライジング・データ ―Processingによる情報視覚化手法」(Ben Fry著) という
 情報視覚化の実践的テクニックを解説する素晴らしい本があります
 
-{{ 4873113784 | amazon_large_image }}
+{{ '4873113784' | amazon_large_image }}
 
-{{ 4873113784 | amazon_link }}
+{{ '4873113784' | amazon_link }}
 
-{{ 4873113784 | amazon_authors }}
+{{ '4873113784' | amazon_authors }}
 
 この本では情報の視覚化にProcessingという
 Javaをベースにしたグラフィック専用言語を使っています

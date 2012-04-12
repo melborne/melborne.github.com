@@ -16,11 +16,11 @@ categories:
 特にサンプルは各NoSQLの利用状況を想定して作られているから
 実用的でうれしいよね
 
-{{ 4798029599 | amazon_large_image }}
+{{ '4798029599' | amazon_large_image }}
 
-{{ 4798029599 | amazon_link }}
+{{ '4798029599' | amazon_link }}
 
-{{ 4798029599 | amazon_authors }}
+{{ '4798029599' | amazon_authors }}
 
 その中に音楽視聴ランキングサイトの楽しいサンプルがあるんだよ
 それはGyaoの音楽ランキングに基づいて
