@@ -45,7 +45,7 @@ _whyの軌跡を追う記事が最近書かれました
 
 そう_whyは今も生きているのです...
 
-###bloopsaphone
+##bloopsaphone
 先の記事で_whyのbloopsaphoneというライブラリを知りました
 以下ではその使い方を簡単に説明したいと思います
 
@@ -122,7 +122,7 @@ sleep 1 while !b.stopped?
 １オクターブ下げ 8分A 8分F# 8分F# 8分F# 2分G
 {% endhighlight %}
 
-###インストール
+##インストール
 OSXへのインストールは以下のようにします{% fn_ref 4 %}
 {% highlight bash %}
 sudo port install portaudio
@@ -130,7 +130,7 @@ sudo gem install bloopsaphone -- --with-opt-lib=/opt/local/lib --with-opt-includ
 {% endhighlight %}
 bloopsaphoneはportaudioというオーディオI/Oライブラリに依存しています
 
-###音質調整メソッド
+##音質調整メソッド
 音質調整はBloops#soundメソッドで生成されるSoundクラスの
 インスタンスメソッドで行います
 それぞれ0.0～1.0の値をセットします
@@ -250,7 +250,7 @@ slide   0.217
 repeat  0.677
 {% endhighlight %}
 
-###メソッド一覧
+##メソッド一覧
 bloopsaphoneのメソッド群は次のようになります
 {% highlight bash %}
 Bloopsクラス
@@ -262,7 +262,7 @@ Trackクラス
  instance methods: to_s
 {% endhighlight %}
 
-###BloopSong DSL
+##BloopSong DSL
 bloopsaphoneで長い楽譜を再生しようとすると
 以下のような問題がありました
 1. CPUの占有率が徐々に上がって途中で再生不能になる

@@ -23,7 +23,7 @@ HTML5のCanvasに興味がでてきて
 以下の記事を読む価値があるかもしれません
 もちろん何の保証もありませんが..
 
-###Canvasを使ったWebアプリケーションの構築
+##Canvasを使ったWebアプリケーションの構築
 この記事は先のリンクで示した
 接近する時計のWebアプリケーションを構築する手順を書いています
 HTMLはhamlとscssを使って
@@ -31,7 +31,7 @@ JavaScriptはjQueryを使って記述しています
 WebフレームワークSinatraを使ってHerokuにデプロイしています
 OSはMac OSX Tiger..です
 
-###ディレクトリ構成
+##ディレクトリ構成
 最終的なファイル構成は以下のようになります
 {% highlight bash %}
 .
@@ -63,7 +63,7 @@ Sinatra版scaffold ease_sinatra.rbを用意しました
 Sinatraのテンプレートファイルが得られます
 かなりいい加減な作りであることをご了承下さい..
 
-###clock.rb
+##clock.rb
 まずWebフレームワークのコントローラとなるclock.rbを書きます
 {% highlight ruby %}
 require 'sinatra'
@@ -87,7 +87,7 @@ hamlで記述されたviews/index.hamlが返されるよう指定しています
 get '/style.css'でlink属性でstyle.cssが呼ばれたときに
 scssで記述されたvews/style.scssが返されるよう指定しています
 
-###layout.haml
+##layout.haml
 次にlayout.hamlを記述します
 Sinatraではlayoutという名のテンプレートが存在する場合
 各テンプレートの読み出しに先立ってそれが自動で読み出されます
@@ -109,7 +109,7 @@ jQueryはGoogleが提供するものを使っています
 時計を記述するclock.jsを指定します
 bodyタグの中身はyieldで実体ファイル(index.haml)に委ねます
 
-###index.haml
+##index.haml
 次にindex.hamlを記述します
 {% highlight ruby %}
 %header
@@ -122,7 +122,7 @@ mainのcanvasタグにclockというid名を付けサイズを指定します
 HTML5非対応ブラウザのためのメッセージを記述します
 footerタグにCREDITのリンクを貼ります
 
-###style.scss
+##style.scss
 次にstyle.scssを記述します
 scssはsassy css(sassライクなcss)を意味するcssの拡張言語です{% fn_ref 1 %}
 scssを使用することによりcssの文法に沿って
@@ -175,7 +175,7 @@ $varnameでグローバル変数を定義できます
 @mixin-@includeでセレクタブロックを関数ライクに使えます
 ここではrounded()で角丸にミックスインを使っています
 
-###clock.js
+##clock.js
 メインとなるclock.jsを記述します
 JavaScript初学者なので書き方に問題があるかもしれません
 間違いをご指摘頂けるとうれしいです
@@ -341,7 +341,7 @@ Dateオブジェクトを使って現在の時・分・秒を取得します
 分針は60秒ごとに一気に１つ進むようにしています
 
 clock.jsは以上です
-###ローカルでの起動
+##ローカルでの起動
 これでローカルで実行する環境が整いました
 早々立ち上げてみましょう
 {% highlight ruby %}
@@ -360,7 +360,7 @@ Ruby1.9.2でshotgunを利用する場合
 [2011-02-18 18:28:47] INFO  ruby 1.9.2 (2010-12-25) [i386-darwin8.11.1]
 [2011-02-18 18:28:47] INFO  WEBrick::HTTPServer#start: pid=1613 port=9393
 {% endhighlight %}
-###Herokuへのデプロイ
+##Herokuへのデプロイ
 http://localhost:4567で問題なくアプリケーションが起動したら
 Herokuにデプロイするためにconfig.ruとGemfileを用意します
 

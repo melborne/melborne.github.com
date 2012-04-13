@@ -14,7 +14,7 @@ categories:
 
 ちょっと数が少ないけど、知らないものがあったらへーとかほーとか、得したとか言ってもらえるとうれしいよ。
 
-###1.Enumerator#with_index
+##1.Enumerator#with_index
 任意のリストを標準出力するときに連番を同時に振るとしたら、普通はEnumerable#each_with_indexを使うよね。
 {% highlight ruby %}
 names = Module.constants.take(10)
@@ -50,7 +50,7 @@ names.each.with_index(1) { |name, i| puts "%d: %s" % [i, name] } # => [:Object, 
 
 with_indexはindexのoffsetを引数に取れるよ。comparableなオブジェクトが取れたらもっとよかったのにね。
 
-###2.Integer#times
+##2.Integer#times
 timesは処理を特定回数だけ繰り返したいときに使うよね。
 {% highlight ruby %}
 you_said = 'てぶくろ'
@@ -69,14 +69,14 @@ timesはブロックを渡さないとEnumeratorを返すよ。だから複数�
 20.times.map { [rand(256), rand(256), rand(256)] } # => [[45, 190, 194], [94, 43, 125], [6, 104, 181], [144, 92, 114], [34, 161, 214], [96, 69, 241], [216, 246, 133], [6, 237, 131], [194, 95, 214], [177, 252, 202], [184, 149, 142], [184, 166, 45], [41, 108, 115], [176, 100, 138], [124, 213, 89], [173, 123, 34], [137, 31, 47], [54, 92, 186], [118, 239, 217], [150, 184, 240]]
 {% endhighlight %}
 
-###3.String#succ / Integer#succ
+##3.String#succ / Integer#succ
 ExcelのAから始まる横のラベルを作りたいんだけどどうする？って問題が最近あったよ。RubyにはString#succまたはnextがあるからこれは簡単だよ。
 {% highlight ruby %}
 col = '@'
 60.times.map { col = col.succ } # => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH"]
 {% endhighlight %}
 
-###4.Comparable.between?
+##4.Comparable.between?
 値が一定範囲内にあるかどうかで処理を切り分けたいことってあるよね？たぶん普通はこうするよ。
 {% highlight ruby %}
 pos = 48
@@ -123,7 +123,7 @@ status =
 status # => :you_are_in
 {% endhighlight %}
 
-###5.Array#uniq
+##5.Array#uniq
 配列の全要素が同じかどうかを調べたいときはどうする？そんなときはArray#uniqが使えるよ。
 {% highlight ruby %}
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1].uniq.size==1 # => true
@@ -131,7 +131,7 @@ status # => :you_are_in
 %w(street retest setter tester).uniq { |w| w.chars.sort }.size==1 # => true
 {% endhighlight %}
 
-###6.BasicObject#instance_eval
+##6.BasicObject#instance_eval
 instance_evalはオブジェクトの生成をDSL風にするときに良く使われているよね。
 {% highlight ruby %}
 class Person
@@ -190,13 +190,13 @@ sd # => 14.247806848775006
 {% endhighlight %}
 中間的な変数をブロック内に閉じ込められるし、ブロックで式がまとまって見やすくない？
 
-###7.Array#first/last
+##7.Array#first/last
 Array#first/lastは個数の引数を取れるよ。
 {% highlight ruby %}
 [*1..100].instance_eval { first(5) + last(5) } # => [1, 2, 3, 4, 5, 96, 97, 98, 99, 100]
 {% endhighlight %}
 
-###8.正規表現:名前付き参照
+##8.正規表現:名前付き参照
 正規表現中で()を使うと部分マッチを捕捉できるよね。で、それに名前を付けたいときは?<pattern>を使えばいいよ。
 {% highlight ruby %}
 langs = "python lisp ruby haskell erlang scala"
@@ -214,7 +214,7 @@ end
 {% endhighlight %}
 って、正規表現てトリビアだらけだからこんなこと言ってもしょうがないか..
 
-###9.正規表現:POSIXブラケット
+##9.正規表現:POSIXブラケット
 Ruby1.9では\wは日本語にマッチしなくなったよね。だから1.9で日本語にもマッチさせたいときはPOSIXブラケットでwordを使うといいかもね。
 {% highlight ruby %}
 need_japanese = "this-日本語*is*_really_/\\変わってる!"
@@ -222,7 +222,7 @@ need_japanese.scan(/\w+/) # => ["this", "is", "_really_"]
 need_japanese.scan(/[[:word:]]+/) # => ["this", "日本語", "is", "_really_", "変わってる"]
 {% endhighlight %}
 
-###10.String#match
+##10.String#match
 もう一つ正規表現を^ ^;
 String#matchはMatchDataオブジェクトを返すから次のように使えるよね。
 {% highlight ruby %}
@@ -239,7 +239,7 @@ mon, day, year = date.match(/\D+/) { |m| [m.to_s.capitalize, m.post_match, m.pre
 "#{mon} #{day}, #{year}" # => "February 14, 2012"
 {% endhighlight %}
 
-###11.String#unpack
+##11.String#unpack
 数字列を決まった長さ基準で区切りたいときはどうする？正規表現を使うのかな。
 {% highlight ruby %}
 a_day = '20120214'
@@ -251,7 +251,7 @@ a_day = '20120214'
 a_day.unpack('A4A2A2') # => ["2012", "02", "14"]
 {% endhighlight %}
 
-###12.DATA.rewind
+##12.DATA.rewind
 DATAは__END__以降をFileとしたオブジェクトだよ。だからrewindクラスメソッドが使えるんだけど、これは__END__の最初の行に戻るんじゃなくてファイルのトップに戻るんだよ。だからこれを使えば、なんちゃってQuineができるんだ。
 {% highlight ruby %}
 #!/usr/bin/env ruby

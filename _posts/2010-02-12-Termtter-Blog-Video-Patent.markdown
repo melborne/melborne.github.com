@@ -17,8 +17,8 @@ gsearch pluginを改良して以下のGoogle検索に対応させました
 -Google Patent Search
 <del datetime="2010-02-15T09:22:46+09:00">なお日本語検索ができないという致命的な問題があります</del>
 (追記：2009/2/15)日本語検索に対応しました
-###使い方
-###*Google Web Search
+##使い方
+##*Google Web Search
 Web検索は以下のようにする
 {% highlight ruby %}
 > google_web ruby または google ruby または gs ruby
@@ -69,7 +69,7 @@ wikiコマンドでwikipediaの検索ができるようになる
 > some 5
 {% endhighlight %}
 として0～4を一度に開くことができる
-###*Google Blog Search
+##*Google Blog Search
 Blog検索は以下のようにする
 {% highlight ruby %}
 > google_blog google buzz または gb google buzz
@@ -81,7 +81,7 @@ Blog検索は以下のようにする
 {% highlight ruby %}
 > gb -l ch -v true -p small google buzz
 {% endhighlight %}
-###*Google Book Search
+##*Google Book Search
 Book検索は以下のようにする
 {% highlight ruby %}
 > google_book ruby または gbk ruby
@@ -96,7 +96,7 @@ Book検索は以下のようにする
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095142.png)
 
 
-###*Google Image Search
+##*Google Image Search
 Image検索は以下のようにする
 {% highlight ruby %}
 > google_image flower または gi flower
@@ -117,7 +117,7 @@ Image検索は以下のようにする
   # :image_type = :face, :photo, :clipart, :lineart
   # :file_type = :jpg, :png, :gif, :bmp
 {% endhighlight %}
-###*Google Video Search
+##*Google Video Search
 Video検索は以下のようにする
 {% highlight ruby %}
 > google_video rubyconf または gv rubyconf
@@ -126,7 +126,7 @@ Video検索は以下のようにする
 
 
 起動optionは -lvp
-###*Google News Search
+##*Google News Search
 News検索は以下のようにする
 {% highlight ruby %}
 > google_news google buzz または gn google buzz
@@ -148,7 +148,7 @@ News検索は以下のようにする
   #               :elections, :politics, :entertainment, :sports, :health
   # :news_relative_to = ex. city, state, province, zipcode..
 {% endhighlight %}
-###*Google Patent Search
+##*Google Patent Search
 Patent検索は以下のようにする
 {% highlight ruby %}
 > google_patent programmig multithread または gp programmig multithread
@@ -160,7 +160,7 @@ Patent検索は以下のようにする
 {% highlight ruby %}
 > gp multithread -i true
 {% endhighlight %}
-###*設定
+##*設定
 検索のdefault設定は以下のようになっている
 {% highlight ruby %}
   :verbose            => false

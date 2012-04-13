@@ -7,7 +7,7 @@ categories:
 ---
 
 
-FizzBuzzはプログラムする人の最初のfilterプログラムだ{% fn_ref 1 %})
+FizzBuzzはプログラムする人の最初のfilterプログラムだ{% fn_ref 1 %}
 だからプログラムをするのならFizzBuzzを解かなきゃならない
 こうしてプログラムする人の数だけFizzBuzzが生まれる
 そして今日もまた別のFizzBuzzが生まれた

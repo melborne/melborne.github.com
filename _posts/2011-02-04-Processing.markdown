@@ -41,17 +41,17 @@ clockアプレット(clock.pde)を例に手順を説明します
 1. iGoogleにアプレットを登録する
 1. はてダにclock.xmlへのリンクを貼る
 
-###1. clock.pdeをexportしてclock.jarを生成する
+##1. clock.pdeをexportしてclock.jarを生成する
 ProcessingのIDEにおいてclock.pdeを作った後
 その最右にあるメニューボタンを押すとappletフォルダ内に
 clock.jarその他のファイルが自動生成されます
-###2. clock.jarを~/Dropbox/public/に移動しそのpublic linkを取得する
+##2. clock.jarを~/Dropbox/public/に移動しそのpublic linkを取得する
 生成されたclock.jarをDropbox/publicフォルダに移動します
 DropboxのWebサイトに行き
 そのファイルのpublic linkを取得します
 linkはマウスカーソルをファイルに当てて
 右側に現れる矢印から選択できます
-###3. ~/Dropbox/public/にiGoogle登録用のclock.xmlを作りそのpublic linkを取得する
+##3. ~/Dropbox/public/にiGoogle登録用のclock.xmlを作りそのpublic linkを取得する
 以下の内容でDropbox/publicフォルダにxmlファイルを作ります
 {% highlight xml %}
 <?xml version="1.0" encoding="UTF-8" ?> 
@@ -72,7 +72,7 @@ width heightをclock.pdeでのものと一致させます
 DropboxのWebサイトに行き
 このファイルのpublic linkを取得します
 
-###4. iGoogleにアプレットを登録する
+##4. iGoogleにアプレットを登録する
 iGoogleのサイトに行き
 先のclock.xmlをgadgetとして登録します
 右上の「コンテンツを追加」で開いたページ左下の
@@ -82,7 +82,7 @@ iGoogleのサイトに行き
 iGoogleのホームに戻り
 gadgetが登録されたことを確認します
 
-###5. はてダにclock.xmlへのリンクを貼る
+##5. はてダにclock.xmlへのリンクを貼る
 はてなダイアリーで記事を投稿する際に
 以下のxmlを本文のところに貼り付けます
 {% highlight xml %}

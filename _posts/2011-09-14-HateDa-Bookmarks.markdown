@@ -42,7 +42,7 @@ categories:
 統計を得るための簡単なツール
 HateDa::BookmarksをRubyで作りました;)
 
-###HateDa::Bookmarksの使い方
+##HateDa::Bookmarksの使い方
 次のサイトからファイルをダウンロードします
 htmlの解析にNokogiriを使っているので
 なければgem install nokogiriしてください
@@ -85,7 +85,7 @@ Bookmarks#totalメソッドで総ブックマーク数が得られます
 
 [Rubyではてダの記事一覧を取得してまとめ頁を作ろう！](/2011/01/27/Ruby/)
 
-###Hatena Bookmarkers in Visual
+##Hatena Bookmarkers in Visual
 折角なのでこのツールで取得した情報を
 ビジュアライズするDemoサイトを
 Processing.jsを使って作ってみました:)

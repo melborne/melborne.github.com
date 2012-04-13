@@ -26,7 +26,7 @@ jQuery UIのスライダーを使って
 以下では前回のデモと異なる部分を中心に説明します
 その他の箇所は前回の記事を読んでください
 
-###ファイル構成
+##ファイル構成
 ファイル構成は次のようになります
 {% highlight bash %}
  .
@@ -56,7 +56,7 @@ public/css/以下のファイル群はsliderのテーマファイルです
 
 [](http://jqueryui.com/download)
 
-###layout.haml
+##layout.haml
 {% highlight ruby %}
 !!! 5
 %html
@@ -75,7 +75,7 @@ public/css/以下のファイル群はsliderのテーマファイルです
 スライダーのcssファイルにリンクを張ります
 jQueryとjQuery UI本体はGoogleが提供するものを使います
 
-###index.haml
+##index.haml
 {% highlight ruby %}
 %header
 #main
@@ -93,7 +93,7 @@ jQueryとjQuery UI本体はGoogleが提供するものを使います
 ボールのサイズ　速度　軌跡　色を調整するために
 ８個のスライダーと対応するラベルを用意します
 
-###eqball.js(1)
+##eqball.js(1)
 {% highlight javascript %}
 var canvas = {};
 var ball = {
@@ -133,7 +133,7 @@ slideイベントでスライダーの値ui.valueを
 サイズを変更するスライダーのコードのみを示していますが
 他のスライダーについても同じように記述します
 
-###eqball.js(2)
+##eqball.js(2)
 {% highlight javascript %}
 function label (obj, ui) {
   var id = obj.attr('id');

@@ -80,7 +80,7 @@ map([1,2,3,4,5], fun(X)->X*X end).
 ちなみにfun(X)->X*X end は
 Rubyのlambdaにそっくりだよね
 
-###Rubyでやってみる
+##Rubyでやってみる
 で
 これを見てRubyでも | で
 リストの結合や分離ができたら

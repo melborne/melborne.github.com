@@ -12,7 +12,7 @@ categories:
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です
 
-###リスト要素の参照
+##リスト要素の参照
 Schemeにはデータオブジェクトの並びを表現する
 リストというデータ構造がある
 リストはlist手続きで作ることができるが
@@ -95,7 +95,7 @@ list_refが定義できるはずだ
  list_ref(odds, 3) # => 7
 {% endhighlight %}
 
-###リストの長さ
+##リストの長さ
 schemeに戻って
 リストの長さ(要素数)を返す手続きlengthを定義する
 {% highlight scheme %}
@@ -124,7 +124,7 @@ Rubyでもlengthを定義しよう
  length(odds) # => 4
 {% endhighlight %}
 
-###リストの結合
+##リストの結合
 次に2つのリストを結合する手続きappendを定義する
 {% highlight scheme %}
  (define (append list1 list2)
@@ -153,7 +153,7 @@ Rubyでもappendを定義しよう
  append(odds, squares) # => [1, [3, [5, [7, [1, [4, [9, [16, [25, nil]]]]]]]]]
 {% endhighlight %}
 
-###リスト要素に手続きを作用させる
+##リスト要素に手続きを作用させる
 今度はリストの各要素に
 任意の手続きを作用させたリストを返す手続きmapを定義する
 {% highlight scheme %}
@@ -206,7 +206,7 @@ mapに渡す演算を変えることによって
  scale_list odds # => [1, [9, [25, [49, nil]]]]
 {% endhighlight %}
 
-###treeに対する演算
+##treeに対する演算
 並びはその要素自身が並びである階層構造を許す
 {% highlight scheme %}
  (cons (list 1 2) (list 3 4))
@@ -308,7 +308,7 @@ Rubyでも同じようにやってみよう
  scale_tree l, 10 # => [10, [[20, [[30, [40, nil]], [50, nil]]], [[60, [70, nil]], nil]]]
 {% endhighlight %}
 
-###Listクラスを定義する
+##Listクラスを定義する
 Rubyではリストをオブジェクトしたバージョンも書いてみる
 Arrayクラスを継承してListクラスを定義する
 {% highlight ruby %}

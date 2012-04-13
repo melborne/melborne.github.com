@@ -36,7 +36,7 @@ memcachedの使い方を学ぶよ
 僕はRailsをよく知らないのでここではSinatraを使うよ
 そして折角だからHerokuにpushもしてみるね
 
-###memcached
+##memcached
 環境はOSX Snow Leopardだよ
 ローカルでmemcachedを使うには
 brew install memcachedすればいいよ
@@ -64,7 +64,7 @@ memcachedを使うと多数のリクエストが
 つまりmemcachedはWebサーバをステートフルにする
 こう理解したんだけどあってるかな？
 
-###GyaoRankサイト
+##GyaoRankサイト
 さて最終的にでき上がったものは以下にあるよ
 
 http://gyaorank.heroku.com/

@@ -190,7 +190,7 @@ make_exponentiationでは
  (+ (* a (* 2 x)) b)
 {% endhighlight %}
 
-###Rubyによる記号微分
+##Rubyによる記号微分
 同じことをRubyでも挑戦してみよう
 Rubyでは記号を表現するために
 シンボル(Symbol)と文字列(String)が使えそうだ

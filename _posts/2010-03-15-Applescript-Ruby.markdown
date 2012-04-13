@@ -72,7 +72,7 @@ keyboardでそれらの透過度を調整するため
 自分が取った試行錯誤を紹介します
 不完全ですが一応の成果は得られたので公開します
 
-###MacVim
+##MacVim
 Vimにはtransparencyという設定項目があり
 それを:set transparency=で変更できます
 ですから単に以下を.gvimrcに記述すればいいです
@@ -83,7 +83,7 @@ nmap _ :set transparency-=5<CR>
 この設定でnomal modeで+を押す度に透過度が上がり
 _を押す度に透過度が下がるようになります
 やはりVimはただ者ではありません
-###iTerm
+##iTerm
 ###*Applescriptその１
 iTermはApplescriptをサポートしています
 ですからその透過度をApplescriptを使って変更できそうです
@@ -179,7 +179,7 @@ do shell script "osascript ~/Library/Application Support/iterm/Scripts/transpare
 これらを先のapplicationのフォルダに置いて実行すると
 ハングしてうまくいきませんでした
 
-###AppleScriptユーティリティ
+##AppleScriptユーティリティ
 Applescriptの別の置き場所としては
 メニューバーのスクリプトアイコンで表示されるエリアがあります
 このアイコンを出現させるには
@@ -201,7 +201,7 @@ keyboard shortcutを割り当てる方法は
 残念ながら見つかりませんでした
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094409.png)
 
-###QuickSilverを使う
+##QuickSilverを使う
 こうなるとQuickSilverの出番です
 QuickSilverで目的のscriptをrunする
 という方法もありますが
@@ -225,7 +225,7 @@ shortcutがiTerm専用ではなくグローバルになってしまいます
 現時点で解決方法は見つかっていません
 ご存知の方は是非ともコメントを下さい
 
-###Rubyを使う
+##Rubyを使う
 Applescriptでは２つの設定を切換えるscriptを書きましたが
 できればMacVimでしたように
 キーを押す度に透過度が段階的に変わるものがほしいです
@@ -289,7 +289,7 @@ do shell script "ruby ~/path/to/file/iterm_opac.rb -"
 {% endhighlight %}
 そして先ほどと同様にQuickSilverで
 keyboard shortcutを登録すれば完了です
-###Terminal用Ruby Script
+##Terminal用Ruby Script
 Terminalでも透過度を調整できるように
 rubyのコードを書きました
 {% highlight ruby %}
@@ -311,7 +311,7 @@ end
 {% endhighlight %}
 基本はiTermのものと同じですが
 対象のwindowとその透過度を取得するやり方が違います
-###ASDictionary
+##ASDictionary
 ネットには思いの外rb-appscriptに関する情報がありません
 そのため対象Macアプリで使える
 commandとpropertyを見つけるのに苦労します
@@ -457,7 +457,7 @@ irb> term.windows[0].background_color.get
 irb> term.windows[0].background_color.set([0,0,0,-6718])
 => nil
 {% endhighlight %}
-###ASTranslate
+##ASTranslate
 もしrubyよりもAppscriptに明るいのなら
 ASTranslateが便利です
 

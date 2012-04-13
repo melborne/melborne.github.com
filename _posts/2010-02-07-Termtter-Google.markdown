@@ -38,7 +38,7 @@ Termtter::Client.register_command(
 {% endhighlight %}
 http://termtter.org/plugins
 
-###Google検索plugin
+##Google検索plugin
 Termtterは検索の使い勝手がいいので
 ここでGoogleも検索できたらきっと面白い
 少し調べるとgoogle-searchというRubyのライブラリがあったので

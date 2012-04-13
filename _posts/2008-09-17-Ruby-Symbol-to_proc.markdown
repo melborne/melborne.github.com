@@ -6,42 +6,28 @@ comments: true
 categories:
 ---
 
+Rubyのメソッドはブロックを取れる。ブロックはコードの塊だから、その内容に応じてメソッドの挙動を大きく変化させることができるんだ。
 
-Rubyのメソッドはブロックを取れる
-ブロックはコードの塊だから
-その内容に応じてメソッドの挙動を
-大きく変化させることができるんだ
-
-例えばinjectメソッドはリストタイプのオブジェクトに対して
-たたみこみ演算を実行するものだけれど
-これに加算を行うコードブロックを渡せば
-injectメソッドはたたみこみ加算器となり
+例えば、injectメソッドはリストタイプのオブジェクトに対して、たたみこみ演算を実行するものだけれど、これに加算を行うコードブロックを渡せばinjectメソッドはたたみこみ加算器となり、
 {% highlight ruby %}
-  (1..10).inject(5) { |mem, var| mem + var }　# => 60
+  (1..10).inject(5) { |mem, var| mem + var } # => 60
 {% endhighlight %}
-一方乗算を行うコードブロックを渡せば
-たたみこみ乗算器となるんだ
+一方乗算を行うコードブロックを渡せば、たたみこみ乗算器となるんだ。
 {% highlight ruby %}
-  (1..5).inject(2) { |mem, var| mem * var }　# => 240
+  (1..5).inject(2) { |mem, var| mem * var } # => 240
 {% endhighlight %}
 
-またmapメソッドはリストの各要素に
-同じ評価を与えるものだけれど
-これにcapitalizeメソッドのコードブロックを渡せば
-mapメソッドはcapitalize変換器となり
+また、mapメソッドはリストの各要素に同じ評価を与えるものだけれど、これにcapitalizeメソッドのコードブロックを渡せば、mapメソッドはcapitalize変換器となり、
 {% highlight ruby %}
    ["ruby", "c", "lisp", "smalltalk"].map { |item| item.capitalize }      # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-一方lengthメソッドのコードブロックを渡せば
-長さ演算器となるんだ
+一方、lengthメソッドのコードブロックを渡せば、長さ演算器となるんだ。
 {% highlight ruby %}
    ["ruby", "c", "lisp", "smalltalk"].map { |item| item.length }       # => [4, 1, 4, 9]
 {% endhighlight %}
-もちろんブロックにはもっと複雑なコードを渡せる
-でも意外と上で示したような単純な演算をさせることが多いよね
+もちろんブロックにはもっと複雑なコードを渡せる。でも、意外と上で示したような単純な演算をさせることが多いよね。
 
-そうするとただ各要素の加算をしたり長さを求めるときに
-いちいちmemとかitemとかのブロック変数を書くのが面倒くさい
+そうすると、ただ各要素の加算をしたり長さを求めるときに、いちいちmemとかitemとかのブロック変数を書くのが面倒くさい。
 
 なんとかならないかな…
 {% highlight ruby %}
@@ -49,47 +35,38 @@ mapメソッドはcapitalize変換器となり
 {% endhighlight %}
 とか書けたらすてきだなあ…
 
-基の式はこうだから
+基の式はこうだから、
 {% highlight ruby %}
-  (1..10).inject(5) { |mem, var| mem + var }　# => 60
+  (1..10).inject(5) { |mem, var| mem + var } # => 60
 {% endhighlight %}
-こうはなるよね
+こうはなるよね。
 {% highlight ruby %}
-  (1..10).inject(5) { |mem, var| mem.send(:+, var) }　# => 60
+  (1..10).inject(5) { |mem, var| mem.send(:+, var) } # => 60
 {% endhighlight %}
-Kernelのsendメソッドは
-シンボル化されたメソッド名を第1引数に取れるんだ
+Kernelのsendメソッドはシンボル化されたメソッド名を第1引数に取れるんだ。
 
-ブロックをブロックとしてではなく
-injectの引数として何とか渡したいなあ
+ブロックをブロックとしてではなく、injectの引数として何とか渡したいなあ。
 
-ならブロックをオブジェクト化すればいいんだ
+ならブロックをオブジェクト化すればいいんだ。
 {% highlight ruby %}
-  (1..10).inject(5, &lambda { |mem, var| mem.send(:+, var) })　# => 60
+  (1..10).inject(5, &lambda { |mem, var| mem.send(:+, var) }) # => 60
 {% endhighlight %}
-メソッドはその引数としてオブジェクトしか受け付けないけど
-lambdaでブロックを手続きオブジェクトに変えてやれば
-他のオブジェクトと同じようにカッコに入れられる
-それで＆(アンパサンド)を前置すれば
-呼び出し側(injectメソッド内部)ではブロックに戻されて
-ブロックとして評価されるようになる
+メソッドはその引数としてオブジェクトしか受け付けないけど、lambdaでブロックを手続きオブジェクトに変えてやれば、他のオブジェクトと同じようにカッコに入れられる。それで＆(アンパサンド)を前置すれば、呼び出し側(injectメソッド内部)ではブロックに戻されて、ブロックとして評価されるようになる。
 
-さて次にこの手続きオブジェクトをどこかに隠したいなあ
+さて、次にこの手続きオブジェクトをどこかに隠したいなあ。
 
-そうか
-シンボルのメソッドにしちゃえばいいんだよ！
-つまりシンボルを
-この手続きオブジェクトに変換するメソッドを書けばいいんだ
+そうか、シンボルのメソッドにしちゃえばいいんだよ！つまり、シンボルをこの手続きオブジェクトに変換するメソッドを書けばいいんだ。
 {% highlight ruby %}
   class Symbol
     def to_proc
       lambda { |mem, var| mem.send(:+, var) }
     end
   end
-  (1..10).inject(5, &:+.to_proc)　# => 60
+  (1..10).inject(5, &:+.to_proc) # => 60
 {% endhighlight %}
 
 すごいな俺！
+
 これでto_procが取れたら完成なんだけど…
 {% highlight ruby %}
   class Symbol
@@ -97,42 +74,34 @@ lambdaでブロックを手続きオブジェクトに変えてやれば
       lambda { |mem, var| mem.send(:+, var) }
     end
   end
-  (1..10).inject(5, &:+)　# => 60
+  (1..10).inject(5, &:+) # => 60
 {% endhighlight %}
-あれ？
-取ってもうまくいくぞ
-なんで？
+あれ？取ってもうまくいくぞ。なんで？
 
-そうか暗黙の型変換だよ
+そうか暗黙の型変換だよ。
 
-＆を前置したからRubyは
-それが手続きオブジェクトであると期待したんだ
-でもその期待に反して＆を伴っていたのはシンボルだったので
-そのオブジェクトに手続きオブジェクトへの変換を要求
-つまりto_procメソッドを自動で送信したんだ
+＆を前置したからRubyは、それが手続きオブジェクトであると期待したんだ。でもその期待に反して＆を伴っていたのはシンボルだったので、そのオブジェクトに手続きオブジェクトへの変換を要求、つまりto_procメソッドを自動で送信したんだ。
 
-できちゃったよ！
-ラッキーだな俺！
+できちゃったよ！ラッキーだな俺！
 
-じゃあ次にmapについても
-同じように考えてみよう
+じゃあ、次にmapについても同じように考えてみよう。
 
-基の式はこうだから
+基の式はこうだから、
 {% highlight ruby %}
    ["ruby", "c", "lisp", "smalltalk"].map { |item| item.capitalize }
             # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-こうはなるよね
+こうはなるよね。
 {% highlight ruby %}
    ["ruby", "c", "lisp", "smalltalk"].map { |item| item.send(:capitalize) }
             # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-次にブロックをオブジェクト化する
+次に、ブロックをオブジェクト化する。
 {% highlight ruby %}
    ["ruby", "c", "lisp", "smalltalk"].map(&lambda { |item| item.send(:capitalize) })
             # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-それでこの手続きオブジェクトをシンボルのto_procメソッドにすれば完成だ
+それでこの手続きオブジェクトをシンボルのto_procメソッドにすれば完成だ。
 {% highlight ruby %}
   class Symbol
     def to_proc
@@ -144,11 +113,7 @@ lambdaでブロックを手続きオブジェクトに変えてやれば
 {% endhighlight %}
 よし！
 
-最後はこのto_procメソッドを一般化しなけりゃ
-つまり上の2つの例ではそれぞれのメソッド:+と:capitalizeが
-to_procに書かれてしまっている
-これらはto_procメソッドの呼びだし元
-つまりselfだからこれに置き換えよう
+最後はこのto_procメソッドを一般化しなけりゃ。つまり、上の2つの例ではそれぞれのメソッド:+と:capitalizeがto_procに書かれてしまっている。これらはto_procメソッドの呼びだし元、つまりselfだからこれに置き換えよう。
 {% highlight ruby %}
   class Symbol
     def to_proc
@@ -156,46 +121,35 @@ to_procに書かれてしまっている
     end
   end
 {% endhighlight %}
-うまいことにRubyのブロックはクロージャとして
-外部環境を一緒に閉じ込めるから
-to_proc内のブロックにおけるselfは
-その呼びだし元(先の例では:+, :capitalize)となる
+うまいことにRubyのブロックはクロージャとして外部環境を一緒に閉じ込めるから、to_proc内のブロックにおけるselfはその呼びだし元(先の例では:+, :capitalize)となる。
 
 これでSymbol#to_procの完成だ！
 
 ----------------------------------------------------------------
-ってか
-こういうことを考えつく人は
-パッと閃いてサッと書いてしまうんでしょう…
-僕はSymbol#to_procをこうやってやっと理解できたのでした
+ってか、こういうことを考えつく人はパッと閃いてサッと書いてしまうんでしょう…僕はSymbol#to_procをこうやってやっと理解できたのでした。
 
-ただここまでくると
-こんどはちょっと＆が邪魔に思えてくる
-だからやっぱりこう書きたい
+ただここまでくると、こんどはちょっと＆が邪魔に思えてくる。だからやっぱりこう書きたい。
 {% highlight ruby %}
   (1..10).inject(5, :+) # => 60
 {% endhighlight %}
-あれ？
-実行できる…
+あれ？実行できる…
+
 これは？
 {% highlight ruby %}
   (1..10).inject(5, '+') # => 60
 {% endhighlight %}
-これもOKだ
-じゃあmapも？
+これもOKだ。じゃあmapも？
 {% highlight ruby %}
   ["ruby", "c", "lisp", "smalltalk"].map(:capitalize)
         # =>ArgumentError: wrong number of arguments (1 for 0)
 {% endhighlight %}
-mapはだめだった
+mapはだめだった。
 
 Ruby1.9のリファレンスマニュアルを調べてみると…
-injectメソッドはシンボルを渡すと
-それをメソッドとして呼ぶように実装されていた{% fn_ref 1 %})
 
-こうなるとmapもなんとかしたい
-まずmapの実装等価コードを
-mappメソッドとして書いてみる
+injectメソッドはシンボルを渡すと、それをメソッドとして呼ぶように実装されていた。{% fn_ref 1 %}
+
+こうなるとmapもなんとかしたい。まずmapの実装等価コードをmappメソッドとして書いてみる。
 {% highlight ruby %}
   module Enumerable
     def mapp
@@ -208,17 +162,16 @@ mappメソッドとして書いてみる
     end
   end
 {% endhighlight %}
-こんな感じだろうか
+こんな感じだろうか。
 {% highlight ruby %}
   ["ruby", "c", "lisp", "smalltalk"].mapp(&:capitalize)
             # => ["Ruby", "C", "Lisp", "Smalltalk"]
   ["ruby", "c", "lisp", "smalltalk"].mapp { |item| item.capitalize }
            # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-いいみたいだ
+いいみたいだ。
 
-次にブロックが渡されないときの処理を分岐して
-その場合には渡された第1引数をメソッドとして呼ぶようにしてみる
+次にブロックが渡されないときの処理を分岐して、その場合には渡された第1引数をメソッドとして呼ぶようにしてみる。
 {% highlight ruby %}
   module Enumerable
     def mapp(*args)
@@ -231,7 +184,7 @@ mappメソッドとして書いてみる
     end
   end
 {% endhighlight %}
-ブロックの有無の判断にはblock_given?メソッドを使う
+ブロックの有無の判断にはblock_given?メソッドを使う。
 {% highlight ruby %}
   ["ruby", "c", "lisp", "smalltalk"].mapp(:capitalize)
                 # => ["Ruby", "C", "Lisp", "Smalltalk"]
@@ -242,11 +195,9 @@ mappメソッドとして書いてみる
   ["ruby", "c", "lisp", "smalltalk"].mapp { |item| item.capitalize }
                # => ["Ruby", "C", "Lisp", "Smalltalk"]
 {% endhighlight %}
-うまくいった
+うまくいった。
 
-ただどういうわけか
-mapを再定義して上記を実装するとうまくいかない
-自分の理解の限界に来たのでここまでとします
+ただどういうわけかmapを再定義して上記を実装するとうまくいかない。自分の理解の限界に来たのでここまでとします。
 
 関連記事：[Rubyのブロックはメソッドに対するメソッドのMix-inだ！](/2008/08/09/Ruby-Mix-in/)
 {% footnotes %}

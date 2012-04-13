@@ -21,7 +21,7 @@ categories:
 1. 案件ごとの開始・終了時間を毎日記録する
 1. 案件ごとに時間を集計する
 
-###案件ごとの開始・終了時間を毎日記録する
+##案件ごとの開始・終了時間を毎日記録する
 案件に対する実働時間というのは一日のうちでも小間切れになるので、これを記録するのはなかなか面倒です。よって時間の記録をできるだけ簡単に行えるようにする必要があります。
 
 そうなるとやっぱりテキストファイルに単純なフォーマットで記録するのがいいです。例えばこんな感じで。
@@ -63,7 +63,7 @@ Project-XYZ
   Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012
 {% endhighlight %}
 
-###案件ごとに時間を集計する
+##案件ごとに時間を集計する
 さあ仕事が終わったら上のファイルをRubyに読み込ませて集計しましょう。
 
 次のような出力が見やすくていいですね。
@@ -91,7 +91,7 @@ Project-XYZ
 1. 日時のラインをパースして日にちごとの時間に集計する。
 1. フォーマットを用意して集計データを出力する。
 
-###ファイルを案件ごとに分ける
+##ファイルを案件ごとに分ける
 split_by_projectメソッドを定義します。
 {% highlight ruby %}
 def split_by_project(lines, time_pattern=/JST/)
@@ -111,7 +111,7 @@ chunkでは日時行を識別するために、/JST/をパターンとしてい�
 split_by_project(ARGF) # => [["AA123", [" Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012", " Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012", " Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012", " Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012", " Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012", " Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012", " Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012"]], ["Project-XYZ", [" Sat Feb 11 08:57:36 JST 2012 - Sat Feb 11 11:00:00 JST 2012", " Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012", " Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012", " Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012", " Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012"]]]
 {% endhighlight %}
 
-###日時のラインをパースして日にちごとの時間に集計する
+##日時のラインをパースして日にちごとの時間に集計する
 次にparse_and_arrange_timelinesメソッドを定義します。
 {% highlight ruby %}
 require 'date'
@@ -134,7 +134,7 @@ parse_and_arrange_timelines(timelines) # => {"2012-01-21"=>(1523/9600), "2012-01
 {% endhighlight %}
 経過時間はRationalで表されています。
 
-###フォーマットを用意して集計データを出力する
+##フォーマットを用意して集計データを出力する
 最後に、出力用のフォーマットメソッドformat_forを用意します。
 {% highlight ruby %}
  require "term/ansicolor"

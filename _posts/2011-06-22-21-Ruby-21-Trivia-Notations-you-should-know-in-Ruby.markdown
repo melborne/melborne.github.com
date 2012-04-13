@@ -13,7 +13,7 @@ categories:
 
 君なら全部知ってるかもしれないけど..
 
-###1. 動的継承
+##1. 動的継承
 Rubyのクラス継承では < 記号の右辺に
 クラス定数だけでなくクラスを返す式が書けるよ
 {% highlight ruby %}
@@ -39,7 +39,7 @@ Rubyのクラス継承では < 記号の右辺に
 {% endhighlight %}
 つまりRubyでは条件に応じて継承するクラスを
 動的に変えることができるんだよ
-###2. 大文字メソッド
+##2. 大文字メソッド
 Rubyでは通常メソッド名には英小文字を使うけど
 英大文字も許容されてるんだよ
 大文字メソッドは一見定数に見えるよね
@@ -73,7 +73,7 @@ Rubyでは通常メソッド名には英小文字を使うけど
 {% endhighlight %}
 僕は「定数メソッド」って呼んでるんだけど
 どうかな？
-###3. メソッド引数のスペース
+##3. メソッド引数のスペース
 Rubyで引数付きメソッドを呼ぶとき
 そのカッコを省略できるけど
 引数がシンボルであればさらに
@@ -97,7 +97,7 @@ Rubyで引数付きメソッドを呼ぶとき
 {% endhighlight %}
 だからどうした
 って話だけど...
-###4. 関数部分適用
+##4. 関数部分適用
 似たようなメソッドを複数書くことはDRY原則に反するよね
 Proc#curryを使えばこれを回避できるかもね
 四季判定関数の例を示すね
@@ -115,7 +115,7 @@ Proc#curryを使えばこれを回避できるかもね
  is_summer['1/1'] # => false
 {% endhighlight %}
 こうなると変数名に ? が使えるとうれしいんだけどなあ
-###5. Procによるcase判定
+##5. Procによるcase判定
 Procの実行はcallメソッドを呼ぶことで実現できるけど
 Proc#===はその別名になってるんだよ
 先の四季判定関数をcase式で使う例で使い方を見るね
@@ -137,7 +137,7 @@ Proc#===はその別名になってるんだよ
 {% endhighlight %}
 引数の受け渡しが暗黙的に行われるので
 case式が非常にすっきりするよね
-###6. Structクラス
+##6. Structクラス
 属性主体のクラスを生成するときにはStructが便利だよね
 {% highlight ruby %}
  module Fortune
@@ -170,7 +170,7 @@ case式が非常にすっきりするよね
  charlie = Person.new('charlie', 13, :programmer)
  charlie.length_of_life('2011/6/22') # => 3
 {% endhighlight %}
-###7. retryと引数デフォルト
+##7. retryと引数デフォルト
 rescue節ではretryを使うことによって
 そのブロックの処理を再実行させることができるよね
 これをメソッド引数のデフォルト値と組み合わせることで
@@ -193,7 +193,7 @@ rescue節ではretryを使うことによって
 {% highlight ruby %}
  Date.new(2009,2,-1).day # => 28
 {% endhighlight %}
-###8. 否定
+##8. 否定
 否定に使われる ! あるいは not が好きじゃない人いる？
 ならBasicObject#!があるよ！
 {% highlight ruby %}
@@ -205,7 +205,7 @@ rescue節ではretryを使うことによって
 ...
 
 次に行きます..
-###9. ％ノーテーション
+##9. ％ノーテーション
 String#%を使うことで文字列に
 指定フォーマットでオブジェクトを埋め込めるけど
 %は配列を受け取れるんだ
@@ -219,7 +219,7 @@ String#%を使うことで文字列に
  lang = {a: :java, b: :ruby}
  "I love %{b}, not %{a}" % lang # => "I love ruby, not java"
 {% endhighlight %}
-###10. 文字列区切り
+##10. 文字列区切り
 文字列を各文字に区切るには
 String#splitかString#charsが使えるよね
 {% highlight ruby %}
@@ -241,7 +241,7 @@ String#scanが便利だよ
  end
  number.comma_value # => "12,345,678"
 {% endhighlight %}
-###11. Array#*
+##11. Array#*
 Array#*に整数を渡すとそれを繰り返した
 新たな配列を返すけど
 文字列を渡すとそれをセパレータとした
@@ -251,7 +251,7 @@ Array#*に整数を渡すとそれを繰り返した
  
  [2009, 1, 10] * '-' # => "2009-1-10"
 {% endhighlight %}
-###12. Arrayスタック系メソッド
+##12. Arrayスタック系メソッド
 Array#<<は一つのオブジェクトしか引数に取れないんだけど
 Array#pushは複数取れるんだ
 またArray#popは一度に複数の値をポップできる
@@ -272,7 +272,7 @@ Array#values_atが便利だよ
  lang = %w(ruby python perl haskell lisp scala)
  lang.values_at 0, 2, 5 # => ["ruby", "perl", "scala"]
 {% endhighlight %}
-###13. Array#uniq
+##13. Array#uniq
 配列から重複した値を取り除くときはArray#uniqを使うけど
 uniqはブロックを取れるから
 そこで重複の条件を指定できるんだ
@@ -284,7 +284,7 @@ uniqはブロックを取れるから
  designers.uniq.map(&:name) # => ["matz", "kay", "gosling", "dhh"]
  designers.uniq{ |d| d.lang }.map(&:name) # => ["matz", "kay", "gosling"]
 {% endhighlight %}
-###14. Kernel#Array
+##14. Kernel#Array
 異なる型の引数を統一的に処理するときには
 Kernel#Arrayが便利だよ
 {% highlight ruby %}
@@ -301,7 +301,7 @@ Kernel#Arrayが便利だよ
  int2month([2,6,9]) # => ["February", "June", "September"]
  int2month(4..8) # => ["April", "May", "June", "July", "August"]
 {% endhighlight %}
-###15. 文字列リスト%w
+##15. 文字列リスト%w
 文字列のリストを作るときには%ｗリテラルが便利だけど
 文字列が空白文字を含むときは
 バックスラッシュでエスケープすればいいよ
@@ -309,7 +309,7 @@ Kernel#Arrayが便利だよ
  designers = %w(John\ McCarthy Yukihiro\ Matsumoto Larry\ Wall Alan\ Kay Martin\ Odersky)
  designers # => ["John McCarthy", "Yukihiro Matsumoto", "Larry Wall", "Alan Kay", "Martin Odersky"]
 {% endhighlight %}
-###16. 要素区切りコンマ
+##16. 要素区切りコンマ
 配列とハッシュの各要素の区切りにはコンマが使われるけど
 最後の要素のカンマは無視されるんだよ
 {% highlight ruby %}
@@ -335,7 +335,7 @@ Kernel#Arrayが便利だよ
 {% endhighlight %}
 要素を頻繁に追加・削除したり
 ファイルからevalするときなどにいいかもね
-###17. ハッシュリテラル
+##17. ハッシュリテラル
 Ruby1.9ではハッシュの新しい記法が導入されたけど
 これは古い記法と混在できるんだ
 {% highlight ruby %}
@@ -357,7 +357,7 @@ Ruby1.9ではハッシュの新しい記法が導入されたけど
  designers = designers1.merge designers2
   # => {:lisp=>"John McCarthy", :ruby=>"Yukihiro Matsumoto", :perl=>"Larry Wall", :smalltalk=>"Alan Kay", :"C++"=>"Bjarne Stroustrup", :java=>"James Gosling", :python=>"Guido van Rossum", :javascript=>"Brendan Eich", :scala=>"Martin Odersky"}
 {% endhighlight %}
-###18. Enumerable#each_with_object
+##18. Enumerable#each_with_object
 Enumerable#injectは便利なメソッドだけど
 ブロック内で条件指定をするような場合でも各イテレーションで
 畳込みオブジェクトが返されることを保証しなければならないよ
@@ -374,7 +374,7 @@ Enumerable#each_with_objectならその手間は要らないよ
 {% endhighlight %}
 名前が長いからどうしても避けちゃうけどね..
 reduceにマッピングしてくれたらうれしいなあ
-###19. Kernel#loop
+##19. Kernel#loop
 無限の繰り返しはコードのブロックを
 Kernel#loopに渡すことで実現できるよね
 {% highlight ruby %}
@@ -401,7 +401,7 @@ Kernel#loopに渡すことで実現できるよね
  # >> 2 3 5 7 11 13 17 19 23 29 31 37 
 {% endhighlight %}
 ブロックの第1引数がnilになっちゃうけど..
-###20. splat展開
+##20. splat展開
 Rubyでアルファベットの配列を作るときなどは
 通常以下のようにするよね
 {% highlight ruby %}
@@ -417,7 +417,7 @@ Rubyでアルファベットの配列を作るときなどは
  [*'a'..'m'] # => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"]
  [*1..10, *20..30] # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 {% endhighlight %}
-###21. 前置コロン
+##21. 前置コロン
 文字列をシンボルに変換するときは通常
 String#internかString#to_symを使うけど
 文字列リテラルにコロンを前置することでも可能だよ

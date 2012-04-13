@@ -32,7 +32,7 @@ defと打つと私のエディタが勝手にendと補完するので
 
 [Ruby1.9でもEND HELLを解消したい！](/2011/07/19/Ruby1-9-END-HELL/)
 
-###endの必要性
+##endの必要性
 しかし私は対称性という様式美の観点から
 Rubyのendは重要な役割を果たしていることを知っている
 
@@ -49,7 +49,7 @@ endはその構造的文化的背景により
 プログラミングには欠かせない
 必須のエレメントであることが理解できるだろう
 
-###問題の所在
+##問題の所在
 しかしそうは言っても次のようなendの連なりには
 若干の問題を感じざるを得ない
 {% highlight ruby %}
@@ -95,7 +95,7 @@ MyModule::MyClass.new.my_method # => 10
 これによってあなたに
 要リファクタリングの警告を発していたのである!
 
-###許容end個数
+##許容end個数
 さて先のコードに
 リファクタリングが必要なことはわかった
 リファクタリングに際しまずは
@@ -113,11 +113,11 @@ heads.map(&:size).inject(:+)/heads.size.to_f # => 4.181818181818182
 理想的には３つ以下である
 詳細はJIS X 3017(8.7.2: キーワード)を参照されたい{% fn_ref 3 %}
 
-###END HELLの回避方法
+##END HELLの回避方法
 具体的なコードによってEND HELLの回避方法は変わるが
 ここでは先のコードにおける
 END HELLの回避方法をいくつか示すに留める
-###その１: 三項条件演算子
+##その１: 三項条件演算子
 if else end式に代えて?:三項条件演算子を使う
 {% highlight ruby %}
 module MyModule
@@ -130,7 +130,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その２: { }(curly braces:波括弧)
+##その２: { }(curly braces:波括弧)
 do endに代えて{ }を使う
 {% highlight ruby %}
 module MyModule
@@ -141,7 +141,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その３:メソッド呼び出し
+##その３:メソッド呼び出し
 if else end式に代えてメソッド呼び出しを使う
 {% highlight ruby %}
 module MyModule
@@ -152,7 +152,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その４:メソッド分割
+##その４:メソッド分割
 メソッドを分割する
 {% highlight ruby %}
 module MyModule
@@ -168,7 +168,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その５:ガード文
+##その５:ガード文
 if else end式に代えてガード文を使う(ここではnext)
 {% highlight ruby %}
 module MyModule
@@ -182,7 +182,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その６:ポリモーフィズム
+##その６:ポリモーフィズム
 if else end式に代えてポリモーフィズムを使う
 {% highlight ruby %}
 class Float
@@ -200,7 +200,7 @@ module MyModule
   end
 end
 {% endhighlight %}
-###その７:定数スコープ演算子
+##その７:定数スコープ演算子
 定数のスコープ演算子::を使う
 {% highlight ruby %}
 module MyModule; end

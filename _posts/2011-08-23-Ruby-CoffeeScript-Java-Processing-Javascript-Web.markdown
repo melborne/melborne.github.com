@@ -88,7 +88,7 @@ CoffeeScriptの書き方がたぶんイマイチなのはご容赦ください^ 
 グラフは書籍にあったサンプルの他
 2009年の国内人口推計{% fn_ref 2 %}を使っています
 
-###ディレクトリ構成
+##ディレクトリ構成
 最終的なファイル構成は以下のようになります
 {% highlight ssh %}
 .
@@ -108,14 +108,14 @@ CoffeeScriptの書き方がたぶんイマイチなのはご容赦ください^ 
     └── style.scss
 {% endhighlight %}
 
-###設計方針
+##設計方針
 以下のような方針でビジュアライジング・データを実現します
 1. データを格納したcensus.ssv{% fn_ref 3 %}とmilk-tea-coffee.tsv{% fn_ref 4 %}をrubyで読みだして解析する
 1. 解析したデータをJSON APIとして特定のURLで提供できるようにする
 1. graph.coffeeにProcessingによるグラフ描画コードを記述する
 1. graph.coffee側で解析データを非同期で取得しグラフに描画する
 
-###app.rb
+##app.rb
 Webフレームワークのコントローラとなる
 app.rbの要点だけを書きます
 {% highlight ruby %}
@@ -150,7 +150,7 @@ label data dataMin dataMax intervalsに値をセットします
 labelとdataの取得はretrieve_label retrieve_dataに委ねますが
 ここではその説明は省略します
 
-###Processingオブジェクト(graph.coffee)
+##Processingオブジェクト(graph.coffee)
 graph.coffeeは長いので分けて要点だけ説明します
 {% highlight javascript %}
 $ ->
@@ -176,7 +176,7 @@ Processingオブジェクトを生成します
 指定のフレームレートで繰り返し実行され
 Canvas上にグラフが描かれることになります
 
-###graphオブジェクト(graph.coffee)
+##graphオブジェクト(graph.coffee)
 次にgraphオブジェクトを示します
 {% highlight javascript %}
 graph = (p) ->
@@ -214,7 +214,7 @@ drawYLabels drawTabsで描画し
 グラフの描画は
 drawDataArea drawDataHighlightで行っています
 
-###drawDataArea(graph.coffee)
+##drawDataArea(graph.coffee)
 次にdrawDataAreaについて説明します
 {% highlight javascript %}
 graph = (p) ->
@@ -244,7 +244,7 @@ endShape関数で終了します
 他の描画関数も同じようなことをしているので
 説明は省略します
 
-###Integrator(graph.coffee)
+##Integrator(graph.coffee)
 ここで各点をプロットするときに
 データ値を直接渡さずにinterpolatorを介します
 interpolatorはBenFryによるIntegratorオブジェクトで
@@ -271,7 +271,7 @@ class Integrator
     @target = t
 {% endhighlight %}
 
-###layout.haml
+##layout.haml
 {% highlight html %}
 !!! 5
 %html
@@ -291,7 +291,7 @@ processing.js coffee-script.js graph.coffee を読み込みます
 coffee-script.jsはclientサイドで
 coffeeファイルをjavascriptに変換します
 
-###config.ru
+##config.ru
 {% highlight ruby %}
 require 'bundler'
 Bundler.require

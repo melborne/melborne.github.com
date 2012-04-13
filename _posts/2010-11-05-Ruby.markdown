@@ -6,11 +6,7 @@ comments: true
 categories:
 ---
 
-
-RubyのMathモジュールには数学関数が定義されていて
-それらは以下のようにモジュール・メソッドとして呼び出す使い方と
-クラスにモジュールをインクルードして関数的に呼び出す使い方の
-２種類の使い方ができるようになっています
+RubyのMathモジュールには数学関数が定義されていて、それらは以下のようにモジュール・メソッドとして呼び出す使い方と、クラスにモジュールをインクルードして関数的に呼び出す使い方の、２種類の使い方ができるようになっています。
 {% highlight ruby %}
 Math.sqrt 4 # => 2.0
 Math.atan2(1, 1) # => 0.785398163397448
@@ -19,19 +15,13 @@ sqrt 4 # => 2.0
 atan2(1, 1) # => 0.785398163397448
 {% endhighlight %}
 
-一方でこれらのメソッドはインクルードした場合
-オブジェクトを指定するメソッド形式での呼び出しが
-できないようにされています
+一方でこれらのメソッドはインクルードした場合、オブジェクトを指定するメソッド形式での呼び出しができないようにされています。
 {% highlight ruby %}
 Object.new.sqrt 4 # => private method `sqrt' called for #<Object:0x1a414> (NoMethodError)
 {% endhighlight %}
-このような形式で定義されたメソッドを
-Rubyでは「モジュール関数」と呼んでいます
-モジュール関数はその利用の態様に応じて使い方を選べるので
-その利便性を高めます
+このような形式で定義されたメソッドを、Rubyでは「モジュール関数」と呼んでいます。モジュール関数はその利用の態様に応じて使い方を選べるので、その利便性を高めます。
 
-早々自分でもモジュール関数redを備えた
-Colorモジュールを定義してみます
+早々自分でもモジュール関数redを備えたColorモジュールを定義してみます。
 {% highlight ruby %}
 module Color
   def self.red
@@ -47,12 +37,9 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x2272c> (NoMethodError)
 {% endhighlight %}
-Colorモジュールにredインスタンス・メソッドと
-redモジュール・メソッドを定義し
-インスタンス・メソッドの可視性をprivateにします
+Colorモジュールにredインスタンス・メソッドとredモジュール・メソッドを定義し、インスタンス・メソッドの可視性をprivateにします。
 
-モジュール・メソッドは
-Singletonクラスを使って定義してもいいですね
+モジュール・メソッドはSingletonクラスを使って定義してもいいですね。
 {% highlight ruby %}
 module Color
   class << self
@@ -72,14 +59,10 @@ Object.new.red # => private method `red' called for #<Object:0x226a0> (NoMethodE
 {% endhighlight %}
 
 これで完了！
-と言いたいところですが
-明らかにこれらのコードには問題があります
 
-そう　ＤＲＹ原則に反しているのです
-同じコードの繰り返しはその保守性を下げるのでいけません
-改善しましょう
-singletonクラスにColorモジュールをインクルードすることによって
-コードの重複を回避します
+と言いたいところですが、明らかにこれらのコードには問題があります。
+
+そう、ＤＲＹ原則に反しているのです。同じコードの繰り返しはその保守性を下げるのでいけません。改善しましょう。singletonクラスにColorモジュールをインクルードすることによって、コードの重複を回避します。
 {% highlight ruby %}
 module Color
   class << self
@@ -95,10 +78,7 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x230dc> (NoMethodError)
 {% endhighlight %}
-残念ながらredの可視性がprivateにされているので
-Colorオブジェクトからredを呼び出せないようです
-Singletonクラスへのインクルードはextendと等価ですから
-extendも試してみます
+残念ながらredの可視性がprivateにされているので、Colorオブジェクトからredを呼び出せないようです。Singletonクラスへのインクルードはextendと等価ですから、extendも試してみます。
 {% highlight ruby %}
 module Color
   extend self
@@ -112,10 +92,9 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x23190> (NoMethodError)
 {% endhighlight %}
-やはりダメです
-さて...
+やはりダメです。さて...
 
-苦肉の策を考えました
+苦肉の策を考えました。
 {% highlight ruby %}
 module Color
   class << self
@@ -134,8 +113,7 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x225ec> (NoMethodError)
 {% endhighlight %}
-呼び出しの問題は解決しましたが
-２つのメソッド名が異なるという致命的な問題が発生しました
+呼び出しの問題は解決しましたが、２つのメソッド名が異なるという致命的な問題が発生しました。
 
 あるいはsendを使って...
 {% highlight ruby %}
@@ -151,15 +129,11 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x227b8> (NoMethodError)
 {% endhighlight %}
-これではとてもモジュール関数とは呼べません
-さてどうしたものでしょうか...
+これではとてもモジュール関数とは呼べません。さてどうしたものでしょうか...
 
-こうなったら最後の手段です
-そう　メタプログラミングです！
+こうなったら最後の手段です。そう、メタプログラミングです！
 
-Colorモジュールにmod_funcというモジュール・メソッドを定義して
-その引数としてインスタンス・メソッドを渡すと
-それを自動でモジュール関数にしてくれるよう実装してみます
+Colorモジュールにmod_funcというモジュール・メソッドを定義して、その引数としてインスタンス・メソッドを渡すと、それを自動でモジュール関数にしてくれるよう実装してみます。
 {% highlight ruby %}
 module Color
   def self.mod_func(meth)
@@ -176,12 +150,9 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x22984> (NoMethodError)
 {% endhighlight %}
-最初の試みは失敗に終わりました
-mod_func内のprivateでインスタンス・メソッドredだけでなく
-モジュール・メソッドredもプライベート化されてしまうようです
+最初の試みは失敗に終わりました。mod_func内のprivateでインスタンス・メソッドredだけでなく、モジュール・メソッドredもプライベート化されてしまうようです。
 
-今度はdefine_methodを使って
-モジュール・メソッドredを別に定義してみます
+今度はdefine_methodを使ってモジュール・メソッドredを別に定義してみます。
 {% highlight ruby %}
 module Color
   def self.mod_func(meth)
@@ -204,16 +175,14 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x21bec> (NoMethodError)
 {% endhighlight %}
-今度はうまくいきました！
-mod_func内では以下のような処理が実行されます
+今度はうまくいきました！mod_func内では以下のような処理が実行されます。
+
 1. extendを使ってColorモジュールの抽象クラスのコンテキストで、redメソッドにアクセスできるようにする
 1. alias_methodにより、redメソッドをnew_methに別名定義する{% fn_ref 1 %}
 1. define_methodにより、インスタンス・メソッドと同じ内容のモジュール・メソッドredを定義する
 1. インスタンス・メソッドredをプライベートにする
 
-mod_funcはモジュールにおいて汎用的に使えるので
-これをColorモジュールだけの機能としておくのはもったいないです
-Moduleクラスに移しましょう
+mod_funcはモジュールにおいて汎用的に使えるので、これをColorモジュールだけの機能としておくのはもったいないです。Moduleクラスに移しましょう。
 {% highlight ruby %}
 class Module
   def mod_func(meth)
@@ -238,12 +207,9 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x22150> (NoMethodError)
 {% endhighlight %}
-すてきです
+すてきです。
 
-ええ　もちろん
-Rubyはユーザにこんな手間を強いることはありません
-Rubyにはモジュール関数を作るために
-Module#module_functionというメソッドが用意されています
+ええ、もちろんRubyはユーザにこんな手間を強いることはありません。Rubyにはモジュール関数を作るために、Module#module_functionというメソッドが用意されています。
 {% highlight ruby %}
 module Color
   def red
@@ -256,8 +222,7 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x22240> (NoMethodError)
 {% endhighlight %}
-module_functionが引数を取らない場合
-それ以降に定義されたメソッドがモジュール関数の対象になります
+module_functionが引数を取らない場合、それ以降に定義されたメソッドがモジュール関数の対象になります。
 {% highlight ruby %}
 module Color
   module_function
@@ -270,6 +235,8 @@ include Color
 red # => :red
 Object.new.red # => private method `red' called for #<Object:0x22830> (NoMethodError)
 {% endhighlight %}
+
+
 {% footnotes %}
    {% fn aliasではうまくいかない %}
 {% endfootnotes %}

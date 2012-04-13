@@ -71,7 +71,7 @@ IRB　そう　
 irbとその周辺のことを少し調べたので
 ここにまとめておきます
 
-###irbの簡単な使い方
+##irbの簡単な使い方
 ターミナル上でirbと打って
 現れたプロンプトでRubyのコードを入力します
 {% highlight bash %}
@@ -128,7 +128,7 @@ rオプションでライブラリを読み込みます
  => ["<a href="n00/index.html">", "<a href="schedule/index.html">", "<a href="wii/index.html">", "<a href="ds/index.html">", "<a href="n09/index.html">", "<a href="n10/index.html">", "<a href="corporate/index.html">", "<a href="wii/index.html" class="wiiLink">"...]
 {% endhighlight %}
 
-###DBインタフェース
+##DBインタフェース
 データベースファイルを読み込めば
 DBインタフェースになります
 DBを定義したuser.rbにconsoleファイルでアクセスする例を示します
@@ -172,7 +172,7 @@ consoleを実行してUserDBにアクセスします
  => "Charlie"
 {% endhighlight %}
 
-###セッション
+##セッション
 irb上でirbコマンドを使うことで
 別のセッションを立上げることができます
 {% highlight bash %}
@@ -238,7 +238,7 @@ irbコマンドに任意のコンテキストを渡せば
 セッションの終了はexitまたは
 kill [セッション番号]で行います
 
-###Workspace
+##Workspace
 コンテキストを共有するworkspaceというものもあります
 pushb(現在のbindingをpushする)コマンドで
 別のworkspaceに移動します
@@ -283,7 +283,7 @@ workspaceはスタックになっているので
 セッションのようにジャンプして移動することができません
 workspaceの使い道はよくわかりません
 
-###HELP
+##HELP
 Ruby Reference Manualを読みたいのならhelpします
 空リターンで終了です
 {% highlight bash %}
@@ -322,7 +322,7 @@ Ruby Reference Manualを読みたいのならhelpします
  irb(main):009:0> 
 {% endhighlight %}
 
-###.irbrcによるカスタマイズ
+##.irbrcによるカスタマイズ
 ホームディレクトリに配置した.irbrcに
 設定を記述してIRBをカスタマイズできます
 {% highlight ruby %}
@@ -477,12 +477,12 @@ fオプションでこれを無視できます
  irb -f
 {% endhighlight %}
 
-###拡張ライブラリ
+##拡張ライブラリ
 irbを拡張する複数のライブラリがあります
 しかしここでは最強の１つのライブラリを紹介します
 それはirbtoolsライブラリです
 
-###irbtoolsライブラリ
+##irbtoolsライブラリ
 [irbtools](http://rbjl.net/40-irbtools-release-the-power-of-irb)はirbの主要拡張ライブラリを統合し
 さらに細かい多数の機能を追加したライブラリです
 gem install irbtoolsでインストールし
@@ -502,7 +502,7 @@ sketches boson hirb
  Irbtools.start
 {% endhighlight %}
 
-###色付けとロケットプロンプト
+##色付けとロケットプロンプト
 irbtoolsをrequireしてirbを起動すると
 Ruby情報を含むwelcomeメッセージのあと
 シンプルなプロンプトが現れます
@@ -516,7 +516,7 @@ Ruby情報を含むwelcomeメッセージのあと
 出力も見やすくなります
 この機能はwirbleとfancy_irbライブラリによって実現されています{% fn_ref 5 %}
 
-###多様な出力形式
+##多様な出力形式
 irbtoolsは多様な出力形式をサポートします
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101116/20101116212417.png)
@@ -529,7 +529,7 @@ tableはデータを表形式で出力します
 これらの出力形式はawesome_print zucker/debug yaml g hirb
 などのライブラリによって実現されています
 
-###コマンド群
+##コマンド群
 irbtoolsによって便利なコマンド群が用意されています
 まずls cat mkdir rm touch
 その他のファイルユーティリティコマンドがあります
@@ -619,7 +619,7 @@ OS RubyEngine RubyVersionがあります
 {% endhighlight %}
 これらの機能はzucker Clipboardライブラリで実現されます
 
-###エディタ支援
+##エディタ支援
 irbからエディタを呼び出し
 そこで編集した内容をirb上に返す機能があります
 vi vim emacs mate ed{% fn_ref 7 %}などのコマンドで
@@ -670,7 +670,7 @@ save_sketchでスケッチをファイルに保存することもできます
  >> 
 {% endhighlight %}
 
-###コマンドの登録
+##コマンドの登録
 bosonライブラリを使うことによって
 効率的にコマンドを登録管理できます
 どんなbosonコマンドがあるか確認するには
@@ -787,7 +787,7 @@ shellではbosonを前置してコマンドを実行します
  % 
 {% endhighlight %}
 
-###テーブル／ツリー出力
+##テーブル／ツリー出力
 先にも書きましたがtableコマンドは
 データを表形式で出力します
 これはデータベースと共に使うと更に便利です
@@ -892,7 +892,7 @@ Rubyのクラスツリーを作ってみます
 
 [Tagaholic - Ruby Class and Rails Plugin Trees With Hirb](http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html)
 
-###irbtoolsにおける若干のカスタマイズ
+##irbtoolsにおける若干のカスタマイズ
 プロンプトの形と出力の色は
 以下のようにしてカスタマイズできます
 {% highlight ruby %}
@@ -937,7 +937,7 @@ irbはかなり強力なものになります
 非常に長くなりました
 最後までお付き合いありがとうございます！
 
-###参考URLs
+##参考URLs
 [library irb](http://doc.okkez.net/192/view/library/irb)
 
 [irbtools / Release the power of irb!](http://rbjl.net/40-irbtools-release-the-power-of-irb) 

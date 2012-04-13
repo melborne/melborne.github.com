@@ -12,7 +12,7 @@ SchemeとRubyで写像の入れ子を見ていきます
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です
 
-###整数の和の素数列
+##整数の和の素数列
 1からnの範囲において j < i なる2つの整数 i, j の和が
 素数になるものを見つける例を通して写像の入れ子を学ぼう
 
@@ -73,7 +73,7 @@ flatmap手続きとして抽象化している
     (accumulate append `() (map proc seq)))
 {% endhighlight %}
 
-###Ruby版素数列
+##Ruby版素数列
 同じことをRubyでもやってみる
 {% highlight ruby %}
  def flatmap(proc, seq)
@@ -103,7 +103,7 @@ flatmap手続きとして抽象化している
  _p prime_sum_pairs 6 # => "2 1 3  3 2 5  4 1 5  4 3 7  5 2 7  6 1 7  6 5 11 "
 {% endhighlight %}
 
-###Arrayクラス版素数列
+##Arrayクラス版素数列
 Arrayクラスの各種メソッドを使えば
 もう少しRubyらしくなる
 {% highlight ruby %}
@@ -127,7 +127,7 @@ Arrayクラスの各種メソッドを使えば
  prime_sum_pairs 6 # => [[2, 1, 3], [3, 2, 5], [4, 1, 5], [4, 3, 7], [5, 2, 7], [6, 1, 7], [6, 5, 11]]
 {% endhighlight %}
 
-###集合Sの順列
+##集合Sの順列
 Schemeに戻って
 先のflatmap手続きを使って
 集合Sのすべての順列を求めてみよう
@@ -154,7 +154,7 @@ Schemeに戻って
        seq))
 {% endhighlight %}
 
-###Ruby版順列
+##Ruby版順列
 Rubyでもpermutationsを書いてみる
 {% highlight ruby %}
  def permutations(s)

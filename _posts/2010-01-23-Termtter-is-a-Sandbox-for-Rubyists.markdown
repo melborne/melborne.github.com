@@ -46,7 +46,7 @@ Termtter is a Sandbox for Rubyists!
 [Termtter](http://termtter.org/)
 [System.Exit &#8211; Termtter &#8211; ターミナルエミュレータ上で動作する Twitter クライアント](http://jugyo.org/blog/2931)
 
-###この2週間のつぶやき
+##この2週間のつぶやき
 http://twitter.com/merborne
 -(10/01/06 11:19) hello from rubytter!
 -(10/01/06 11:47) termtterを入れてみたのだけど、api.rb#try_authでこける。 

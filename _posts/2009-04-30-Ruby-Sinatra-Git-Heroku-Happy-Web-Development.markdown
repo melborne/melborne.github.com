@@ -7,7 +7,7 @@ categories:
 ---
 
 
-###Ruby
+##Ruby
 10年前にRubyといえば7月の誕生石のことか
 5.5ポイント活字のことでした
 でも今はGoogleを30頁めくっても
@@ -20,7 +20,7 @@ Pearlは今も6月の誕生石の地位を守っています
 ここにLarryの奥さんは6月生まれであり
 Matzの奥さんは7月生まれでないとの仮説が成り立ちます
 
-###Sinatra
+##Sinatra
 なぜWebフレームワークの名前を
 [Sinatra](http://www.sinatrarb.com/)としたのか皆目検討も付きません
 シナトラハットがトレードマークですから
@@ -36,7 +36,7 @@ Googleで「[Sinatra](http://www.google.co.jp/search?client=safari&rls=ja-jp&q=s
 このWebフレームワークがトップに来た日が
 その命日にならないことを祈りつつ
 
-###Git
+##Git
 [Git](http://git-scm.com/)は「ぎっと」と発音します
 意味はこうです
 {% highlight ruby %}
@@ -52,7 +52,7 @@ Linusさんにそう言われれば
 ヴァージョン管理システム「[ass hole](http://www.google.co.jp/search?client=safari&rls=ja-jp&q=ass%20hole&esrch=BetaShortcuts&ie=UTF-8&oe=UTF-8)」
 を作って我が国の首相を救ってください！
 
-###Heroku
+##Heroku
 [Heroku](http://heroku.com/)は「Her-OH-koo」と発音します
 Google App Engineほどつまらない名前はないですが
 その意味に辿り着けないというのもまたつまらないものです
@@ -81,7 +81,7 @@ OSX+Terminal+TextMateを前提に書きます
 
 あなたも罪人になってみませんか？
 
-###Ruby+Sinatra
+##Ruby+Sinatra
 Sinatraをインストールします
 現時点でRuby1.9には完全には対応していません
 {% highlight ruby %}
@@ -292,7 +292,7 @@ layoutをバナーとメインに分けます
 Previous Year/Next Yearを適当にクリックします
 タイトルをクリックして本年に戻るか確認します
 
-###Git
+##Git
 そろそろGitでHerokuにデプロイしてみます
 
 念のためmycal.rbの全体を載せます
@@ -395,7 +395,7 @@ Gitにファイルを追加します
  mycal% git commit -m "first commit"
 {% endhighlight %}
 
-###Heroku
+##Heroku
 Herokuにアカウントが無ければ作ります
 
 [Heroku](http://heroku.com/)
