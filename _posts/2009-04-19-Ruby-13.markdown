@@ -6,11 +6,8 @@ comments: true
 categories:
 ---
 
-
-###Version17
-次にVersion07で示したような
-最長ワードトップ30を出力するメソッド
-top_by_lengthも定義しましょう
+##Version17
+次にVersion07で示したような、最長ワードトップ30を出力するメソッドtop_by_lengthも定義しましょう。
 {% highlight ruby %}
  class WordDictionary
    def top_by_length(nth, &blk)
@@ -31,26 +28,17 @@ top_by_lengthも定義しましょう
  p wdic.top_by_length(30) { |val| val > 100 }
 {% endhighlight %}
 
-ここでは将来に備えて
-take_by_valueと同じようにtake_by_keyを定義して
-top_by_lengthはこれを使うようにします
+ここでは将来に備えて、take_by_valueと同じようにtake_by_keyを定義して、top_by_lengthはこれを使うようにします。
 
-top_by_lengthはその語と出現数に加えて
-語長を返すようにしています
-Arrayクラスのmapメソッドをここでは使っています
-mapメソッドはinjectメソッド同様とても便利なメソッドです
-配列の各要素の内容をブロックの処理結果で置き換えます
-上の例は list.map { |item| item << item[0].length }
-でもいいです
+top_by_lengthはその語と出現数に加えて、語長を返すようにしています。Arrayクラスのmapメソッドをここでは使っています。mapメソッドはinjectメソッド同様とても便利なメソッドです。配列の各要素の内容をブロックの処理結果で置き換えます。上の例は list.map { |item| item << item[0].length } でもいいです。
 
-出力はこんな感じです
+出力はこんな感じです。
 {% highlight ruby %}
 #> [["illustration", 160, 12], ["therefore", 127, 9], ["catherine", 126, 9], ["jerusalem", 120, 9], ["gutenberg", 285, 9], ["elizabeth", 636, 9], ["prophecy", 322, 8], ["together", 105, 8], ["anything", 117, 8], ["pleasure", 103, 8], ["judgment", 134, 8], ["believe", 110, 7], ["collins", 180, 7], ["between", 114, 7], ["wickham", 194, 7], ["bingley", 306, 7], ["replied", 136, 7], ["history", 189, 7], ["himself", 178, 7], ["against", 164, 7], ["because", 116, 7], ["however", 179, 7], ["through", 185, 7], ["nothing", 235, 7], ["sabbath", 215, 7], ["herself", 312, 7], ["another", 144, 7], ["project", 262, 7], ["without", 263, 7], ["thought", 215, 7]]
 {% endhighlight %}
 
-###Version18
-またも問題発生！
-DRY違反です！
+##Version18
+またも問題発生！DRY違反です！
 {% highlight ruby %}
    def take_by_value(nth, sort_opt)
      @freq_dic.select { |key, val| block_given? ? yield(val) : val }.take_by(nth) { |key, val| sort_opt[val] }
@@ -61,8 +49,7 @@ DRY違反です！
    end
 {% endhighlight %}
 
-take_by_key_or_valメソッドを定義して
-これを回避します
+take_by_key_or_valメソッドを定義して、これを回避します。
 {% highlight ruby %}
    def take_by_value(nth, sort_opt, &blk)
      val = lambda { |key, val| val }
@@ -80,17 +67,12 @@ take_by_key_or_valメソッドを定義して
 {% endhighlight %}
 ふぅ
 
-###Version19
-さて次は何ですか？
-そうですね...
+##Version19
+さて次は何ですか？そうですね...
 
-せっかくクラスを作ったのに
-コマンド引数しか取れないっていうのは寂しいです
-では次はWordDictionaryクラスが
-ファイル名か文字列を直接受け取れるようにしましょう
+せっかくクラスを作ったのに、コマンド引数しか取れないっていうのは寂しいです。では次はWordDictionaryクラスがファイル名か文字列を直接受け取れるようにしましょう。
 
-そのためにinput_to_stringメソッドを定義し
-initializeメソッドで入力を適切に変換するようにします
+そのためにinput_to_stringメソッドを定義し、initializeメソッドで入力を適切に変換するようにします。
 {% highlight ruby %}
  class WordDictionary
    def initialize(input)
@@ -131,15 +113,8 @@ EOS
  [["it", 5], ["you", 5], ["and", 5], ["that", 4], ["had", 4], ["a", 4], ["if", 3], ["she", 3], ["to", 3], ["not", 3]]
 {% endhighlight %}
 
-input_to_stringにおいて
-case式を使って入力の種類を切り分けました
-when Stringでは最初ファイル名として処理できるか試み
-できない場合は文字列として処理できるようにしました
-うまくいっているようです
+input_to_stringにおいて、case式を使って入力の種類を切り分けました。when Stringでは最初ファイル名として処理できるか試み、できない場合は文字列として処理できるようにしました。うまくいっているようです。
 
-WordDictionary.new(<<-EOS)...は
-ヒアドキュメントという記法を使っています
-任意記号EOSで挟まれた行が
-文字列として解釈されます
+WordDictionary.new(<<-EOS)...は、ヒアドキュメントという記法を使っています。任意記号EOSで挟まれた行が文字列として解釈されます。
 
 ([次回に続く](/2009/04/20/Ruby-14/))
