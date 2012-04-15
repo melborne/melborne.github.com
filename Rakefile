@@ -78,6 +78,8 @@ task :post do
     post.puts 'description: ""'
     post.puts "category: "
     post.puts "tags: []"
+    post.puts "date: #{date}"
+    post.puts "published: false"
     post.puts "---"
     post.puts "{% include JB/setup %}"
   end
@@ -109,8 +111,9 @@ task :page do
 end # task :page
 
 desc "Launch preview environment"
-task :preview do
-  system "jekyll --auto --server"
+task :preview, :limit do |t, args|
+  limit = "--limit_posts=#{args.limit}" if args.limit
+  system "jekyll --auto --server #{limit}"
 end # task :preview
 
 # Public: Alias - Maintains backwards compatability for theme switching.
