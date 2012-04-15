@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyでいろんなかたちと矢印のグラフを書こう！ ーGraphViz Shape&Arrow見本
+title: Rubyでいろんなかたちと矢印のグラフを書こう！
+tagline: GraphViz Shape&Arrow見本
 date: 2010-02-05
 comments: true
 categories:

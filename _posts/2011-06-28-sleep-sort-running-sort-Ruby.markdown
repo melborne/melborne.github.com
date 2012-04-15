@@ -1,6 +1,7 @@
 ---
 layout: post
-title: sleep sortに対抗してrunning sortだ！（Ruby版｜失敗に終わる編）
+title: sleep sortに対抗してrunning sortだ！
+tagline: Ruby版｜失敗に終わる編
 date: 2011-06-28
 comments: true
 categories:

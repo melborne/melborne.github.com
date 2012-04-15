@@ -4,6 +4,7 @@ title: RubyでSum of Primesを解く-CodeEval
 date: 2012-01-24
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでSum of Primesを解く-CodeEval

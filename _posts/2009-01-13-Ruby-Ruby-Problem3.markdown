@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで素因数を求める ～Rubyでオイラープロジェクトを解こう！Problem3
+title: Rubyで素因数を求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem3
 date: 2009-01-13
 comments: true
 categories:
@@ -50,6 +51,7 @@ categories:
 primes = prime_factor(600851475143) # => [71, 839, 1471, 6857]
 primes.last # => 6857
 {% endhighlight %}
+
 ##Rubyでフィボナッチ数列を求める ～Rubyでオイラープロジェクトを解こう！Problem2
 [Problem 2 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=2)
 > 

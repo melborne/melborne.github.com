@@ -4,6 +4,7 @@ title: RubyでRepeated Substringを解く-CodeEval
 date: 2012-02-14
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでRepeated Substringを解く-CodeEval

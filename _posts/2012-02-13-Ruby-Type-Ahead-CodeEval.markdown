@@ -4,6 +4,7 @@ title: RubyでType Aheadを解く-CodeEval
 date: 2012-02-13
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 一応パスしたけど75点^ ^;

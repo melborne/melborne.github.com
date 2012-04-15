@@ -4,6 +4,7 @@ title: RubyでFizzBuzz問題に終止符を打つ!
 date: 2012-02-09
 comments: true
 categories:
+tags: [ruby, fizzbuzz]
 ---
 
 FizzBuzz問題はプログラマーが最初に出会う問題だよ。FizzBuzzの解法はプログラマーの数ほどあると言われているよ。でもいつまでもFizzBuzz問題に関わってたら、本当に解決しなければならない問題を解決できないよ。

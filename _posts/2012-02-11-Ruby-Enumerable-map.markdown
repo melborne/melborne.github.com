@@ -4,6 +4,7 @@ title: RubyのEnumerable#mapをもっと便利にしたいよ
 date: 2012-02-11
 comments: true
 categories:
+tags: [ruby, enumerable]
 ---
 
 次のような名前のリストがあって、

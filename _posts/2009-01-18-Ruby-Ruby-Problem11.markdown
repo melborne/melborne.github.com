@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで縦横斜めの積を求める ～Rubyでオイラープロジェクトを解こう！Problem11
+title: Rubyで縦横斜めの積を求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem11
 date: 2009-01-18
 comments: true
 categories:

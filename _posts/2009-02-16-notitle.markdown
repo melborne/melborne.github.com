@@ -4,18 +4,15 @@ title: 高階関数はコードをユーザフレンドリーにする
 date: 2009-02-16
 comments: true
 categories:
+tags: [ruby]
 ---
 
 
-「{{ '489471163X' | amazon_link }}」の
-図形言語のところでつまずいているので
-もう一度高階関数に対する自分の理解を
-Rubyを使って整理してみる
+「{{ '489471163X' | amazon_link }}」の図形言語のところでつまずいているので、もう一度高階関数に対する自分の理解をRubyを使って整理してみる。
 
-「高階関数」とはその引数として関数を取ったり
-その戻り値として関数を返したりする関数のことである
+「高階関数」とはその引数として関数を取ったり、その戻り値として関数を返したりする関数のことである。
 
-今3つの数の和、差、積、商を求めるメソッドを考える
+今3つの数の和、差、積、商を求めるメソッドを考える。
 {% highlight ruby %}
  def plus_abc(a, b, c)
    a + b + c
@@ -38,21 +35,17 @@ Rubyを使って整理してみる
  mul_abc(4, 5, 6) # => 120
  div_abc(12, 3, 2) # => 2
 {% endhighlight %}
-これらのメソッドは
-使っている演算子は違うけれども
-a (演算子) b (演算子) cという制御構造は同じだ
+これらのメソッドは使っている演算子は違うけれども、a (演算子) b (演算子) cという制御構造は同じだ。
 
-だから変数と同じように演算を引数として渡せれば
-これらのメソッドは一つにまとめられる
+だから変数と同じように演算を引数として渡せれば、これらのメソッドは一つにまとめられる。
 {% highlight ruby %}
  def calc_abc(a, b, c, op)
    op[a, b, c]  #またはop.call(a, b, c)
  end
 {% endhighlight %}
-ここでopは上記演算の抽象である
+ここでopは上記演算の抽象である。
 
-これに対して各演算の専用メソッドにおいて
-具体的な演算の手続きをcalc_abcメソッドの引数として渡す
+これに対して各演算の専用メソッドにおいて、具体的な演算の手続きをcalc_abcメソッドの引数として渡す。
 {% highlight ruby %}
  def plus_abc(a, b, c)
    calc_abc(a, b, c, lambda { |x, y, z| x + y + z })
@@ -76,8 +69,7 @@ a (演算子) b (演算子) cという制御構造は同じだ
  div_abc(12, 3, 2) # => 2
 {% endhighlight %}
 
-演算を抽象化したcalc_abcメソッドがあれば
-後から同種の演算を簡単に追加できる
+演算を抽象化したcalc_abcメソッドがあれば、後から同種の演算を簡単に追加できる。
 {% highlight ruby %}
  def power_abc(a, b, c)
    calc_abc(a, b, c, lambda { |x, y, z| x ** y ** z })
@@ -86,21 +78,15 @@ a (演算子) b (演算子) cという制御構造は同じだ
  power_abc(2, 2, 2) # => 16
 {% endhighlight %}
 
-さらに同種の演算子を追加する場合に
-毎回手続きであるlambda...の入力は煩わしい
-演算子を引数にとって手続きを戻り値とする
-メソッドを定義できれば問題は解決する
+さらに同種の演算子を追加する場合に毎回手続きであるlambda...の入力は煩わしい。演算子を引数にとって手続きを戻り値とするメソッドを定義できれば問題は解決する。
 {% highlight ruby %}
  def operator(op)
    lambda { |x, y, z| (x.send(op, y)).send(op, z) }
  end
 {% endhighlight %}
-operatorメソッドは演算子を引数に取って
-3つの数に順次その演算子を作用させる手続きを返す
-つまりoperatorメソッドは演算手続きを抽象化する
+operatorメソッドは演算子を引数に取って、3つの数に順次その演算子を作用させる手続きを返す、つまりoperatorメソッドは演算手続きを抽象化する。
 
-これを用いることによって
-各演算メソッドはより簡潔になる
+これを用いることによって各演算メソッドはより簡潔になる。
 {% highlight ruby %}
  def plus_abc(a, b, c)
    calc_abc(a, b, c, operator(:+))
@@ -129,8 +115,7 @@ operatorメソッドは演算子を引数に取って
  power_abc(2, 2, 2) # => 16
 {% endhighlight %}
 
-ついでに引数をいくつでも取れるようにすれば
-より汎用性が高まる
+ついでに引数をいくつでも取れるようにすればより汎用性が高まる。
 {% highlight ruby %}
  def calc_abc(*i, op)
    op[i]
@@ -182,9 +167,7 @@ end
  join_abc(1, 2, 3, 4, 5) # => 12345
 {% endhighlight %}
 
-高階関数の別の例を示そう
-配列の各要素を倍にするメソッドと
-配列の各要素を大文字にするメソッドを考える
+高階関数の別の例を示そう。配列の各要素を倍にするメソッドと、配列の各要素を大文字にするメソッドを考える。
 {% highlight ruby %}
  def multi_list(list)
    if list.empty?
@@ -207,9 +190,7 @@ end
  multi_list([1, 2, 3, 4]) # => [2, 4, 6, 8]
  upper_list(['cat', 'dog', 'horse']) # => ["CAT", "DOG", "HORSE"]
 {% endhighlight %}
-これらの制御構造はそっくりで
-dataに対する演算のところだけが違う
-だからこの演算のところを抽象化できれば汎用メソッドができる
+これらの制御構造はそっくりで、dataに対する演算のところだけが違う。だからこの演算のところを抽象化できれば汎用メソッドができる。
 {% highlight ruby %}
  def mappie(list, op)
    if list.empty?
@@ -220,7 +201,7 @@ dataに対する演算のところだけが違う
    end
  end
 {% endhighlight %}
-このメソッドを使えば各メソッドは簡潔に書ける
+このメソッドを使えば各メソッドは簡潔に書ける。
 {% highlight ruby %}
  def multi_list(list)
    mappie(list, lambda { |x| x * 2 })
@@ -234,8 +215,7 @@ dataに対する演算のところだけが違う
  upper_list(['cat', 'dog', 'horse']) # => ["CAT", "DOG", "HORSE"]
 {% endhighlight %}
 
-先の例と同様に
-mappieに渡す手続きもメソッドにしよう
+先の例と同様にmappieに渡す手続きもメソッドにしよう。
 {% highlight ruby %}
  def operator(op, *args)
    lambda { |x| x.send(op, *args) }
@@ -254,14 +234,11 @@ mappieに渡す手続きもメソッドにしよう
  multi_list([1, 2, 3, 4]) # => [2, 4, 6, 8]
  upper_list(['cat', 'dog', 'horse']) # => ["CAT", "DOG", "HORSE"]
 {% endhighlight %}
-メソッドの追加も容易だ
+メソッドの追加も容易だ。
 {% highlight ruby %}
  def reverse_list(list)
    mappie(list, operator(:reverse))
  end
  reverse_list(%w(elppa odnetnin elgoog)) # => ["apple", "nintendo", "google"]
 {% endhighlight %}
-このように高階関数を使えば
-任意の抽象手続きを定義できるようになり
-その結果下流コードが簡潔になって
-それを利用するユーザにやさしいプログラムができる
+このように高階関数を使えば、任意の抽象手続きを定義できるようになり、その結果下流コードが簡潔になって、それを利用するユーザにやさしいプログラムができる。

@@ -1,9 +1,11 @@
 ---
 layout: post
-title: 第2弾!知って得する12のRubyのトリビアな記法 ~ 12 Trivia Notations you should know in Ruby
+title: 第2弾!知って得する12のRubyのトリビアな記法
+tagline: 12 Trivia Notations you should know in Ruby
 date: 2012-02-08
 comments: true
 categories:
+tags: [ruby, trivia]
 ---
 
 半年くらい前にちょっとトリビアだけど、知っていると意外と便利なRubyの記法を21個紹介したよ。

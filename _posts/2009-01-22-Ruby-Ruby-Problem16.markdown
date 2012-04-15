@@ -1,12 +1,13 @@
 ---
 layout: post
-title: Rubyで桁の合計を求める ～Rubyでオイラープロジェクトを解こう！Problem16
+title: Rubyで桁の合計を求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem16
 date: 2009-01-22
 comments: true
 categories:
 ---
 
-##Rubyで桁の合計を求める ～Rubyでオイラープロジェクトを解こう！Problem16
+##Rubyで桁の合計を求める  ～Rubyでオイラープロジェクトを解こう！Problem16
 [Problem 16 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=16)
 > 
 > [tex:2^{15} = 32768] and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.

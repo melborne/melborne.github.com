@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで三角形の最大ルートを求める ～Rubyでオイラープロジェクトを解こう！Problem18
+title: Rubyで三角形の最大ルートを求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem18
 date: 2009-01-25
 comments: true
 categories:

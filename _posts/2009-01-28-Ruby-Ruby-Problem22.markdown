@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyでアルファベット値を数える ～Rubyでオイラープロジェクトを解こう！Problem22
+title: Rubyでアルファベット値を数える
+tagline: Rubyでオイラープロジェクトを解こう！Problem22
 date: 2009-01-28
 comments: true
 categories:

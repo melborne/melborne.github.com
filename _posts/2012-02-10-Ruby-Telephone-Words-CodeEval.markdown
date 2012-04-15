@@ -4,6 +4,7 @@ title: RubyでTelephone Wordsを解く-CodeEval
 date: 2012-02-10
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでTelephone Wordsを解く-CodeEval

@@ -4,6 +4,7 @@ title: SchemeとRubyでリストの操作を学ぼう
 date: 2009-02-05
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
@@ -224,9 +225,9 @@ mapに渡す演算を変えることによって
 
 葉を数える手続きcount_leavesを定義しよう
 {% highlight scheme %}
- (define (count_leaves tree)
+(define (count_leaves tree)
  	(cond ((null? tree) 0)
- 		  {% fn_ref 1 %} 1)
+ 		  ((not (pair? tree)) 1)
  		  (else (+ (count_leaves (car tree))
  				   (count_leaves (cdr tree))))))
  
@@ -273,9 +274,9 @@ Rubyでもcount_leavesを定義しよう
 schemeに戻ってcount_leaves同様に
 先のscale_listもtreeに対応させよう
 {% highlight scheme %}
- (define (scale_tree tree factor)
- 	(cond {% fn_ref 2 %}
- 		  {% fn_ref 3 %} (* tree factor))
+(define (scale_tree tree factor)
+ 	(cond ((null? tree) `())
+ 		  ((not (pair? tree)) (* tree factor))
  		  (else (cons (scale_tree (car tree) factor)
  					  (scale_tree (cdr tree) factor)))))
  					
@@ -385,8 +386,3 @@ injectを使うのはちょっとずるっぽいけど
 {{ '489471163X' | amazon_link }}
 
 {{ '489471163X' | amazon_authors }}
-{% footnotes %}
-   {% fn not (pair? tree %}
-   {% fn null? tree) `( %}
-   {% fn not (pair? tree %}
-{% endfootnotes %}

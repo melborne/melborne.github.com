@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで英数字を作って文字数を数える ～Rubyでオイラープロジェクトを解こう！Problem17
+title: Rubyで英数字を作って文字数を数える
+tagline: Rubyでオイラープロジェクトを解こう！Problem17
 date: 2009-01-23
 comments: true
 categories:

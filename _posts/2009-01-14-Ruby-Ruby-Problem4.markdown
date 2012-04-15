@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで回文数を求める ～Rubyでオイラープロジェクトを解こう！Problem4
+title: Rubyで回文数を求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem4
 date: 2009-01-14
 comments: true
 categories:

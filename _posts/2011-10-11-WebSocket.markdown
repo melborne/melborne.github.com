@@ -1,6 +1,7 @@
 ---
 layout: post
-title: プログラミング言語が好き？ ~WebSocketのデモ
+title: プログラミング言語が好き？
+tagline: WebSocketのデモ
 date: 2011-10-11
 comments: true
 categories:

@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで友愛数を探す ～Rubyでオイラープロジェクトを解こう！Problem21
+title: Rubyで友愛数を探す
+tagline: Rubyでオイラープロジェクトを解こう！Problem21
 date: 2009-01-27
 comments: true
 categories:

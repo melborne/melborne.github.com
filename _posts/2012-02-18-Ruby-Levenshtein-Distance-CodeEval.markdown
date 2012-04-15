@@ -3,7 +3,7 @@ layout: post
 title: RubyでLevenshtein Distanceを解く-CodeEval
 date: 2012-02-18
 comments: true
-categories: [ruby, codeeval]
+tags: [ruby, codeeval]
 ---
 
 できません..

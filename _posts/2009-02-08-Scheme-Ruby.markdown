@@ -4,6 +4,7 @@ title: SchemeとRubyで写像の入れ子を学ぼう
 date: 2009-02-08
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
@@ -53,7 +54,7 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
 {% endhighlight %}
 これらを繋いで目的の手続きprime_sum_pairsが得られる
 {% highlight scheme %}
- (define (prime_sum_pairs n)
+(define (prime_sum_pairs n)
     (map make_pair_sum
        (filter prime_sum?
           (flatmap
@@ -63,7 +64,7 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
              (enumerate_interval 1 n)))))
  
  (prime_sum_pairs 6)
- {% fn_ref 1 %}
+ ((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7) (6 1 7) (6 5 11))
 {% endhighlight %}
 
 なおここではmapとappendによるaccumulateの手続きを
@@ -132,7 +133,7 @@ Schemeに戻って
 先のflatmap手続きを使って
 集合Sのすべての順列を求めてみよう
 {% highlight scheme %}
- (define (permutations s)
+(define (permutations s)
     (if (null? s)
        (list `())
        (flatmap (lambda (x)
@@ -141,7 +142,7 @@ Schemeに戻って
               s)))
  
  (permutations (list 1 2 3))
- {% fn_ref 2 %}
+ ((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))
 {% endhighlight %}
 内側のmap手続きで
 外側のflatmapから渡された要素xを除く集合に対し
@@ -183,7 +184,3 @@ RubyのArrayクラスにはpermutationというメソッドが既にある
 {{ '489471163X' | amazon_link }}
 
 {{ '489471163X' | amazon_authors }}
-{% footnotes %}
-   {% fn 2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7) (6 1 7) (6 5 11 %}
-   {% fn 1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1 %}
-{% endfootnotes %}

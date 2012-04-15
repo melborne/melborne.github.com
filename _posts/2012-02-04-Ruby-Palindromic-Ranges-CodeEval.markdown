@@ -4,6 +4,7 @@ title: RubyでPalindromic Rangesを解く-CodeEval
 date: 2012-02-04
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでPalindromic Rangesを解く-CodeEval

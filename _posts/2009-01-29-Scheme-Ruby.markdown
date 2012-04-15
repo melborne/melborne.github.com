@@ -4,6 +4,7 @@ title: SchemeとRubyで高階関数を学ぼう
 date: 2009-01-29
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
@@ -269,8 +270,8 @@ Schemeではlambdaは局所変数を作り出すためにも使われる
 更にletというものが使える
 letを使えば最初にa,bを定義できる
 {% highlight scheme %}
- (define (f x y)
-	(let {% fn_ref 1 %})
+(define (f x y)
+	(let ((a (+ 1 (* x y)))
 		(b (- 1 y)))
 	  (+ (* x (square a))
 	       (* y b)
@@ -311,6 +312,3 @@ Rubyではローカル変数はメソッドを透過できないので
 {{ '489471163X' | amazon_authors }}
 (追記:2009/2/1）タイトルを「RubyでSchemeの高階関数を学ぼう」から「SchemeでRubyの高階関数を学ぼう」に変えました
 (追記:2009/2/5)　タイトルを「SchemeでRubyの高階関数を学ぼう」から「SchemeとRubyで高階関数を学ぼう」に変えました
-{% footnotes %}
-   {% fn a (+ 1 (* x y %}
-{% endfootnotes %}

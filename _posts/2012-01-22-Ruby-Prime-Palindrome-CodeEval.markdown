@@ -4,6 +4,7 @@ title: RubyでPrime Palindromeを解く -CodeEval
 date: 2012-01-22
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 id:rochefortさんに倣って[CodeEval](http://www.codeeval.com/)のprime Palindrome問題を解いてみました。僕はEnumeratorを使って。

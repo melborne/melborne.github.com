@@ -4,6 +4,7 @@ title: RubyでString Searchingを解く-CodeEval
 date: 2012-02-03
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでString Searchingを解く-CodeEval

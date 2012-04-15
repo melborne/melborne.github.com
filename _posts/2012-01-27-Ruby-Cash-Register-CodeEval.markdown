@@ -4,6 +4,7 @@ title: RubyでCash Registerを解く-CodeEval
 date: 2012-01-27
 comments: true
 categories:
+tags: [ruby, codeeval]
 ---
 
 ##RubyでCash Registerを解く-CodeEval

@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyでカラフルにグラフを書こう！ ーGraphViz色見本
+title: Rubyでカラフルにグラフを書こう！
+tagline: GraphViz色見本
 date: 2010-02-04
 comments: true
 categories:

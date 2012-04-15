@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyでピタゴラスを求める ～Rubyでオイラープロジェクトを解こう！Problem9
+title: Rubyでピタゴラスを求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem9
 date: 2009-01-17
 comments: true
 categories:

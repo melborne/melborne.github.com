@@ -1,9 +1,10 @@
 ---
 layout: post
-title: RubyのGsubチェーンはイケてない? ~ GsubFilterの紹介
+title: RubyのGsubチェーンはイケてない?
+tagline: GsubFilterの紹介
 description: ""
 category: 
-tags: []
+tags: [ruby, gem]
 ---
 {% include JB/setup %}
 

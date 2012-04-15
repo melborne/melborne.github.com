@@ -1,6 +1,7 @@
 ---
 layout: post
-title: 知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby
+title: 知って得する21のRubyのトリビアな記法
+tagline: 21 Trivia Notations you should know in Ruby
 date: 2011-06-22
 comments: true
 categories:

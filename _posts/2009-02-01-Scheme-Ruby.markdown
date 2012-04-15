@@ -4,10 +4,11 @@ title: SchemeとRubyでデータ抽象を学ぼう
 date: 2009-02-01
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
-[前回](/2009/01/31/notitle/)に引き続き「[rakuten:book:10825992:title]」を使って
+[前回](/2009/01/31/notitle/)に引き続き「{{ '489471163X' | amazon_link }}」を使って
 今度はSchemeとRubyにおける
 データ抽象の違いを見ていこうと思います
 なおSchemeのコードは本書からの抜粋で
@@ -27,11 +28,7 @@ Schemeで有理数に対する算術演算
 add_rat, sub_rat, mul_rat, div_rat, equal_rat?を考える
 有理数に対する演算式は次の通りである
 
-[tex:\frac{n1}{d1} + \frac{n2}{d2} = \frac{n1d2 + n2d1}{d1d2}]
-[tex:\frac{n1}{d1} - \frac{n2}{d2} = \frac{n1d2 - n2d1}{d1d2}]
-[tex:\frac{n1}{d1} * \frac{n2}{d2} = \frac{n1n2}{d1d2}]
-[tex:\frac{n1/d1}{n2/d2} = \frac{n1d2}{d1n2}]
-[tex:\frac{n1}{d1} = \frac{n2}{d2}] のときに限り [tex:n1d2 = n2d1]
+![Alt expression]({{ site.url }}/assets/images/2009-02-01-Scheme-Ruby.png)
 
 整数nと整数dを取って
 分子がn分母がdの有理数を返す手続きをmake_ratとし
@@ -137,8 +134,8 @@ consは2つの引数を取り
 先の手続きは簡約まではしない
 最大公約数gcdを使ってこれを改善する
 {% highlight scheme %}
- (define (make_rat n d)
- 	(let {% fn_ref 1 %})
+(define (make_rat n d)
+ 	(let ((g (gcd n d)))
  	 (cons (/ n g) (/ d g))))
 {% endhighlight %}
 
@@ -255,8 +252,7 @@ newで渡した引数を分子分母とする
  one_half /one_third # => Rational(3, 2)
 {% endhighlight %}
 
-[rakuten:book:10825992:detail]
+{{ '489471163X' | amazon_medium_image }}
+{{ '489471163X' | amazon_link }}
+
 (追記:2009/2/5)　タイトルを「SchemeでRubyのデータ抽象を学ぼう」から「SchemeとRubyでデータ抽象を学ぼう」に変えました
-{% footnotes %}
-   {% fn g (gcd n d %}
-{% endfootnotes %}

@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで階乗して桁を合計 ～Rubyでオイラープロジェクトを解こう！Problem20
+title: Rubyで階乗して桁を合計
+tagline: Rubyでオイラープロジェクトを解こう！Problem20
 date: 2009-01-26
 comments: true
 categories:

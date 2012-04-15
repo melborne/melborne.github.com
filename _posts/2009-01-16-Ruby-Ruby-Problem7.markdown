@@ -1,12 +1,13 @@
 ---
 layout: post
-title: Rubyでエラトステネス ～Rubyでオイラープロジェクトを解こう！Problem7
+title: Rubyでエラトステネス
+tagline: Rubyでオイラープロジェクトを解こう！Problem7
 date: 2009-01-16
 comments: true
 categories:
 ---
 
-##Rubyでエラトステネス ～Rubyでオイラープロジェクトを解こう！Problem7
+
 [Problem 7 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=7)
 > 
 > By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.

@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで最小公倍数を求める ～Rubyでオイラープロジェクトを解こう！Problem5
+title: Rubyで最小公倍数を求める
+tagline: Rubyでオイラープロジェクトを解こう！Problem5
 date: 2009-01-15
 comments: true
 categories:

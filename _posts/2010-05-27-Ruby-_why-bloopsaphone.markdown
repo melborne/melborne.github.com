@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyでマリオを奏でよう！ ～_whyのbloopsaphoneの紹介
+title: Rubyでマリオを奏でよう！
+tagline: _whyのbloopsaphoneの紹介
 date: 2010-05-27
 comments: true
 categories:

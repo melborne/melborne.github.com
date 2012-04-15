@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで100個の数を足す ～Rubyでオイラープロジェクトを解こう！Problem13
+title: Rubyで100個の数を足す
+tagline: Rubyでオイラープロジェクトを解こう！Problem13
 date: 2009-01-19
 comments: true
 categories:

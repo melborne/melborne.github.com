@@ -4,6 +4,7 @@ title: SchemeとRubyで高階関数を学ぼう ~その2~
 date: 2009-01-31
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
@@ -151,13 +152,13 @@ Schemeで表現すると以下のようになる
 手続きfixed_pointは入力として
 関数fと最初の予想値first_guessを取る
 {% highlight scheme %}
- (define tolerance 0.00001)
+(define tolerance 0.00001)
  
  (define (fixed_point f first_guess)
  	(define (close_enough? v1 v2)
  		(< (abs (- v1 v2)) tolerance))
  	(define (try guess)
- 		(let {% fn_ref 1 %})
+ 		(let ((next (f guess)))
  			(if (close_enough? guess next)
  			     next
  			    (try next))))
@@ -333,6 +334,3 @@ average_dampはProcオブジェクトを返す
 [rakuten:book:10825992:detail]
 (追記:2009/2/1）タイトルを「RubyでSchemeの高階関数を学ぼう~その2~」から「SchemeでRubyの高階関数を学ぼう~その2~」に変えました
 (追記:2009/2/5)　タイトルを「SchemeでRubyの高階関数を学ぼう~その2~」から「SchemeとRubyで高階関数を学ぼう~その2~」に変えました
-{% footnotes %}
-   {% fn next (f guess %}
-{% endfootnotes %}

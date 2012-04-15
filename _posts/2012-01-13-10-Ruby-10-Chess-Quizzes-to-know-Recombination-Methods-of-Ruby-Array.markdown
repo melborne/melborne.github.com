@@ -1,9 +1,11 @@
 ---
 layout: post
-title: 10のチェスクイズでRubyの配列組み換えメソッドを覚えよう! - 10 Chess Quizzes to know Recombination Methods of Ruby Array
+title: 10のチェスクイズでRubyの配列組み換えメソッドを覚えよう!
+tagline: 10 Chess Quizzes to know Recombination Methods of Ruby Array
 date: 2012-01-13
 comments: true
 categories:
+tags: [ruby, quiz]
 ---
 
 Rubyには与えられた配列を別の配列のかたちに組み換えるようなメソッドがいくつかあるよ。それらはすごく便利だけどリファレンスでは別々に説明されてるから、まとまった知識としてはちょっと記憶しづらいよね。

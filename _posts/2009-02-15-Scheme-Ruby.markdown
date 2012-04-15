@@ -4,6 +4,7 @@ title: SchemeとRubyで図形言語を学ぼう
 date: 2009-02-15
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 

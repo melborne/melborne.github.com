@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Rubyで最長の数列を探す ～Rubyでオイラープロジェクトを解こう！Problem14
+title: Rubyで最長の数列を探す
+tagline: Rubyでオイラープロジェクトを解こう！Problem14
 date: 2009-01-20
 comments: true
 categories:

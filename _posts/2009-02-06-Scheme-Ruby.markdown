@@ -4,6 +4,7 @@ title: SchemeとRubyで接続インタフェースを学ぼう
 date: 2009-02-06
 comments: true
 categories:
+tags: [ruby, scheme]
 ---
 
 
@@ -21,9 +22,9 @@ SchemeとRubyでリストの接続インタフェース{% fn_ref 1 %}
 
 前者の手続きはSchemeで以下のように表現できる
 {% highlight scheme %}
- (define (sum_odd_squares tree)
+(define (sum_odd_squares tree)
        (cond ((null? tree) 0)
-                  {% fn_ref 2 %}
+                  ((not (pair? tree))
                        (if (odd? tree) (square tree) 0))
                   (else (+ (sum_odd_squares (car tree))
                                  (sum_odd_squares (cdr tree))))))
@@ -37,11 +38,11 @@ treeをcarダウンおよびcdrダウンしていき
 
 一方後者の手続きは以下のようになる
 {% highlight scheme %}
- (define (even_fibs n)
+(define (even_fibs n)
        (define (next k)
              (if (> k n)
                  `()
-             (let {% fn_ref 3 %})
+             (let ((f (fib k)))
                   (if (even? f)
                        (cons f (next (+ k 1)))
                        (next (+ k 1))))))
@@ -93,9 +94,9 @@ k番目のフィボナッチ数を求める手続きをfib(k)とし
 次に条件を満たした要素だけを選び出す
 filter手続きを書こう
 {% highlight scheme %}
- (define (filter predicate sequence)
-        (cond {% fn_ref 4 %}
-                 {% fn_ref 5 %}
+(define (filter predicate sequence)
+        (cond ((null? sequence) `())
+                 ((predicate (car sequence))
                           (cons (car sequence)
                                   (filter predicate (cdr sequence))))
                   (else (filter predicate (cdr sequence)))))
@@ -130,9 +131,9 @@ accumurate手続きは以下のようになる
 enumarate手続きは各異なるものが必要だ
 木の葉を数え上げるenumarate_treeを最初に定義しよう
 {% highlight scheme %}
- (define (enumerate_tree tree)
-        (cond {% fn_ref 6 %}
-                 {% fn_ref 7 %} (list tree))
+(define (enumerate_tree tree)
+        (cond ((null? tree) `())
+                 ((not (pair? tree)) (list tree))
                  (else (append (enumerate_tree (car tree))
                                           (enumerate_tree (cdr tree))))))
  
@@ -401,11 +402,5 @@ Rubyのオブジェクトを使った接続インタフェースでは
 {{ '489471163X' | amazon_authors }}
 {% footnotes %}
    {% fn conventional interface:訳書では公認インタフェースとなっています %}
-   {% fn not (pair? tree %}
-   {% fn f (fib k %}
-   {% fn null? sequence) `( %}
-   {% fn predicate (car sequence %}
-   {% fn null? tree) `( %}
-   {% fn not (pair? tree %}
    {% fn pはdef p(x); x.join(" ").chop endで定義している %}
 {% endfootnotes %}
