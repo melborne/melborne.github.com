@@ -100,6 +100,6 @@ MyModule::MyClass.new.my_method
 
 やっぱりRubyは楽しいですね！
 
-関連記事：[Sinatraに別構文があってもいいじゃないか！](/2011/06/05/Sinatra/)
+関連記事：[Sinatraに別構文があってもいいじゃないか！]({{ site.url }}/2011/06/05/Sinatra/)
 
 {% gist 1091353 ennnd.rb %}

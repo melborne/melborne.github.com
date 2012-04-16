@@ -198,10 +198,10 @@ end
 (追記:2011-10-15)関数の機能分離が不十分だったので修正しました。
 
 関連記事:
-[Yet Another Ruby FizzBuzz](/2010/03/18/Yet-Another-Ruby-FizzBuzz/)
+[Yet Another Ruby FizzBuzz]({{ site.url }}/2010/03/18/Yet-Another-Ruby-FizzBuzz/)
 
-[Yet Another Ruby FizzBuzz その2](/2010/03/24/Yet-Another-Ruby-FizzBuzz-2/)
+[Yet Another Ruby FizzBuzz その2]({{ site.url }}/2010/03/24/Yet-Another-Ruby-FizzBuzz-2/)
 
-[Yet Another Ruby FizzBuzz その3](/2010/03/24/Yet-Another-Ruby-FizzBuzz-3/)
+[Yet Another Ruby FizzBuzz その3]({{ site.url }}/2010/03/24/Yet-Another-Ruby-FizzBuzz-3/)
 
-[Yet Another Ruby FizzBuzz その4](/2010/03/24/Yet-Another-Ruby-FizzBuzz-4/)
+[Yet Another Ruby FizzBuzz その4]({{ site.url }}/2010/03/24/Yet-Another-Ruby-FizzBuzz-4/)

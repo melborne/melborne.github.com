@@ -8,7 +8,7 @@ tags: [ruby, scheme]
 ---
 
 
-[前回](/2009/01/31/notitle/)に引き続き「{{ '489471163X' | amazon_link }}」を使って
+[前回]({{ site.url }}/2009/01/31/notitle/)に引き続き「{{ '489471163X' | amazon_link }}」を使って
 今度はSchemeとRubyにおける
 データ抽象の違いを見ていこうと思います
 なおSchemeのコードは本書からの抜粋で

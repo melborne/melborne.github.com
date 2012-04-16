@@ -384,7 +384,7 @@ Rubyでアルファベットの配列を作るときなどは通常、以下の�
 よかったら僕にも君のトリビア教えてね！
 
 第2弾を書いたよ!
-[第2弾!知って得する12のRubyのトリビアな記法 ~ 12 Trivia Notations you should know in Ruby](/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/)
+[第2弾!知って得する12のRubyのトリビアな記法 ~ 12 Trivia Notations you should know in Ruby]({{ site.url }}/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/)
 
 (追記：2011-6-26) 21の「文字列にコロンを」を「文字列リテラルにコロンを」に変更しました。
 (追記：2011-6-27) 2の「カッコを省略できないという欠点があるけど」を「引数がないときでもカッコを省略できないという欠点があるけど」に変更しました。

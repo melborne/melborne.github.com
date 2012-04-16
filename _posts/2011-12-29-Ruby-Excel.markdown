@@ -9,7 +9,7 @@ tags: [ruby]
 
 社内でFizzBuzz問題のコンテストをしたらあまり出来がよくなかったという記事があって、以前その問題をRubyで解いた投稿をしたよ。
 
-[RubyでFizzBuzz問題を解いて上司に対抗しよう!](/2011/10/09/Ruby-FizzBuzz/)
+[RubyでFizzBuzz問題を解いて上司に対抗しよう!]({{ site.url }}/2011/10/09/Ruby-FizzBuzz/)
 
 [FizzBuzz問題を使って社内プログラミングコンテストを開催してみた - ITは芸術だ](http://d.hatena.ne.jp/JunichiIto/20111007/1317976730#20111007f1)
 
@@ -21,7 +21,7 @@ tags: [ruby]
 
 少し前の投稿で僕はRubyでは何でも作れて、ロシアンルーレットのためのメソッドまで予め用意されているって紹介したよ{% fn_ref 1 %}。
 
-[RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!](/2011/12/18/Ruby-RSpec/)
+[RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!]({{ site.url }}/2011/12/18/Ruby-RSpec/)
 
 だから当然にRubyにはExcelのためのメソッドもあって、それらを使えば先の問題は簡単に解けちゃうんだよ:)
 {% highlight ruby %}

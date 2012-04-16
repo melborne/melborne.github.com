@@ -8,7 +8,7 @@ tags: [ruby, scheme]
 ---
 
 
-[前回](/2009/01/29/Scheme-Ruby/)に引き続き「{{ 489471163X || amazon_link }}」を使って
+[前回]({{ site.url }}/2009/01/29/Scheme-Ruby/)に引き続き「{{ 489471163X || amazon_link }}」を使って
 SchemeとRubyで平方根の求め方と
 手続きを出力とする高階手続きをまとめてみました
 なおSchemeのコードは本書からの抜粋で

@@ -213,9 +213,9 @@ irb(main):082:1> end
 
 関連記事：
 
-1. [Sinatraに別構文があってもいいじゃないか！](/2011/06/05/Sinatra/)
+1. [Sinatraに別構文があってもいいじゃないか！]({{ site.url }}/2011/06/05/Sinatra/)
 
-2. [内部DSLを使って、RubyのWebフレームワークを書こう！](/2011/06/07/DSL-Ruby-Web/)
+2. [内部DSLを使って、RubyのWebフレームワークを書こう！]({{ site.url }}/2011/06/07/DSL-Ruby-Web/)
 
 (comment)
 > Try http://github.com/padrino/padrino-framework

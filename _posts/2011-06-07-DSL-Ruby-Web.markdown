@@ -7,7 +7,7 @@ categories:
 tags: [ruby, DSL]
 ---
 
-Sinatraのようなベース言語の構文を使って実現するDSLを内部DSLといいます。前回僕が書いた[Chinatra](/2011/06/05/Chinatra/)は一見内部DSLにみえるけど、ベース言語とは異なる構文を使った外部DSLです。
+Sinatraのようなベース言語の構文を使って実現するDSLを内部DSLといいます。前回僕が書いた[Chinatra]({{ site.url }}/2011/06/05/Chinatra/)は一見内部DSLにみえるけど、ベース言語とは異なる構文を使った外部DSLです。
 
 でも時代の風は内部DSLに向いています。
 
@@ -84,9 +84,9 @@ Rubyの内部DSLであなたも**natraしてみませんか？
 
 関連記事：
 
-1. [SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！](/2011/06/03/Sinatra-DSL-Ruby/)
+1. [SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！]({{ site.url }}/2011/06/03/Sinatra-DSL-Ruby/)
 
-2. [Sinatraに別構文があってもいいじゃないか！](/2011/06/05/Sinatra/)
+2. [Sinatraに別構文があってもいいじゃないか！]({{ site.url }}/2011/06/05/Sinatra/)
 
 {% gist 1008708 shynatra.rb %}
 

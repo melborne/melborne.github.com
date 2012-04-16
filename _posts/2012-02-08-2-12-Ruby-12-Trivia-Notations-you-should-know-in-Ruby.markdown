@@ -10,7 +10,7 @@ tags: [ruby, trivia]
 
 半年くらい前にちょっとトリビアだけど、知っていると意外と便利なRubyの記法を21個紹介したよ。
 
-[知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby](/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
+[知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby]({{ site.url }}/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
 
 今回はその第2弾だよ!
 

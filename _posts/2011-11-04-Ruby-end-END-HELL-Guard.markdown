@@ -20,7 +20,7 @@ Rubyのendは構文上の欠点だとされ、一部のRubyistからEND HELLと�
 
 結局、未熟な私はendの悟りを開くことができず、かつて誤った道に足を踏み入れた。
 
-[Ruby1.9でもEND HELLを解消したい！](/2011/07/19/Ruby1-9-END-HELL/)
+[Ruby1.9でもEND HELLを解消したい！]({{ site.url }}/2011/07/19/Ruby1-9-END-HELL/)
 
 ##endの必要性
 しかし私は対称性という様式美の観点から、Rubyのendは重要な役割を果たしていることを知っている。

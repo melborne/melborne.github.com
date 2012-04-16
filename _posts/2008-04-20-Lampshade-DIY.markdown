@@ -10,7 +10,7 @@ categories:
 リビングのペンダントライトがりっぱになると
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080221/20080221171004.jpg)
 
-[IQ lightは魔法のライト](/2008/02/21/IQ-light/)
+[IQ lightは魔法のライト]({{ site.url }}/2008/02/21/IQ-light/)
 
 相対的に棚上のアロマポッドが淋しく見える{% fn_ref 1 %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080420/20080420174436.jpg)

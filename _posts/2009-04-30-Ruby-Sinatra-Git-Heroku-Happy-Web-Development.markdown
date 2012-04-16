@@ -445,7 +445,7 @@ heroku rename newnameでリネイムできます
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090430/20090430100819.png)
 
 
-([次回に続く](/2009/05/01/notitle/))
+([次回に続く]({{ site.url }}/2009/05/01/notitle/))
 
 (参考リンク)
 [sinatra's heroku-sinatra-app at master - GitHub](http://github.com/sinatra/heroku-sinatra-app/tree/master)

@@ -213,7 +213,7 @@ helpers do
 end
 {% endhighlight %}
 ただここではビデオの取得にスレッドを使っているよ
-折角だからここでは[この間作った](/2011/06/29/notitle/)
+折角だからここでは[この間作った]({{ site.url }}/2011/06/29/notitle/)
 Enumerable#thread_withを使ってみたよ
 これはsystem_extensions.rbというファイルに置いてあるよ
 

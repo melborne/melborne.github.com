@@ -10,7 +10,7 @@ categories:
 先の記事でTweetでドット絵を描く
 実験的サイト「[Tweette Dotte](http://tweetdot.heroku.com/)」を紹介しました
 
-[Tweetでドット絵を描こう!](/2011/10/31/Tweet/)
+[Tweetでドット絵を描こう!]({{ site.url }}/2011/10/31/Tweet/)
 
 自分の告知力が弱くて
 なかなか人が集まってはくれませんが

@@ -10,7 +10,7 @@ categories:
 前回の投稿ではsleep sortと
 それに対抗したrunning sortを紹介したよ
 
-[sleep sortに対抗してrunning sortだ！（失敗に終わる編）](/2011/06/28/sleep-sort-running-sort/)
+[sleep sortに対抗してrunning sortだ！（失敗に終わる編）]({{ site.url }}/2011/06/28/sleep-sort-running-sort/)
 
 それらのアルゴリズムではRubyのThreadを使ったけど
 Threadってなんか毎回書き方を忘れるよ

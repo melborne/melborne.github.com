@@ -16,7 +16,7 @@ categories:
 > では10001番目の素数は何か。
 
 
-[Rubyで素因数を求める](/2009/01/13/Ruby/)で書いた
+[Rubyで素因数を求める]({{ site.url }}/2009/01/13/Ruby/)で書いた
 next_primeメソッドとprime?メソッドをそのまま使おう
 {% highlight ruby %}
  def nth_prime(nth)

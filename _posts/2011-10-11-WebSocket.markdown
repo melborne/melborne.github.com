@@ -10,7 +10,7 @@ categories:
 
 少し前にRubyでWebSocketする記事を書いたよ
 
-[irbから学ぶRubyの並列処理 ~ forkからWebSocketまで](/2011/09/29/irb-Ruby-fork-WebSocket/)
+[irbから学ぶRubyの並列処理 ~ forkからWebSocketまで]({{ site.url }}/2011/09/29/irb-Ruby-fork-WebSocket/)
 
 折角WebSocketの概要を理解したんだから
 簡単なデモを作ってみんなに見てもらいたいと思ったんだよ

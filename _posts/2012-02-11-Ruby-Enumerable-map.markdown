@@ -90,7 +90,7 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 
 ゴメンナサイm(__)m
 
-関連記事:[RubyのSymbol#to_procを考えた人になってみる](/2008/09/17/Ruby-Symbol-to_proc/)
+関連記事:[RubyのSymbol#to_procを考えた人になってみる]({{ site.url }}/2008/09/17/Ruby-Symbol-to_proc/)
 
 (追記:2012-2-14)Twitterを通してすごい荒業を知ったよ{% fn_ref 2 %}
 {% highlight ruby %}

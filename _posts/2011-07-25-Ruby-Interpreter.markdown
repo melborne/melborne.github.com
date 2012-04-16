@@ -4,82 +4,47 @@ title: RubyのメタプログラミングでInterpreterパターンを実装し�
 date: 2011-07-25
 comments: true
 categories:
+tags: [ruby, interpreter, design_pattern]
 ---
 
+「Rubyによるデザインパターン」(著：ラス・オルセン)は、GoFの23あるデザインパターンのうちの14個についてRubyによる実装とその解説を試みた書籍です。
 
-「Rubyによるデザインパターン」(著：ラス・オルセン)は
-GoFの23あるデザインパターンのうちの14個について
-Rubyによる実装とその解説を試みた書籍です
+{{ '4894712857' | amazon_medium_image }}
 
-{{ '4894712857' | amazon_large_image }}
-
-{{ '4894712857' | amazon_link }}
-
-{{ '4894712857' | amazon_authors }}
+{{ '4894712857' | amazon_link }} by {{ '4894712857' | amazon_authors }}
 
 ##Interpreterパターン
-その中にInterpreterパターンを取り扱った章(15)があります
-Interpreterパターンでは言語上に
-問題解決に特化した専用言語を構築します
-専用言語で書かれたプログラムはパーサで抽象構文木(AST)
-というオブジェクトのツリー構造に変換され
-評価(interpret)されます
-ASTはオブジェクトノードの集まりですが
-これはその言語のプリミティブなノードである終端(terminal)と
-終端への参照を含む高階の非終端(nonterminal)で構成されます
+その中にInterpreterパターンを取り扱った章(15)があります。Interpreterパターンでは言語上に問題解決に特化した専用言語を構築します。専用言語で書かれたプログラムはパーサで抽象構文木(AST)というオブジェクトのツリー構造に変換され、評価(interpret)されます。ASTはオブジェクトノードの集まりですが、これはその言語のプリミティブなノードである終端(terminal)と、終端への参照を含む高階の非終端(nonterminal)で構成されます。
 
-本書ではRubyによるInterpreterパターンの実装例として
-ファイル検索用インタープリタが紹介されています
-このインタープリタでは最終的に以下のような書き方で
-ファイル検索が行えます
+本書ではRubyによるInterpreterパターンの実装例として、ファイル検索用インタープリタが紹介されています。このインタープリタでは最終的に以下のような書き方でファイル検索が行えます。
 {% highlight ruby %}
   (bigger(1024) & writable) | file_name('*.mp3')
 {% endhighlight %}
 
-説明は不要と思いますが
-この記述で1KB以上の書き込み可能ファイルと
-mp3ファイルの集合が表現されています
-Rubyをよく知っている人なら
-このプログラムを構文解析するのに
-パーサは不要であることに気づくでしょう
+説明は不要と思いますが、この記述で1KB以上の書き込み可能ファイルと、mp3ファイルの集合が表現されています。Rubyをよく知っている人なら、このプログラムを構文解析するのにパーサは不要であることに気づくでしょう。
 
-そう
-Rubyでは演算子のように使える & や | メソッドを活用することで
-パーサ無しで利用者にやさしい専用言語を構築できるのです！
-つまりこれは内部DSLですね
+そう、Rubyでは演算子のように使える `&` や `|` メソッドを活用することで、パーサ無しで利用者にやさしい専用言語を構築できるのです！つまりこれは内部DSLですね。
 
-そして特定のディレクトリでこの集合を評価することで
-該当ディレクトリに含まれるファイルリストが得られます
+そして特定のディレクトリでこの集合を評価することで、該当ディレクトリに含まれるファイルリストが得られます。
 {% highlight ruby %}
   file_exp = (bigger(1024) & writable) | file_name('*.mp3')
   puts file_exp.evaluate('~/target_directory')
 {% endhighlight %}
 
-この専用言語を構築する具体的な手順は
-本書を参照してくださいね
-もっとも実装コードだけなら
-以下のサイトから取得することもできます{% fn_ref 1 %}
+この専用言語を構築する具体的な手順は本書を参照してくださいね。もっとも実装コードだけなら、以下のサイトから取得することもできます{% fn_ref 1 %}。
 
 [Design Patterns In Ruby: Home](http://designpatternsinruby.com/index.html)
 
 ##InterpreterBuilder
-デザインパターン初学者の自分にとって
-Interpreterパターンはとても新鮮に感じられました
-しかしその一方でそれを構築するには
-それなりの量のコードが必要であることを知りました
-例えば上記ファイル検索用インタープリタを実現するのに
-著者はおよそ120行のコードを書いています
+デザインパターン初学者の自分にとってInterpreterパターンはとても新鮮に感じられました。しかしその一方でそれを構築するにはそれなりの量のコードが必要であることを知りました。例えば上記ファイル検索用インタープリタを実現するのに、著者はおよそ120行のコードを書いています。
 
 でも中を見ると似たようなコードの繰り返しなんですよねー
 
 そんなわけで..
 
-Rubyのメタプログラミングを使って
-Interpreterパターンを簡単に実現する
-InterpreterBuilderというライブラリを書いてみました:)
+Rubyのメタプログラミングを使ってInterpreterパターンを簡単に実現する、InterpreterBuilderというライブラリを書いてみました:)
 
-早速先のファイル検索用インタープリタを
-InterpreterBuilderライブラリを使って書き直してみます{% fn_ref 2 %}
+早速先のファイル検索用インタープリタをInterpreterBuilderライブラリを使って書き直してみます{% fn_ref 2 %}。
 {% highlight ruby %}
 require "find"
 require "interpreter_builder"
@@ -127,33 +92,22 @@ module FileSelect
   end
 end
 {% endhighlight %}
-InterpreterBuilderを使うことで
-ファイル検索用インタプリタの実装は
-僅か50行になりました！
+InterpreterBuilderを使うことで、ファイル検索用インタプリタの実装は僅か50行になりました！
 
-使い方の手順は以下のとおりです
+使い方の手順は以下のとおりです。
+
 1. InterpreterBuilderモジュールをextendする(1)
 1. ASTノードのベースクラスExpressionを定義する(2)
 1. define_terminalメソッドを使って終端オブジェクト(Expressionのサブクラス)を定義する(3)
 1. define_nonterminalメソッドを使って非終端オブジェクト(Expressionのサブクラス)を定義する(4)
 
-define_terminalではAll FileName Bigger Writableという名の
-Expressionサブクラスを作ります
-同時に同名の関数的メソッド
-all file_name bigger writableも生成されます{% fn_ref 3 %}
-第3引数にはサブクラスでオーバーライドするメソッド名を
-第4引数にはその引数を被評価集合に変換するconverterを
-更に被評価集合に対する適合条件をブロックで渡します
+define_terminalではAll, FileName, Bigger, Writableという名のExpressionサブクラスを作ります。同時に同名の関数的メソッドall, file_name, bigger, writableも生成されます{% fn_ref 3 %}。第3引数にはサブクラスでオーバーライドするメソッド名を、第4引数にはその引数を被評価集合に変換するconverterを、更に被評価集合に対する適合条件をブロックで渡します。
 
-define_nonterminalではExcept Or Andという名の
-Expressionサブクラスを作ります
-第4引数にはその非終端で参照される
-非終端オブジェクトに適用する演算子を指定します
+define_nonterminalではExcept, Or, Andという名のExpressionサブクラスを作ります。第4引数にはその非終端で参照される非終端オブジェクトに適用する演算子を指定します。
 
-説明が不十分で言ってることがよくわからないと思いますが
-先のコードを見て理解して頂けると助かります^ ^;
+説明が不十分で言ってることがよくわからないと思いますが、先のコードを見て理解して頂けると助かります^ ^;
 
-InterpreterBuilderの内部実装は以下のとおりです
+InterpreterBuilderの内部実装は以下のとおりです。
 {% highlight ruby %}
 # encoding: UTF-8
 class String
@@ -195,13 +149,9 @@ end
 {% endhighlight %}
 
 ##ユーザ検索用インタープリタ
-別の例を示します
-今度はInterpreterBuilderを使って
-ユーザの属性集合を求める
-ユーザ検索用のクエリー言語を構築してみます
+別の例を示します。今度はInterpreterBuilderを使って、ユーザの属性集合を求めるユーザ検索用のクエリー言語を構築してみます。
 
-今ここに
-カンマ区切りのユーザ属性情報があります
+今ここにカンマ区切りのユーザ属性情報があります。
 {% highlight bash %}
 Joe, 25, M, US, Programmer
 Armstrong, 28, M, US, Teacher
@@ -214,9 +164,7 @@ Ralf, 29, M, DE, Programmer
 Naomi, 16, F, FR, Student
 {% endhighlight %}
 
-ユーザ調査用インタープリタはこのユーザ情報を読み取り
-以下のような簡単なクエリー言語を使って
-対象ユーザの抽出を行えるようにします
+ユーザ調査用インタープリタはこのユーザ情報を読み取り、以下のような簡単なクエリー言語を使って対象ユーザの抽出を行えるようにします。
 {% highlight ruby %}
  except(nationality(:JP))  # 日本人以外のユーザ
  age(30, :>) & sex(:M)   # 30歳以上の男性ユーザ
@@ -224,8 +172,7 @@ Naomi, 16, F, FR, Student
  # 30歳未満の米国またはドイツのプログラマー
 {% endhighlight %}
 
-最初にInterpreterBuilderを使わずに
-このクエリー言語を構築するコードを示します
+最初にInterpreterBuilderを使わずに、このクエリー言語を構築するコードを示します。
 {% highlight ruby %}
 # encoding: UTF-8
 module Census
@@ -341,10 +288,9 @@ module Census
   end
 end
 {% endhighlight %}
-およそ120行のコードが必要になります
+およそ120行のコードが必要になります。
 
-次にこれと等価なコードを
-InterpreterBuilderを使って構築してみます
+次にこれと等価なコードをInterpreterBuilderを使って構築してみます。
 {% highlight ruby %}
 # encoding: UTF-8
 require "../lib/interpreter_builder"
@@ -389,10 +335,9 @@ module Census
   end
 end
 {% endhighlight %}
-48行で構築できました
+48行で構築できました。
 
-では先のユーザ情報を読み取って
-クエリーを実行してみましょう
+では先のユーザ情報を読み取ってクエリーを実行してみましょう。
 {% highlight ruby %}
 require "./sample/census"
 include Census
@@ -418,11 +363,7 @@ Ralf, 29, M, DE, Programmer
 Naomi, 16, F, FR, Student
 {% endhighlight %}
 
-ここでは__END__以下のデータを読み取って
-各ユーザ毎に
-Personオブジェクトを生成してpeople変数に格納し
-これを先のクエリー言語で評価しています
-結果は以下のとおりです
+ここでは__END__以下のデータを読み取って、各ユーザ毎にPersonオブジェクトを生成してpeople変数に格納し、これを先のクエリー言語で評価しています。結果は以下のとおりです。
 {% highlight ruby %}
 puts none_japanese.evaluate(people)
 #<struct Census::Person name="Joe", age=25, sex=:M, nationality=:US, job="Programmer">
@@ -443,17 +384,13 @@ puts under30_us_or_de_programmer.evaluate(people)
 うまくいっているようですね！
 
 ##算術演算インタープリタ
-あまり意味が無いのですが
-InterpreterBuilderの活用例として
-以下のような構文を実現する
-算術演算インタープリタを実装してみます
+あまり意味が無いのですがInterpreterBuilderの活用例として以下のような構文を実現する算術演算インタープリタを実装してみます。
 {% highlight ruby %}
  exp = divide( plus(2, multiple(3,4)), 3 )
  exp.to_i # => 4
 {% endhighlight %}
 
-算術演算では終端は数字になるので
-selfを返すFixnum#to_iをiterpretメソッドとして使います
+算術演算では終端は数字になるので、selfを返すFixnum#to_iをiterpretメソッドとして使います。
 {% highlight ruby %}
 # encoding: UTF-8
 require_relative "../lib/interpreter_builder"
@@ -475,16 +412,14 @@ module Calc
   end
 end
 {% endhighlight %}
-非終端である演算子の定義を追加することで
-他の算術演算も可能になります
+非終端である演算子の定義を追加することで他の算術演算も可能になります。
 
-Interpreterパターンに対する根本的な理解が間違っていて
-意味不明なことをやっている可能性がありますが
-誰かの何かの参考になればうれしいです
+Interpreterパターンに対する根本的な理解が間違っていて、意味不明なことをやっている可能性がありますが、誰かの何かの参考になればうれしいです。
 
 (追記：2011-7-26)算術演算の例を一部修正しました。
 
-https://github.com/melborne/InterpreterBuilder
+[melborne/InterpreterBuilder](https://github.com/melborne/InterpreterBuilder 'melborne/InterpreterBuilder')
+
 {% footnotes %}
    {% fn 該当ファイルはchap15/ex1_files.rbとex3_operators.rbです %}
    {% fn 一部実装が異なります %}

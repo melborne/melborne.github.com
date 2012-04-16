@@ -65,4 +65,4 @@ puts
 Fixnum.unfizzbuzzize
 (1..100).each { |i| print "#{i} " }
 {% endhighlight %}
-[Yet Another Ruby FizzBuzz](/2010/03/18/Yet-Another-Ruby-FizzBuzz/)
+[Yet Another Ruby FizzBuzz]({{ site.url }}/2010/03/18/Yet-Another-Ruby-FizzBuzz/)

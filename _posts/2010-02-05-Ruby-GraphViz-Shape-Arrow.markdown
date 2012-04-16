@@ -15,7 +15,7 @@ GraphVizを使ったグラフ作りは楽しい
 
 GraphVizで使えるかたちと矢印は豊富だけれども
 豊富過ぎて名前を見ただけではそれがわからない
-だから[前々回](/2010/02/03/notitle/)作ったGraphAzで見本を作ってみた
+だから[前々回]({{ site.url }}/2010/02/03/notitle/)作ったGraphAzで見本を作ってみた
 これでかたちと矢印選びもばっちり！
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100205/20100205155010.gif)
