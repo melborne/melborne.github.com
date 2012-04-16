@@ -4,42 +4,20 @@ title: Ruby脳でCoffeeScriptのクラスを理解する
 date: 2011-09-08
 comments: true
 categories:
+tags: [ruby, coffeescript]
 ---
 
+`Ruby`は最高の言語だから、もっと普及していいと思うけれども、その障害となっているのはたぶん「Rubyがビジュアルに訴えない言語」となっているからだよ。たしかにRubyにはRuby/TkとかShoesとかがあるけど、現代のプログラミングで「ビジュアル」と言ったら、暗黙的に「Web上の」という修飾が付くよね。
 
-Rubyは最高の言語だから
-もっと普及していいと思うけれども
-その障害となっているのはたぶん
-「Rubyがビジュアルに訴えない言語」となっているからだよ
-たしかにRubyにはRuby/TkとかShoesとかがあるけど
-現代のプログラミングで「ビジュアル」と言ったら
-暗黙的に「Web上の」という修飾が付くよね
+一方で`JavaScript`は、`jQuery`や`CoffeeScript`の人気を見る限り、最高とは言えない言語だけれども「ビジュアルに訴える言語」となっている点が普及の大きな要因になっていると思うよ。つまりブラウザ上で実行できる唯一の言語たる地位が、JavaScriptの大きなアドバンテージなんだね。
 
-一方でJavaScriptは
-jQueryやCoffeeScriptの人気を見る限り
-最高とは言えない言語だけれども
-「ビジュアルに訴える言語」となっている点が
-普及の大きな要因になっていると思うよ
-つまりブラウザ上で実行できる唯一の言語たる地位が
-JavaScriptの大きなアドバンテージなんだね
-
-だから今のところ
-「最高の言語でビジュアルなプログラミング」
-をすることはできないけれども僕らにはCoffeeScriptがあるよ
-CoffeeScriptはRubyの影響を大きく受けてるから
-この言語を使って「ビジュアル」なプログラミングをすることが
-現時点での最良の選択だと僕は思うんだよ
+だから今のところ「最高の言語でビジュアルなプログラミング」をすることはできないけれども、僕らにはCoffeeScriptがあるよ。CoffeeScriptはRubyの影響を大きく受けてるから、この言語を使って「ビジュアル」なプログラミングをすることが現時点での最良の選択だと僕は思うんだよ。
 
 そんなわけで..
 
-JavaScriptのことをよく知らないRuby脳の僕が
-Coffeescriptのクラスのことを少し学んだので
-ここでRubyのクラスと対比しつつ説明してみるよ
-きっと誤解があると思うけど間違っていたら教えてね
-なお以下ではCoffeeScriptのことを単にCoffeeと呼ぶよ
+JavaScriptのことをよく知らないRuby脳の僕が、Coffeescriptのクラスのことを少し学んだので、ここでRubyのクラスと対比しつつ説明してみるよ。きっと誤解があると思うけど間違っていたら教えてね。なお以下ではCoffeeScriptのことを単にCoffeeと呼ぶよ。
 
-さっそくCoffeeを使って
-簡単なクラスを定義してみるよ
+さっそくCoffeeを使って簡単なクラスを定義してみるよ。
 {% highlight javascript %}
 class Duck
   constructor: (@name, @age) ->
@@ -52,11 +30,9 @@ mofi.say() # => "Quack Quack Mofi!"
 pipi.say() # => "Quack Quack Pipi!"
 tete.say() # => "Quack Quack Tete!"
 {% endhighlight %}
-Rubyを知っているならこのコードはすぐ読めるよね
-new関数でDuckオブジェクトを生成して
-sayメソッドを呼んでいるよ
+Rubyを知っているならこのコードはすぐ読めるよね。new関数でDuckオブジェクトを生成して、sayメソッドを呼んでいるよ。
 
-対応するRubyコードはこんな感じかな
+対応するRubyコードはこんな感じかな。
 {% highlight ruby %}
 class Duck
   def initialize(name, age)
@@ -74,56 +50,30 @@ mofi.say # => "Quack Quack Mofi"
 pipi.say # => "Quack Quack Pipi"
 tete.say # => "Quack Quack Tete"
 {% endhighlight %}
-インスタンス変数への初期値の代入構文は
-Rubyにもほしい機能だよね
+インスタンス変数への初期値の代入構文はRubyにもほしい機能だよね。
 
-一見これらのコードは同じに見えるけど
-異なる挙動が２つほどあるよ
+一見これらのコードは同じに見えるけど、異なる挙動が２つほどあるよ。
 
-１つ目はCoffeeでは先のコードで
-既にインスタンス変数への外部からのアクセスが
-可能になっている点だよ
-確かめてみよう
+１つ目はCoffeeでは先のコードで、既にインスタンス変数への外部からのアクセスが可能になっている点だよ。確かめてみよう。
 {% highlight ruby %}
 mofi.name = "mofy"
 mofi.name # => mofy
 mofi.say() # => Quack Quack Mofy!
 {% endhighlight %}
-読み出しも書き込みもできる
-Rubyではメソッドを介してじゃないと
-インスタンス変数にアクセスすることはできないので
-Coffeeと等価にするには
-アクセッサメソッドを定義する必要があるよ
+読み出しも書き込みもできる。Rubyではメソッドを介してじゃないとインスタンス変数にアクセスすることはできないので、Coffeeと等価にするにはアクセッサメソッドを定義する必要があるよ。
 
-２つ目は
-sayの呼び出しには常にカッコが必要な点だよ
-CoffeeでRubyのようにカッコを省略すると
-次のような結果が返るよ
+２つ目はsayの呼び出しには常にカッコが必要な点だよ。CoffeeでRubyのようにカッコを省略すると次のような結果が返るよ。
 {% highlight javascript %}
 mofi.say
 # => function () {                                
          return "Quack Quack " + this.name + "!";
        }                                         
 {% endhighlight %}
-これはJavaScriptに変換された
-sayのコードそのものだよ
-そしてCoffeeではsayの後のカッコが
-そのメソッドを実行させるんだね
+これはJavaScriptに変換されたsayのコードそのものだよ。そしてCoffeeではsayの後のカッコがそのメソッドを実行させるんだね。
 
-つまりこういうことだよ
-Coffee(JavaScript)では
-オブジェクトの後に続く.nameや.sayは
-オブジェクトの内部変数nameや
-sayにセットされた値にアクセスする方法なんだよ
-そしてJavaScriptでは
-関数はファーストクラスのオブジェクトだから
-他のデータと同じように
-内部変数にそのままセットできるんだ
-JavaScriptでは
-このような内部変数をプロパティと呼ぶそうだよ
+つまりこういうことだよ。Coffee(JavaScript)ではオブジェクトの後に続く.nameや.sayはオブジェクトの内部変数nameやsayにセットされた値にアクセスする方法なんだよ。そしてJavaScriptでは関数はファーストクラスのオブジェクトだから、他のデータと同じように内部変数にそのままセットできるんだ。JavaScriptではこのような内部変数をプロパティと呼ぶそうだよ。
 
-さてこれらの点を考慮して
-Rubyのコードを修正すると次のようになるよ
+さてこれらの点を考慮してRubyのコードを修正すると次のようになるよ。
 {% highlight ruby %}
 class Duck
   attr_accessor :name, :age
@@ -143,16 +93,9 @@ pipi.say.() # => "Quack Quack Pipi"
 tete.say[] # => "Quack Quack Tete"
 tete.say # => #<Proc:0x00000100866680@-:8 (lambda)>
 {% endhighlight %}
-attr_accessorの説明は不要だよね
-sayメソッドはProcオブジェクトを返すようにして
-呼び出し側でProc#callすれば
-Coffeeと同様の結果が得られるよ
-Proc#callの別名() []もここで示したよ
+attr_accessorの説明は不要だよね。sayメソッドはProcオブジェクトを返すようにして、呼び出し側でProc#callすればCoffeeと同様の結果が得られるよ。Proc#callの別名() []もここで示したよ。
 
-さて一応先のCoffeeコードを
-JavaScriptにコンパイルしたものにも目を通してみるよ
-CoffeeScriptの[公式サイト](http://jashkenas.github.com/coffee-script/#top)でTRY COFFSCRIPTすると
-次のJavaScriptのコードが得られるんだ
+さて一応先のCoffeeコードをJavaScriptにコンパイルしたものにも目を通してみるよ。CoffeeScriptの[公式サイト](http://jashkenas.github.com/coffee-script/#top)でTRY COFFSCRIPTすると、次のJavaScriptのコードが得られるんだ。
 {% highlight javascript %}
 var Duck, mofi, pipi, tete;
 Duck = (function() {
@@ -173,37 +116,12 @@ pipi.say();
 tete.say();
 {% endhighlight %}
 
-JavaScriptのことはよくわからないから
-ここからの説明は僕の推測を大いに含んでいるよ
-まずCoffeeにおけるconstructor: () -> というのが
-function Duck(){} に変換されているから
-constructorは関数定義になることがわかるよ
-このDuck関数を実行してnewに渡すと
-nameとageのプロパティを持った
-オブジェクトが生成されるんだね
-JavaScriptはRubyのような
-クラスベースのオブジェクト指向ではなくて
-コピーベースのオブジェクト指向だから
-ここで生成された３つのオブジェクトmofi pipi teteは
-Duckオブジェクトのコピーと考えればいいのかな
+JavaScriptのことはよくわからないから、ここからの説明は僕の推測を大いに含んでいるよ。まずCoffeeにおける`constructor: () ->` というのが`function Duck(){}` に変換されているから、constructorは関数定義になることがわかるよ。このDuck関数を実行してnewに渡すとnameとageのプロパティを持ったオブジェクトが生成されるんだね。JavaScriptはRubyのようなクラスベースのオブジェクト指向ではなくて、コピーベースのオブジェクト指向だから、ここで生成された３つのオブジェクトmofi, pipi, teteは、Duckオブジェクトのコピーと考えればいいのかな。
 
-次にCoffeeにおける say: -> が
-Duck.prototype.say = function(){} と変換されているよ
-つまり
-Duckオブジェクトのprototypeという名のプロパティに
-sayプロパティが生成されてここに関数がセットされている
-なるほど
-コピーベースのオブジェクト指向においては
-Duck.say = function(){} とすると関数の実体が
-すべてのオブジェクトにコピーされてしまって
-効率上問題がある
-だからprototypeという共通の器を作って
-そこに関数を置けるようにしたんだね
+次にCoffeeにおける `say: ->` が、`Duck.prototype.say = function(){}` と変換されているよ。つまり、Duckオブジェクトのprototypeという名のプロパティにsayプロパティが生成されてここに関数がセットされている。なるほどコピーベースのオブジェクト指向においては、Duck.say = function(){} とすると関数の実体がすべてのオブジェクトにコピーされてしまって、効率上問題がある。だからprototypeという共通の器を作ってそこに関数を置けるようにしたんだね。
 
 ##メソッドの追加
-さて次にオブジェクトに別のメソッドを追加してみよう
-Rubyでインスタンスメソッドを追加するには
-クラスを再オープンすればいいよね
+さて次にオブジェクトに別のメソッドを追加してみよう。Rubyでインスタンスメソッドを追加するにはクラスを再オープンすればいいよね。
 {% highlight ruby %}
 class Duck
   def how_old
@@ -214,20 +132,16 @@ mofi.how_old.call # => "I'm 12 years old."
 pipi.how_old.call # => "I'm 9 years old."
 {% endhighlight %}
 
-Coffeeで同じことをするには
-上で学んだようにDuckのprototypeプロパティに
-関数をセットすればいいはずだよ
-これはCoffeeでは次のようにするよ
+Coffeeで同じことをするには上で学んだようにDuckのprototypeプロパティに関数をセットすればいいはずだよ。これはCoffeeでは次のようにするよ。
 {% highlight javascript %}
 Duck::howOld = ->
   "I'm #{@age} years old."
 mofi.howOld() # => "I'm 12 years old."
 pipi.howOld() # => "I'm 9 years old."
 {% endhighlight %}
-Rubyで::は定数のスコープ演算子を表すから
-これはちょっと間違えそうだね
+Rubyで::は定数のスコープ演算子を表すから、これはちょっと間違えそうだね。
 
-JavaScriptにコンパイルするよ
+JavaScriptにコンパイルするよ。
 {% highlight javascript %}
 Duck.prototype.howOld = function() {
   return "I'm " + this.age + " years old.";
@@ -235,15 +149,10 @@ Duck.prototype.howOld = function() {
 mofi.howOld(); # => "I'm 12 years old." 
 pipi.howOld(); # => "I'm 9 years old."  
 {% endhighlight %}
-いいみたいだね
-ちなみにJavaScriptでは
-クラスを再オープンすることはできなさそうだね
-Duckを再定義すると
-別のDuckオブジェクトが定義されてしまうよ
+いいみたいだね。ちなみにJavaScriptではクラスを再オープンすることはできなさそうだね。Duckを再定義すると別のDuckオブジェクトが定義されてしまうよ。
 
 ##プロパティの追加
-Coffeeでは個々のオブジェクトに
-簡単にプロパティを設定できるよ
+Coffeeでは個々のオブジェクトに簡単にプロパティを設定できるよ。
 {% highlight javascript %}
 pipi.color = 'brown'
 pipi.swim = ->
@@ -252,14 +161,13 @@ pipi.color # => 'brown'
 pipi.swim() # => 'swim 9 days!'
 {% endhighlight %}
 
-もちろんこれらは
-他のオブジェクトからは参照できないよ
+もちろんこれらは他のオブジェクトからは参照できないよ。
 {% highlight javascript %}
 tete.color # => undefined
 tete.swim() # => TypeError: Object #<Duck> has no method 'swim'
 {% endhighlight %}
 
-JavaScriptの対応コードは次のようになるよ
+JavaScriptの対応コードは次のようになるよ。
 {% highlight ruby %}
 pipi.color = 'brown';
 pipi.swim = function() {
@@ -269,12 +177,9 @@ pipi.color;
 pipi.swim();
 {% endhighlight %}
 
-Coffeeのオブジェクトにおけるこの軽量さは
-Ruby脳にはちょっと驚きだよ
-まるでRubyのHashのようだね
+Coffeeのオブジェクトにおけるこの軽量さはRuby脳にはちょっと驚きだよ。まるでRubyのHashのようだね。
 
-さてRubyでもオブジェクト固有のメソッドを定義できるので
-等価コードを書いてみるよ
+さてRubyでもオブジェクト固有のメソッドを定義できるので、等価コードを書いてみるよ。
 {% highlight ruby %}
 class << pipi
   attr_accessor :color
@@ -289,15 +194,9 @@ tete.color # => undefined method `color'
 tete.swim # => undefined method `swim'
 {% endhighlight %}
 
-Rubyではpipiオブジェクトについて
-シングルトンクラスを開いて
-各メソッドを定義する必要があるよ
+Rubyではpipiオブジェクトについてシングルトンクラスを開いて、各メソッドを定義する必要があるよ。
 
-ちなみにprototypeプロパティに定義された関数と
-同名の関数をプロパティにセットすると
-どうなるかは想像がつくよね
-そのオブジェクトに関しては
-それが優先して呼び出されるんだ
+ちなみにprototypeプロパティに定義された関数と同名の関数をプロパティにセットすると、どうなるかは想像がつくよね。そのオブジェクトに関してはそれが優先して呼び出されるんだ。
 {% highlight javascript %}
 class Duck
   constructor: (@name, @age) ->
@@ -315,10 +214,7 @@ tete.say() # => "Quack Quack Tete!"
 この挙動はRubyでも同じだね
 
 ##クラスメソッド
-さて次にDuckクラスに
-クラスメソッドを定義することを考えてみるよ
-まずはRubyにDuckの総数をカウントする
-countクラスメソッドを定義してみるよ
+さて次にDuckクラスにクラスメソッドを定義することを考えてみるよ。まずはRubyにDuckの総数をカウントするcountクラスメソッドを定義してみるよ。
 {% highlight ruby %}
 class Duck
   @@count = 0
@@ -335,15 +231,9 @@ pipi = Duck.new('Pipi', 9)
 tete = Duck.new('Tete', 5)
 Duck.count # => 3
 {% endhighlight %}
-クラス変数@@countを初期化し
-Duck.countメソッドを定義して
-@@countにアクセスできるようにする
-そしてinitializeでカウントアップするよ
+クラス変数`@@count`を初期化しDuck.countメソッドを定義して、@@countにアクセスできるようにする。そしてinitializeでカウントアップするよ。
 
-CoffeeにおいてDuckクラスの外で
-Duckのプロパティをセットするのは
-Duck.count = 0でできるけど
-クラス定義の中では次のように書くみたいだね
+CoffeeにおいてDuckクラスの外でDuckのプロパティをセットするのは`Duck.count = 0`でできるけど、クラス定義の中では次のように書くみたいだね。
 {% highlight ruby %}
 class Duck
   @count: 0  または @count = 0
@@ -354,14 +244,10 @@ pipi = new Duck('Pipi', 9)
 tete  = new Duck('Tete', 5)
 Duck.count # => 3
 {% endhighlight %}
-インスタンス変数と同じ @ を使うよ
-ちょっと紛らわしいけどプロパティの中と外で
-@の意味が変わることを覚えとけばいいね
+インスタンス変数と同じ`@`を使うよ。ちょっと紛らわしいけどプロパティの中と外で`@`の意味が変わることを覚えとけばいいね。
 
 ##プライベート・メソッド
-さて次にDuckにプライベートメソッドを定義してみるよ
-Rubyではprivateキーワードで簡単にできるよね
-eatメソッドで呼ばれるfoodメソッドを定義するね
+さて次にDuckにプライベートメソッドを定義してみるよ。Rubyではprivateキーワードで簡単にできるよね。eatメソッドで呼ばれるfoodメソッドを定義するね。
 {% highlight ruby %}
 class Duck
   def eat
@@ -377,8 +263,7 @@ mofi.eat.call # => "eat meat!"
 mofi.food # => private method `food' called
 {% endhighlight %}
 
-それでプライベートメソッドで
-インスタンス変数を呼ぶことももちろんできるよ
+それでプライベートメソッドでインスタンス変数を呼ぶことももちろんできるよ。
 {% highlight ruby %}
 class Duck
   def eat
@@ -393,8 +278,7 @@ mofi = Duck.new('Mofi', 12)
 mofi.eat.call # => "eat 12 meat!"
 {% endhighlight %}
 
-Coffeeでプライベートメソッドを定義するには
-ちょっとわからないけど次のようにするのかな
+Coffeeでプライベートメソッドを定義するには、ちょっとわからないけど次のようにするのかな。
 {% highlight javascript %}
 class Duck
   eat: ->
@@ -406,10 +290,9 @@ mofi = new Duck('Mofi', 12)
 mofi.eat() # => 'eat beans'
 mofi.food() # => TypeError: Object #<Duck> has no method 'food'
 {% endhighlight %}
-オブジェクト内のfood変数に"beans"を返す
-無名関数をセットするよ
+オブジェクト内のfood変数に"beans"を返す無名関数をセットするよ。
 
-次にfoodでインスタンス変数を呼ぶよ
+次にfoodでインスタンス変数を呼ぶよ。
 {% highlight javascript %}
 class Duck
   eat: ->
@@ -421,11 +304,9 @@ mofi = new Duck('Mofi', 12)
 mofi.eat() # => 'eat undefined beans'
 {% endhighlight %}
 
-残念ながらこれがうまくいかないんだよ
-ちょっと僕には理由がわからないんだけど..
+残念ながらこれがうまくいかないんだよ。ちょっと僕には理由がわからないんだけど..
 
-ここでは引数でオブジェクトを指し示すthisを受け渡して
-目的を達成するよ
+ここでは引数でオブジェクトを指し示すthisを受け渡して目的を達成するよ。
 {% highlight javascript %}
 class Duck
   eat: ->
@@ -437,8 +318,6 @@ mofi = new Duck('Mofi', 12)
 mofi.eat() # => 'eat 12 beans'
 {% endhighlight %}
 
-僕が勉強したのはここまでだよ
-Coffeeではクラスの継承もできるみたいなんだけど
-それはまた別機会にするよ
+僕が勉強したのはここまでだよ。Coffeeではクラスの継承もできるみたいなんだけどそれはまた別機会にするよ。
 
 (追記:2011-09-09) 記述を一部加筆・修正しました。
