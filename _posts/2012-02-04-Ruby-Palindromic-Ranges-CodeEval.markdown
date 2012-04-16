@@ -28,12 +28,12 @@ Array#permutationを使って力技!
 
 気にせず先に..
 
-一桁の素数(2,3,5,7)で割れる数をUgly Numberという。D桁の数字の桁の間に+か-を挟むと3^D-1個の数字ができる。Ugly Numberの個数を求める。
+一桁の素数(2,3,5,7)で割れる数をUgly Numberという。D桁の数字の桁の間に+か-を挟むと3^D-1 個の数字ができる。Ugly Numberの個数を求める。
 {% gist 1697463 ugly_numbers.rb %}
 
 
 ##RubyでString Listを解く-CodeEval
-Array#repeated_permutationで^　^;
+Array#repeated_permutationで^ ^;
 
 文字列中の文字の全順列。
 {% gist 1697463 string_list.rb %}

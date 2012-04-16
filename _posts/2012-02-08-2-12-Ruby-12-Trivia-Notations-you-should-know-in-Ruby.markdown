@@ -254,7 +254,7 @@ a_day.unpack('A4A2A2') # => ["2012", "02", "14"]
 {% endhighlight %}
 
 ##12.DATA.rewind
-DATAは__END__以降をFileとしたオブジェクトだよ。だからrewindクラスメソッドが使えるんだけど、これは__END__の最初の行に戻るんじゃなくてファイルのトップに戻るんだよ。だからこれを使えば、なんちゃってQuineができるんだ。
+DATAは\_\_END__以降をFileとしたオブジェクトだよ。だからrewindクラスメソッドが使えるんだけど、これは\_\_END__の最初の行に戻るんじゃなくてファイルのトップに戻るんだよ。だからこれを使えば、なんちゃってQuineができるんだ。
 {% highlight ruby %}
 #!/usr/bin/env ruby
 require "g"

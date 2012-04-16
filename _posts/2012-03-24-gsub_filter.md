@@ -90,6 +90,6 @@ gs.stocks # => {:lang=>["Ruby", "Ruby"]}
 まあ需要があるとは思えないけどいままでgemを作ったことがなかったから、勉強を兼ねてこのクラスをgem化してみたよ! gem i gsub_filterでインストールできるから暇つぶしに遊んでくれたらうれしいよ。
 
 
-https://rubygems.org/gems/gsub_filter
+[gsub_filter](https://rubygems.org/gems/gsub_filter)
 
 {% gist 2177656 %}

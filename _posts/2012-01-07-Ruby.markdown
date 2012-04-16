@@ -8,54 +8,48 @@ tags: [ruby, quiz]
 ---
 
 
-かなり古い記事だけどRubyを使って
-連続数字をハイフンでつなぐ方法が出てたよ
+かなり古い記事だけどRubyを使って、連続数字をハイフンでつなぐ方法が出てたよ。
 
 [Rubyでどう書く？：連続した数列を範囲形式にまとめたい - builder](http://builder.japan.zdnet.com/script/sp_ruby-doukaku-panel/20369264/)
 
-要するにスペース区切りの数字列を
-数字が連続する場合にその箇所をハイフンにする
-という話だよ
-> 
->   "1 2 3" => "1-3."
->   "1 2 3 5 7 8" => "1-3, 5, 7-8."
->   "1 3 4 5 7" => "1, 3-5, 7."
+要するにスペース区切りの数字列を数字が連続する場合にその箇所をハイフンにする、という話だよ。
+{% highlight ruby %}
+"1 2 3" => "1-3."
+"1 2 3 5 7 8" => "1-3, 5, 7-8."
+"1 3 4 5 7" => "1, 3-5, 7."
+{% endhighlight %}
 
-解答例が出てたけどなんかしっくり来なかったので
-自分なりの違う方法を考えてみたよ
+解答例が出てたけどなんかしっくり来なかったので、自分なりの違う方法を考えてみたよ。
 
-まず数字文字列を数字の配列に変換するよ
+まず数字文字列を数字の配列に変換するよ。
 {% highlight ruby %}
 str = "1 3 4 5 7"
 nums = str.scan(/\d+/).map(&:to_i) # => [1, 3, 4, 5, 7]
 {% endhighlight %}
 
-次にこれを
-配列のインデックスに対応付けて配置し直すよ
+次にこれを配列のインデックスに対応付けて配置し直すよ。
 {% highlight ruby %}
 nums.inject([]) { |arr, n| arr[n-1] = n; arr } # => [1, nil, 3, 4, 5, nil, 7]
 {% endhighlight %}
-これで数字が連続しないところにはnilが入るよ
+これで数字が連続しないところにはnilが入るよ。
 
-次にnilのところで配列を分けるよ
+次にnilのところで配列を分けるよ。
 {% highlight ruby %}
 nums = nums.chunk { |n| !n.nil? || nil }.to_a # => [[true, [1]], [true, [3, 4, 5]], [true, [7]]]
 {% endhighlight %}
-Enumerable#chunkを使うよ
-そのブロックでは要素がnilの場合はnilを返すようにして
-その要素を捨てるよ
+Enumerable#chunkを使うよ。そのブロックでは要素がnilの場合はnilを返すようにして、その要素を捨てるよ。
 
-次に各要素の長さに応じた加工を施して文字列にするよ
+次に各要素の長さに応じた加工を施して文字列にするよ。
 {% highlight ruby %}
 nums = nums.map { |_, gr| gr.size>1 ? "#{gr.first}-#{gr.last}" : "#{gr.first}" } # => ["1", "3-5", "7"]
 {% endhighlight %}
 
-最後にこれをつないで完成だよ
+最後にこれをつないで完成だよ。
 {% highlight ruby %}
 nums.join(', ') + '.' # => "1, 3-5, 7."
 {% endhighlight %}
 
-まとめると次のようになるよ
+まとめると次のようになるよ。
 
 {% gist 1573258 hyphenize.rb %}
 
@@ -63,8 +57,7 @@ nums.join(', ') + '.' # => "1, 3-5, 7."
 やっぱりRubyは便利だね!
 
 id:smilerubyさんから
-Enumerable#slice_beforeを使った例を頂いたので
-併せて載せておくよ
+Enumerable#slice_beforeを使った例を頂いたので、併せて載せておくよ。
 {% highlight ruby %}
 def hyphenize(str)
  nums = str.scan(/\d+/).map(&:to_i).sort
@@ -78,4 +71,8 @@ hyphenize("1 3 4 5 7") # => "1, 3-5, 7."
 e.minmax.uniq*'-'がステキだよね!
 
 (追記:2012-1-7) id:smilerubyさんの案を参考に一部を訂正、追記しました。
-Enumerable#slice_beforeも<br><br>def hyphenize(str)<br>  nums = str.scan(/\d+/).map(&:to_i).sort<br>  nums.slice_before(num: nums.first) { |e, prev|<br>    prev[:num], prevprev = e, prev[:num]<br>    prevprev.succ != prev[:num]<br>  }.map{ |e| e.minmax.uniq * '-' } * ', ' + '.'<br>end<br><br>同じような例題がEnumerable#slice_beforeのヘルプの例になってますねw<br>http://rurema.clear-code.com/1.9.3/method/Enumerable/i/slice_before.html>smilerubyさん<br>コメントどうもです! slice_beforeなんて技があったのですね. それにしてもe.mimmax.uniq*'-'はステキすぎます. それとstr.scan(/\d+/)が正しいですね. 訂正しておきます.追記ありがとうございます。<br>slice_beforeは前に同じような例題（日付バージョン）をやった時に覚えましたが、このパターンの処理の時にしか使ったことがありませんｗ<br>とはいえ、1.9で導入されたchunkやslice_before等のメソッドを使わずに実装するのは面倒なので、この手のメソッドが用意されているRubyは便利ですよね！
+
+(comment)
+>Enumerable#slice_beforeも<br><br>def hyphenize(str)<br>  nums = str.scan(/\d+/).map(&:to_i).sort<br>  nums.slice_before(num: nums.first) { |e, prev|<br>    prev[:num], prevprev = e, prev[:num]<br>    prevprev.succ != prev[:num]<br>  }.map{ |e| e.minmax.uniq * '-' } * ', ' + '.'<br>end<br><br>同じような例題がEnumerable#slice_beforeのヘルプの例になってますねw<br>http://rurema.clear-code.com/1.9.3/method/Enumerable/i/slice_before.html
+>>smilerubyさん<br>コメントどうもです! slice_beforeなんて技があったのですね. それにしてもe.mimmax.uniq*'-'はステキすぎます. それとstr.scan(/\d+/)が正しいですね. 訂正しておきます.
+>追記ありがとうございます。<br>slice_beforeは前に同じような例題（日付バージョン）をやった時に覚えましたが、このパターンの処理の時にしか使ったことがありませんｗ<br>とはいえ、1.9で導入されたchunkやslice_before等のメソッドを使わずに実装するのは面倒なので、この手のメソッドが用意されているRubyは便利ですよね！

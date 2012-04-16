@@ -1,0 +1,1163 @@
+---
+layout: post
+title: RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!
+date: 2011-12-18
+comments: true
+categories:
+tags: [ruby, rspec, test]
+---
+
+今までコードを書くとき、正直あまりまじめにテストをしてこなかったよ。でも、いつまでもそういう訳にはいかないだろうから、以下の記事を参考にしてRSpecをやってみたんだ。
+
+[RSpec の入門とその一歩先へ - t-wadaの日記](http://d.hatena.ne.jp/t-wada/20100228/p1)
+
+[Rubyist Magazine - スはスペックのス 【第 1 回】 RSpec の概要と、RSpec on Rails (モデル編)](http://jp.rubyist.net/magazine/?0021-Rspec)
+
+そうしたら次のようなことが分かったんだよ。
+
+1. RSpecは設計図
+1. RSpecはなんかたのしい
+
+で、この感覚をみんなと共有できればと思ったので、RSpec入門者の僕がRSpecを使ってここで何か作ってみるよ。
+
+さて、何を作ろうか..
+
+何か実用的で楽しいものがいいよね。そうだ折角だからなかなか手に入らないものがいいね。なかなか手に入らないものといったら..
+
+もちろん輸入禁制品だよね!
+
+そんなわけで..
+
+RubyのRSpecを使ってけん銃を作るよ。で、最高にイカしてるけん銃と言ったらリボルバーだから、リボルバーを作ることにするよ。銃が完成したら君とロシアンルーレットを楽しみたいと思うんだ。
+
+最初に断っておくと、このポストは君がエディタとターミナルを開いて僕と同じことをすることを期待したもの、つまりチュートリアルの形式になっているよ。だから、相当長いポストになることを覚悟してほしいよ。
+
+結果だけみたい人は以下にコードを張ったから、それにざっと目を通してそれから「ロシアンルーレットで遊ぶ」の項に飛んでくれるとうれしいよ。
+
+[Revolver for Russian Roulette ― Gist](https://gist.github.com/1490370)
+
+
+##リボルバーの作り方
+うれしいことにRubyにはロシアンルーレットのための部品が既に用意されてるよ。Array#rotate!, #shuffle, #cycleはまさにその目的のために作られたんだよ。これらのメソッドがあれば作業がかなり捗るよね。
+
+さて、簡単な方針だけ決めてRSpecを書いていくよ。けん銃にもいろいろあるから、ここではいきなりRevolverクラスを作るんじゃなくて、ベースとなるGunクラスを作ってRevolverクラスはそれを継承するようにしよう。
+{% highlight ruby %}
+ #gun_spec.rb
+ require "rspec"
+ require_relative "gun"
+ 
+ describe Gun do
+   
+ end
+ 
+ describe Revolver do
+   
+ end
+{% endhighlight %}
+
+##Gunクラス
+けん銃は少なくとも弾を込めて発砲できなくちゃいけないから、これをGunクラスの機能として持たせるよ。薬室(弾を込める場所)、装弾、発砲をそれぞれchamber, set_cartridge, triggerとするよ。弾はカートリッジ(cartridge)と言うよ。
+
+ちなみに銃に詳しくない人はここに目を通すといいよ。
+
+[SCC-Gun](http://s-c-c.info/tec/revo.html)
+
+{% highlight ruby %}
+ describe Gun do
+   context "chamber" do
+     
+   end
+ 
+   context "set_cartridge" do
+     
+   end
+ 
+   context "trigger" do
+     
+   end
+ end
+{% endhighlight %}
+
+ここで一度rspecを走らせてみるよ。
+{% highlight bash %}
+ % rspec -fs -c gun_spec.rb
+ % gun_spec.rb:4:in `<top (required)>': uninitialized constant Object::Gun (NameError)
+{% endhighlight %}
+
+Gunクラスがないって文句を言われたからこれを作ろう。Revolverもね。
+{% highlight ruby %}
+ #gun.rb
+ class Gun
+   
+ end
+ 
+ class Revolver < Gun
+   
+ end
+{% endhighlight %}
+
+さあもう一度テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb
+ No examples found.
+ 
+ Finished in 0.00005 seconds
+ 0 examples, 0 failures
+{% endhighlight %}
+
+で、chamberは最初は空でset_cartridgeすると、弾がそこに入って撃てるようになる、そういう設計に沿ってexampleを書くよ。
+{% highlight ruby %}
+ require "rspec"
+ require_relative "gun"
+ 
+ describe Gun do
+   before do
+     @gun = Gun.new
+   end
+ 
+   context "chamber" do
+     it "should be empty at default" do
+       @gun.chamber.should be_empty
+     end
+     
+   end
+ 
+   context "set_cartridge" do
+     it "should set a cartridge to the chamber" do
+       @gun.set_cartridge
+       @gun.chamber.should == [Cartridge.new]
+     end
+   end
+ 
+   context "trigger" do
+     
+   end
+ end
+ 
+ describe Revolver do
+   
+ end
+{% endhighlight %}
+
+そしてテストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default (FAILED - 1)
+   set_cartridge
+     should set a cartridge to the chamber (FAILED - 2)
+ Failures:
+ 
+   1) Gun chamber should be empty at default
+      Failure/Error: @gun.chamber.should be_empty
+      NoMethodError:
+        undefined method `chamber' for #<Gun:0x00000100a1e248>
+      # ./gun_spec.rb:11:in `block (3 levels) in <top (required)>'
+ 
+   2) Gun set_cartridge should set a cartridge to the chamber
+      Failure/Error: @gun.set_cartridge
+      NoMethodError:
+        undefined method `set_cartridge' for #<Gun:0x00000100a1cda8>
+      # ./gun_spec.rb:18:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00092 seconds
+ 2 examples, 2 failures
+ Failed examples:
+ 
+ rspec ./gun_spec.rb:10 # Gun chamber should be empty at default
+ rspec ./gun_spec.rb:17 # Gun set_cartridge should set a cartridge to the chamber
+{% endhighlight %}
+
+chamberメソッドもset_cartridgeメソッドも無いって言われたから作るよ。
+{% highlight ruby %}
+ class Gun
+   attr_reader :chamber
+   def initialize
+     @chamber = []
+   end
+ 
+   def set_cartridge
+     @chamber << Cartridge.new
+   end
+ end
+{% endhighlight %}
+
+もう一度テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber (FAILED - 1)
+ Failures:
+ 
+   1) Gun set_cartridge should set a cartridge to the chamber
+      Failure/Error: @gun.set_cartridge
+      NameError:
+        uninitialized constant Gun::Cartridge
+      # ./gun.rb:8:in `set_cartridge'
+      # ./gun_spec.rb:18:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00328 seconds
+ 2 examples, 1 failure
+{% endhighlight %}
+1つ目はパスしたけど、2つ目はまだ弾を作ってなかったからフェイルしたよ。弾を作るよ。
+{% highlight ruby %}
+ class Cartridge
+   
+ end
+{% endhighlight %}
+
+テストね
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber (FAILED - 1)
+ Failures:
+ 
+   1) Gun set_cartridge should set a cartridge to the chamber
+      Failure/Error: @gun.chamber.should == [Cartridge.new]
+        expected: [#<Cartridge:0x00000100a992b8>]
+             got: [#<Cartridge:0x00000100a99420>] (using ==)
+        Diff:
+        @@ -1,2 +1,2 @@
+        -[#<Cartridge:0x00000100a992b8>]
+        +[#<Cartridge:0x00000100a99420>]
+      # ./gun_spec.rb:19:in `block (3 levels) in <top (required)>'
+ Finished in 0.00145 seconds
+ 2 examples, 1 failure
+{% endhighlight %}
+
+今度は弾が違うって言われたよ。弾の同値性をオブジェクトで判断するからだね。じゃあ同値性をクラスで判断して弾の個性を消すよ。
+{% highlight ruby %}
+ class Cartridge
+   include Comparable
+   def <=>(other)
+     self.class <=> other.class
+   end
+ end
+{% endhighlight %}
+
+さあもう一度。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+ Finished in 0.00088 seconds
+ 2 examples, 0 failures
+{% endhighlight %}
+うまくいったよ!
+
+さて、次にchamberに弾が入ってたらもう詰められないから、そのときはエラーがでるようにしないと。exampleを書くよ。
+{% highlight ruby %}
+  context "set_cartridge" do
+    it "should set a cartridge to the chamber" do
+      @gun.set_cartridge
+      @gun.chamber.should == [Cartridge.new]
+    end
+    it "should be error when the chamber has a cartridge" do
+      ->{ 2.times { @gun.set_cartridge } }.should raise_error
+    end
+  end
+{% endhighlight %}
+raise_errorを捕捉するにはset_cartridgeのリターンをProcオブジェクト化しないといけないよ。ちょっとイケてないけどねー。
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge (FAILED - 1)
+ 
+ Failures:
+ 
+   1) Gun set_cartridge should be error when the chamber has a cartridge
+      Failure/Error: ->{ 2.times { @gun.set_cartridge } }.should raise_error
+        expected Exception but nothing was raised
+      # ./gun_spec.rb:23:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00122 seconds
+ 3 examples, 1 failure
+{% endhighlight %}
+
+エラーを期待したのに、エラーにならないって言われたので対応するよ。ErrorクラスはChamberErrorにしようか。
+{% highlight ruby %}
+ class Gun
+   class ChamberError < StandardError; end
+   
+   attr_reader :chamber
+   def initialize
+     @chamber = []
+   end
+ 
+   def set_cartridge
+     raise ChamberError, 'The chamber is full' unless @chamber.empty?
+     @chamber << Cartridge.new
+   end
+ end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+ 
+ Finished in 0.00137 seconds
+ 3 examples, 0 failures
+{% endhighlight %}
+パスしたよ。
+
+さて次はtrigger周りを作ろう。もちろん発砲したら'Bang!'ってならなきゃ。
+{% highlight ruby %}
+  context "trigger" do
+    it "should return 'Bang!'" do
+      @gun.trigger.should == 'Bang!'
+    end
+  end
+{% endhighlight %}
+
+実装もしちゃうよ。
+{% highlight ruby %}
+ class Gun
+ 
+   def trigger
+     'Bang!'
+   end
+ end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+ 
+ Finished in 0.00148 seconds
+ 4 examples, 0 failures
+{% endhighlight %}
+いいね!
+
+さて、今度は弾がないときの対応も取らないと。
+{% highlight ruby %}
+  context "trigger" do
+    it "should return 'Bang!'" do
+      @gun.trigger.should == 'Bang!'
+    end
+    it "should be nil when the chamber is empty" do
+      @gun.chamber.should be_empty
+      @gun.trigger.should be_nil 
+    end
+  end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty (FAILED - 1)
+ Failures:
+ 
+   1) Gun trigger should be nil when the chamber is empty
+      Failure/Error: @gun.trigger.should be_nil
+        expected: nil
+             got: "Bang!"
+      # ./gun_spec.rb:34:in `block (3 levels) in <top (required)>'
+ Finished in 0.00234 seconds
+ 5 examples, 1 failure
+{% endhighlight %}
+
+弾がなくても発砲しちゃうって..対応するよ。
+{% highlight ruby %}
+  def trigger
+    return nil if @chamber.empty?
+    'Bang!'
+  end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!' (FAILED - 1)
+     should be nil when the chamber is empty
+ Failures:
+ 
+   1) Gun trigger should return 'Bang!'
+      Failure/Error: @gun.trigger.should == 'Bang!'
+        expected: "Bang!"
+             got: nil (using ==)
+      # ./gun_spec.rb:29:in `block (3 levels) in <top (required)>'
+ Finished in 0.00218 seconds
+ 5 examples, 1 failure
+{% endhighlight %}
+
+今度はさっきパスしたexampleがフェイルしてる。そうだよ弾をセットしてないからね。テストが間違ってたんだ。テストを直してもう一度。
+{% highlight ruby %}
+  context "trigger" do
+    it "should return 'Bang!'" do
+      @gun.set_cartridge
+      @gun.trigger.should == 'Bang!'
+    end
+    it "should be nil when the chamber is empty" do
+      @gun.chamber.should be_empty
+      @gun.trigger.should be_nil 
+    end
+  end
+{% endhighlight %}
+
+テストする。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Gun
+   chamber
+     should be empty at default
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty
+ Finished in 0.0023 seconds
+ 5 examples, 0 failures
+{% endhighlight %}
+いいね!
+
+さてそれから弾を撃ったらchamberは空にならなきゃいけないね。追加しよう。
+{% highlight ruby %}
+  context "chamber" do
+    it "should be empty at default" do
+      @gun.chamber.should be_empty
+    end
+    it "should be empty after triggering" do
+      @gun.set_cartridge
+      @gun.trigger
+      @gun.chamber.should be_empty
+    end
+  end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Gun
+   chamber
+     should be empty at default
+     should be empty after triggering (FAILED - 1)
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty
+ 
+ Failures:
+ 
+   1) Gun chamber should be empty after triggering
+      Failure/Error: @gun.chamber.should be_empty
+        expected empty? to return true, got false
+      # ./gun_spec.rb:17:in `block (3 levels) in <top (required)>'
+ Finished in 0.00227 seconds
+ 6 examples, 1 failure
+{% endhighlight %}
+
+フェイルするから実装するよ。
+{% highlight ruby %}
+  def trigger
+    return nil if @chamber.empty?
+    @chamber.clear
+    'Bang!'
+  end
+{% endhighlight %}
+
+もう一度テスト。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Gun
+   chamber
+     should be empty at default
+     should be empty after triggering
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty
+ 
+ Finished in 0.00215 seconds
+ 6 examples, 0 failures
+{% endhighlight %}
+いいね!
+
+さてGunクラスは一応これで完成として、今度はRevolverクラスを作っていくよ。
+
+##Revolverクラス
+リボルバーは6弾程の弾を保持する回転式シリンダーという独特の機構を持っていて、一発撃つ毎にシリンダーが一つ回転して、次の弾がチャンバーにアラインされて発砲の準備が整うよ。
+
+早速Revolverクラスを設計しよう。Gunクラスでは弾を直接chamberにセットしたけど、Revolverではcylinderにセットすることになるよね。だからset_cartridgeとchamberの再設計が必要だよ。ここではcylinderの0位置に弾がセットされたら、chamberにも弾があることにするよ。
+{% highlight ruby %}
+ describe Revolver do
+   before do
+     @rev = Revolver.new
+   end
+ 
+   context "set_cartridge" do
+     it "should set a cartridge to the cylinder pos 0" do
+       @rev.set_cartridge
+       @rev.cylinder[0].should == Cartridge.new
+     end
+   end
+ end
+{% endhighlight %}
+
+テストしてみるよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0 (FAILED - 1)
+ 
+ Failures:
+ 
+   1) Revolver set_cartridge should set a cartridge to the cylinder pos 0
+     Failure/Error: @rev.cylinder[0].should == Cartridge.new
+      NoMethodError:
+       undefined method `cylinder' for #<Revolver:0x00000100a5af90>
+      # ./gun_spec.rb:53:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00296 seconds
+ 7 examples, 1 failure
+{% endhighlight %}
+
+cylinderがないって言われたので作るよ。
+{% highlight ruby %}
+ class Revolver < Gun
+   CYLINDER_SIZE = 6
+   attr_reader :cylinder
+   def initialize
+     @cylinder = Array.new(CYLINDER_SIZE)
+     super
+   end
+ end
+{% endhighlight %}
+
+再テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0 (FAILED - 1)
+ 
+ Failures:
+ 
+   1) Revolver set_cartridge should set a cartridge to the cylinder pos 0
+     Failure/Error: @rev.cylinder[0].should == Cartridge.new
+        expected: #<Cartridge:0x00000100a6a3a0>
+        got: nil (using ==)
+      # ./gun_spec.rb:53:in `block (3 levels) in <top (required)>'
+ Finished in 0.00281 seconds
+ 7 examples, 1 failure
+{% endhighlight %}
+
+今度は設計と違う結果(nil)が返ってきたよ。Revolver用のset_cartridgeを実装しないとね。最初は0ポジション空いてなければ隣に装弾する方式にしよう。先を急ぐから例外処理もここに書いちゃうよ。
+{% highlight ruby %}
+ class Revolver < Gun
+   class CylinderError < StandardError; end
+   
+   CYLINDER_SIZE = 6
+   attr_reader :cylinder
+   def initialize
+     @cylinder = Array.new(CYLINDER_SIZE)
+     super
+   end
+ 
+   def set_cartridge
+     pos = @cylinder.index(nil)
+     raise CylinderError, 'Cylinder is full' unless pos
+     @cylinder[pos] = Cartridge.new
+   end
+ end
+{% endhighlight %}
+
+もう2つほどexampleを追加してからテストしてみよう。
+{% highlight ruby %}
+  context "set_cartridge" do
+    it "should set a cartridge to the cylinder pos 0" do
+      @rev.set_cartridge
+      @rev.cylinder[0].should == Cartridge.new
+    end
+    it "should set 3 cartridges to the cylinder pos 0-3" do
+      3.times { @rev.set_cartridge }
+      @rev.cylinder.should == [Cartridge.new, Cartridge.new, Cartridge.new, nil, nil, nil]
+    end
+    it "should be error when it called more than the cylinder rooms" do
+      Revolver::CYLINDER_SIZE.times { @rev.set_cartridge }
+      ->{ @rev.set_cartridge }.should raise_error(Revolver::CylinderError)
+    end
+  end
+{% endhighlight %}
+
+テストだよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+ 
+ Finished in 0.00315 seconds
+ 9 examples, 0 failures
+{% endhighlight %}
+OKだね!ほんとうはcylinderの自由な位置にカートリッジを装填できるべきだけど、ここでは割愛するよ。
+
+さてtriggerにいこう。まずはちゃんとBangするように。
+{% highlight ruby %}
+  context "trigger" do
+    it "should return 'Bang!'" do
+      @rev.set_cartridge
+      @rev.trigger.should == 'Bang!'
+    end
+  end
+{% endhighlight %}
+
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   trigger
+     should return 'Bang!' (FAILED - 1)
+ Failures:
+   1) Revolver trigger should return 'Bang!'
+      Failure/Error: @rev.trigger.should == 'Bang!'
+        expected: "Bang!"
+             got: nil (using ==)
+      # ./gun_spec.rb:70:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00469 seconds
+ 10 examples, 1 failure
+{% endhighlight %}
+
+フェイルしちゃったよ。あーchamberに弾が無いからね。cylinder[0]に弾があればchamberにも弾があるって設計だったよね。
+{% highlight ruby %}
+  def chamber
+    [ @cylinder[0] ].compact
+  end
+{% endhighlight %}
+
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   trigger
+     should return 'Bang!' (FAILED - 1)
+ Failures:
+   1) Revolver trigger should return 'Bang!'
+      Failure/Error: @rev.trigger.should == 'Bang!'
+        expected: "Bang!"
+             got: nil (using ==)
+      # ./gun_spec.rb:70:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00338 seconds
+ 10 examples, 1 failure
+{% endhighlight %}
+
+まだフェイルする..そうかこれはGun#triggerで直接@chamberを参照してるから起きてるんだ。ここを直そう。
+{% highlight ruby %}
+ class Gun
+ 
+    def trigger
+ -    return nil if @chamber.empty?
+ +    return nil if chamber.empty?
+ -    @chamber.clear
+ +    reset_chamber
+     'Bang!'
+    end
+ 
+ +  private
+ +  def reset_chamber
+ +    @chamber.clear
+ +  end
+ end
+ 
+ 
+ class Revolver
+ 
+ + def reset_chamber
+ +   @cylinder[0] = nil
+ + end
+ + private :reset_chamber
+ end
+{% endhighlight %}
+
+テストだよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Gun
+   chamber
+     should be empty at default
+     should be empty after triggering
+   set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge  trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   trigger
+     should return 'Bang!'
+ Finished in 0.00373 seconds
+ 10 examples, 0 failures
+{% endhighlight %}
+OKだね。
+
+考えてみたらロシアンルーレットってみんな、毎回ハンマー(撃鉄)を手で起こしてるよね。このタイプのリボルバーはシングルアクションというそうだよ。是非ともこの機構(cocking)を実装したいよ。cockingしないと発砲できないようにしよう。それから発砲した後はhammerが戻るようにしよう。
+{% highlight ruby %}
+  context "trigger" do
+    it "should return 'Bang!'" do
+      @rev.set_cartridge
+      @rev.cocking
+      @rev.trigger.should == 'Bang!'
+    end
+    it "should be nil without cocking" do
+      @rev.set_cartridge
+      @rev.trigger.should be_nil
+    end
+  end
+  context "hammer" do
+    it "should be false after triggering" do
+      @rev.set_cartridge
+      @rev.cocking
+      @rev.trigger
+      @rev.hammer.should be_false
+    end
+  end
+{% endhighlight %}
+
+当然hammerやcockingが無いって怒られるから、それを確認した上で実装しよう。
+{% highlight ruby %}
+ class Revolver < Gun
+   attr_reader :cylinder, :hammer
+   def initialize
+     @cylinder = Array.new(CYLINDER_SIZE)
+     @hammer = false
+     super
+   end
+ 
+   def cocking
+     @hammer = true
+   end
+ 
+   def trigger
+     return nil unless @hammer
+     @hammer = false
+     super
+   end
+ end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   trigger
+     should return 'Bang!'
+     should be nil without cocking
+   hammer
+     should be false after triggering
+ Finished in 0.0042 seconds
+ 12 examples, 0 failures
+{% endhighlight %}
+いいみたいだね。
+
+あ、それとcockingしたらcylinderが一つ回転するようにしないといけなかったよ。回転しないと連続発砲ができないからね。
+{% highlight ruby %}
+  context "cylinder" do
+    it "should rotate for next when cocking" do
+      @rev.set_cartridge
+      @rev.cocking
+      @rev.cylinder.should == [nil, nil, nil, nil, nil, Cartridge.new]
+    end
+  end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   cylinder
+     should rotate for next when cocking (FAILED - 1)
+   trigger
+     should return 'Bang!'
+     should be nil without cocking
+   hammer
+     should be false after triggering
+ 
+ Failures:
+ 
+   1) Revolver cylinder should rotate for next when cocking
+      Failure/Error: @rev.cylinder.should == [nil, Cartridge.new, nil, nil, nil, nil]
+        expected: [nil, #<Cartridge:0x000001009cc1c8>, nil, nil, nil, nil]
+             got: [#<Cartridge:0x000001009cc330>, nil, nil, nil, nil, nil] (using ==)
+        Diff:
+        @@ -1,2 +1,2 @@
+        -[nil, #<Cartridge:0x000001009cc1c8>, nil, nil, nil, nil]
+        +[#<Cartridge:0x000001009cc330>, nil, nil, nil, nil, nil]
+      # ./gun_spec.rb:71:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00549 seconds
+ 13 examples, 1 failure
+{% endhighlight %}
+
+フェイルするから直すよ。
+{% highlight ruby %}
+  def cocking
+    @cylinder.rotate!
+    @hammer = true
+  end
+{% endhighlight %}
+
+テストだよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 0
+     should set 3 cartridges to the cylinder pos 0-3
+     should be error when it called more than the cylinder rooms
+   cylinder
+     should rotate for next when cocking
+   trigger
+     should return 'Bang!' (FAILED - 1)
+     should be nil without cocking
+   hammer
+     should be false after triggering
+ 
+ Failures:
+ 
+   1) Revolver trigger should return 'Bang!'
+      Failure/Error: @rev.trigger.should == 'Bang!'
+        expected: "Bang!"
+             got: nil (using ==)
+      # ./gun_spec.rb:79:in `block (3 levels) in <top (required)>'
+ 
+ Finished in 0.00466 seconds
+ 13 examples, 1 failure
+{% endhighlight %}
+
+今度はtriggerのexampleでエラーが出たよ。cockingで弾がpos 0にいなくなったからだね。じゃあset_cartridgeでpos 0じゃなくpos 1に弾をセットするように変えて対応するよ。
+{% highlight ruby %}
+   context "set_cartridge" do
+ -    it "should set a cartridge to the cylinder pos 0" do
+ +    it "should set a cartridge to the cylinder pos 1" do
+       @rev.set_cartridge
+ -      @rev.cylinder[0].should == Cartridge.new
+ +      @rev.cylinder[1].should == Cartridge.new
+     end
+ 
+ -    it "should set 3 cartridges to the cylinder pos 0-3" do
+ +    it "should set 3 cartridges to the cylinder pos 1-4" do
+       3.times { @rev.set_cartridge }
+ -      @rev.cylinder.should == [Cartridge.new, Cartridge.new, Cartridge.new, nil, nil, nil]
+ +      @rev.cylinder.should == [nil, Cartridge.new, Cartridge.new, Cartridge.new, nil, nil]
+     end
+ 
+     it "should be error when it called more than the cylinder rooms" do
+       Revolver::CYLINDER_SIZE.times { @rev.set_cartridge }
+       ->{ @rev.set_cartridge }.should raise_error(Revolver::CylinderError)
+     end
+   end
+ 
+   context "cylinder" do
+     it "should rotate for next when cocking" do
+       @rev.set_cartridge
+       @rev.cocking
+ -      @rev.cylinder.should == [nil, nil, nil, nil, nil, Cartridge.new]
+ +      @rev.cylinder.should == [Cartridge.new, nil, nil, nil, nil, nil]
+     end
+   end  
+{% endhighlight %}
+
+フェイルするから実装するよ。
+{% highlight ruby %}
+  def set_cartridge
+    pos = @cylinder.rotate.index(nil)
+    raise CylinderError, 'Cylinder is full' unless pos
+    pos = (pos + 1) % CYLINDER_SIZE
+    @cylinder[pos] = Cartridge.new
+  end
+{% endhighlight %}
+
+テストだよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 1
+     should set 3 cartridges to the cylinder pos 1-4
+     should be error when it called more than the cylinder rooms
+   cylinder
+     should rotate for next when cocking
+   trigger
+     should return 'Bang!'
+     should be nil without cocking
+   hammer
+     should be false after triggering
+ 
+ Finished in 0.00461 seconds
+ 13 examples, 0 failures
+{% endhighlight %}
+うまくいったよ。
+
+じゃあ連続発砲ができるか試すよ。
+{% highlight ruby %}
+  context "trigger" do
+    it "should work sequentially" do
+      6.times { @rev.set_cartridge }
+      @rev.cocking
+      8.times.map { @rev.trigger.tap{ @rev.cocking } }.should == ["Bang!", "Bang!", "Bang!", "Bang!", "Bang!", "Bang!", nil, nil]
+    end
+  end
+{% endhighlight %}
+
+テストするよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 1
+     should set 3 cartridges to the cylinder pos 1-4
+     should be error when it called more than the cylinder rooms
+   cylinder    should rotate for next when cocking
+   trigger
+     should return 'Bang!'
+     should be nil without cocking
+     should work sequentially
+   hammer
+     should be false after triggering
+ 
+ Finished in 0.00705 seconds
+ 14 examples, 0 failures
+{% endhighlight %}
+うまくいってるようだね。
+
+さて最後に、ロシアンルーレットに必須の機能とも言うべきspin_cylinderを実装しよう。
+{% highlight ruby %}
+  context "spin_cylinder" do
+    it "should rotate the cylinder line randomly(fail sometimes)" do
+      @rev.set_cartridge
+      before_spin = @rev.cylinder.dup
+      @rev.spin_cylinder
+      @rev.cylinder.should_not == before_spin
+    end
+  end
+{% endhighlight %}
+あまり良いテストじゃないよね..こういうランダムな結果をテストするのはどうすればいいんだろうね。わからないから今回はこれでよしとして先に進むよ。
+
+さてもちろんテストに通らないので、spin_cylinderを実装するよ。
+{% highlight ruby %}
+  def spin_cylinder
+    @cylinder.rotate!(rand CYLINDER_SIZE)
+  end
+{% endhighlight %}
+
+さあテストだよ。
+{% highlight ruby %}
+ % rspec -fs -c gun_spec.rb 
+ 
+ Gun
+   chamber
+     should be empty at default
+     should be empty after triggering
+  set_cartridge
+     should set a cartridge to the chamber
+     should be error when the chamber has a cartridge
+   trigger
+     should return 'Bang!'
+     should be nil when the chamber is empty
+ Revolver
+   set_cartridge
+     should set a cartridge to the cylinder pos 1
+     should set 3 cartridges to the cylinder pos 1-4
+     should be error when it called more than the cylinder rooms
+   cylinder
+     should rotate for next when cocking
+   trigger
+     should return 'Bang!'
+     should be nil without cocking
+     should work sequentially
+   hammer
+     should be false after triggering
+   spin_cylinder
+     should rotate the cylinder line randomly(fail sometimes)
+ 
+ Finished in 0.00705 seconds
+ 15 examples, 0 failures
+{% endhighlight %}
+いいね!
+
+さあこれでようやくRevolverが完成したよ!
+
+##ロシアンルーレットで遊ぶ
+さあ銃が用意できたから、早速ロシアンルーレットできるか試してみるよ。まずは舞台(russian_roulette.rb)を作ろう。
+{% highlight ruby %}
+ require "term/ansicolor"
+ require_relative "gun"
+ 
+ String.send(:include, Term::ANSIColor)
+ 
+ def russian_roulette(fighters)
+   print "--- Welcome to Russian Roulette ---\n".green
+   print "Today's fighters are: "
+   print fighters.map { |f| f.magenta.underline }.join(", ")
+   print "\nLet's go!\n\n"
+ 
+   rev = Revolver.new
+   rev.set_cartridge
+   sleep 2
+ 
+   fighters.shuffle.cycle do |fighter|
+     print "#{fighter}'s turn:\n".cyan
+     rev.cocking
+     rev.spin_cylinder
+     sleep 2
+     unless result = rev.trigger
+       print "  Nothing happened..\n\n".yellow
+       sleep 1
+     else
+       print "  #{result}  ".yellow.on_red.blink
+       print "  #{fighter} is dead.\n".blue
+       print "\n--- Game is over ---\n".green
+       exit
+     end
+   end
+ end
+ 
+ russian_roulette(ARGV)
+{% endhighlight %}
+term-ansicolorで色を付けたからgem install term-ansicolorしてね。
+
+さあ試してみるよ..
+{% highlight bash %}
+ % ruby russian_roulette.rb Charlie Fox Henry
+ --- Welcome to Russian Roulette ---
+ Today's fighters are: Charlie, Fox, Henry
+ Let's go!
+ 
+ Fox's turn:
+   Nothing happened..
+ 
+ Charlie's turn:
+   Nothing happened..
+ 
+ Henry's turn:
+   Nothing happened..
+ 
+ Fox's turn:
+   Nothing happened..
+ 
+ Charlie's turn:
+   Bang!    Charlie is dead.
+ 
+ --- Game is over ---
+ 
+{% endhighlight %}
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20111217/20111217233410.png)
+
+
+あー、チャーリーが死んじゃった..
+
+じゃあ今度は君と僕とで勝負しようよ!
+
+まずは僕から。
+{% highlight bash %}
+ % ruby russian_roulette.rb me you
+ --- Welcome to Russian Roulette ---
+ Today's fighters are: you, me
+ Let's go!
+ 
+ me's turn:
+   Nothing happened..
+{% endhighlight %}
+ふー、セーフだったよ!
+
+じゃあ今度は君
+{% highlight bash %}
+ you's turn:
+   Nothing happened..
+{% endhighlight %}
+
+おー、よかったね!
+
+次は僕の番
+{% highlight bash %}
+ me's turn:
+   Bang!    me is dead.
+ 
+ --- Game is over ---
+{% endhighlight %}
+
