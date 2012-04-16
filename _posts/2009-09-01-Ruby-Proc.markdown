@@ -12,13 +12,7 @@ RubyのブロックとそのオブジェクトであるProcオブジェクトは
 
 Procオブジェクトに関し試してみたことを書いてみます。きっと勘違いがあるので指摘してくれるとうれしいです。
 ##あるときはSingletonメソッド・ジェネレータになる
-Rubyのブロックはメソッドと同じように手続きの塊を作り
-それはlambdaでオブジェクト(Procオブジェクト)化できる
-このときProcオブジェクトは外側の変数の参照を
-自身の状態として取りこめる
-ブロック内の手続きは
-Proc#callメソッドを呼ぶことによって実行される
-こんな感じだ
+Rubyのブロックはメソッドと同じように手続きの塊を作り、それはlambdaでオブジェクト(Procオブジェクト)化できる。このときProcオブジェクトは外側の変数の参照を自身の状態として取りこめる。ブロック内の手続きは、Proc#callメソッドを呼ぶことによって実行される。こんな感じだ。
 {% highlight ruby %}
  name = "taro"
  party = "jimin"
@@ -42,11 +36,9 @@ Proc#callメソッドを呼ぶことによって実行される
  # >> minshu
  # >> Hello, I'm yukio of minshu
 {% endhighlight %}
-外側の変数(name,party)の参照先が変わると
-それに合わせてProcオブジェクト(pm)の状態も変わる
+外側の変数(name,party)の参照先が変わると、それに合わせてProcオブジェクト(pm)の状態も変わる。
 
-pmはオブジェクトだからユーザがメソッドを追加してもいい
-こんなときsingletonクラス(特異クラス)が使える
+pmはオブジェクトだからユーザがメソッドを追加してもいい。こんなときsingletonクラス(特異クラス)が使える。
 {% highlight ruby %}
  name = "taro"
  party = "jimin"
@@ -77,13 +69,9 @@ pmはオブジェクトだからユーザがメソッドを追加してもいい
  pm.party # => "minshu"
  pm.greeting # => "Hello, I'm yukio of minshu"
 {% endhighlight %}
-例では先の例のブロック内の各文をメソッドで呼べるようにしている
-singletonクラスの参照オブジェクトをpmとしメソッドを定義して
-Proc#callでinitメソッドが実行されるようにする
+例では先の例のブロック内の各文をメソッドで呼べるようにしている。singletonクラスの参照オブジェクトをpmとしメソッドを定義して、Proc#callでinitメソッドが実行されるようにする。
 
-ただ上のコードはブロックの内部で変数pmを参照しているので
-pmの参照先が変わると問題が起きる
-ブロックの引数として対象のオブジェクトを渡して問題を解決しよう
+ただ上のコードはブロックの内部で変数pmを参照しているので、pmの参照先が変わると問題が起きる。ブロックの引数として対象のオブジェクトを渡して問題を解決しよう。
 {% highlight ruby %}
  name = "taro"
  party = "jimin"
@@ -114,10 +102,9 @@ pmの参照先が変わると問題が起きる
  pm.party # => "minshu"
  pm.greeting # => "Hello, I'm yukio of minshu"
 {% endhighlight %}
-ブロックを実行するpm[pm](これはpm.call(pm)と等価)のところが
-ちょっと変な感じがする
+ブロックを実行するpm[pm](これはpm.call(pm)と等価)のところがちょっと変な感じがする。
 
-別のオブジェクトをブロック引数として渡したらどうなるんだろう
+別のオブジェクトをブロック引数として渡したらどうなるんだろう。
 {% highlight ruby %}
  class Person
  end
@@ -130,11 +117,9 @@ pmの参照先が変わると問題が起きる
  me.party # => "N/A"
  me.greeting # => "Hello, I'm Charlie of N/A"
 {% endhighlight %}
-Personクラスのオブジェクトmeに先のメソッドが追加された
+Personクラスのオブジェクトmeに先のメソッドが追加された。
 
-そうかpmオブジェクトは任意のオブジェクトに
-singletonメソッドを追加するジェネレータとして機能するんだ
-じゃあもっとそれっぽく作ってみよう
+そうか、pmオブジェクトは任意のオブジェクトにsingletonメソッドを追加するジェネレータとして機能するんだ。じゃあもっとそれっぽく作ってみよう。
 {% highlight ruby %}
  singleton_generator = lambda do |obj, properties|
    class << obj
@@ -164,15 +149,9 @@ singletonメソッドを追加するジェネレータとして機能するん�
  
   #>> 44th President of the United States is Barack Hussein Obama of Democratic party.
 {% endhighlight %}
-singletonメソッドを生成するsingleton_generatorオブジェクトに
-ブロック引数として対象のオブジェクトと
-任意のプロパティをハッシュで渡せるようにした
-この例ではPersonクラスのオブジェクトuspに対して
-mnameとpartyメソッドを追加する例を示した
-これでsingletonメソッド・ジェネレーターの完成だ！
+singletonメソッドを生成するsingleton_generatorオブジェクトにブロック引数として対象のオブジェクトと、任意のプロパティをハッシュで渡せるようにした。この例ではPersonクラスのオブジェクトuspに対してmnameとpartyメソッドを追加する例を示した。これでsingletonメソッド・ジェネレーターの完成だ！
 
-もっとも同じことは別にメソッドでもできるので
-意味はなさそうだけど…
+もっとも同じことは別にメソッドでもできるので、意味はなさそうだけど…
 {% highlight ruby %}
  def singleton_generator(obj, properties)
    class << obj
@@ -190,15 +169,11 @@ mnameとpartyメソッドを追加する例を示した
 {% endhighlight %}
 
 ##あるときは再帰オブジェクトになる
-以下のブログでY-Combinatorを使って
-再帰的な関数を手続きオブジェクトにするやり方が書かれている
+以下のブログでY-Combinatorを使って再帰的な関数を手続きオブジェクトにするやり方が書かれている。
 
 [「再帰的な関数」を手続きオブジェクトにする - バリケンのRuby日記 - Rubyist](http://rubyist.g.hatena.ne.jp/muscovyduck/20060524/p1)
 
-解説はとても丁寧になされていてとてもためになる
-でもY-Combinatorについては
-どうにも僕の頭がついていってくれないので
-別の方法がないか考えてみた
+解説はとても丁寧になされていてとてもためになる。でもY-Combinatorについてはどうにも僕の頭がついていってくれないので、別の方法がないか考えてみた。
 {% highlight ruby %}
  fact = lambda do |n|
    if n.zero?
@@ -210,8 +185,7 @@ mnameとpartyメソッドを追加する例を示した
  
  fact[10] # => 3628800
 {% endhighlight %}
-ここでブロック内の変数を無くすために
-手続きオブジェクトをブロック引数として渡すようにする
+ここでブロック内の変数を無くすために、手続きオブジェクトをブロック引数として渡すようにする。
 {% highlight ruby %}
  fact = lambda do |f, n|
    if n.zero?
@@ -223,16 +197,11 @@ mnameとpartyメソッドを追加する例を示した
  
  fact[fact, 10] # => 3628800
 {% endhighlight %}
-うまくいった
-でもfactを呼ぶときfactを引数で渡すのは格好悪い
+うまくいった。でもfactを呼ぶときfactを引数で渡すのは格好悪い。
 
-Ruby1.9のProcオブジェクトにはcurryというメソッドがあって
-引数の一部を先に渡して
-そのオブジェクトに部分適用してくれるものがある
-関数に対するこのような作用を
-論理学者ハスケル・カリーに因んでカリー化というらしい
+Ruby1.9のProcオブジェクトにはcurryというメソッドがあって、引数の一部を先に渡してそのオブジェクトに部分適用してくれるものがある。関数に対するこのような作用を論理学者ハスケル・カリーに因んでカリー化というらしい。
 
-これが使えるかもしれない
+これが使えるかもしれない。
 {% highlight ruby %}
  fact = lambda do |f, n|
    if n.zero?
@@ -245,14 +214,9 @@ Ruby1.9のProcオブジェクトにはcurryというメソッドがあって
  fact_maker = fact[fact] # => #<Proc:0x5becf8 (lambda)>
  fact_maker[10] # => 3628800
 {% endhighlight %}
-factオブジェクトをカリー化し
-最初にブロック引数としてfactオブジェクトだけを渡して
-fact_makerオブジェクトを作る
-こうすればfact_makerに対する引数は1つだけになって
-目的は達成できる
+factオブジェクトをカリー化し、最初にブロック引数としてfactオブジェクトだけを渡してfact_makerオブジェクトを作る。こうすればfact_makerに対する引数は1つだけになって目的は達成できる。
 
-でもまだブロック内のelse節でProcオブジェクトを渡してる
-これも消したい
+でもまだブロック内のelse節でProcオブジェクトを渡してる。これも消したい。
 {% highlight ruby %}
  fact = lambda do |f, n|
    if n.zero?
@@ -265,13 +229,9 @@ fact_makerオブジェクトを作る
  fact_maker = fact[fact] # => #<Proc:0x5becf8 (lambda)>
  fact_maker[10] #=> TypeError:Proc can't be coerced into Fixnum
 {% endhighlight %}
-もちろんエラーが出る
-エラーがでないようにするためにはブロックに渡す引数は
-factオブジェクトじゃなくて既にfactを渡して生成した
-Procオブジェクトつまりfact_makerじゃなくちゃいけない
+もちろんエラーが出る。エラーがでないようにするためにはブロックに渡す引数は、factオブジェクトじゃなくて既にfactを渡して生成したProcオブジェクトつまりfact_makerじゃなくちゃいけない。
 
-そこでバリケンさんにあったアイディアをもらって
-fact_makerを次のようにしてみる
+そこでバリケンさんにあったアイディアをもらって、fact_makerを次のようにしてみる。
 {% highlight ruby %}
  fact = lambda do |f, n|
    if n.zero?
@@ -287,8 +247,7 @@ fact_makerを次のようにしてみる
  
  fact_maker[10] # => 3628800
 {% endhighlight %}
-うまくいった
-さらにfactにつけたcurryをfact_maker内に移動する
+うまくいった。さらにfactにつけたcurryをfact_maker内に移動する。
 {% highlight ruby %}
  fact = lambda do |f, n|
    if n.zero?
@@ -304,7 +263,8 @@ fact_makerを次のようにしてみる
  
  fact_maker[10] # => 3628800
 {% endhighlight %}
-fact_makerをY-Combinatorのようにメソッドにしてみる
+fact_makerをY-Combinatorのようにメソッドにしてみる。
+
 {% highlight ruby %}
  fact = lambda { |f, n| n.zero? ? 1 : n * f[n-1] }
  
@@ -315,7 +275,7 @@ fact_makerをY-Combinatorのようにメソッドにしてみる
  fact = my_combinator(fact)
  fact[10] # => 3628800
 {% endhighlight %}
-フィボナッチでも試してみる
+フィボナッチでも試してみる。
 {% highlight ruby %}
  fib = lambda do |f, n|
    case n
@@ -332,7 +292,7 @@ fact_makerをY-Combinatorのようにメソッドにしてみる
  fib = my_combinator(fib)
  fib[10] # => 55
 {% endhighlight %}
-ここまで来たらProcのメソッドにもしてみる
+ここまで来たらProcのメソッドにもしてみる。
 {% highlight ruby %}
  class Proc
    def recur
@@ -347,11 +307,10 @@ fact_makerをY-Combinatorのようにメソッドにしてみる
 トンチンカンなことやってないか心配だ…
 
 ##あるときはcaseの判定ラベルになる
-Ruby1.9ではProc#callの別名としてProc#===が用意されている
-それを用いた楽しいサンプルを
-Dave Thomasさんのブログで見つけた
+Ruby1.9ではProc#callの別名としてProc#===が用意されている。それを用いた楽しいサンプルをDave Thomasさんのブログで見つけた。
 
 [PragDave: Fun with Procs in Ruby 1.9](http://pragdave.blogs.pragprog.com/pragdave/2008/09/fun-with-procs.html)
+
 {% highlight ruby %}
  is_weekday = lambda {|day_of_week, time| time.wday == day_of_week}.curry  
    
@@ -372,15 +331,9 @@ Dave Thomasさんのブログで見つけた
    puts "chores"  
  end  
 {% endhighlight %}
-sunday, monday..はis_weekdayに曜日数値だけを
-適用して生成されたProcオブジェクトだ
-これをcaseの条件におくと
-Proc#===つまりcallメソッドが呼ばれて
-Time.nowを引数としてis_weekdayのブロックが評価される
-そしてブロックの評価結果はcaseの条件になる
+sunday, monday..はis_weekdayに曜日数値だけを適用して生成されたProcオブジェクトだ。これをcaseの条件におくと、Proc#===つまりcallメソッドが呼ばれて、Time.nowを引数としてis_weekdayのブロックが評価される。そしてブロックの評価結果はcaseの条件になる。
 
-case式において比較条件の詳細が隠ぺいされていて簡潔だ
-自分でも何か書いてみよう
+case式において比較条件の詳細が隠ぺいされていて簡潔だ。自分でも何か書いてみよう。
 {% highlight ruby %}
  Person = Struct.new(:name, :height, :weight)
  
@@ -417,16 +370,11 @@ case式において比較条件の詳細が隠ぺいされていて簡潔だ
  #>> {"jiro"=>"Problem!"}
  #>> {"saburo"=>"You are great!"}
 {% endhighlight %}
-upper,middle,lowerはBMIオブジェクトにそれぞれの
-許容範囲の最大値、最小値を部分適用したProcオブジェクトだ
-それらはcase式において各testeeの身長と体重を参照して
-各許容範囲と比較し結果を返す
+upper,middle,lowerはBMIオブジェクトにそれぞれの許容範囲の最大値、最小値を部分適用したProcオブジェクトだ。それらはcase式において各testeeの身長と体重を参照して各許容範囲と比較し結果を返す。
 
 もう少し面白い例が思いつけばよかったんだけど…
 
-こんなふうにProcオブジェクトはその使い方によって
-さまざまな形に化ける
+こんなふうにProcオブジェクトはその使い方によってさまざまな形に化ける。
 
-そう
-RubyのProcオブジェクトは
-状況に応じて七変化するキューティーハニーだったんだ!
+そう、RubyのProcオブジェクトは状況に応じて七変化するキューティーハニーだったんだ!
+

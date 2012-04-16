@@ -21,56 +21,65 @@ Yugui著「初めてのRuby」を読んでいる。自分はこの本の想定�
 Ruby空間における操作対象(オペランド)はオブジェクトである。Rubyオペレータはオブジェクトしか取り扱わない。オブジェクトはユーザによって初めてRuby空間に生み出されるが、それはクラスという設計図に従って常に構築される。
 
 ユーザは新しいクラスを設計して、それに基づいてオブジェクトを生成することもできるけれども、文字列、数字(整数)、シンボルなどのオペランドは、既にRuby設計者によって設計されたクラスString、Fixnum、Symbolに属しているので、簡単にRuby空間に生み出すことができる。
-> 
->   'Charlie'
->   183
->   :name
-
+{% highlight ruby %}
+'Charlie'
+183
+:name
+{% endhighlight %}
 
 ##文字列
 Ruby空間に生み出されたすべてのオブジェクトはそれぞれが固有のID(object_id)を持っていて、RubyオペレータはこのIDで個々のオブジェクトを管理する。
 
 一方、ユーザはこのIDにアクセスすることはできるけれども、このIDでオブジェクトを管理することはできない。代わりにユーザは、変数(あるいは定数)という名札をオブジェクトに付けてこれを管理する。
-> 
->   my_name = 'Charlie'
+{% highlight ruby %}
+my_name = 'Charlie'
+{% endhighlight %}
 
 これが文字列のオブジェクトに名札を付ける方法だ。以降ユーザはmy_nameを呼ぶことによって、Charlieオブジェクトにアクセスできるようになる。
-> 
->   me = my_name
+ 
+{% highlight ruby %}
+me = my_name
+{% endhighlight %}
 
 このようにして、複数の名札を付けることもできる。
 
 世に同名の人が複数存在するように、同名の文字列オブジェクトも複数存在しうる。
-> 
->   his_name = 'Charlie'
+{% highlight ruby %}
+his_name = 'Charlie'
+{% endhighlight %}
 
 これをRuby空間に新たに生成したとき、my_nameとhis_nameは同名のオブジェクトを指しているけれども、それらは異なるIDを備えた異なるオブジェクトである。
-> 
->   my_name.object_id  # => 8848520
->   his_name.object_id  # => 8827340
+{% highlight ruby %}
+my_name.object_id  # => 8848520
+his_name.object_id  # => 8827340
+{% endhighlight %}
 
 だから僕が逆さの国'napaJ'に引っ越して、名前が変わっても彼の名前はそのままだ。
-> 
->   my_name.reverse! # => "eilrahC"
->   me                           # => "eilrahC"
->   his_name                # => "Charlie"
+{% highlight ruby %}
+my_name.reverse! # => "eilrahC"
+me               # => "eilrahC"
+his_name         # => "Charlie"
+{% endhighlight %}
 
 
 変数はユーザが文字列オブジェクトを管理するための唯一の方法だ。だから対象の文字列オブジェクトが名札である変数を失うと、ユーザはそれを見失いもう管理できなくなる。
-> 
->   his_name = 'Fox'
+{% highlight ruby %}
+his_name = 'Fox'
+{% endhighlight %}
 
 このようにCharlieに割り当てた変数his_nameをFoxに割り当て直すと、元のCharlieオブジェクトからはhis_nameの名札が外れる。結果ユーザはCharlieオブジェクトに対するアクセス手段を失う。Charlieオブジェクトのその後を知っているのは、Rubyオペレータのみとなりそのようなオブジェクトは彼が後に破棄する。
 ##数字
 整数のオブジェクトに名札を付ける方法も文字列の場合と変わらない。
-> 
->   my_number = 183
->   his_number = 183
+{% highlight ruby %}
+my_number = 183
+his_number = 183
+{% endhighlight %}
 
 だけど文字列の場合と異なって、これらのオブジェクトのIDは同じになる。
-> 
->   my_number.object_id  # => 367
->   his_number.object_id  # => 367
+{% highlight ruby %}
+my_number.object_id  # => 367
+his_number.object_id  # => 367
+{% endhighlight %}
 
 (Fixnumのみ,Bignum,Floatは別IDとなる)
 
@@ -81,30 +90,35 @@ Ruby空間に生み出されたすべてのオブジェクトはそれぞれが�
 そうすると本来整数には名札を付ける必要すらない。整数に対するオブジェクトは一意であり、ユーザは文字列の場合とは異なって、名札がなくても希望するオブジェクトにアクセスできるからだ。つまりユーザにとって、整数自体がそのオブジェクトの名札の役割を担う。
 
 Rubyでは数字にも名札を付けることができるけれども、これは対象オブジェクトの管理のためではなく、もっぱら代数演算の結果を格納する容器としての役割を担っている。
-> 
->   a = 10
->   b = a * 3
+{% highlight ruby %}
+a = 10
+b = a * 3
+{% endhighlight %}
 
 ##シンボル
 シンボルは文字列と一対一で対応する記号である。文字列'Charlie'に対応するシンボルは:Charlieとなる。文字列のところで書いたように、
-> 
->   my_name = 'Charlie'
->   his_name = 'Charlie'
+{% highlight ruby %}
+my_name = 'Charlie'
+his_name = 'Charlie'
+{% endhighlight %}
 
 とした場合、2つの異なるオブジェクトがRuby空間に生成される。
-> 
->   my_name.object_id  # => 8848520
->   his_name.object_id  # => 8827340
+{% highlight ruby %}
+my_name.object_id  # => 8848520
+his_name.object_id  # => 8827340
+{% endhighlight %}
 
 これらのシンボルは以下により得られる。
-> 
->   my_name.intern # => :Charlie
->   his_name.intern # => :Charlie
+{% highlight ruby %}
+my_name.intern # => :Charlie
+his_name.intern # => :Charlie
+{% endhighlight %}
 
 当然に異なるオブジェクトのシンボルは異なるオブジェクトであることが期待される。しかしそうはならない。
-> 
->   my_name.intern.object_id # => 314378
->   his_name.intern.object_id # => 314378
+{% highlight ruby %}
+my_name.intern.object_id # => 314378
+his_name.intern.object_id # => 314378
+{% endhighlight %}
 
 つまり、同一記号のシンボルは同じオブジェクトである。これはつまり一つのRuby空間には無数の"Charlie"が存在しうるけれども、これに対応する:Charlieというシンボルオブジェクトは、ただ一つしか存在しないということを意味している。
 
@@ -120,26 +134,31 @@ Rubyでは数字にも名札を付けることができるけれども、これ�
 
 ##シンボルの出番
 Rubyには複数の関連するオブジェクトをユーザがまとめて管理できるようにするオブジェクトがある。配列とハッシュである。
-> 
->   our_name = [ 'Charlie', 'Fox', 'Henry' ]
+{% highlight ruby %}
+our_name = [ 'Charlie', 'Fox', 'Henry' ]
+{% endhighlight %}
 
 これでRuby空間に3つの文字列オブジェクトを管理する１つの配列オブジェクトが生成され、それにour_nameの名札が付けられる。配列で管理されるオブジェクトへのアクセスは、その位置を表す数字で行なえる。
-> 
->   our_name[1] # => "Fox"
+{% highlight ruby %}
+our_name[1] # => "Fox"
+{% endhighlight %}
 
 でも数字には個性がないので、1と”Fox"との間にはその位置以上の関連性はない。できればもっと関連性を持たせて意味付けをしたい。
 
 そのような場合シンボルが使える。
-> 
->   our_name = { :my_name => 'Charlie', :his_name => 'Fox', :my_nephew => 'Henry' }
+{% highlight ruby %}
+our_name = { :my_name => 'Charlie', :his_name => 'Fox', :my_nephew => 'Henry' }
+{% endhighlight %}
 
 これでRuby空間に3つの文字列オブジェクトを管理する、１つのハッシュオブジェクトが生成され、それにour_nameの名札がつけられる。ハッシュで管理されるオブジェクトへのアクセスは、そのキー値を使って行う。
-> 
->   our_name[:his_name] # => "Fox"
+{% highlight ruby %}
+our_name[:his_name] # => "Fox"
+{% endhighlight %}
 
 なおRuby空間では:his_nameは”his_name"に対応しているが、それらは別のオブジェクトなので、
-> 
->   our_name["his_name"] # => nil
+{% highlight ruby %}
+our_name["his_name"] # => nil
+{% endhighlight %}
 
 となる。Rails空間では事情が異なるようだ。
 
@@ -160,7 +179,7 @@ Rubyには複数の関連するオブジェクトをユーザがまとめて管�
 
 {{ '4873113679' | amazon_link }} by {{ '4873113679' | amazon_authors }}
 
-comment
+(comment)
 >シンボルについて、かなりスッキリしました。「たのしいRuby」よりそちらの方がよさげですね。ありがとうございました。
 
 >soiyamさん<br>お役に立ててうれしいです。

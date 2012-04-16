@@ -7,83 +7,80 @@ categories:
 ---
 
 
-IRB{% fn_ref 1 %}　名前を聞けば誰でもわかる
-超有名なライブラリ
-IRBを知らなけりゃ　それはもぐりのRubyist
-
-:$
-IRB　全部のRubyに付いてくる
-あなたとRubyの対話の窓口
-できないことがあるのなら　irbと打ってみよう
-rubyと打ってもダメですよ
-
-IRB　それはRubyistの魔法のランプ
-こすれば何かが現れる
-IRB　それはRubyistの魔法のランプ
-こすって願いを叶えよう
-I RuB you　I RuB you
-:TO
-
-IRB　色気がないのはご愛嬌
-色がいるなら　.irbrcしてください
-補完だってインデントだって
-そうしたいならプロンプトだって
-あなた色に染まります
-
-IRB　それでも不満があるのなら
-wirble fancy_irbが色付けします
-デバッグするならpp ap y g -d
-table viewにq o c
-エディタいるならie{% fn_ref 2 %} sketches使ってね
-コマンド足すならbosonあるよ
-全部入りならirbtools！
-
-IRB　それはRubyistの魔法のランプ
-こすれば何かが現れる
-IRB　それはRubyistの魔法のランプ
-こすって願いを叶えよう
-I RuB you I RuB you
-
-君がいなけりゃ生きてはいけない
-君がいなけりゃRubyも要らない
-君がいなけりゃ
-プログラミングなんてもうやらない
-ごめんなさい　いままでおざなりにして
-これからはもっと君のこと大切にします
-
-:D.S.
-
-:CODA
-IRB　それは
-アイルランド共和同盟(Irish republican brotherhood)じゃない
-IRB　それは
-国際ラグビー評議会(International Rugby Board)でもない
-IRB　もちろん
-治験審査委員会(Institutional Review Board)でもない{% fn_ref 3 %}
-
-IRB　そう　
-それは　Interactive Rubyのこと
-そう　それはRubyistの魔法のランプ
+    IRB　名前を聞けば誰でもわかる
+    超有名なライブラリ
+    IRBを知らなけりゃ　それはもぐりのRubyist
+    
+    :$
+    IRB　全部のRubyに付いてくる
+    あなたとRubyの対話の窓口
+    できないことがあるのなら　irbと打ってみよう
+    rubyと打ってもダメですよ
+    
+    IRB　それはRubyistの魔法のランプ
+    こすれば何かが現れる
+    IRB　それはRubyistの魔法のランプ
+    こすって願いを叶えよう
+    I RuB you　I RuB you
+    :TO
+    
+    IRB　色気がないのはご愛嬌
+    色がいるなら　.irbrcしてください
+    補完だってインデントだって
+    そうしたいならプロンプトだって
+    あなた色に染まります
+    
+    IRB　それでも不満があるのなら
+    wirble fancy_irbが色付けします
+    デバッグするならpp ap y g -d
+    table viewにq o c
+    エディタいるならie sketches使ってね
+    コマンド足すならbosonあるよ
+    全部入りならirbtools！
+    
+    IRB　それはRubyistの魔法のランプ
+    こすれば何かが現れる
+    IRB　それはRubyistの魔法のランプ
+    こすって願いを叶えよう
+    I RuB you I RuB you
+    
+    君がいなけりゃ生きてはいけない
+    君がいなけりゃRubyも要らない
+    君がいなけりゃ
+    プログラミングなんてもうやらない
+    ごめんなさい　いままでおざなりにして
+    これからはもっと君のこと大切にします
+    
+    :D.S.
+    
+    :CODA
+    IRB　それは
+    アイルランド共和同盟(Irish republican brotherhood)じゃない
+    IRB　それは
+    国際ラグビー評議会(International Rugby Board)でもない
+    IRB　もちろん
+    治験審査委員会(Institutional Review Board)でもない
+    
+    IRB　そう　
+    それは　Interactive Rubyのこと
+    そう　それはRubyistの魔法のランプ
 
 
 さて...
 
-irbとその周辺のことを少し調べたので
-ここにまとめておきます
+irbとその周辺のことを少し調べたので、ここにまとめておきます。
 
 ##irbの簡単な使い方
-ターミナル上でirbと打って
-現れたプロンプトでRubyのコードを入力します
+ターミナル上でirbと打って、現れたプロンプトでRubyのコードを入力します。
 {% highlight bash %}
  %irb
  irb(main):001:0> puts "hello, irb!"
  hello, irb!
  => nil
 {% endhighlight %}
-リターンで式の評価が行われ
-結果が返されます
+リターンで式の評価が行われ、結果が返されます。
 
-複数行に渡る入力も受け付けます
+複数行に渡る入力も受け付けます。
 {% highlight bash %}
  irb(main):004:0> def fib n
  irb(main):005:1> [0,1].include?(n) ? n : fib(n-1) + fib(n-2)
@@ -92,10 +89,9 @@ irbとその周辺のことを少し調べたので
  irb(main):007:0> fib 10
  => 55
 {% endhighlight %}
-つまりリターン入力時に式が完了していない場合
-評価を先送りして　完了した時結果を返します
+つまりリターン入力時に式が完了していない場合、評価を先送りして　完了した時結果を返します。
 
-_(アンダースコア)は前の評価結果を保持します
+_(アンダースコア)は前の評価結果を保持します。
 {% highlight bash %}
  irb(main):008:0> 1 + 2
  => 3
@@ -105,8 +101,7 @@ _(アンダースコア)は前の評価結果を保持します
  => 4.5
 {% endhighlight %}
 
-mオプションを付ければ高度な数学電卓になります
-つまりmathnをrequireします
+mオプションを付ければ高度な数学電卓になります。つまりmathnをrequireします。
 {% highlight bash %}
  % irb -m     
  >> 1/2
@@ -119,7 +114,7 @@ mオプションを付ければ高度な数学電卓になります
  2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 => nil
 {% endhighlight %}
 
-rオプションでライブラリを読み込みます
+rオプションでライブラリを読み込みます。
 {% highlight bash %}
  % irb -ropen-uri
  >> site = open "http://www.nintendo.co.jp"
@@ -129,11 +124,9 @@ rオプションでライブラリを読み込みます
 {% endhighlight %}
 
 ##DBインタフェース
-データベースファイルを読み込めば
-DBインタフェースになります
-DBを定義したuser.rbにconsoleファイルでアクセスする例を示します
+データベースファイルを読み込めば、DBインタフェースになります。DBを定義したuser.rbにconsoleファイルでアクセスする例を示します。
 
-user.rbを作ります
+user.rbを作ります。
 {% highlight ruby %}
  require "dm-core"
  require "dm-migrations"
@@ -149,17 +142,17 @@ user.rbを作ります
  DataMapper.auto_upgrade!
 {% endhighlight %}
 
-consoleファイルを作ります
+consoleファイルを作ります。
 {% highlight bash %}
  irb -r/path/to/the/user
 {% endhighlight %}
 
-実行権限を付与します
+実行権限を付与します。
 {% highlight bash %}
  chmod +x console
 {% endhighlight %}
 
-consoleを実行してUserDBにアクセスします
+consoleを実行してUserDBにアクセスします。
 {% highlight bash %}
  % ./console
  >> User.create(:nickname => 'Charlie', :email => 'charlie@abc.com')
@@ -173,18 +166,15 @@ consoleを実行してUserDBにアクセスします
 {% endhighlight %}
 
 ##セッション
-irb上でirbコマンドを使うことで
-別のセッションを立上げることができます
+irb上でirbコマンドを使うことで、別のセッションを立上げることができます。
 {% highlight bash %}
  irb(main):009:0> irb
  irb#1(main):001:0> 1 + 2
  => 3
 {% endhighlight %}
-プロンプトの#番号が目印です
+プロンプトの#番号が目印です。
 
-mainのコンテキストで定義したメソッドは
-Objectクラスのprivateインスタンスメソッドですから
-どこからでも呼ぶことができます
+mainのコンテキストで定義したメソッドは、Objectクラスのprivateインスタンスメソッドですから、どこからでも呼ぶことができます。
 {% highlight bash %}
  irb(main):025:0> Object.private_instance_methods(false).grep(/^f/)
  => [:fib]
@@ -194,7 +184,7 @@ Objectクラスのprivateインスタンスメソッドですから
  => 55
 {% endhighlight %}
 
-しかしセッションはローカル変数を共有しません
+しかしセッションはローカル変数を共有しません。
 {% highlight bash %}
  irb(main):001:0> @a = 1
  => 1
@@ -207,8 +197,7 @@ Objectクラスのprivateインスタンスメソッドですから
  NameError: undefined local variable or method `b' for main:Object from (irb#1):2
 {% endhighlight %}
 
-irbコマンドに任意のコンテキストを渡せば
-そのコンテキストでセッションが立ち上がります
+irbコマンドに任意のコンテキストを渡せば、そのコンテキストでセッションが立ち上がります。
 {% highlight bash %}
  irb(main):011:0> irb String
  irb#2(String):001:0> def too_long?
@@ -223,8 +212,7 @@ irbコマンドに任意のコンテキストを渡せば
  irb(main):014:0> 
 {% endhighlight %}
 
-セッションの一覧はjobs
-切換えはfgコマンドで行います
+セッションの一覧はjobs、切換えはfgコマンドで行います。
 {% highlight bash %}
  irb#2(String):004:0> jobs
  => #0->irb on main (#<Thread:0x0bfa68>: stop)
@@ -235,13 +223,10 @@ irbコマンドに任意のコンテキストを渡せば
  irb(main):015:0> 
 {% endhighlight %}
 
-セッションの終了はexitまたは
-kill [セッション番号]で行います
+セッションの終了はexitまたは、kill [セッション番号]で行います。
 
 ##Workspace
-コンテキストを共有するworkspaceというものもあります
-pushb(現在のbindingをpushする)コマンドで
-別のworkspaceに移動します
+コンテキストを共有するworkspaceというものもあります。pushb(現在のbindingをpushする)コマンドで、別のworkspaceに移動します。
 {% highlight bash %}
  irb(main):011:0> str = "hello, ruby"
  => "hello, ruby"
@@ -251,8 +236,7 @@ pushb(現在のbindingをpushする)コマンドで
  => "ybur ,olleh"
 {% endhighlight %}
 
-そしてpopb(bindingをpop)で元のworkspaceに戻ります
-popによって今いたworkspaceはなくなります
+そしてpopb(bindingをpop)で元のworkspaceに戻ります。popによって今いたworkspaceはなくなります。
 {% highlight bash %}
  irb(ybur ,olleh):014:0> popb
  => []
@@ -260,11 +244,9 @@ popによって今いたworkspaceはなくなります
  => "ybur ,olleh"
 {% endhighlight %}
 
-セッションと異なり別のworkspaceに移るときには
-新たなコンテキストを常に引数として渡す必要があります
-プロンプトの表示がworkspaceでも目印になります
+セッションと異なり別のworkspaceに移るときには、新たなコンテキストを常に引数として渡す必要があります。プロンプトの表示がworkspaceでも目印になります。
 
-workspaceでは外側のローカル変数を共有します{% fn_ref 4 %}
+workspaceでは外側のローカル変数を共有します{% fn_ref 1 %}。
 {% highlight bash %}
  irb(main):016:0> str2 = " world!!"
  => " world!!"
@@ -279,13 +261,10 @@ workspaceでは外側のローカル変数を共有します{% fn_ref 4 %}
  irb(main):021:0> str
  => "ybur ,olleh world!!"
 {% endhighlight %}
-workspaceはスタックになっているので
-セッションのようにジャンプして移動することができません
-workspaceの使い道はよくわかりません
+workspaceはスタックになっているので、セッションのようにジャンプして移動することができません。workspaceの使い道はよくわかりません。
 
 ##HELP
-Ruby Reference Manualを読みたいのならhelpします
-空リターンで終了です
+Ruby Reference Manualを読みたいのならhelpします。空リターンで終了です。
 {% highlight bash %}
  irb(main):008:0> help
  
@@ -323,28 +302,24 @@ Ruby Reference Manualを読みたいのならhelpします
 {% endhighlight %}
 
 ##.irbrcによるカスタマイズ
-ホームディレクトリに配置した.irbrcに
-設定を記述してIRBをカスタマイズできます
+ホームディレクトリに配置した.irbrcに、設定を記述してIRBをカスタマイズできます。
 {% highlight ruby %}
  require "irb/completion"
 {% endhighlight %}
-これでタブ補完が効くようになります
+これでタブ補完が効くようになります。
 
 {% highlight ruby %}
  require "irb/ext/save-history"
  IRB.conf[:SAVE_HISTORY] = 1000
 {% endhighlight %}
-これで入力コマンドの履歴が1000件分保存されます
-保存先はデフォルトでホームディレクトリの.irb_historyです
-Ctrl+P Ctrl+N で履歴を辿ります
+これで入力コマンドの履歴が1000件分保存されます。保存先はデフォルトでホームディレクトリの.irb_historyです。Ctrl+P Ctrl+N で履歴を辿ります。
 
 {% highlight ruby %}
  IRB.conf[:EVAL_HISTORY] = 100
 {% endhighlight %}
-これで実行結果の履歴を100件分覚えます
+これで実行結果の履歴を100件分覚えます。
 
-__(アンダースコア2つ)で一覧し
-__[line_no]で取り出します
+__(アンダースコア2つ)で一覧し、__[line_no]で取り出します。
 {% highlight bash %}
  irb(main):001:0> 1 + 2
  => 3
@@ -365,7 +340,7 @@ __[line_no]で取り出します
 {% highlight ruby %}
  IRB.conf[:AUTO_INDENT] = true
 {% endhighlight %}
-これで構文に沿った自動インデントを可能にします
+これで構文に沿った自動インデントを可能にします。
 
 {% highlight bash %}
  irb(main):001:0> def foo
@@ -374,10 +349,9 @@ __[line_no]で取り出します
  => nil
  irb(main):004:0> 
 {% endhighlight %}
-残念ながらendまではうまく処理できません
+残念ながらendまではうまく処理できません。
 
-プロンプトを変えたいなら
-以下のようにします
+プロンプトを変えたいなら、以下のようにします。
 {% highlight ruby %}
  IRB.conf[:PROMPT][:MY_PROMPT] = {
    :PROMPT_I => "%N(%m)>> ",     # 通常時
@@ -389,13 +363,11 @@ __[line_no]で取り出します
  
  IRB.conf[:PROMPT_MODE] = :MY_PROMPT
 {% endhighlight %}
-%N %m %lはそれぞれ
-設定したirb名　コンテキスト　セパレータを表します
+%N %m %lはそれぞれ、設定したirb名、コンテキスト、セパレータを表します。
 
-セッションごとにプロンプトを変えたいときは
-IRB.conf[:IRB_RC]をセットします
+セッションごとにプロンプトを変えたいときは、IRB.conf[:IRB_RC]をセットします。
 
-例えば以下を.irbrcに追加します
+例えば以下を.irbrcに追加します。
 {% highlight ruby %}
  IRB.conf[:IRB_RC] = lambda do |conf|
    if conf.irb_name[/\d+/]
@@ -406,7 +378,7 @@ IRB.conf[:IRB_RC]をセットします
  end
 {% endhighlight %}
 
-以下のような表示になります
+以下のような表示になります。
 {% highlight bash %}
  >> :main => :main
  >> irb
@@ -417,13 +389,9 @@ IRB.conf[:IRB_RC]をセットします
  Array(#2)>> :array => :array
  Array(#2)>> 
 {% endhighlight %}
-mainでは>>のみを表示し
-サブセッションではコンテキスト名とセッション番号を表示します
-サブセッションに入るときコンテキスト名をputsします
+mainでは>>のみを表示し、サブセッションではコンテキスト名とセッション番号を表示します。サブセッションに入るときコンテキスト名をputsします。
 
-.irbrcはRubyのコードとしてirbに読み込まれますから
-ここにメソッドなどを定義すれば
-トップレベルのメソッドとして使えます
+.irbrcはRubyのコードとしてirbに読み込まれますから。ここにメソッドなどを定義すれば、トップレベルのメソッドとして使えます。
 {% highlight ruby %}
  def now
    puts Time.now.strftime("%Y/%m/%d(%a) %H:%M:%S")
@@ -435,8 +403,7 @@ mainでは>>のみを表示し
  2010/11/16(Tue) 16:52:42
 {% endhighlight %}
 
-プロンプトを動的に変えたいときは
-以下のようにします
+プロンプトを動的に変えたいときは、以下のようにします。
 {% highlight bash %}
  >> conf.prompt_i = "><<<<@> " #=> "><<<<@> "
  ><<<<@> 1 + 2 #=> 3
@@ -446,7 +413,7 @@ irb(main):011:0> 3 * 4 #=> 12
 irb(main):012:0> 
 {% endhighlight %}
 
-しかし.irbrcにメソッドを定義すればもっと便利になります
+しかし.irbrcにメソッドを定義すればもっと便利になります。
 {% highlight ruby %}
  def prompt(type='')
    prmt = [:DEFAULT, :SIMPLE, :IRBTOOLS, :KEYES]
@@ -471,29 +438,24 @@ irb(main):012:0>
  >> 
 {% endhighlight %}
 
-.irbrcはirb起動時に自動で読み込まれますが
-fオプションでこれを無視できます
+.irbrcはirb起動時に自動で読み込まれますがfオプションでこれを無視できます。
 {% highlight bash %}
  irb -f
 {% endhighlight %}
 
 ##拡張ライブラリ
-irbを拡張する複数のライブラリがあります
-しかしここでは最強の１つのライブラリを紹介します
-それはirbtoolsライブラリです
+irbを拡張する複数のライブラリがあります。しかしここでは最強の１つのライブラリを紹介します。それは`irbtools`ライブラリです。
 
 ##irbtoolsライブラリ
-[irbtools](http://rbjl.net/40-irbtools-release-the-power-of-irb)はirbの主要拡張ライブラリを統合し
-さらに細かい多数の機能を追加したライブラリです
-gem install irbtoolsでインストールし
-.irbrcでrequire 'irbtools'することで使えるようになります
+[irbtools](http://rbjl.net/40-irbtools-release-the-power-of-irb)はirbの主要拡張ライブラリを統合し、さらに細かい多数の機能を追加したライブラリです。`gem install irbtools`でインストールし、.irbrcで`require 'irbtools'`することで使えるようになります。
 
-irbtoolsには以下のライブラリが統合されています
-wirble fancy_irb fileutils coderay clipboard 
-zucker ap yaml g guessmethod interactive_editor
-sketches boson hirb
+irbtoolsには以下のライブラリが統合されています。
 
-特定のライブラリを外したい場合は.irbrcを以下のようにします
+>wirble fancy_irb fileutils coderay clipboard 
+>zucker ap yaml g guessmethod interactive_editor
+>sketches boson hirb
+
+特定のライブラリを外したい場合は.irbrcを以下のようにします。
 {% highlight ruby %}
  #require 'irbtools'
  require "irbtools/configure"
@@ -503,36 +465,21 @@ sketches boson hirb
 {% endhighlight %}
 
 ##色付けとロケットプロンプト
-irbtoolsをrequireしてirbを起動すると
-Ruby情報を含むwelcomeメッセージのあと
-シンプルなプロンプトが現れます
-戻り値はスペースが許す場合入力行の右に
-色付けされて出力されます
+irbtoolsをrequireしてirbを起動すると、Ruby情報を含むwelcomeメッセージのあとシンプルなプロンプトが現れます。戻り値はスペースが許す場合入力行の右に色付けされて出力されます。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101116/20101116212416.png)
 
-(クリックで拡大)
-返り値が色付けされて右に来ることで
-出力も見やすくなります
-この機能はwirbleとfancy_irbライブラリによって実現されています{% fn_ref 5 %}
+返り値が色付けされて右に来ることで、出力も見やすくなります。この機能はwirbleとfancy_irbライブラリによって実現されています{% fn_ref 2 %}。
 
 ##多様な出力形式
-irbtoolsは多様な出力形式をサポートします
+irbtoolsは多様な出力形式をサポートします。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101116/20101116212417.png)
 
-(クリックで拡大)
-oは現在の行　ファイル　メソッドを
-cはコールスタックを出力します
-yはyaml形式　gはgrowlへの出力をします
-tableはデータを表形式で出力します
-これらの出力形式はawesome_print zucker/debug yaml g hirb
-などのライブラリによって実現されています
+oは現在の行、ファイル、メソッドを、cはコールスタックを出力します。yはyaml形式、gはgrowlへの出力をします。tableはデータを表形式で出力します。これらの出力形式はawesome_print, zucker/debug, yaml、g、hirbなどのライブラリによって実現されています。
 
 ##コマンド群
-irbtoolsによって便利なコマンド群が用意されています
-まずls cat mkdir rm touch
-その他のファイルユーティリティコマンドがあります
+irbtoolsによって便利なコマンド群が用意されています。まずls, cat, mkdir, rm, touchその他のファイルユーティリティコマンドがあります。
 {% highlight bash %}
  >> ls
  => ["console", "iphone", "irbtools.txt", "lisr", "lorem.txt", "math.rb", "twilog.txt", "uni.rb", "unicode.txt", "user.db", "user.rb"]
@@ -542,36 +489,31 @@ irbtoolsによって便利なコマンド群が用意されています
  >> 
 {% endhighlight %}
 
-Rubyファイルを表示する場合はCodeRayによるrayコマンドがいいです
-引数で渡されたファイルがSyntax Highlightで表示されます{% fn_ref 6 %}
+Rubyファイルを表示する場合はCodeRayによるrayコマンドがいいです。引数で渡されたファイルがSyntax Highlightで表示されます{% fn_ref 3 %}。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101116/20101116212418.png)
 
+もっともCodeRayは本来HTMLを生成するものですから、その例を示したほうがいいですね。
 
-もっともCodeRayは本来HTMLを生成するものですから
-その例を示したほうがいいですね
-
-user.rbを読み込んでhtmlを生成します
+user.rbを読み込んでhtmlを生成します。
 {% highlight bash %}
  >> user_html = CodeRay.scan(cat("user.rb"), :ruby).page
  => "<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n...
 {% endhighlight %}
-結果をuser.htmlファイルに書き込みます
+結果をuser.htmlファイルに書き込みます。
 {% highlight bash %}
  >> File.open('user.html','w') {|f| f.write user_html } #=> 6366
 {% endhighlight %}
-ブラウザで見てみます
+ブラウザで見てみます。
 {% highlight bash %}
  >> system('open', 'user.html') #=> true
  >> 
 {% endhighlight %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101117/20101117191617.png)
 
-いいですね
+いいですね。
 
-クリップボードとやり取りするための
-copy paste copy_inputがあります
-copy_inputはirbの全セッションをコピーします
+クリップボードとやり取りするためのcopy, paste, copy_inputがあります。copy_inputはirbの全セッションをコピーします。
 {% highlight bash %}
  >> site = paste #=> "http://d.hatena.ne.jp/keyesberry/"
  >> copy Math::PI #=> "3.141592653589793"
@@ -579,17 +521,14 @@ copy_inputはirbの全セッションをコピーします
  >> 
 {% endhighlight %}
 
-requireとloadのショートカットrqとld
-requireし直すrerequireがあります
+requireとloadのショートカットrqとld、requireし直すrerequireがあります。
 {% highlight bash %}
  >> rq:mathn #=> true
  >> rq:'open-uri' #=> true
  >> ld:json #=> true
 {% endhighlight %}
 
-入力履歴を出力するsession_history
-irbにログインし直すreset!
-画面をフラッシュするclearがあります
+入力履歴を出力するsession_history、irbにログインし直すreset!、画面をフラッシュするclearがあります。
 {% highlight bash %}
  >> Math::PI #=> 3.141592653589793
  >> puts 'helo' #=> nil
@@ -602,8 +541,7 @@ irbにログインし直すreset!
  >> clear
 {% endhighlight %}
 
-OSやRubyのバージョンを調べる
-OS RubyEngine RubyVersionがあります
+OSやRubyのバージョンを調べる、OS RubyEngine RubyVersionがあります。
 {% highlight bash %}
  >> OS #=> darwin8
  >> RubyEngine  #=> mri
@@ -617,37 +555,22 @@ OS RubyEngine RubyVersionがあります
  >> RE.jruby? #=> false
  >> RE.rubinius? #=> false
 {% endhighlight %}
-これらの機能はzucker Clipboardライブラリで実現されます
+これらの機能はzucker Clipboardライブラリで実現されます。
 
 ##エディタ支援
-irbからエディタを呼び出し
-そこで編集した内容をirb上に返す機能があります
-vi vim emacs mate ed{% fn_ref 7 %}などのコマンドで
-エディタが起動し一時ファイルを開きます
-編集後エディタを閉じればirb内でそのコードを利用できます
+irbからエディタを呼び出し、そこで編集した内容をirb上に返す機能があります。vi, vim, emacs, mate, ed{% fn_ref 4 %}などのコマンドでエディタが起動し一時ファイルを開きます。編集後エディタを閉じればirb内でそのコードを利用できます。
 
-同じセッションで同じコマンドを使えば
-同じ一時ファイルが開いて再編集ができるようになります
-コマンドに特定のファイルを渡すこともできます
-これはInteractive_editorライブラリにより実現されています
+同じセッションで同じコマンドを使えば、同じ一時ファイルが開いて再編集ができるようになります。コマンドに特定のファイルを渡すこともできます。これはInteractive_editorライブラリにより実現されています。
 
-同じような目的でSketchesライブラリがあります
-こちらはエディタを閉じることなく
-内容をirbに反映させることができます
+同じような目的でSketchesライブラリがあります。こちらはエディタを閉じることなく、内容をirbに反映させることができます。
 
-.irbrcでsketchesで使用するエディタをセットします
+.irbrcでsketchesで使用するエディタをセットします。
 {% highlight ruby %}
  Sketches.config :editor => 'mate', :background => true
 {% endhighlight %}
-上記設定をしない場合は
-環境変数$EDITORが参照されます
+上記設定をしない場合は、環境変数$EDITORが参照されます。
 
-skecthコマンドで指定エディタが起動します
-エディタを閉じずに内容を保存します
-これでirbにコードが反映されます
-名前付きスケッチも作れます
-sketchesでスケッチの一覧を表示します
-save_sketchでスケッチをファイルに保存することもできます
+skecthコマンドで指定エディタが起動します。エディタを閉じずに内容を保存します。これでirbにコードが反映されます。名前付きスケッチも作れます。sketchesでスケッチの一覧を表示します。save_sketchでスケッチをファイルに保存することもできます。
 {% highlight bash %}
  IRB on Ruby1.9.2
  >> sketch #=> nil
@@ -671,41 +594,37 @@ save_sketchでスケッチをファイルに保存することもできます
 {% endhighlight %}
 
 ##コマンドの登録
-bosonライブラリを使うことによって
-効率的にコマンドを登録管理できます
-どんなbosonコマンドがあるか確認するには
-commandsコマンドを使います
->|
- >> commands  #=> true
- +--------------+----------+--------+------------+
- | full_name    | lib      | usage  | description|
- +--------------+----------+--------+------------+
- | render       | core     | [object| Render any |
- | menu         | core     | [arr] [| Provide a m|
- | usage        | core     | [comman| Print a com|
- | commands     | core     | [query=| List or sea|
- | libraries    | core     | [query=| List or sea|
- | load_library | core     | [librar| Load a libr|
- | get          | web_core | [url] [| Gets the bo|
- | post         | web_core | [url] [| Posts to a |
- | build_url    | web_core | [url] [| Builds a ur|
- | browser      | web_core | [*urls]| Opens urls |
- | install      | web_core | [url][-| Installs a |
- +--------------+----------+--------+------------+
- 11 rows in set
- >> 
-|<
-テーブルはターミナルの幅に合わせてtruncateされます{% fn_ref 8 %}
+bosonライブラリを使うことによって、効率的にコマンドを登録管理できます。どんなbosonコマンドがあるか確認するには、commandsコマンドを使います。
+{% highlight bash %}
+>> commands  #=> true
++--------------+----------+--------+------------+
+| full_name    | lib      | usage  | description|
++--------------+----------+--------+------------+
+| render       | core     | [object| Render any |
+| menu         | core     | [arr] [| Provide a m|
+| usage        | core     | [comman| Print a com|
+| commands     | core     | [query=| List or sea|
+| libraries    | core     | [query=| List or sea|
+| load_library | core     | [librar| Load a libr|
+| get          | web_core | [url] [| Gets the bo|
+| post         | web_core | [url] [| Posts to a |
+| build_url    | web_core | [url] [| Builds a ur|
+| browser      | web_core | [*urls]| Opens urls |
+| install      | web_core | [url][-| Installs a |
++--------------+----------+--------+------------+
+11 rows in set
+>> 
+{% endhighlight %}
 
-irbではそのままコマンドを使えます
+テーブルはターミナルの幅に合わせてtruncateされます{% fn_ref 5 %}。
+
+irbではそのままコマンドを使えます。
 {% highlight bash %}
  >> site = get "http://d.hatena.ne.jp/"
  => "<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\r\n<html>\r\n<head>\r\n<meta http-equiv="Content-Type" content="text/html; charset=euc-jp">\n<meta http-equiv="Content-Style-Type"
 {% endhighlight %}
 
-独自のコマンドを追加してみましょう
-bosonのインストールでできた~/.boson/commandsディレクトリに
-以下のようなRubyモジュールを作ります
+独自のコマンドを追加してみましょう。bosonのインストールでできた~/.boson/commandsディレクトリに、以下のようなRubyモジュールを作ります。
 {% highlight bash %}
  vi .boson/commands/mymath.rb
 {% endhighlight %}
@@ -735,32 +654,32 @@ bosonのインストールでできた~/.boson/commandsディレクトリに
  end
 {% endhighlight %}
 
-再度コマンド一覧を見ます
+再度コマンド一覧を見ます。
 {% highlight bash %}
- >> commands 
- +--------------+----------+--------+------------+
- | full_name    | lib      | usage  | description|
- +--------------+----------+--------+------------+
- | render       | core     | [object| Render any |
- | menu         | core     | [arr] [| Provide a m|
- | usage        | core     | [comman| Print a com|
- | commands     | core     | [query=| List or sea|
- | libraries    | core     | [query=| List or sea|
- | load_library | core     | [librar| Load a libr|
- | get          | web_core | [url] [| Gets the bo|
- | post         | web_core | [url] [| Posts to a |
- | build_url    | web_core | [url] [| Builds a ur|
- | browser      | web_core | [*urls]| Opens urls |
- | install      | web_core | [url][-| Installs a |
- | fib          | mymath   | [n]    | calculate f|
- | fact         | mymath   | [n]    | calculate f|
- +--------------+----------+--------+------------+
- 13 rows in set
- >> 
+>> commands 
++--------------+----------+--------+------------+
+| full_name    | lib      | usage  | description|
++--------------+----------+--------+------------+
+| render       | core     | [object| Render any |
+| menu         | core     | [arr] [| Provide a m|
+| usage        | core     | [comman| Print a com|
+| commands     | core     | [query=| List or sea|
+| libraries    | core     | [query=| List or sea|
+| load_library | core     | [librar| Load a libr|
+| get          | web_core | [url] [| Gets the bo|
+| post         | web_core | [url] [| Posts to a |
+| build_url    | web_core | [url] [| Builds a ur|
+| browser      | web_core | [*urls]| Opens urls |
+| install      | web_core | [url][-| Installs a |
+| fib          | mymath   | [n]    | calculate f|
+| fact         | mymath   | [n]    | calculate f|
++--------------+----------+--------+------------+
+13 rows in set
+>> 
 {% endhighlight %}
-mymathライブラリの２つのコマンドが追加されています
+mymathライブラリの２つのコマンドが追加されています。
 
-実行してみましょう
+実行してみましょう。
 {% highlight bash %}
  >> fib 10 #=> 55
  >> fact 15 #=> 1307674368000
@@ -771,9 +690,7 @@ mymathライブラリの２つのコマンドが追加されています
  >> 
 {% endhighlight %}
 
-bosonの優れたところは
-これらのコマンドをShellでも使える点にあります
-shellではbosonを前置してコマンドを実行します
+bosonの優れたところは、これらのコマンドをShellでも使える点にあります。shellではbosonを前置してコマンドを実行します。
 {% highlight bash %}
  >> exit
  % boson fib 10
@@ -788,10 +705,7 @@ shellではbosonを前置してコマンドを実行します
 {% endhighlight %}
 
 ##テーブル／ツリー出力
-先にも書きましたがtableコマンドは
-データを表形式で出力します
-これはデータベースと共に使うと更に便利です
-先に出てきたUserDBにhomepageのpropertyを追加して表示します
+先にも書きましたがtableコマンドはデータを表形式で出力します。これはデータベースと共に使うと更に便利です。先に出てきたUserDBにhomepageのpropertyを追加して表示します。
 {% highlight bash %}
  IRB on Ruby1.9.2
  >> rq:user #=> true
@@ -799,20 +713,20 @@ shellではbosonを前置してコマンドを実行します
  => [#<User @id=1 @nickname="Charlie" @email="charlie@abc.com" @homepage="http://www.nintendo.com">, #<User @id=2 @nickname="Tommy" @email="tommy@abc.com" @homepage="http://twitter.com/merborne/">, #<User @id=3 @nickname="Alice" @email="alice@xyz.com" @homepage="http://d.hatena.ne.jp/keyesberry/">]
 {% endhighlight %}
 
-これをtable表示します
+これをtable表示します。
 {% highlight bash %}
 >> table User.all #=> true
-1. ----+----------+-----------------+----------------+
+ ----+----------+-----------------+----------------+
 | id | nickname | email           | homepage       |
-1. ----+----------+-----------------+----------------+
+ ----+----------+-----------------+----------------+
 | 1  | Charlie  | charlie@abc.com | http://www.nin |
 | 2  | Tommy    | tommy@abc.com   | http://twitter |
 | 3  | Alice    | alice@xyz.com   | http://d.haten |
-1. ----+----------+-----------------+----------------+
+ ----+----------+-----------------+----------------+
 3 rows in set
 {% endhighlight %}
 
-条件で絞り込みます
+条件で絞り込みます。
 {% highlight bash %}
  >> table User.all(:email.like=>"%@abc.com") #=> true
  +----+----------+-----------------+---------------+
@@ -825,9 +739,7 @@ shellではbosonを前置してコマンドを実行します
  >> 
 {% endhighlight %}
 
-menuというコマンドを使うと表から値を抽出できます
-以下の例ではTommyとAliceのhomepageを抽出して
-それをbrowserコマンドに渡して開いています
+menuというコマンドを使うと表から値を抽出できます。以下の例ではTommyとAliceのhomepageを抽出して、それをbrowserコマンドに渡して開いています。
 {% highlight bash %}
  >> choices = menu User.all, :fields=>[:nickname, :homepage], :two_d=>true
  +--------+----------+----------------------------+
@@ -846,8 +758,7 @@ menuというコマンドを使うと表から値を抽出できます
  >> 
 {% endhighlight %}
 
-ツリー表示を実現するviewというコマンドもあります
-Rubyのクラスツリーを作ってみます
+ツリー表示を実現するviewというコマンドもあります。Rubyのクラスツリーを作ってみます。
 {% highlight bash %}
  >> class_tree = [[0,:Object],[1,:Array],[1,:Binding],[1,:Continuation],[1,:Data],[1,:Dir],[1,:Hash],[1,:IO],[2,:File],[2,:BasicSocket],[3,:IPSocket],[3,:UNIXSocket],[3,:Socket],[4,:TCPSocket],[4,:UDPSocket],[4,:UNIXServer],[5,:TCPServer],[1,:MatchData],[1,:Method],[1,:Module],[2,:Class],[1,:Numeric],[2,:Float],[2,:Integer],[3,:Bignum],[3,:Fixnum],[1,:Proc],[1,:Range],[1,:Regexp],[1,:String],[1,:Struct],[1,:Symbol],[1,:Thread],[1,:ThreadGroup],[1,:Time]]
  => [[0, :Object], [1, :Array], [1, :Binding], [1, :Continuation], [1, :Data], [1, :Dir], [1, :Hash], [1, :IO], [2, :File], [2, :BasicSocket], [3, :IPSocket], [3, :UNIXSocket], [3, :Socket], [4, :TCPSocket], [4, :UDPSocket], [4, :UNIXServer], [5, :TCPServer], [1, :MatchData], [1, :Method], [1, :Module], [2, :Class], [1, :Numeric], [2, :Float], [2, :Integer], [3, :Bignum], [3, :Fixnum], [1, :Proc], [1, :Range], [1, :Regexp], [1, :String], [1, :Struct], [1, :Symbol], [1, :Thread], [1, :ThreadGroup], [1, :Time]]
@@ -887,14 +798,12 @@ Rubyのクラスツリーを作ってみます
  `-- Time
  >> 
 {% endhighlight %}
-これらはHirbというライブラリで実現しますが
-このライブラリは奥が深そうです
+これらはHirbというライブラリで実現しますが、このライブラリは奥が深そうです。
 
 [Tagaholic - Ruby Class and Rails Plugin Trees With Hirb](http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html)
 
 ##irbtoolsにおける若干のカスタマイズ
-プロンプトの形と出力の色は
-以下のようにしてカスタマイズできます
+プロンプトの形と出力の色は以下のようにしてカスタマイズできます。
 {% highlight ruby %}
  #require 'irbtools'
  require "irbtools/configure"
@@ -917,25 +826,21 @@ Rubyのクラスツリーを作ってみます
   }
  )
 {% endhighlight %}
-fancy_irbをirbtoolsから外し独立してrequireします
-FancyIrb.startの引数に自分の設定を渡します{% fn_ref 9 %}
+fancy_irbをirbtoolsから外し独立してrequireします。FancyIrb.startの引数に自分の設定を渡します{% fn_ref 6 %}。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101116/20101116212419.png)
 
 
-welcomeメッセージを変えることもできます
+welcomeメッセージを変えることもできます。
 {% highlight ruby %}
  #require 'irbtools'
  require "irbtools/configure"
  Irbtools.welcome_message = "IRB on Ruby#{ RUBY_VERSION }"
  Irbtools.start
 {% endhighlight %}
-irbtoolsライブラリを入れることで
-irbはかなり強力なものになります
-是非とも試してみてください
+irbtoolsライブラリを入れることで、irbはかなり強力なものになります。是非とも試してみてください。
 
-非常に長くなりました
-最後までお付き合いありがとうございます！
+非常に長くなりました。最後までお付き合いありがとうございます！
 
 ##参考URLs
 [library irb](http://doc.okkez.net/192/view/library/irb)
@@ -952,13 +857,14 @@ irbはかなり強力なものになります
 [Boson - Command Your Ruby Universe](http://tagaholic.me/2009/10/14/boson-command-your-ruby-universe.html) 
 [Hirb - Irb On The Good Stuff](http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html) 
 
-(追記：2010-11-17) CodeRayのHTML出力について記述を追加しました
-(追記：2010-11-18) CodeRayの記述の間違いを修正しました
-(追記：2010-11-20) .irbrcへのメソッド定義についての記述を追加しました
+(追記：2010-11-17) CodeRayのHTML出力について記述を追加しました。
+
+(追記：2010-11-18) CodeRayの記述の間違いを修正しました。
+
+(追記：2010-11-20) .irbrcへのメソッド定義についての記述を追加しました。
+
+(参考)：[IRB Wikipedia](http://ja.wikipedia.org/wiki/IRB)
 {% footnotes %}
-   {% fn 正式にはirb %}
-   {% fn interactive_editor %}
-   {% fn IRB - Wikipedia http://ja.wikipedia.org/wiki/IRB %}
    {% fn 内側のローカル変数はできないみたいです %}
    {% fn fancy_irbは出力の態様によって問題が出るときがあります %}
    {% fn ファイルの読み込みは別途requireする必要があります %}
