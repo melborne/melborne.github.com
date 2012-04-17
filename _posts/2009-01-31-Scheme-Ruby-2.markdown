@@ -166,7 +166,7 @@ Schemeで表現すると以下のようになる
 {% endhighlight %}
 補助手続きとしてclose_enough?,tryを定義し抽象化する
 これを用いて例えば
-方程式[tex:y=sin y + cos y]の解が得られる
+方程式 \\(y=\sin y + \cos y\\) の解が得られる
 {% highlight scheme %}
  (fixed_point (lambda (y) (+ (sin y) (cos y)))
  		 1.0)
@@ -174,7 +174,7 @@ Schemeで表現すると以下のようになる
 {% endhighlight %}
 
 平方根の計算は不動点探索の問題に置き換えられる
-つまりxの平方根の計算は[tex:y^2] = xなるyを探すことだから
+つまりxの平方根の計算は y^2 = x なるyを探すことだから
 これはy=x/yと書けy -> x/yの不動点を探しているのと等価である
 先のfixed_point手続きを使って平方根を求めてみよう
 {% highlight scheme %}
@@ -266,8 +266,8 @@ Rubyっぽいかもしれない
  (define (average_damp f)
 	(lambda (x) (average x (f x))))
 {% endhighlight %}
-例えばこれに[tex:x]を[tex:x^2]とする手続きsquareを渡すと
-[tex:x]と[tex:x^2]の平均を値とする手続きを返す
+例えばこれに x を x^2 とする手続きsquareを渡すと
+x と x^2 の平均を値とする手続きを返す
 だから例えばこの返された手続きに10を作用させると
 10と100の平均が得られる
 {% highlight scheme %}

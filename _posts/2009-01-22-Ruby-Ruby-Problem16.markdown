@@ -9,12 +9,14 @@ categories:
 
 ##Rubyで桁の合計を求める  ～Rubyでオイラープロジェクトを解こう！Problem16
 [Problem 16 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=16)
-> 
-> [tex:2^{15} = 32768] and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
-> What is the sum of the digits of the number [tex:2^{1000}]?
-> [tex:2^{15} = 32768] の各桁の合計は 3 + 2 + 7 + 6 + 8 = 26である。
-> [tex:2^{1000}]の各桁の合計はいくつか。
-
+ 
+____
+2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+What is the sum of the digits of the number 2^1000 ?
+____
+2^15 = 32768 の各桁の合計は 3 + 2 + 7 + 6 + 8 = 26である。
+2^1000 の各桁の合計はいくつか。
+____
 
 算数的でないけど
 {% highlight ruby %}
@@ -36,6 +38,7 @@ categories:
  end
  sum_of_digits(2**1000) # => 1366
 {% endhighlight %}
+
 ##Rubyで最短ルート数を探す ～Rubyでオイラープロジェクトを解こう！Problem15
 [Problem 15 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=15)
 > 

@@ -210,13 +210,18 @@ DATA
 でWikipediaを調べてみると…
 
 [約数の個数 - Wikipediaより](http://ja.wikipedia.org/wiki/%E7%B4%84%E6%95%B0)
-> 
-> 自然数 n の全ての正の約数の個数を d(n) で表す。
-> n の素因数分解が
->   [tex:n = p1^{a1}p2^{a2}...pm^{am}]
-> と表せるとき、d(n) は以下の式で求められる。
->   [tex:d(n) = (a1 + 1)(a2 +1)...(am + 1)]
-
+ 
+____
+自然数 n の全ての正の約数の個数を d(n) で表す。
+n の素因数分解が
+{% math %}
+n = p1^{a1}p2^{a2}...pm^{am}
+{% endmath %}
+と表せるとき、d(n) は以下の式で求められる。
+{% math %}
+d(n) = (a1 + 1)(a2 +1)...(am + 1)
+{% endmath %}
+____
 
 じゃあ今度はこの方向で…
 {% highlight ruby %}

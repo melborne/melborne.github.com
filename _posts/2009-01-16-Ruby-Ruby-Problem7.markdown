@@ -125,20 +125,29 @@ prime?に渡すようにしよう
 いくらかよくなったかな
 ##Rubyでサムオブスクエアスクエアオブサム ～Rubyでオイラープロジェクトを解こう！Problem6
 [Problem 6 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=6)
-> 
-> The sum of the squares of the first ten natural numbers is,
-> [tex:1^2 + 2^2 + ... + 10^2 = 385]
-> The square of the sum of the first ten natural numbers is,
-> [tex:(1 + 2 + ... + 10)^2 = 55^2 = 3025]
-> Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is 3025 - 385 = 2640.
-> Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
-> 最初の10個の自然数を二乗したものの合計は、
-> [tex:1^2 + 2^2 + ... + 10^2 = 385]
-> 最初の10個の自然数の合計を二乗したものは、
-> [tex:(1 + 2 + ... + 10)^2 = 55^2 = 3025]
-> よってこれらの差は、3025 - 385 = 2640である。
-> 最初の100個の自然数を二乗したものの合計と、それら自然数の合計を二乗したものとの差を求めよ。
-
+____
+The sum of the squares of the first ten natural numbers is,
+{% math %}
+1^2 + 2^2 + ... + 10^2 = 385
+{% endmath %}
+The square of the sum of the first ten natural numbers is,
+{% math %}
+(1 + 2 + ... + 10)^2 = 55^2 = 3025
+{% endmath %}
+Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is \\(3025 - 385 = 2640\\).
+Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+___
+最初の10個の自然数を二乗したものの合計は、
+{% math %}
+1^2 + 2^2 + ... + 10^2 = 385
+{% endmath %}
+最初の10個の自然数の合計を二乗したものは、
+{% math %}
+(1 + 2 + ... + 10)^2 = 55^2 = 3025
+{% endmath %}
+よってこれらの差は、\\(3025 - 385 = 2640\\)である。
+最初の100個の自然数を二乗したものの合計と、それら自然数の合計を二乗したものとの差を求めよ。
+____
 
 {% highlight ruby %}
  def sum_of_squares(limit)

@@ -9,17 +9,29 @@ categories:
 
 ##Rubyでピタゴラスを求める ～Rubyでオイラープロジェクトを解こう！Problem9
 [Problem 9 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=9)
-> 
-> A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
-> [tex:a^2 + b^2 = c^2]
-> For example, [tex:3^2 + 4^2 = 9 + 16 = 25 = 5^2].
-> There exists exactly one Pythagorean triplet for which a + b + c = 1000.
-> Find the product abc.
-> ピタゴラス数とは、次の関係にある3つの自然数の組(a < b < c )をいう。
-> [tex:a^2 + b^2 = c^2]
-> 例： [tex:3^2 + 4^2 = 9 + 16 = 25 = 5^2].
->  a + b + c = 1000 となるピタゴラス数がただ一つある。abcの積を求めよ。
-
+ 
+____
+A Pythagorean triplet is a set of three natural numbers, \\(a < b < c\\), for which,
+{% math %}
+a^2 + b^2 = c^2
+{% endmath %}
+For example, 
+{% math %}
+3^2 + 4^2 = 9 + 16 = 25 = 5^2
+{% endmath %}
+There exists exactly one Pythagorean triplet for which \\(a + b + c = 1000\\).
+Find the product abc.
+____
+ピタゴラス数とは、次の関係にある3つの自然数の組\\(a < b < c\\)をいう。
+{% math %}
+a^2 + b^2 = c^2
+{% endmath %}
+例：
+{% math %}
+3^2 + 4^2 = 9 + 16 = 25 = 5^2
+{% endmath %}
+\\(a + b + c = 1000\\) となるピタゴラス数がただ一つある。abcの積を求めよ。
+ ____
 
 a < b < c の条件を維持しながら
  a + b + c = 1000 なるピタゴラス数を
@@ -106,4 +118,7 @@ DATA
  end
  greatest_five(number) # => 40824
 {% endhighlight %}
-a + b + c = n<br>を<br>c = n - (a + b)<br>と変形して、<br>a² + b² = c² <br>に代入して、さらに変形すると<br>b = (2 * a * n - n²) / (2 * a - 2 *n)<br>  = n - n² / (2 * (n - a))<br>となります。<br>この式の a に 1 から順に整数を代入していって、b が整数になる場合を求め<br>ると、かなり速く答えが出せます。<br><br><br>def pythagorean_triples (n)<br>  return([]) if n.odd?<br><br>  ans = Array.new<br>  1.step(n) do |a|<br>    b = n - 0.5 * (n ** 2) / (n - a.to_f)<br>    case<br>    when (a > b)<br>      return(ans)<br>    when (b.to_i == b)<br>      ans.push([a, b.to_i, Math.sqrt(a ** 2 + b ** 2).to_i])<br>    end<br>  end<br>end<br><br>p pythagorean_triples(1000)>通りすがりさん<br>圧倒的に速いですね。なるほど。
+
+(comment)
+>a + b + c = n<br>を<br>c = n - (a + b)<br>と変形して、<br>a² + b² = c² <br>に代入して、さらに変形すると<br>b = (2 * a * n - n²) / (2 * a - 2 *n)<br>  = n - n² / (2 * (n - a))<br>となります。<br>この式の a に 1 から順に整数を代入していって、b が整数になる場合を求め<br>ると、かなり速く答えが出せます。<br><br><br>def pythagorean_triples (n)<br>  return([]) if n.odd?<br><br>  ans = Array.new<br>  1.step(n) do |a|<br>    b = n - 0.5 * (n ** 2) / (n - a.to_f)<br>    case<br>    when (a > b)<br>      return(ans)<br>    when (b.to_i == b)<br>      ans.push([a, b.to_i, Math.sqrt(a ** 2 + b ** 2).to_i])<br>    end<br>  end<br>end<br><br>p pythagorean_triples(1000)
+>>通りすがりさん<br>圧倒的に速いですね。なるほど。

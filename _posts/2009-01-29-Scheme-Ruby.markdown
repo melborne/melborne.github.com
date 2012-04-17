@@ -236,15 +236,17 @@ Rubyではブロックが使える
 
 ##let
 Schemeではlambdaは局所変数を作り出すためにも使われる
-> 
-> [tex:f(x,y) = x(1 + xy)^2 + y(1 - y) + (1 + xy)(1 - y)]
+{% math %}
+f(x,y) = x(1 + xy)^2 + y(1 - y) + (1 + xy)(1 - y)
+{% endmath %}
 
 という関数を計算したい場合
 これは以下のように書ける
-> 
-> [tex:a = 1 + xy]
-> [tex:b = 1 - y]
-> [tex:f(x,y) = xa^2 + yb + ab]
+{% math %}
+a = 1 + xy\\
+b = 1 - y\\
+f(x,y) = xa^2 + yb + ab
+{% endmath %}
 
 手続きfにおいてこの途中のa,bも束縛しておきたい
 そのようなときは補助手続きを定義する
