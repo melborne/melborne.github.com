@@ -29,9 +29,11 @@ categories:
 
 
 方針：
+
 1. 数列はその終了条件がわかっているので再帰を使う
 1. 各開始数と数列の長さをハッシュでペアにして持つ
 1. その中から最長のものの開始数を抽出する
+
 {% highlight ruby %}
  def longest_chain(range)
    pair = {}

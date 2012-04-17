@@ -1,12 +1,13 @@
 ---
 layout: post
-title: <span style="font-weight:bold;">MacBook Air</span>それは美の追求
+title: MacBook Airそれは美の追求
 date: 2008-01-23
 comments: true
 categories:
+tags: [mac]
 ---
 
-##<span style="font-weight:bold;">MacBook Air</span>それは美の追求
+##MacBook Airそれは美の追求
 Jobs、いやAppleが追求しているのは便利なToolではない
 彼らが追求しているのは情報機器における美である
 美の追求の基本的な姿勢は
@@ -17,7 +18,7 @@ Computerを繋ぐコード類は美しくない
 携帯Computerにマウスは美しくない
 携帯Computer専用のバッグは美しくない
 
-そうして<span style="font-weight:bold;">MacBook</span> Airのような美しい作品が生まれる
+そうしてMacBook Airのような美しい作品が生まれる
 
 彼らは技術を美の実現のために用いる
 利便性と美とは本来相対立する概念ではない

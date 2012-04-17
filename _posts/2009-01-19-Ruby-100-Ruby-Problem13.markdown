@@ -149,9 +149,11 @@ DATA
 
 
 ちょっと悩んだけど以下の戦略で
+
 1. factorメソッドで順番に三角数の因数{% fn_ref 1 %}を求める
 1. Array#combinationメソッドで因数同士の全て組み合わせを求める
 1. その組み合わせから約数{% fn_ref 2 %}を求める
+
 {% highlight ruby %}
  require "mathn"
  def triangle_number(divs)
@@ -183,8 +185,10 @@ DATA
 ここでバカみたいに複雑なことやっているのに気付いた
 
 方針：
+
 1. 三角数は (1..n).inject(:+)で求まる
 1. 約数は三角数を割ってあまりが出ないもので求まる
+
 {% highlight ruby %}
  def tr_with_divs(limit)
    i = 1

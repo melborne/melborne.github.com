@@ -89,6 +89,7 @@ token_cache_fileに認証トークンが保存されるようだ
 以上の知識を使ってFlickrPhotoクラスを書いてみた
 
 使い方は以下のようにする
+
 1.FlickrPhoto.set_tokenでプログラムを認証させる
 2.FlickrPhoto.newで写真のオブジェクトを生成する
 3.タイトルなど必要な属性をセットする
@@ -99,11 +100,9 @@ token_cache_fileに認証トークンが保存されるようだ
 お困りの方がおられたら使ってください
 
 (参考)
-digital:pardoe - Using rFlickr
-http://digitalpardoe.co.uk/blog/show/87
+[digital:pardoe - Using rFlickr](http://digitalpardoe.co.uk/blog/show/87)
 
-Ruby を使って Flickr へ写真をアップロード - まちゅダイアリー(2008-10-20)
-http://www.machu.jp/diary/20081020.html#p01
+[Ruby を使って Flickr へ写真をアップロード - まちゅダイアリー(2008-10-20)](http://www.machu.jp/diary/20081020.html#p01)
 
 (追記:2009/10/11)撮影日を取得するのにdate_timeではなくdate_time_originalを使うよう修正しました。API KeyをPitを使って管理するようにしました。
 <a href="http://subtech.g.hatena.ne.jp/cho45/20080102/1199257680">アカウント情報を管理するコマンド pit - 冬通りに消え行く制服ガールは、夢物語にリアルを求めない。 - subtech</a>

@@ -4,11 +4,10 @@ title: Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)
 date: 2009-05-01
 comments: true
 categories:
+tags: [ruby, sinatra, webapp, heroku]
 ---
 
-
-mycal.rbに戻ってもう少し機能を増やします
-日表示のための以下のコードを追加します
+mycal.rbに戻ってもう少し機能を増やします。日表示のための以下のコードを追加します。
 {% highlight ruby %}
  get '/:year/:mon/:day' do |*ymd|
    @year, @mon, @day = ymd.map { |x| x.to_i }
@@ -25,18 +24,14 @@ mycal.rbに戻ってもう少し機能を増やします
  <%= @dcal %>
 {% endhighlight %}
 
-Webサーバを起動します
+Webサーバを起動します。
 {% highlight ruby %}
  mycal% ruby mycal.rb
 {% endhighlight %}
 
-http://localhost:4567/1993/2/24にアクセスして
-1993年2月24日の頁が表示されるか確認します
+http://localhost:4567/1993/2/24にアクセスして、1993年2月24日の頁が表示されるか確認します。
 
-頁のカレンダーにおいて
-対象の日の色付けを行うためタグを挿入します
-メッセージもグレードアップします
-先のコードを以下のように修正します
+頁のカレンダーにおいて、対象の日の色付けを行うためタグを挿入します。メッセージもグレードアップします。先のコードを以下のように修正します。
 {% highlight ruby %}
  get '/:year/:mon/:day' do |*ymd|
    @year, @mon, @day = ymd.map { |x| x.to_i }
@@ -46,14 +41,11 @@ http://localhost:4567/1993/2/24にアクセスして
    erb :day
  end
 {% endhighlight %}
-subを使って日にマッチさせタグを挿入しています
+subを使って日にマッチさせタグを挿入しています。
 
-http://localhost:4567/1998/5/14にアクセスします
-メッセージを確認します
-頁のソースを表示して14日にタグが挿入されているか確認します
+http://localhost:4567/1998/5/14にアクセスします。メッセージを確認します。頁のソースを表示して14日にタグが挿入されているか確認します。
 
-表示形式が頁によって異なっているので
-divで要素を識別できるようにテンプレートを修正します
+表示形式が頁によって異なっているので、divで要素を識別できるようにテンプレートを修正します。
 {% highlight ruby %}
  __END__
  @@layout
@@ -99,12 +91,9 @@ divで要素を識別できるようにテンプレートを修正します
    <pre class="dcal"><%= @dcal %></pre>
  </div>
 {% endhighlight %}
-yield回りの＜pre＞を削除し
-各実体頁側で対応するようにします
+yield回りの＜pre＞を削除し、各実体頁側で対応するようにします。
 
-年のカレンダーにおいて月単位でのデータ処理を実現するため
-各月のカレンダーを生成し個別のdivで管理するようにします
-helpersを以下のように修正します
+年のカレンダーにおいて月単位でのデータ処理を実現するため、各月のカレンダーを生成し個別のdivで管理するようにします。helpersを以下のように修正します。
 {% highlight ruby %}
  helpers do
    def cal(*date)
@@ -127,12 +116,9 @@ helpersを以下のように修正します
    end
  end
 {% endhighlight %}
-calコマンドはcalendarメソッドとして別にします
-この時点でhttp://localhost:4567/にアクセスすると
-表示は崩れていますが表示がなされていれば先に進みます
+calコマンドはcalendarメソッドとして別にします。この時点でhttp://localhost:4567/にアクセスすると、表示は崩れていますが表示がなされていれば先に進みます。
 
-今日の日付にタグを付けます
-calメソッドのelse節を次のようにします
+今日の日付にタグを付けます。calメソッドのelse節を次のようにします。
 {% highlight ruby %}
  (1..12).inject("") do |s, m|
    monthly_cal = "<div class='mon_cal id='mon_#{m}>" + calendar(m, year) + "</div>"
@@ -145,8 +131,7 @@ calメソッドのelse節を次のようにします
  end
 {% endhighlight %}
 
-更に各日付に該当頁のリンクタグを挿入します
-else節に追加します
+更に各日付に該当頁のリンクタグを挿入します。else節に追加します。
 {% highlight ruby %}
  (1..12).inject("") do |s, m|
    monthly_cal = "<div class='mon_cal id='mon_#{m}>" + calendar(m, year) + "</div>"
@@ -163,7 +148,7 @@ else節に追加します
  end
 {% endhighlight %}
 
-最後にテンプレートに以下のスタイルを挿入して完成です
+最後にテンプレートに以下のスタイルを挿入して完成です。
 {% highlight css %}
  __END__
  @@layout
@@ -210,38 +195,31 @@ else節に追加します
    </body>
  </html>
 {% endhighlight %}
-http://localhost:4567/にアクセスします
-Previous Yearを5回クリックしてAugustをクリックします
-2004年8月のカレンダーが表示されているのを確認します
-そこからNext Yearを3回クリックして
-Octoberの15日をクリックします
-2007年10月15日のカレンダーが表示されているのを確認します
-そこからNext Yearを3回クリックしてMayの3日をクリックします
-2010年5月3日のカレンダーが表示されているのを確認します
+http://localhost:4567/にアクセスします。Previous Yearを5回クリックしてAugustをクリックします。2004年8月のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックして、Octoberの15日をクリックします。2007年10月15日のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックしてMayの3日をクリックします。2010年5月3日のカレンダーが表示されているのを確認します。
 
-カレンダーが完成したのでcommitしてHerokuにpushします
+カレンダーが完成したのでcommitしてHerokuにpushします。
 {% highlight ruby %}
  mycal% git commit -m "second commit"
  mycal% git push heroku
  mycal% heroku open
 {% endhighlight %}
 
-以下のようなカレンダーがブラウザに表示されたら成功です
+以下のようなカレンダーがブラウザに表示されたら成功です。
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090501/20090501093355.png)
 
 
-こちらで作成したサイトには以下からアクセスできます
+こちらで作成したサイトには以下からアクセスできます。
 
 [mycal](http://mycal.heroku.com/)
 
-コードは以下にあります
+コードは以下にあります。
+
 [gist: 104362 - GitHub](http://gist.github.com/104362)
 
-[前回]({{ site.url }}/2009/04/25/notitle/)と[前々回]({{ site.url }}/2009/04/07/notitle/)のチュートリアルで作成した
-アプリケーションのURLも貼っておきます
+[前回]({{ site.url }}/2009/04/25/notitle/)と[前々回]({{ site.url }}/2009/04/07/notitle/)のチュートリアルで作成した。アプリケーションのURLも貼っておきます。
 
-ScanAnimation
-http://scananimation.heroku.com/
+[ScanAnimation](http://scananimation.heroku.com/)
 
-WORDS in Books
-http://words-in-books.heroku.com/
+[WORDS in Books](http://words-in-books.heroku.com/)
+

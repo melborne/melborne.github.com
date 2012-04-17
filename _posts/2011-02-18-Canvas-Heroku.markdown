@@ -4,35 +4,20 @@ title: CanvasアニメーションをHerokuで公開しようよ！
 date: 2011-02-18
 comments: true
 categories:
+tags: [ruby, heroku, sinatra, canvas]
 ---
 
-##CanvasアニメーションをHerokuで公開しようよ！
-もしあなたが暇で暇でしようがなくて
-一日中時計をぼーっと眺めるのも悪くない
-と考えているのなら
-次のリンクをクリックしてください
-3分くらいならあなたの時間をつぶせるかもしれません
+もしあなたが暇で暇でしようがなくて、一日中時計をぼーっと眺めるのも悪くない、と考えているのなら、次のリンクをクリックしてください。3分くらいならあなたの時間をつぶせるかもしれません。
 
-[](http://aclock.heroku.com/)
+[aclock](http://aclock.heroku.com/)
 
-もしあなたがRubyを使っていて
-JavaScriptのことはよく知らないけれども
-HTML5のCanvasに興味がでてきて
-その成果物をネットで簡単に公開できればうれしいかも
-と考えているのなら
-以下の記事を読む価値があるかもしれません
-もちろん何の保証もありませんが..
+もしあなたがRubyを使っていて、JavaScriptのことはよく知らないけれども、HTML5のCanvasに興味がでてきて、その成果物をネットで簡単に公開できればうれしいかも、と考えているのなら、以下の記事を読む価値があるかもしれません。もちろん何の保証もありませんが..
 
 ##Canvasを使ったWebアプリケーションの構築
-この記事は先のリンクで示した
-接近する時計のWebアプリケーションを構築する手順を書いています
-HTMLはhamlとscssを使って
-JavaScriptはjQueryを使って記述しています
-WebフレームワークSinatraを使ってHerokuにデプロイしています
-OSはMac OSX Tiger..です
+この記事は先のリンクで示した、接近する時計のWebアプリケーションを構築する手順を書いています。HTMLはhamlとscssを使って、JavaScriptはjQueryを使って記述しています。WebフレームワークSinatraを使ってHerokuにデプロイしています。OSはMac OSX Tiger..です
 
 ##ディレクトリ構成
-最終的なファイル構成は以下のようになります
+最終的なファイル構成は以下のようになります。
 {% highlight bash %}
 .
 ├── Gemfile
@@ -40,31 +25,23 @@ OSはMac OSX Tiger..です
 ├── clock.rb
 ├── config.ru
 ├── public
-│&#160;&#160; └── javascripts
-│&#160;&#160;     └── clock.js
+│ └── javascripts
+│ └── clock.js
 └── views
     ├── index.haml
     ├── layout.haml
     └── style.scss
 {% endhighlight %}
-Sinatraのために
-clock.rb layout.haml index.haml style.scssが必要になります
-時計を描画するJavaScriptはclock.jsに記述します
-Herokuにデプロイするために更にconfig.ru Gemfileが必要になります
-Gemfile.lockはbundler installコマンドで自動生成されます
+Sinatraのためにclock.rb layout.haml index.haml style.scssが必要になります。時計を描画するJavaScriptはclock.jsに記述します。Herokuにデプロイするために更にconfig.ru Gemfileが必要になります。Gemfile.lockはbundler installコマンドで自動生成されます。
 
-以下では一つずつファイルを用意する必要がありますが
-僕のような無精者のために
-Sinatra版scaffold ease_sinatra.rbを用意しました
+以下では一つずつファイルを用意する必要がありますが、僕のような無精者のために、Sinatra版scaffold ease_sinatra.rbを用意しました。
 
-[](https://gist.github.com/802707)
+[gist](https://gist.github.com/802707)
 
-カレントディレクトリでWebApp::ease_sinatraすれば
-Sinatraのテンプレートファイルが得られます
-かなりいい加減な作りであることをご了承下さい..
+カレントディレクトリでWebApp::ease_sinatraすれば、Sinatraのテンプレートファイルが得られます。かなりいい加減な作りであることをご了承下さい..
 
 ##clock.rb
-まずWebフレームワークのコントローラとなるclock.rbを書きます
+まずWebフレームワークのコントローラとなるclock.rbを書きます。
 {% highlight ruby %}
 require 'sinatra'
 require 'haml'
@@ -80,17 +57,10 @@ get '/style.css' do
   scss :style
 end
 {% endhighlight %}
-configureブロックはアプリ立ち上げ時に一度だけ呼ばれます
-get '/'でルートが呼ばれた(GETされた)ときの挙動を記述します
-ここでは
-hamlで記述されたviews/index.hamlが返されるよう指定しています
-get '/style.css'でlink属性でstyle.cssが呼ばれたときに
-scssで記述されたvews/style.scssが返されるよう指定しています
+configureブロックはアプリ立ち上げ時に一度だけ呼ばれます。get '/'でルートが呼ばれた(GETされた)ときの挙動を記述します。ここでは、hamlで記述されたviews/index.hamlが返されるよう指定しています。get '/style.css'でlink属性でstyle.cssが呼ばれたときに、scssで記述されたvews/style.scssが返されるよう指定しています。
 
 ##layout.haml
-次にlayout.hamlを記述します
-Sinatraではlayoutという名のテンプレートが存在する場合
-各テンプレートの読み出しに先立ってそれが自動で読み出されます
+次にlayout.hamlを記述します。Sinatraではlayoutという名のテンプレートが存在する場合、各テンプレートの読み出しに先立ってそれが自動で読み出されます。
 {% highlight ruby %}
 !!! 5
 %html
@@ -103,14 +73,10 @@ Sinatraではlayoutという名のテンプレートが存在する場合
   %body
     = yield
 {% endhighlight %}
-titleタグに先ほどのconfigureで定義したAPP_TITLEを指定します
-hamlでは=(イコール)以降をRubyのコードとして評価します
-jQueryはGoogleが提供するものを使っています
-時計を記述するclock.jsを指定します
-bodyタグの中身はyieldで実体ファイル(index.haml)に委ねます
+titleタグに先ほどのconfigureで定義したAPP_TITLEを指定します。hamlでは=(イコール)以降をRubyのコードとして評価します。jQueryはGoogleが提供するものを使っています。時計を記述するclock.jsを指定します。bodyタグの中身はyieldで実体ファイル(index.haml)に委ねます。
 
 ##index.haml
-次にindex.hamlを記述します
+次にindex.hamlを記述します。
 {% highlight ruby %}
 %header
 #main
@@ -118,15 +84,10 @@ bodyタグの中身はyieldで実体ファイル(index.haml)に委ねます
 %footer
   %a{:href => CREDIT[1]}= CREDIT[0]
 {% endhighlight %}
-mainのcanvasタグにclockというid名を付けサイズを指定します
-HTML5非対応ブラウザのためのメッセージを記述します
-footerタグにCREDITのリンクを貼ります
+mainのcanvasタグにclockというid名を付けサイズを指定します。HTML5非対応ブラウザのためのメッセージを記述します。footerタグにCREDITのリンクを貼ります。
 
 ##style.scss
-次にstyle.scssを記述します
-scssはsassy css(sassライクなcss)を意味するcssの拡張言語です{% fn_ref 1 %}
-scssを使用することによりcssの文法に沿って
-sassの拡張を取り入れることができます
+次にstyle.scssを記述します。scssはsassy css(sassライクなcss)を意味するcssの拡張言語です。scssを使用することによりcssの文法に沿って、sassの拡張を取り入れることができます。
 {% highlight ruby %}
 $font_color: #D0FFD0;
 $bg_color: #325F82;
@@ -170,16 +131,10 @@ footer {
   }
 }
 {% endhighlight %}
-$varnameでグローバル変数を定義できます
-セレクタをネストできます
-@mixin-@includeでセレクタブロックを関数ライクに使えます
-ここではrounded()で角丸にミックスインを使っています
+$varnameでグローバル変数を定義できます。セレクタをネストできます。@mixin-@includeでセレクタブロックを関数ライクに使えます。ここではrounded()で角丸にミックスインを使っています。
 
 ##clock.js
-メインとなるclock.jsを記述します
-JavaScript初学者なので書き方に問題があるかもしれません
-間違いをご指摘頂けるとうれしいです
-少し長いので分けて説明します
+メインとなるclock.jsを記述します。JavaScript初学者なので書き方に問題があるかもしれません。間違いをご指摘頂けるとうれしいです。少し長いので分けて説明します。
 {% highlight javascript %}
 var canvas = {};
 $(document).ready(function(){
@@ -204,31 +159,15 @@ $(document).ready(function(){
   );
 })
 {% endhighlight %}
-グローバルに参照できるcanvasオブジェクトを定義します
-$(document).ready..はHTMLドキュメントの読み込みの完了を待って
-その引数の関数が実行されることを保証します
-そのなかで最初にcanvasオブジェクトにcanvasの情報を
-オブジェクト・プロパティとしてセットします
-JavaScriptではオブジェクト・プロパティは先行する宣言が不要です
+グローバルに参照できるcanvasオブジェクトを定義します。$(document).ready..はHTMLドキュメントの読み込みの完了を待って、その引数の関数が実行されることを保証します。そのなかで最初にcanvasオブジェクトにcanvasの情報をオブジェクト・プロパティとしてセットします。JavaScriptではオブジェクト・プロパティは先行する宣言が不要です。
 
-canvasへの描画はcanvasオブジェクトの2Dコンテキストに対し行います
-そのためgetContext('2d')しますが
-jQueryではcanvasオブジェクトはArrayを返すので注意が必要です
+canvasへの描画はcanvasオブジェクトの2Dコンテキストに対し行います。そのためgetContext('2d')しますが、jQueryではcanvasオブジェクトはArrayを返すので注意が必要です。
 
-時計の描画は中心点を基準に行うほうがやり易いので
-ctx.translateで座標軸をcanvasの中心に移動します
+時計の描画は中心点を基準に行うほうがやり易いので、ctx.translateで座標軸をcanvasの中心に移動します。
 
-Canvasにおけるアニメーションの描画にはsetIntervalを使います
-setIntervalは第２引数に指定した周期で第１引数に渡した関数を
-関数の実行スタックに繰り返し登録します
-setIntervalの第１引数にはclock関数を包んだ匿名関数を渡します
-時計を描画するclock関数はそのサイズxを引数にとります
-サイズxは匿名関数が呼ばれる度にspだけ増分されてclockに渡されるので
-呼び出しの度に時計のサイズは大きくなっていきます
-サイズxが任意の値を超えると(ここではcanvas.width*0.6)
-時計は今度は徐々に小さくなっていきます
+Canvasにおけるアニメーションの描画にはsetIntervalを使います。setIntervalは第２引数に指定した周期で第１引数に渡した関数を関数の実行スタックに繰り返し登録します。setIntervalの第１引数にはclock関数を包んだ匿名関数を渡します。時計を描画するclock関数はそのサイズxを引数にとります。サイズxは匿名関数が呼ばれる度にspだけ増分されてclockに渡されるので、呼び出しの度に時計のサイズは大きくなっていきます。サイズxが任意の値を超えると(ここではcanvas.width*0.6)、時計は今度は徐々に小さくなっていきます。
 
-続いてclock関数の中身を見ていきます
+続いてclock関数の中身を見ていきます。
 {% highlight javascript %}
 function clock (radius) {
   canvas.ctx.clearRect(-canvas.width/2,-canvas.height/2,canvas.width,canvas.height);
@@ -242,19 +181,9 @@ function clock (radius) {
   canvas.ctx.restore();
 }
 {% endhighlight %}
-ctx.clearRectでキャンバスをクリアします
-drawFrame関数で時計の文字盤を描画し
-drawHand関数で針を描画します
-針の描画はctx.rotateでキャンバスの座標系を回転させながら行うので
-最初に初期位置を12時の位置に合わせています
-ctx.save() ctx.restore()は動かした座標系を元に戻すために使います{% fn_ref 2 %}
-saveでそれ以前の状態を保存し座標系を動かして描画を行った後
-restoreで元に戻します
-各描画サイズは
-clockに渡されるサイズxに対する比で規定することによって
-時計のサイズが変わってもそのバランスが崩れないようにします
+ctx.clearRectでキャンバスをクリアします。drawFrame関数で時計の文字盤を描画し、drawHand関数で針を描画します。針の描画はctx.rotateでキャンバスの座標系を回転させながら行うので、最初に初期位置を12時の位置に合わせています。ctx.save() ctx.restore()は動かした座標系を元に戻すために使います{% fn_ref 2 %}。saveでそれ以前の状態を保存し座標系を動かして描画を行った後、restoreで元に戻します。各描画サイズはclockに渡されるサイズxに対する比で規定することによって、時計のサイズが変わってもそのバランスが崩れないようにします。
 
-次にdrawFrame関数の中身をみます
+次にdrawFrame関数の中身をみます。
 {% highlight javascript %}
 function drawFrame (radius, color) {
   drawCircle(radius, radius*0.1, color, false);
@@ -298,17 +227,9 @@ function drawNumbers (size, distance, color) {
   };
 }
 {% endhighlight %}
-drawFrame関数では外円とインデックスバーと数字を描画する
-drawCircle drawPitchLines drawNumbersを呼びます
-線の描画はbeginPathで開始宣言し
-moveToで開始点lineToで終了点を決めて
-strokeで実際に描画します
-円はarcで描画します
-引数には中心座標　半径　描画角始点終点
-および描画方向を指定します
-数字の描画はfillTextで行います
+drawFrame関数では外円とインデックスバーと数字を描画するdrawCircle drawPitchLines drawNumbersを呼びます。線の描画はbeginPathで開始宣言し、moveToで開始点lineToで終了点を決めて、strokeで実際に描画します。円はarcで描画します。引数には中心座標　半径　描画角始点終点、および描画方向を指定します。数字の描画はfillTextで行います。
 
-次に時計の針を描画するdrawHand関数をみます
+次に時計の針を描画するdrawHand関数をみます。
 {% highlight javascript %}
 function drawHand (unit, length, width, offset, color) {
   var now = new Date();
@@ -335,15 +256,12 @@ function drawHand (unit, length, width, offset, color) {
   ctx.restore();
 }
 {% endhighlight %}
-Dateオブジェクトを使って現在の時・分・秒を取得します
-針の種類によって一度に進む量angleが異なるので場合分けします
-ここでは時針は時刻の進行で少しずつ移動しますが
-分針は60秒ごとに一気に１つ進むようにしています
+Dateオブジェクトを使って現在の時・分・秒を取得します。針の種類によって一度に進む量angleが異なるので場合分けします。ここでは時針は時刻の進行で少しずつ移動しますが、分針は60秒ごとに一気に１つ進むようにしています。
 
-clock.jsは以上です
+clock.jsは以上です。
+
 ##ローカルでの起動
-これでローカルで実行する環境が整いました
-早々立ち上げてみましょう
+これでローカルで実行する環境が整いました。早々立ち上げてみましょう。
 {% highlight ruby %}
 /Users/keyes/aclock% ruby clock.rb
 == Sinatra/1.1.2 has taken the stage on 4567 for development with backup from Thin
@@ -351,8 +269,8 @@ clock.jsは以上です
 >> Maximum connections set to 1024
 >> Listening on 0.0.0.0:4567, CTRL+C to stop
 {% endhighlight %}
-Ruby1.9.2でshotgunを利用する場合
-カレントパスをロードする必要があるかもしれません
+
+Ruby1.9.2でshotgunを利用する場合、カレントパスをロードする必要があるかもしれません。
 {% highlight ruby %}
 /Users/keyes/aclock% shotgun -I. clock.rb 
 == Shotgun/WEBrick on http://127.0.0.1:9393/
@@ -361,8 +279,7 @@ Ruby1.9.2でshotgunを利用する場合
 [2011-02-18 18:28:47] INFO  WEBrick::HTTPServer#start: pid=1613 port=9393
 {% endhighlight %}
 ##Herokuへのデプロイ
-http://localhost:4567で問題なくアプリケーションが起動したら
-Herokuにデプロイするためにconfig.ruとGemfileを用意します
+http://localhost:4567で問題なくアプリケーションが起動したら、Herokuにデプロイするためにconfig.ruとGemfileを用意します。
 
 config.ru
 {% highlight ruby %}
@@ -379,58 +296,48 @@ source :rubygems
 gem "sinatra"
 gem "haml"
 {% endhighlight %}
-Herokuに必要なgemsをインストールするために
-BundlerというGem管理ツールを使います
-Gemfileに必要なgemsを羅列し
-config.ruではbundlerをrequireしてこれらを読み込むよう指定します
+Herokuに必要なgemsをインストールするために、BundlerというGem管理ツールを使います。Gemfileに必要なgemsを羅列し、config.ruではbundlerをrequireしてこれらを読み込むよう指定します。
 
-Bundlerをインストールして
-installコマンドを実行します
+Bundlerをインストールしてinstallコマンドを実行します。
 {% highlight bash %}
 /Users/keyes/aclock% gem install bundler
 /Users/keyes/aclock% bundle install
 {% endhighlight %}
-これでGemfileに記述したgemsが
-アプリケーションで使えるようになります
-同時にGemfile.lockが生成され
-ローカルとHerokuで使われる
-gemsのバージョンの一致が保証されます{% fn_ref 3 %}
+これでGemfileに記述したgemsがアプリケーションで使えるようになります。同時にGemfile.lockが生成され、ローカルとHerokuで使われるgemsのバージョンの一致が保証されます{% fn_ref 3 %}。
 
-HerokuへのデプロイはgitとHeroku gemを使います
-初回はSSHキーのセットアップなどが必要になりますが
-説明は他サイトに譲ります{% fn_ref 4 %}
+HerokuへのデプロイはgitとHeroku gemを使います。初回はSSHキーのセットアップなどが必要になりますが、説明は他サイトに譲ります{% fn_ref 4 %}。
 {% highlight bash %}
 /Users/keyes/aclock% git init
 /Users/keyes/aclock% git add .
 /Users/keyes/aclock% git commit -m 'initial'
 {% endhighlight %}
 
-Heroku側にアプリケーションのレポジトリを用意し
-git pushでデプロイします
+Heroku側にアプリケーションのレポジトリを用意し、git pushでデプロイします。
 {% highlight bash %}
 /Users/keyes/aclock% heroku create myclock
 /Users/keyes/aclock% git push heroku master
 {% endhighlight %}
 
-早々アプリケーションを立ち上げましょう
+早々アプリケーションを立ち上げましょう。
 {% highlight bash %}
 /Users/keyes/aclock% heroku open
 {% endhighlight %}
-うまくいかない場合はlogを見てみましょう
+うまくいかない場合はlogを見てみましょう。
 {% highlight bash %}
 /Users/keyes/aclock% heroku logs
 {% endhighlight %}
 
-さあ
-あなたもCanvasを使ったサイトを立ち上げましょう！
+さあ、あなたもCanvasを使ったサイトを立ち上げましょう！
 
 enjoy your Canvas life!
 
-ソースコードは以下にあります
-[](https://github.com/melborne/Approaching-Clock)
+ソースコードは以下にあります。
+[Approaching-Clock](https://github.com/melborne/Approaching-Clock)
+
+参照： [Sass、そしてSassy CSS (SCSS)](http://hail2u.net/documents/sass-and-sassy-css.html)
+
 {% footnotes %}
-   {% fn Sass、そしてSassy CSS (SCSS) http://hail2u.net/documents/sass-and-sassy-css.html %}
    {% fn save,restoreが保持するのは座標系だけに限らない %}
    {% fn http://devcenter.heroku.com/articles/bundler %}
-   {% fn http://devcenter.heroku.com/articles/quickstart, http://d.hatena.ne.jp/ruedap/20110128/ruby_heroku_sinatra_hello_world %}
+   {% fn http://devcenter.heroku.com/articles/quickstart %}
 {% endfootnotes %}

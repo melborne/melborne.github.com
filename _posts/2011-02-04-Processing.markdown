@@ -35,6 +35,7 @@ Dropboxのアカウントをお持ちでない方は
 
 上に貼り付けた
 clockアプレット(clock.pde)を例に手順を説明します
+
 1. clock.pdeをexportしてclock.jarを生成する
 1. clock.jarを~/Dropbox/public/に移動しそのpublic linkを取得する
 1. ~/Dropbox/public/にiGoogle登録用のclock.xmlを作りそのpublic linkを取得する

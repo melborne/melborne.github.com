@@ -19,8 +19,10 @@ categories:
 なんかスマートではありません…
 
 （チョンボなところ）
+
 1. 計算量を減らすため任意のlimitを使っている
 1. 数字を文字列に変換して回文数を見つけている
+
 {% highlight ruby %}
 def max_palindrome_from(digits)
   base = 10 ** digits - 1
