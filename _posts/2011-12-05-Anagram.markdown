@@ -1,0 +1,328 @@
+---
+layout: post
+title: Rubyでアナグラムしようよ
+date: 2011-12-05
+comments: true
+categories:
+tags: [ruby, anagram]
+---
+
+アナグラム(anagram)をご存知ですか？アナグラムは単語や文の文字を入れ替えて、別の意味を持った単語や文を作る遊びです。例えば"note"には"tone"、"master"には"stream"というアナグラムがあります。
+
+もちろん日本語アナグラムもあります。"タモリ"は"モリタ"のアナグラムです。"いきるいみなんて"と"みんないきている"は、一見哲学的問答に見えますが、これもアナグラムなんです:)
+
+少しやって頂ければ分かりますが、アナグラムを見つけるのは意外と難しいです。試しに"friend" と"setter"と"resort"のアナグラムをそれぞれちょっと考えてみてください。(答え){% fn_ref 3 %}
+
+そんなわけで..
+
+Rubyにアナグラムを見つけてもらいましょう。
+
+##RubyでAnagramを作る
+指定の英単語に対する複数のアナグラムを見つけるプログラムを考えます。こんな感じです。
+{% highlight ruby %}
+ find_anagrams('name') # => ['mean', 'amen']
+{% endhighlight %}
+これを実現するには少なくとも次のステップが必要そうです。
+
+1. 英単語リストを用意する。
+1. 指定単語のアナグラムを英単語リストから見つけ出す。
+
+##指定単語のアナグラムを英単語リストから見つけ出す
+単語リストはどこかにきっとあるでしょうから、後回しにして..アナグラムを見つける方法を先に考えます。
+
+先に示した"name"と"mean"と"amen"はアナグラムですが、どうやってRubyにそれを判断させればいいでしょうか。
+
+いい方法を思いつきました。単語を文字で区切って配列化し引き算するんです。
+{% highlight ruby %}
+w1 = 'name'
+w2 = 'mean'
+w3 = 'amen'
+w4 = 'man'
+ws1 = w1.split(//) # => ["n", "a", "m", "e"]
+ws2 = w2.split(//) # => ["m", "e", "a", "n"]
+ws3 = w3.split(//) # => ["a", "m", "e", "n"]
+ws4 = w4.split(//) # => ["m", "a", "n"]
+ws1 - ws2 # => []
+ws1 - ws3 # => []
+ws1 - ws4 # => ["e"]
+{% endhighlight %}
+空配列になったらアナグラムです!
+
+と、言いたいのですがこれはダメです。
+{% highlight ruby %}
+w1 = 'name'
+w5 = 'amenman'
+w1.split(//) - w5.split(//) # => []
+w1 = 'aaabbbccc'
+w2 = 'abc'
+w1.split(//) - w2.split(//) # => []
+{% endhighlight %}
+引く配列要素が多かったり重複要素がある場合は、期待する結果になりません。
+
+実はいい方法があります。各単語のシグネチャーを作ってこれを比較するのです。で、このシグネチャーは何かというと、単語の文字をソートしたものです。
+{% highlight ruby %}
+w1 = 'name'
+w1.chars.sort.join.intern # => :aemn
+{% endhighlight %}
+アナグラムな単語はこのシグネチャーがおなじになるはずです。
+
+やってみましょう。
+{% highlight ruby %}
+w1 = 'name'
+w2 = 'mean'
+w3 = 'amen'
+w4 = 'amenman'
+sig1 = w1.chars.sort.join.intern # => :aemn
+sig2 = w2.chars.sort.join.intern # => :aemn
+sig3 = w3.chars.sort.join.intern # => :aemn
+sig4 = w4.chars.sort.join.intern # => :aaemmnn
+sig1 == sig2 # => true
+sig1 == sig3 # => true
+sig1 == sig4 # => false
+{% endhighlight %}
+いいですね!{% fn_ref 4 %}
+
+ではこれをメソッド化しておきましょう。
+{% highlight ruby %}
+def signature(word)
+  word.downcase.chars.sort.join.intern
+end
+%w(name mean amen man).map { |word| signature word } # => [:aemn, :aemn, :aemn, :amn]
+{% endhighlight %}
+
+##単語リスト
+さて次に単語リストを用意します。ネットから拾う手もありますが、都合の良いことにMacの`/usr/share/dict/`には最初から単語リストwordsが入ってるんです。
+
+覗いてみます。
+{% highlight bash %}
+% head /usr/share/dict/words
+A
+a
+aa
+aal
+aalii
+aam
+Aani
+aardvark
+aardwolf
+Aaron
+% tail /usr/share/dict/words 
+zymotoxic
+zymurgy
+Zyrenian
+Zyrian
+Zyryan
+zythem
+Zythia
+zythum
+Zyzomys
+Zyzzogeton
+{% endhighlight %}
+
+語数を調べましょう。
+{% highlight bash %}
+% wc -l /usr/share/dict/words
+  234936 /usr/share/dict/words
+{% endhighlight %}
+十分ですね。
+
+##アナグラム辞書
+さて先の方針で単語同士を直接比較するのではなくて、そのシグネチャーを比較することとしました。ですから単語リストの各単語をそのシグネチャーで、引ける辞書(アナグラム辞書)を作る必要があります。毎回単語リストのシグネチャーを計算するのは効率的ではありませんからね。
+
+データ構造は次のようなものがよさそうです。
+{% highlight ruby %}
+{:aemn => ['name', 'mean', 'amen'], :amn => ['man']}
+{% endhighlight %}
+シグネチャーをkeyとして、それを持った単語のリストをvalueとするハッシュです。
+
+それでは単語リストからアナグラム辞書を作るbuild_anagramsメソッドを定義しましょう。入力は単語の配列です。
+{% highlight ruby %}
+def build_anagrams(words)
+  words.map { |word| [signature(word), word] }
+       .inject({}) { |h, (sign, word)| h[sign] ||= []; h[sign] << word; h }
+       .select { |sign, words| words.size > 1 }
+end
+{% endhighlight %}
+
+まずmapでシグネチャーと単語の組みを作って、injectで共通のシグネチャーの指す配列に単語を追加していきます。injectの使い方では注意点が２つあります。１つは`h[sign] ||= []`での初期化が必要なこと、１つは各イテレートでハッシュhを返すことです。ちなみに次のような書き方もできます。
+{% highlight ruby %}
+def build_anagrams(words)
+  mem = Hash.new{|h, k| h[k] = []}
+  words.map { |word| [signature(word), word] }
+       .each_with_object(mem) { |(sign, word), h| h[sign] << word }
+       .select { |sign, words| words.size > 1 }
+end
+{% endhighlight %}
+
+さてこのメソッドを試してみましょう。
+{% highlight ruby %}
+word_list = %w(name mean amen man)
+Anagrams = build_anagrams(word_list) # => {:aemn=>["name", "mean", "amen"], :amn=>["man"]}
+{% endhighlight %}
+いいですね!
+
+これでもう最初に示した。find_anagramsメソッドが書けますね。
+{% highlight ruby %}
+def find_anagrams(word)
+  sign = signature(word)
+  res = Anagrams[sign]
+  res ? res - [word] : []
+end
+find_anagrams("name") # => ["mean", "amen"]
+find_anagrams("age") # => []
+{% endhighlight %}
+
+##単語リストの読み込み
+ここまで来ればあと一歩です。単語リストのファイルをオープンして、メモリー上に読み出し、そこから単語の配列を作ります。最初は小さな単語ファイル(sample)を用意して、試してみるのがいいですね。
+{% highlight txt %}
+name
+mean
+amen
+man
+man
+MAN
+street
+sweet
+Tester
+retest
+word
+world
+tower
+rowet
+WROTE
+X
+a
+monopersulphuric
+b
+{% endhighlight %}
+
+コードは次のようになります。
+{% highlight ruby %}
+def build_wordlist(path)
+  File.open(path) do |f|
+    f.map { |line| line.chomp.downcase }.uniq.reject { |word| word.size < 2 }
+  end
+end
+WORDS = build_wordlist('./sample') # => ["name", "mean", "amen", "man", "street", "sweet", "tester", "retest", "word", "world", "tower", "rowet", "wrote", "monopersulphuric"]
+{% endhighlight %}
+改行を除去して全て小文字化し、重複と空行と一文字単語を除去します。
+
+さあ完成です!コードをまとめてみましょう。
+{% gist 1429196 anagram.rb %}
+
+Rubyならアナグラムも簡単ですね!
+
+##Anagramライブラリ
+で、ここまでやったので、Anagramライブラリを書いて見ました。Rspecの練習を兼ねまして..^ ^;
+
+[melborne/anagram - GitHub](https://github.com/melborne/anagram)
+
+##anagramコマンド
+後述するAnagram辞書を作ると、Terminalでanagramコマンドが使えます。
+{% highlight bash %}
+% ./anagram dream team ruby
+dream => ["armed", "derma", "ramed"]
+team => ["mate", "meat", "meta", "tame", "tema"]
+ruby => ["bury"]
+{% endhighlight %}
+アナグラムを見つけたい１または複数の単語をコマンドの引数として渡します。
+
+##Anagram辞書の作成
+Anagram.buildクラスメソッドでAnagram辞書を作ります。
+{% highlight ruby %}
+% irb
+>> require 'anagram'
+>> 
+>> File.open('/usr/share/dict/words') do |f|
+>>   Angram.build(f)
+>> end
+{% endhighlight %}
+辞書はカレントディレクトリにYAMLファイル(anagram.yml)で保存されます。
+
+##Anagram.findクラスメソッド
+Anagram辞書ができればfindクラスメソッドが使えます。
+{% highlight ruby %}
+>> Anagram.find 'time' #=> ["emit", "item", "mite"]
+>> Anagram.find 'beer' #=> ["bere", "bree"]
+{% endhighlight %}
+
+##Anagram.anagrams?クラスメソッド
+このメソッドは引数に渡した単語同士がアナグラムか検査します。
+{% highlight ruby %}
+>> Anagram.anagrams? 'beer', 'bair' #=> false
+>> Anagram.anagrams? 'time', 'emit', 'item' #=> true
+{% endhighlight %}
+
+anagrams?メソッドは日本語でも文章でも使えます。
+{% highlight ruby %}
+>> Anagram.anagrams? 'いきるいみなんて', 'みんないきている' #=> true
+>> sentence1 = "To be or not to be: that is the question; whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune..."
+>> sentence2 = "In one of the Bard's best-thought-of tragedies our insistent hero, Hamlet, queries on two fronts about how life turns rotten."
+>> Anagram.anagrams?(sentence1, sentence2) #=> true
+{% endhighlight %}
+こんな長いアナグラムを考える人がいるんですね..
+
+##Anagramオブジェクト
+Anagram.newでAnagramオブジェクトを生成することで、Anagram#find, #longest, #most および#allの各メソッドが使えるようになります。Anagram#findはAnagram.findと同じです。
+{% highlight ruby %}
+>> an = Anagram.new
+>> an.find 'visit' #=> ["vitis"]
+>> an.find 'master' #=> ["martes", "remast", "stream"]
+>> an.find 'version' #=> []
+>> an.find 'bridge' #=> ["begird"]
+>> an.find 'paper' #=> ["rappe"]
+>> an.find 'speech' #=> []
+>> an.find 'take' #=> ["kate", "keta", "teak"]
+>> an.find 'language' #=> ["ganguela"]
+>> 
+{% endhighlight %}
+
+Anagram#longest は辞書における長い単語のアナグラムを上位から表示します。Anagram#most は最も組数の多いアナグラムを上位から表示します。
+{% highlight ruby %}
+>> an.longest(size:10).each {|l| p l}
+["hydropneumopericardium", "pneumohydropericardium"]
+["cholecystoduodenostomy", "duodenocholecystostomy"]
+["glossolabiopharyngeal", "labioglossopharyngeal"]
+["chromophotolithograph", "photochromolithograph"]
+["duodenopancreatectomy", "pancreatoduodenectomy"]
+["anatomicopathological", "pathologicoanatomical"]
+["encephalomeningocele", "meningoencephalocele"]
+["glossolabiolaryngeal", "labioglossolaryngeal"]
+["anatomicophysiologic", "physiologicoanatomic"]
+["pericardiacophrenic", "phrenicopericardiac"]
+>> an.most(size:10).each {|m| p m}
+["angor", "argon", "goran", "grano", "groan", "nagor", "orang", "organ", "rogan", "ronga"]
+["elaps", "lapse", "lepas", "pales", "salep", "saple", "sepal", "slape", "spale", "speal"]
+["caret", "carte", "cater", "crate", "creat", "creta", "react", "recta", "trace"]
+["ester", "estre", "reest", "reset", "steer", "stere", "stree", "terse", "tsere"]
+["leapt", "palet", "patel", "pelta", "petal", "plate", "pleat", "tepal"]
+["armet", "mater", "metra", "ramet", "tamer", "terma", "trame", "trema"]
+["asteer", "easter", "eastre", "reseat", "saeter", "seater", "staree", "teaser"]
+["arist", "astir", "sitar", "stair", "stria", "tarsi", "tisar", "trias"]
+["laster", "lastre", "rastle", "relast", "resalt", "salter", "slater", "stelar"]
+["dater", "derat", "detar", "drate", "rated", "trade", "tread"]
+{% endhighlight %}
+
+Anagram#all は辞書におけるすべてのアナグラムの組みを表示します。
+{% highlight ruby %}
+>> an.all.size #=> 14212
+>> an.all.take 5 #=> [["aal", "ala"], ["aam", "ama"], ["aaronic", "nicarao", "ocarina"], ["aaronite", "aeration"], ["aaru", "aura"]]
+>> an.all.select {|set| set.size > 3 && set.first =~ /^ru/}
+=> [["ruinate", "taurine", "uranite", "urinate"], ["runite", "triune", "uniter", "untire"], ["rusa", "saur", "sura", "ursa", "usar"], ["ruse", "suer", "sure", "user"]]
+{% endhighlight %}
+なおAnagram.newは単語リストファイルを引数に取ることができます。
+{% highlight ruby %}
+>> an = Anagram.new(open 'sample_dic')
+{% endhighlight %}
+こうするとAnagram辞書を作らずに各インスタンスメソッドが使えるようになります。
+
+暇なときに遊んでやってください :-)
+
+(追記:2011-12-07) コードを一部修正しました。
+
+{% footnotes %}
+   {% fn https://twitter.com/#!/Chigami/status/96606063931047936 %}
+   {% fn ホントのことを言えば、このブログから先のツイートを知ったのでした^ ^; %}
+   {% fn "friend"には["finder", "redfin", "refind"], "setter"には["retest" "street" "tester"], "resort"には["roster", "sorter", "storer"]があります %}
+   {% fn この方法は「珠玉のプログラミング」に載っていました。 %}
+{% endfootnotes %}

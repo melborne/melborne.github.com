@@ -1,106 +1,75 @@
 ---
 layout: post
-title: Rubyでビックリ階乗を解こう! ～人間の実働時間を最適化する
+title: Rubyでビックリ階乗を解こう!
+tagline: 人間の実働時間を最適化する
 date: 2011-12-05
 comments: true
 categories:
+tags: [ruby]
 ---
 
-##Rubyでビックリ階乗を解こう! ～人間の実働時間を最適化する
 「ビックリ階乗(Exclamatory Factorial)」って知ってますか？
-ええ　知るわけないです
-なぜならいま僕が
-次のツイートの解に命名したばかりの言葉だからです{% fn_ref 1 %}
+
+ええ、知るわけないです。なぜならいま僕が、次のツイートの解に命名したばかりの言葉だからです{% fn_ref 1 %}。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20111205/20111205222834.png)
 
 
-なかなか意味深なツイートですが
-自分が先生だったらこの解答に
-◯を付けざるを得ないでしょう
-答えにビックリマークを付ける人はいませんからね!
+なかなか意味深なツイートですが、自分が先生だったらこの解答に◯を付けざるを得ないでしょう。答えにビックリマークを付ける人はいませんからね!
 
-さて
-プログラムする身としては
-文系理系両者の反応よりも
-このような「ビックリ階乗」が
-どれくらい奇跡的なものなのかが気になります
-つまりa - (b / c) の解(先の例では24)と
-(a - b) / c の解の階乗(4!)とが
-一致する組み合わせは
-果たしてどれくらいあるのでしょうか
+さて、プログラムする身としては文系理系両者の反応よりも、このような「ビックリ階乗」がどれくらい奇跡的なものなのかが気になります。つまりa - (b / c) の解(先の例では24)と、(a - b) / c の解の階乗(4!)とが一致する組み合わせは果たしてどれくらいあるのでしょうか。
 
-数学的に書くとこういうことです
+数学的に書くとこういうことです。
+ 
+> f1 = a - (b / c)
+> f2 = (a - b) / c
 > 
-> [tex:f1 = a - (b \div c)]
-> [tex:f2 = (a - b) \div c]
-> 
-> [tex:f1 == f2!]
+> f1 == f2!
 
-
-そんな思いは当然僕だけではありませんでした{% fn_ref 2 %}
+そんな思いは当然僕だけではありませんでした{% fn_ref 2 %}。
 
 [「40 - 32 / 2 = 4!」 - エンジニアのソフトウェア的愛情](http://d.hatena.ne.jp/E_Mattsan/20111124/1322145039)
 
-このブログより1000以下の数字で
-15組のビックリ階乗があることがわかっています
-ここで1000までの数を考えたときa b c の組み合わせ数は
-10億通り([tex:1000^3])にもなりますからその確率は..
-> 
-> [tex:15 \div 10{,}0000{,}0000=0.000000015]
+このブログより1000以下の数字で、15組のビックリ階乗があることがわかっています。ここで1000までの数を考えたときa b c の組み合わせ数は、10億通り([tex:1000^3])にもなりますからその確率は..
+ 
+> 15 / 10,0000,0000 = 0.000000015
 
 ビックリ階乗は奇跡的な組み合わせなんですね!
 
-しかしそれにしても10億通りの組み合わせとなると
-まじめにそのすべてを試してみると当然に
-その実行時間が問題になります
-先のブログでは試行錯誤して最初のプログラムから
-1800倍の高速化を実現して0.1秒以下で答えがでます
-手元でRuby版も試して見ましたが0.037秒でした
-ステキすぎます!
+しかしそれにしても10億通りの組み合わせとなると、まじめにそのすべてを試してみると当然にその実行時間が問題になります。先のブログでは試行錯誤して最初のプログラムから、1800倍の高速化を実現して0.1秒以下で答えがでます。手元でRuby版も試して見ましたが0.037秒でした。ステキすぎます!
 
-でこれ以上僕のできることは何も無いのですが
-コードの実行時間というものを完全に無視して
-コードの読み易さつまり
-人間の実働時間の最適化という一点に焦点を合わせて
-Rubyでコードを書いてみようと思います^ ^;
+で、これ以上僕のできることは何も無いのですが、コードの実行時間というものを完全に無視してコードの読み易さつまり、人間の実働時間の最適化という一点に焦点を合わせてRubyでコードを書いてみようと思います^ ^;
 
-さて
-ビックリ階乗の数式をもう一度確認します
+さて、ビックリ階乗の数式をもう一度確認します。
+ 
+> f1 = a - (b / c)
+> f2 = (a - b) / c
 > 
-> [tex:f1 = a - (b \div c)]
-> [tex:f2 = (a - b) \div c]
-> 
-> [tex:f1 == f2!]
+> f1 == f2!
 
 
-これをRubyの式に置き換えます
+これをRubyの式に置き換えます。
 {% highlight ruby %}
 f1 = ->a,b,c{  a - b  / c }
 f2 = ->a,b,c{ (a - b) / c }
 a, b, c = 40, 32, 2
 f1[a,b,c] == factorial(f2[a,b,c]) # => true
 {% endhighlight %}
-メソッドでもいいですが
-ここでは一行で済むProcを使います
+メソッドでもいいですが、ここでは一行で済むProcを使います。
 
-このコードは一見よさそうですが
-一部に問題があります
+このコードは一見よさそうですが、一部に問題があります。
 {% highlight ruby %}
 10 / 3 # => 3
 {% endhighlight %}
-そうですRubyでは整数同士の除算は
-余りを無視してしまいます
+そうです、Rubyでは整数同士の除算は余りを無視してしまいます。
 
-しかしこの問題はrequire 'mathn'
-することで解決します
+しかしこの問題は`require 'mathn'`することで解決します。
 {% highlight ruby %}
 require 'mathn'
 10 / 3 # => (10/3)
 {% endhighlight %}
 
-次にfactorialメソッドってのがダサいですね
-こうしましょう
+次にfactorialメソッドってのがダサいですね。こうしましょう。
 {% highlight ruby %}
 class Integer
   def !
@@ -109,6 +78,7 @@ class Integer
 end
 4.! # => 24
 {% endhighlight %}
+
 {% highlight ruby %}
 require 'mathn'
 f1 = ->a,b,c{  a - b  / c }
@@ -118,19 +88,17 @@ f1[a,b,c] == f2[a,b,c].! # => true
 {% endhighlight %}
 良くなりましたね!
 
-次にa b c についての
-10億の組み合わせを作ります
+次にa b c についての10億の組み合わせを作ります。
 {% highlight ruby %}
 set = [*2..1000].repeated_permutation(3) # => #<Enumerator: [2, 3, 4..]:repeated_permutation(3)>
 {% endhighlight %}
 
-そこから先の条件に見合うものだけ
-セレクトします
+そこから先の条件に見合うものだけ、セレクトします。
 {% highlight ruby %}
 selected = set.select { |abc| f1[*abc] == f2[*abc].! }
 {% endhighlight %}
 
-結果をプリントします
+結果をプリントします。
 {% highlight ruby %}
 pp = ->abc{
   print "(%i - %i) / %i = %i\n"         % [*abc, f2[*abc]]
@@ -158,10 +126,7 @@ pp = ->abc{
           .each { |abc| pp[abc] }
 {% endhighlight %}
 
-完成です! exclamation.rbで保存して
-実行してみましょう!
-いきなり1000もなんですから
-まずは[*2..100]から..
+完成です! exclamation.rbで保存して実行してみましょう!いきなり1000もなんですから、まずは[*2..100]から..
 {% highlight bash %}
 % time ruby exclamation.rb
 (25 - 5) / 5 = 4
@@ -172,8 +137,7 @@ pp = ->abc{
  40 - 32  / 2 = 4! = 24
 ruby exclamation.rb  3.25s user 0.03s system 99% cpu 3.287 total
 {% endhighlight %}
-おおっ
-良い感じじゃないですか!
+おおっ、良い感じじゃないですか!
 
 では1000で..
 {% highlight ruby %}
@@ -188,9 +152,7 @@ ruby exclamation.rb  3.25s user 0.03s system 99% cpu 3.287 total
 {% endhighlight %}
 全く反応ありません^ ^;
 
-仕方が無いので require 'mathn' はやめて
-a <= b, (b % c) != 0, ((a - b) % c) != 0
-の条件だけ入れて足切りします
+仕方が無いので、require 'mathn' はやめて、`a <= b, (b % c) != 0, ((a - b) % c) != 0`の条件だけ入れて足切りします。
 {% highlight ruby %}
 [*2..1000].repeated_permutation(3)
           .select { |a,b,c|
@@ -262,388 +224,4 @@ ruby exclamation.rb  349.56s user 0.72s system 99% cpu 5:51.87 total
 
 使い捨てプログラムとしては許容できる範囲...
 判断は各人にお任せします..
-##Rubyでアナグラムしようよ
-アナグラム(anagram)をご存知ですか？
-アナグラムは単語や文の文字を入れ替えて
-別の意味を持った単語や文を作る遊びです
-例えば"note"には"tone"
-"master"には"stream"というアナグラムがあります
 
-もちろん日本語アナグラムもあります
-"タモリ"は"モリタ"のアナグラムです
-"いきるいみなんて"と"みんないきている"は
-一見哲学的問答に見えますが
-これもアナグラムなんです:)
-
-少しやって頂ければ分かりますが
-アナグラムを見つけるのは意外と難しいです
-試しに"friend" と"setter"と"resort"のアナグラムを
-それぞれちょっと考えてみてください
-(答え){% fn_ref 3 %}
-
-そんなわけで..
-
-Rubyにアナグラムを見つけてもらいましょう
-
-##RubyでAnagramを作る
-指定の英単語に対する
-複数のアナグラムを見つけるプログラムを考えます
-こんな感じです
-{% highlight ruby %}
- find_anagrams('name') # => ['mean', 'amen']
-{% endhighlight %}
-これを実現するには少なくとも次のステップが必要そうです
-1. 英単語リストを用意する
-1. 指定単語のアナグラムを英単語リストから見つけ出す
-##指定単語のアナグラムを英単語リストから見つけ出す
-単語リストはどこかにきっとあるでしょうから
-後回しにして..
-アナグラムを見つける方法を先に考えます
-
-先に示した"name"と"mean"と"amen"はアナグラムですが
-どうやってRubyにそれを判断させればいいでしょうか
-
-いい方法を思いつきました
-単語を文字で区切って配列化し引き算するんです
-{% highlight ruby %}
-w1 = 'name'
-w2 = 'mean'
-w3 = 'amen'
-w4 = 'man'
-ws1 = w1.split(//) # => ["n", "a", "m", "e"]
-ws2 = w2.split(//) # => ["m", "e", "a", "n"]
-ws3 = w3.split(//) # => ["a", "m", "e", "n"]
-ws4 = w4.split(//) # => ["m", "a", "n"]
-ws1 - ws2 # => []
-ws1 - ws3 # => []
-ws1 - ws4 # => ["e"]
-{% endhighlight %}
-空配列になったらアナグラムです!
-
-と言いたいのですがこれはダメです
-{% highlight ruby %}
-w1 = 'name'
-w5 = 'amenman'
-w1.split(//) - w5.split(//) # => []
-w1 = 'aaabbbccc'
-w2 = 'abc'
-w1.split(//) - w2.split(//) # => []
-{% endhighlight %}
-引く配列要素が多かったり
-重複要素がある場合は
-期待する結果になりません
-
-実はいい方法があります
-各単語のシグネチャーを作って
-これを比較するのです
-でこのシグネチャーは何かというと
-単語の文字をソートしたものです
-{% highlight ruby %}
-w1 = 'name'
-w1.chars.sort.join.intern # => :aemn
-{% endhighlight %}
-アナグラムな単語は
-このシグネチャーがおなじになるはずです
-
-やってみましょう
-{% highlight ruby %}
-w1 = 'name'
-w2 = 'mean'
-w3 = 'amen'
-w4 = 'amenman'
-sig1 = w1.chars.sort.join.intern # => :aemn
-sig2 = w2.chars.sort.join.intern # => :aemn
-sig3 = w3.chars.sort.join.intern # => :aemn
-sig4 = w4.chars.sort.join.intern # => :aaemmnn
-sig1 == sig2 # => true
-sig1 == sig3 # => true
-sig1 == sig4 # => false
-{% endhighlight %}
-いいですね!{% fn_ref 4 %}
-
-ではこれをメソッド化しておきましょう
-{% highlight ruby %}
-def signature(word)
-  word.downcase.chars.sort.join.intern
-end
-%w(name mean amen man).map { |word| signature word } # => [:aemn, :aemn, :aemn, :amn]
-{% endhighlight %}
-
-##単語リスト
-さて次に単語リストを用意します
-ネットから拾う手もありますが
-都合の良いことにMacの /usr/share/dict/
-には最初から単語リストwordsが入ってるんです
-
-覗いてみます
-{% highlight bash %}
-% head /usr/share/dict/words
-A
-a
-aa
-aal
-aalii
-aam
-Aani
-aardvark
-aardwolf
-Aaron
-% tail /usr/share/dict/words 
-zymotoxic
-zymurgy
-Zyrenian
-Zyrian
-Zyryan
-zythem
-Zythia
-zythum
-Zyzomys
-Zyzzogeton
-{% endhighlight %}
-
-語数を調べましょう
-{% highlight bash %}
-% wc -l /usr/share/dict/words
-  234936 /usr/share/dict/words
-{% endhighlight %}
-十分ですね
-
-##アナグラム辞書
-さて先の方針で
-単語同士を直接比較するのではなくて
-そのシグネチャーを比較することとしました
-ですから単語リストの各単語をそのシグネチャーで
-引ける辞書(アナグラム辞書)を作る必要があります
-毎回単語リストのシグネチャーを計算するのは
-効率的ではありませんからね
-
-データ構造は次のようなものがよさそうです
-{% highlight ruby %}
-{:aemn => ['name', 'mean', 'amen'], :amn => ['man']}
-{% endhighlight %}
-シグネチャーをkeyとして
-それを持った単語のリストをvalueとするハッシュです
-
-それでは単語リストからアナグラム辞書を作る
-build_anagramsメソッドを定義しましょう
-入力は単語の配列です
-{% highlight ruby %}
-def build_anagrams(words)
-  words.map { |word| [signature(word), word] }
-       .inject({}) { |h, (sign, word)| h[sign] ||= []; h[sign] << word; h }
-       .select { |sign, words| words.size > 1 }
-end
-{% endhighlight %}
-
-まずmapでシグネチャーと単語の組みを作って
-injectで共通のシグネチャーの指す配列に単語を追加していきます
-injectの使い方では注意点が２つあります
-１つは h[sign] ||= [] での初期化が必要なこと
-１つは各イテレートでハッシュhを返すことです
-ちなみに次のような書き方もできます
-{% highlight ruby %}
-def build_anagrams(words)
-  mem = Hash.new{|h, k| h[k] = []}
-  words.map { |word| [signature(word), word] }
-       .each_with_object(mem) { |(sign, word), h| h[sign] << word }
-       .select { |sign, words| words.size > 1 }
-end
-{% endhighlight %}
-
-さてこのメソッドを試してみましょう
-{% highlight ruby %}
-word_list = %w(name mean amen man)
-Anagrams = build_anagrams(word_list) # => {:aemn=>["name", "mean", "amen"], :amn=>["man"]}
-{% endhighlight %}
-いいですね!
-
-これでもう最初に示した
-find_anagramsメソッドが書けますね
-{% highlight ruby %}
-def find_anagrams(word)
-  sign = signature(word)
-  res = Anagrams[sign]
-  res ? res - [word] : []
-end
-find_anagrams("name") # => ["mean", "amen"]
-find_anagrams("age") # => []
-{% endhighlight %}
-
-##単語リストの読み込み
-ここまで来ればあと一歩です
-単語リストのファイルをオープンして
-メモリー上に読み出し
-そこから単語の配列を作ります
-最初は小さな単語ファイル(sample)を用意して
-試してみるのがいいですね
-{% highlight txt %}
-name
-mean
-amen
-man
-man
-MAN
-street
-sweet
-Tester
-retest
-word
-world
-tower
-rowet
-WROTE
-X
-a
-monopersulphuric
-b
-{% endhighlight %}
-
-コードは次のようになります
-{% highlight ruby %}
-def build_wordlist(path)
-  File.open(path) do |f|
-    f.map { |line| line.chomp.downcase }.uniq.reject { |word| word.size < 2 }
-  end
-end
-WORDS = build_wordlist('./sample') # => ["name", "mean", "amen", "man", "street", "sweet", "tester", "retest", "word", "world", "tower", "rowet", "wrote", "monopersulphuric"]
-{% endhighlight %}
-改行を除去して全て小文字化し
-重複と空行と一文字単語を除去します
-
-さあ完成です!
-コードをまとめてみましょう
-{% gist 1429196 anagram.rb %}
-
-
-Rubyならアナグラムも簡単ですね!
-
-##Anagramライブラリ
-で　ここまでやったので
-Anagramライブラリを書いて見ました
-Rspecの練習を兼ねまして..^ ^;
-
-[melborne/anagram - GitHub](https://github.com/melborne/anagram)
-
-##anagramコマンド
-後述するAnagram辞書を作ると
-Terminalでanagramコマンドが使えます
-{% highlight bash %}
-% ./anagram dream team ruby
-dream => ["armed", "derma", "ramed"]
-team => ["mate", "meat", "meta", "tame", "tema"]
-ruby => ["bury"]
-{% endhighlight %}
-アナグラムを見つけたい１または複数の単語を
-コマンドの引数として渡します
-
-##Anagram辞書の作成
-Anagram.buildクラスメソッドで
-Anagram辞書を作ります
-{% highlight ruby %}
-% irb
->> require 'anagram'
->> 
->> File.open('/usr/share/dict/words') do |f|
->>   Angram.build(f)
->> end
-{% endhighlight %}
-辞書はカレントディレクトリに
-YAMLファイル(anagram.yml)で保存されます
-
-##Anagram.findクラスメソッド
-Anagram辞書ができれば
-findクラスメソッドが使えます
-{% highlight ruby %}
->> Anagram.find 'time' #=> ["emit", "item", "mite"]
->> Anagram.find 'beer' #=> ["bere", "bree"]
-{% endhighlight %}
-
-##Anagram.anagrams?クラスメソッド
-このメソッドは引数に渡した単語同士が
-アナグラムか検査します
-{% highlight ruby %}
->> Anagram.anagrams? 'beer', 'bair' #=> false
->> Anagram.anagrams? 'time', 'emit', 'item' #=> true
-{% endhighlight %}
-
-anagrams?メソッドは日本語でも文章でも使えます
-{% highlight ruby %}
->> Anagram.anagrams? 'いきるいみなんて', 'みんないきている' #=> true
->> sentence1 = "To be or not to be: that is the question; whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune..."
->> sentence2 = "In one of the Bard's best-thought-of tragedies our insistent hero, Hamlet, queries on two fronts about how life turns rotten."
->> Anagram.anagrams?(sentence1, sentence2) #=> true
-{% endhighlight %}
-こんな長いアナグラムを考える人がいるんですね..
-
-##Anagramオブジェクト
-Anagram.newでAnagramオブジェクトを生成することで
-Anagram#find #longest #most および#all
-の各メソッドが使えるようになります
-Anagram#findはAnagram.findと同じです
-{% highlight ruby %}
->> an = Anagram.new
->> an.find 'visit' #=> ["vitis"]
->> an.find 'master' #=> ["martes", "remast", "stream"]
->> an.find 'version' #=> []
->> an.find 'bridge' #=> ["begird"]
->> an.find 'paper' #=> ["rappe"]
->> an.find 'speech' #=> []
->> an.find 'take' #=> ["kate", "keta", "teak"]
->> an.find 'language' #=> ["ganguela"]
->> 
-{% endhighlight %}
-
-Anagram#longest は辞書における
-長い単語のアナグラムを上位から表示します
-Anagram#most は最も組数の多い
-アナグラムを上位から表示します
-{% highlight ruby %}
->> an.longest(size:10).each {|l| p l}
-["hydropneumopericardium", "pneumohydropericardium"]
-["cholecystoduodenostomy", "duodenocholecystostomy"]
-["glossolabiopharyngeal", "labioglossopharyngeal"]
-["chromophotolithograph", "photochromolithograph"]
-["duodenopancreatectomy", "pancreatoduodenectomy"]
-["anatomicopathological", "pathologicoanatomical"]
-["encephalomeningocele", "meningoencephalocele"]
-["glossolabiolaryngeal", "labioglossolaryngeal"]
-["anatomicophysiologic", "physiologicoanatomic"]
-["pericardiacophrenic", "phrenicopericardiac"]
->> an.most(size:10).each {|m| p m}
-["angor", "argon", "goran", "grano", "groan", "nagor", "orang", "organ", "rogan", "ronga"]
-["elaps", "lapse", "lepas", "pales", "salep", "saple", "sepal", "slape", "spale", "speal"]
-["caret", "carte", "cater", "crate", "creat", "creta", "react", "recta", "trace"]
-["ester", "estre", "reest", "reset", "steer", "stere", "stree", "terse", "tsere"]
-["leapt", "palet", "patel", "pelta", "petal", "plate", "pleat", "tepal"]
-["armet", "mater", "metra", "ramet", "tamer", "terma", "trame", "trema"]
-["asteer", "easter", "eastre", "reseat", "saeter", "seater", "staree", "teaser"]
-["arist", "astir", "sitar", "stair", "stria", "tarsi", "tisar", "trias"]
-["laster", "lastre", "rastle", "relast", "resalt", "salter", "slater", "stelar"]
-["dater", "derat", "detar", "drate", "rated", "trade", "tread"]
-{% endhighlight %}
-
-Anagram#all は辞書における
-すべてのアナグラムの組みを表示します
-{% highlight ruby %}
->> an.all.size #=> 14212
->> an.all.take 5 #=> [["aal", "ala"], ["aam", "ama"], ["aaronic", "nicarao", "ocarina"], ["aaronite", "aeration"], ["aaru", "aura"]]
->> an.all.select {|set| set.size > 3 && set.first =~ /^ru/}
-=> [["ruinate", "taurine", "uranite", "urinate"], ["runite", "triune", "uniter", "untire"], ["rusa", "saur", "sura", "ursa", "usar"], ["ruse", "suer", "sure", "user"]]
-{% endhighlight %}
-なおAnagram.newは単語リストファイルを
-引数に取ることができます
-{% highlight ruby %}
->> an = Anagram.new(open 'sample_dic')
-{% endhighlight %}
-こうするとAnagram辞書を作らずに
-各インスタンスメソッドが使えるようになります
-
-暇なときに遊んでやってください :-)
-
-(追記:2011-12-07) コードを一部修正しました。
-{% footnotes %}
-   {% fn https://twitter.com/#!/Chigami/status/96606063931047936 %}
-   {% fn ホントのことを言えば、このブログから先のツイートを知ったのでした^ ^; %}
-   {% fn "friend"には["finder", "redfin", "refind"], "setter"には["retest" "street" "tester"], "resort"には["roster", "sorter", "storer"]があります %}
-   {% fn この方法は「珠玉のプログラミング」に載っていました。 %}
-{% endfootnotes %}
