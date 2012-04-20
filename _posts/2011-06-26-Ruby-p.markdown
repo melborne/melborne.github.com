@@ -4,11 +4,10 @@ title: Rubyのpでメソッドチェーンを覗き見よう！
 date: 2011-06-26
 comments: true
 categories:
+tags: [ruby, tips]
 ---
 
-
-Rubyでメソッドチェーンの途中経過を覗き見るには
-Kernel#tapが便利だよね
+Rubyでメソッドチェーンの途中経過を覗き見るには、Kernel#tapが便利だよね。
 {% highlight ruby %}
  (1..10).tap{ |x| puts x.inspect }
         .to_a.tap{ |x| puts x.inspect }
@@ -20,14 +19,9 @@ Kernel#tapが便利だよね
  # >> [2, 4, 6, 8, 10]
  # >> [4, 16, 36, 64, 100]
 {% endhighlight %}
-tapのブロックにはもちろんいろいろな手続が書けるけど
-やっぱり出力系メソッドがよく使われると思うんだ
+tapのブロックにはもちろんいろいろな手続が書けるけど、やっぱり出力系メソッドがよく使われると思うんだ。
 
-それならいっそのこと
-それらのメソッドがselfを返すようにして
-しかも引数を取らないときには
-selfが引数になるようにしたら
-もっと簡単になるんじゃないかと思ったんだ
+それならいっそのこと、それらのメソッドがselfを返すようにして、しかも引数を取らないときにはselfが引数になるようにしたら、もっと簡単になるんじゃないかと思ったんだ。
 {% highlight ruby %}
  module Kernel
    [:p, :puts].each do |m|
@@ -40,8 +34,7 @@ selfが引数になるようにしたら
  end
 {% endhighlight %}
 
-こうしておけば
-先の例は次のように書けるんだよ
+こうしておけば先の例は次のように書けるんだよ。
 {% highlight ruby %}
  (1..10).p.to_a.p.select { |x| x % 2 == 0 }.p.map { |x| x * x }.p
  
@@ -52,7 +45,7 @@ selfが引数になるようにしたら
 {% endhighlight %}
 どうかな？
 
-他の例も示しておくね
+他の例も示しておくね。
 {% highlight ruby %}
  %w(google twitter facebook).map(&:capitalize).puts.map(&:upcase) # => ["GOOGLE", "TWITTER", "FACEBOOK"]
  
@@ -90,14 +83,17 @@ selfが引数になるようにしたら
  # >> {:GOOG=>"google", :YHOO=>"yahoo", :MSFT=>"microsoft"}
  # >> {:GOOG=>"www.google.com", :YHOO=>"www.yahoo.com", :MSFT=>"www.microsoft.com"}
 {% endhighlight %}
-先の実装だとオリジナルのメソッドに
-ちょっと制限が掛かっちゃうけど{% fn_ref 1 %}
-簡単に途中経過を見れるのはよさそうだよね
+先の実装だとオリジナルのメソッドにちょっと制限が掛かっちゃうけど{% fn_ref 1 %}、簡単に途中経過を見れるのはよさそうだよね。
 
-既出のアイディアだったら許してね
+既出のアイディアだったら許してね。
 
-(追記：2011-6-26) やっぱりありました ^ ^; こちらはpの拡張ではないのですが、まあ発想は同じです。https://github.com/esminc/tapp (https://twitter.com/#!/mori_dev/status/84845033634799616)
-面白かったです、特にmapメソッドの間に挟むといいですね。<br><br>似たようなやつで、pの内容と一緒にRubyのクラス階層やメソッドを表示する'rubywho'ってのを作ったことがあります。 <br> http://d.hatena.ne.jp/tuto0621/20110616/1308192321>tuto0621さん<br>コメントどうも！なるほど、デバッグでオブジェクト情報も全部出しちゃおうってことですね！
+(追記：2011-6-26) やっぱりありました ^ ^; こちらはpの拡張ではないのですが、まあ発想は同じです。
+
+[https://github.com/esminc/tapp](https://twitter.com/#!/mori_dev/status/84845033634799616)
+
+> 面白かったです、特にmapメソッドの間に挟むといいですね。<br><br>似たようなやつで、pの内容と一緒にRubyのクラス階層やメソッドを表示する'rubywho'ってのを作ったことがあります。 <br> http://d.hatena.ne.jp/tuto0621/20110616/1308192321
+> >tuto0621さん<br>コメントどうも！なるほど、デバッグでオブジェクト情報も全部出しちゃおうってことですね！
+
 {% footnotes %}
    {% fn 複数の引数が取れないなど %}
 {% endfootnotes %}

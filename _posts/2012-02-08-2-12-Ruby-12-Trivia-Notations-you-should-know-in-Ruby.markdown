@@ -5,7 +5,7 @@ tagline: 12 Trivia Notations you should know in Ruby
 date: 2012-02-08
 comments: true
 categories:
-tags: [ruby, trivia]
+tags: [ruby, tips]
 ---
 
 半年くらい前にちょっとトリビアだけど、知っていると意外と便利なRubyの記法を21個紹介したよ。

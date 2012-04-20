@@ -4,30 +4,24 @@ title: jQuery UIでCanvasアニメーションを操作しようよ
 date: 2011-02-22
 comments: true
 categories:
+tags: [ruby, sinatra, canvas, jquery]
 ---
 
+HTML5 Canvasがマイブームです。でも慣れないJavaScriptに悪戦苦闘しています。なかなかキレイにコードが書けません...
 
-HTML5 Canvasがマイブームです
-でも慣れないJavaScriptに悪戦苦闘しています
-なかなかキレイにコードが書けません...
+[crayovas](http://crayovas.heroku.com/)、[aclock](http://aclock.heroku.com/)に続き、デモを作ったので公開します。jQuery UIのスライダーを使って、ボールの速度や色の属性を調整できます。
 
-[](http://crayovas.heroku.com/)　[](http://aclock.heroku.com/)に続き
-デモを作ったので公開します
-jQuery UIのスライダーを使って
-ボールの速度や色の属性を調整できます
-
-まあ　それだけです..
+まあ、それだけです..
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110222/20110222190656.png)
 
 
-[](http://eqball.heroku.com/)
+[eqball](http://eqball.heroku.com/)
 
-以下では前回のデモと異なる部分を中心に説明します
-その他の箇所は前回の記事を読んでください
+以下では前回のデモと異なる部分を中心に説明します。その他の箇所は前回の記事を読んでください。
 
 ##ファイル構成
-ファイル構成は次のようになります
+ファイル構成は次のようになります。
 {% highlight bash %}
  .
  ├── Gemfile
@@ -35,26 +29,24 @@ jQuery UIのスライダーを使って
  ├── config.ru
  ├── eqball.rb
  ├── public
- │&#160;&#160; ├── css
- │&#160;&#160; │&#160;&#160; └── ui-lightness
- │&#160;&#160; │&#160;&#160;     ├── images
- │&#160;&#160; │&#160;&#160;     │&#160;&#160; ├── ui-bg_diagonals.. png
- │&#160;&#160; │&#160;&#160;     │&#160;&#160; ├── ui-bg_diagonals.. png
- │&#160;&#160; │&#160;&#160;     │&#160;&#160; ├──            :
- │&#160;&#160; │&#160;&#160;     │&#160;&#160; └── ui-icons_ffffff_256x240.png
- │&#160;&#160; │&#160;&#160;     └── jquery-ui-1.8.9.custom.css
- │&#160;&#160; └── javascripts
- │&#160;&#160;     └── eqball.js
+ │ ├── css
+ │ │ └── ui-lightness
+ │ │     ├── images
+ │ │     │ ├── ui-bg_diagonals.. png
+ │ │     │ ├── ui-bg_diagonals.. png
+ │ │     │ ├──            :
+ │ │     │ └── ui-icons_ffffff_256x240.png
+ │ │     └── jquery-ui-1.8.9.custom.css
+ │ └── javascripts
+ │     └── eqball.js
  └── views
      ├── index.haml
      ├── layout.haml
      └── style.scss
 {% endhighlight %}
-デモではjQuery UIのslider widget{% fn_ref 1 %}を使っています
-public/css/以下のファイル群はsliderのテーマファイルです
-以下から取得してpublic以下に配置します
+デモではjQuery UIのslider widget{% fn_ref 1 %}を使っています。public/css/以下のファイル群はsliderのテーマファイルです。以下から取得してpublic以下に配置します。
 
-[](http://jqueryui.com/download)
+[jQueryUI](http://jqueryui.com/download)
 
 ##layout.haml
 {% highlight ruby %}
@@ -72,8 +64,7 @@ public/css/以下のファイル群はsliderのテーマファイルです
     = yield
 {% endhighlight %}
 
-スライダーのcssファイルにリンクを張ります
-jQueryとjQuery UI本体はGoogleが提供するものを使います
+スライダーのcssファイルにリンクを張ります。jQueryとjQuery UI本体はGoogleが提供するものを使います。
 
 ##index.haml
 {% highlight ruby %}
@@ -90,8 +81,7 @@ jQueryとjQuery UI本体はGoogleが提供するものを使います
   %a{:href => CREDIT[1]}=CREDIT[0]
 {% endhighlight %}
 
-ボールのサイズ　速度　軌跡　色を調整するために
-８個のスライダーと対応するラベルを用意します
+ボールのサイズ、速度、軌跡、色を調整するために８個のスライダーと対応するラベルを用意します。
 
 ##eqball.js(1)
 {% highlight javascript %}
@@ -121,17 +111,9 @@ $(document).ready(function(){
 })
 {% endhighlight %}
 
-ballオブジェクトを生成しsetInterval()で
-bounce関数に一定周期で渡します
-スライダーの初期設定と操作されたときのイベントを
-$(".slider").sliderの引数として記述します
-slideイベントでスライダーの値ui.valueを
-ボールの各属性にセットします
+ballオブジェクトを生成しsetInterval()でbounce関数に一定周期で渡します。スライダーの初期設定と操作されたときのイベントを$(".slider").sliderの引数として記述します。slideイベントでスライダーの値ui.valueをボールの各属性にセットします。
 
-後述のlabel関数でラベルの表示も変更します
-ここでは
-サイズを変更するスライダーのコードのみを示していますが
-他のスライダーについても同じように記述します
+後述のlabel関数でラベルの表示も変更します。ここでは、サイズを変更するスライダーのコードのみを示していますが、他のスライダーについても同じように記述します。
 
 ##eqball.js(2)
 {% highlight javascript %}
@@ -159,25 +141,18 @@ function fadeToClear (alpha) {
 }
 {% endhighlight %}
 
-label関数でスライダーのラベルの表示を変更します
-bounce関数でボールを描画します
-キャンバスの境界でボールが反転するように
-if条件でspx spyの向きを変えます
-この反転条件は手抜きでボールが壁に沈んでしまいますが
-ここではよしとします
+label関数でスライダーのラベルの表示を変更します。bounce関数でボールを描画します。キャンバスの境界でボールが反転するように、if条件でspx spyの向きを変えます。この反転条件は手抜きでボールが壁に沈んでしまいますがここではよしとします。
 
-fadeToClear関数でキャンバスをクリアしたのち
-ctx.arc ~ ctx.fillでボールを描きます
-fadeToClear関数はボールの軌跡を残せるように
-clearRectせずに
-alpha値を調整したキャンバスの色を再描画します
+fadeToClear関数でキャンバスをクリアしたのち、ctx.arc ~ ctx.fillでボールを描きます。fadeToClear関数はボールの軌跡を残せるようにclearRectせずに、alpha値を調整したキャンバスの色を再描画します。
 
 視覚に訴えるプログラミングも楽しいですね！
 
 Enjoy Your Canvas Life!
 
 ソースコードは以下にあります
-[](https://github.com/melborne/EQBall)
+
+[EQBall](https://github.com/melborne/EQBall)
+
 {% footnotes %}
    {% fn http://jqueryui.com/demos/slider/ %}
 {% endfootnotes %}

@@ -4,58 +4,43 @@ title: Rubyでcalをカラフルに
 date: 2010-12-02
 comments: true
 categories:
+tags: [ruby, gem]
 ---
 
+世界はすっかりＧＵＩに支配されました。コンピュータといったらWindowシステムのことです。人々を魅了したのはその操作性だけではありません。人々はそのカラフルな世界に魅了されたのです。
 
-世界はすっかりＧＵＩに支配されました
-コンピュータといったらWindowシステムのことです
-人々を魅了したのはその操作性だけではありません
-人々はそのカラフルな世界に魅了されたのです
+確かにCUIの世界には色はありません。辛うじて環境変数LSCOLORSをセットして、色の付いたファイル名を眺めるだけの、暗くて地味な、そしてそれを使う人を孤独にさせる世界です。
 
-確かにCUIの世界には色はありません
-辛うじて環境変数LSCOLORSをセットして
-色の付いたファイル名を眺めるだけの
-暗くて地味な
-そしてそれを使う人を孤独にさせる世界です
+しかしそんな世界に[Termtter](http://termtter.org/)が登場しました。TermtterはANSIカラーを引き連れて、CUIの世界に一条の光を差しました。まるでＧＢ末期に登場したポケモンの如くに！{% fn_ref 1 %}。
 
-しかしそんな世界に[Termtter](http://termtter.org/)が登場しました
-TermtterはANSIカラーを引き連れて
-CUIの世界に一条の光を差しました
-まるでＧＢ末期に登場したポケモンの如くに！{% fn_ref 1 %}
+それ以来、<del datetime="2010-12-02T22:19:40+09:00">僕の中</del>ちまたでは、ターミナルのカラー化が流行しています。
 
-それ以来　<del datetime="2010-12-02T22:19:40+09:00">僕の中</del>ちまたでは
-ターミナルのカラー化が流行しています
+[RubyでANSIカラーシーケンスを学ぼう！]({{ site.url }}/2010/11/07/Ruby-ANSI/) 
 
-[]({{ site.url }}/2010/11/07/notitle/) 
+どこかで誰かが叫ぶ声が聞こえます。
 
-どこかで誰かが叫ぶ声が聞こえます
 ターミナルにもっと色を！
+
 ターミナルにもっと色を！
 
 そんなわけで..
 
-calを色付けして出力するCalourを作りました
-多分Reinventing the Wheelでしょうけれども..
+calを色付けして出力するCalourを作りました。多分Reinventing the Wheelでしょうけれども..
 
-Ruby1.9にのみ対応しています
-色付けにはTermColorライブラリを使っています
+Ruby1.9にのみ対応しています。色付けにはTermColorライブラリを使っています。
 
 ##使い方
-添付ファイルをダウンロードして
-そのなかの/bin/cal.rbを実行します
+添付ファイルをダウンロードしてそのなかの/bin/cal.rbを実行します。
 {% highlight ruby %}
 % ruby cal.rb
 {% endhighlight %}
 
-引数無しで当月のカレンダーを表示します
-今日の日付には反転した色が付きます
+引数無しで当月のカレンダーを表示します。今日の日付には反転した色が付きます。
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215308.png)
 
 
-月と年でその年月のものを
-月のみで本年のその月を
-年のみで年間カレンダーを表示します
+月と年でその年月のものを、月のみで本年のその月を、年のみで年間カレンダーを表示します。
 {% highlight ruby %}
 % ruby cal.rb 3 2011
 % ruby cal.rb 2050 9
@@ -68,7 +53,7 @@ Ruby1.9にのみ対応しています
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215258.png)
 
 
-cal.rbの中身は以下のようになっています
+cal.rbの中身は以下のようになっています。
 {% highlight ruby %}
 #!/usr/bin/env ruby
 #-*-encoding: utf-8-*-
@@ -76,12 +61,10 @@ require_relative "../lib/calour"
 puts Calour.new.cal *ARGV.map(&:to_i)
 {% endhighlight %}
 
-Calourクラスのオブジェクトを生成して
-唯一のパブリックメソッドcalを呼ぶことで
-色付きカレンダーの文字列を出力します
+Calourクラスのオブジェクトを生成して、唯一のパブリックメソッドcalを呼ぶことで色付きカレンダーの文字列を出力します。
 
 ##色の指定
-オブジェクトの生成時に引数でカラーを指定できます
+オブジェクトの生成時に引数でカラーを指定できます。
 {% highlight ruby %}
 Calour.new( title: [:magenta, :yellow],
             today: :cyan,
@@ -92,9 +75,7 @@ Calour.new( title: [:magenta, :yellow],
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215259.png)
 
 
-titleの２つの引数はそれぞれ
-タイトルにおける月と年のカラーです
-デフォルトのカラーは以下の通りです
+titleの２つの引数はそれぞれ、タイトルにおける月と年のカラーです。デフォルトのカラーは以下の通りです。
 {% highlight ruby %}
   :title =>  [:green,:yellow]
   :today =>  :green
@@ -104,8 +85,7 @@ titleの２つの引数はそれぞれ
 {% endhighlight %}
 
 ##祭日の色付け
-holiday_optオプションを指定することで
-祭日の色付けをすることができます
+holiday_optオプションを指定することで、祭日の色付けをすることができます。
 {% highlight ruby %}
 Calour.new(holiday_opt: {country: :ja_ja})
 {% endhighlight %}
@@ -113,9 +93,9 @@ Calour.new(holiday_opt: {country: :ja_ja})
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215301.png)
 
 
-祭日データは[Google Calendar Data API](http://code.google.com/apis/calendar/)から取得しています
+祭日データは[Google Calendar Data API](http://code.google.com/apis/calendar/)から取得しています。
 
-verboseオプションをtrueにすれば祭日名を同時に表示します
+verboseオプションをtrueにすれば祭日名を同時に表示します。
 {% highlight ruby %}
 Calour.new(holiday_opt {country: :ja_ja, verbose:true})
 {% endhighlight %}
@@ -125,21 +105,17 @@ Calour.new(holiday_opt {country: :ja_ja, verbose:true})
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215303.png)
 
 
-countryオプションは現在 ja_ja(日本語表記) ja(英語表記) us
-au(australian) cn(china) fr(french) de(german) it(italian)
-kr(south_korea) tw(taiwan) gb(uk) に対応しています
-holiday_optはデフォルトではoffになっています
+countryオプションは現在 ja_ja(日本語表記) ja(英語表記) us au(australian) cn(china) fr(french) de(german) it(italian) kr(south_korea) tw(taiwan) gb(uk) に対応しています。holiday_optはデフォルトではoffになっています。
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215304.png)
 
 
 ##irbやTermtterで使う
-irbやTermtterで使う場合は以下の記事の中で紹介した
-bosonライブラリを介すると便利です
+irbやTermtterで使う場合は以下の記事の中で紹介したbosonライブラリを介すると便利です。
 
 [IRB　それはRubyistの魔法のランプ]({{ site.url }}/2010/11/16/IRB-Rubyist/) 
 
-~/.boson/commandsディレクトリに
-以下のようなRubyモジュールを作ります
+~/.boson/commandsディレクトリに以下のようなRubyモジュールを作ります。
 {% highlight ruby %}
  vi .boson/commands/mysystem.rb
 {% endhighlight %}
@@ -155,17 +131,17 @@ module MySystem
 end
 {% endhighlight %}
 
-そうすればirb上でcalコマンドで使えます
+そうすればirb上でcalコマンドで使えます。
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101202/20101202215305.png)
 
 
-shell上ではbosonコマンドを前置します
+shell上ではbosonコマンドを前置します。
 {% highlight ruby %}
 % boson cal
 {% endhighlight %}
 
-Termtterで使う場合はこのaliasを作れば便利です
-aliasの作成は~/.termtter/configで以下のようにします
+Termtterで使う場合はこのaliasを作れば便利です。aliasの作成は~/.termtter/configで以下のようにします。
 {% highlight ruby %}
 config.plugins.alias.aliases = {
     :cal => '! boson cal'
@@ -176,16 +152,18 @@ config.plugins.alias.aliases = {
 
 
 ##制限
-Ruby1.9のみの対応です
-内部でシステムのcalコマンドを呼んでいます
-それが無いシステムでは動作しません
-OSX Tigerでしか動作確認していません
-他のシステムで動作するかわかりません
-無責任無保証です
 
-使ってくれる人がいたらうれしいです
+1. Ruby1.9のみの対応です
+1. 内部でシステムのcalコマンドを呼んでいます
+1. それが無いシステムでは動作しません
+1. OSX Tigerでしか動作確認していません
+1. 他のシステムで動作するかわかりません
+1. 無責任無保証です
+
+使ってくれる人がいたらうれしいです。
 
 [melborne's calour at master - GitHub](https://github.com/melborne/calour)
+
 {% footnotes %}
    {% fn よく知りませんけど %}
 {% endfootnotes %}

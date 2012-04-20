@@ -4,27 +4,18 @@ title: Enumerable#thread_withでRubyのスレッドを簡単に使おう！
 date: 2011-06-29
 comments: true
 categories:
+tags: [ruby, thread]
 ---
 
-
-前回の投稿ではsleep sortと
-それに対抗したrunning sortを紹介したよ
+前回の投稿ではsleep sortと、それに対抗したrunning sortを紹介したよ。
 
 [sleep sortに対抗してrunning sortだ！（失敗に終わる編）]({{ site.url }}/2011/06/28/sleep-sort-running-sort/)
 
-それらのアルゴリズムではRubyのThreadを使ったけど
-Threadってなんか毎回書き方を忘れるよ
-引数の受け渡し方とかjoinとか
-もっと簡単にスレッディングしたいのにねぇ...
+それらのアルゴリズムではRubyのThreadを使ったけど、Threadってなんか毎回書き方を忘れるよ。引数の受け渡し方とかjoinとか、もっと簡単にスレッディングしたいのにねぇ...
 
-それでEnumerableなオブジェクトに対して
-渡したブロックを並列処理してくれる
-メソッドがあれば便利かなと考えたんだよ
-それならスレッドの実装のことを忘れて
-対象の処理のことだけ考えればいいからね
+それでEnumerableなオブジェクトに対して、渡したブロックを並列処理してくれるメソッドがあれば便利かなと考えたんだよ。それならスレッドの実装のことを忘れて、対象の処理のことだけ考えればいいからね。
 
-で
-Enumerable#thread_withというメソッドを書いてみたよ{% fn_ref 1 %}
+で、Enumerable#thread_withというメソッドを書いてみたよ{% fn_ref 1 %}。
 {% highlight ruby %}
 module Enumerable
   def thread_with
@@ -38,26 +29,21 @@ module Enumerable
   end
 end
 {% endhighlight %}
-Enumerable#thread_withがあれば
-sleep sortは簡単だよ
+Enumerable#thread_withがあればsleep sortは簡単だよ。
 {% highlight ruby %}
 a = (1..10).sort_by { rand } # => [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]
 a.thread_with { |i| sleep i } # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 {% endhighlight %}
 
-効率を良くしたければ
-次のようにすればいいし
+効率を良くしたければ、次のようにすればいいし。
 {% highlight ruby %}
 a = (1..10).sort_by { rand } # => [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]
 a.thread_with { |i| sleep Math.log(i); i } # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 {% endhighlight %}
 
-もう少し真面目な例を挙げるね
+もう少し真面目な例を挙げるね。
 
-複数のWebサイトに並列的にアクセスして
-そこからimgタグを拾ってくる例を示すよ
-ここではベンチマークを取って
-スレッドを使わない例と比べているよ
+複数のWebサイトに並列的にアクセスして、そこからimgタグを拾ってくる例を示すよ。ここではベンチマークを取って、スレッドを使わない例と比べているよ。
 {% highlight ruby %}
 require "benchmark"
 require "open-uri"
@@ -78,16 +64,14 @@ end
 {% endhighlight %}
 なんかThreadが身近になった感じがしない？
 
-ただ先の実装には１つ問題があるよ
-それはもとの配列の順位がthread_withの返り値として
-保証されないことだよ{% fn_ref 2 %}
+ただ先の実装には１つ問題があるよ。それはもとの配列の順位がthread_withの返り値として保証されないことだよ{% fn_ref 2 %}。
 {% highlight ruby %}
 a = (1..1000).map { |i| i**2 }
 b = (1..1000).thread_with { |i| i**2 }
 a == b # => false
 {% endhighlight %}
 
-でも以下のようにすれば一応もとの順位は保証できるんだ
+でも以下のようにすれば一応もとの順位は保証できるんだ。
 {% highlight ruby %}
 module Enumerable
   def thread_with(order=false)
@@ -105,13 +89,12 @@ a = (1..1000).map { |i| i**2 }
 b = (1..1000).thread_with(true) { |i| i**2 }
 a == b # => true
 {% endhighlight %}
-つまりthread_withが引数を取るようにして
-trueを渡せば
-最後にもとの配列の順位にソートしてくれる
+つまりthread_withが引数を取るようにしてtrueを渡せば、最後にもとの配列の順位にソートしてくれる。
 
-まあ
-たいしたネタじゃなかったね..
+まあ、たいしたネタじゃなかったね..
+
 {% footnotes %}
    {% fn まあThreadの使い方そのまんまなんだけど.. %}
    {% fn まあそれがスレッドなんだけど %}
 {% endfootnotes %}
+
