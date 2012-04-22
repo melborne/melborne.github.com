@@ -4,33 +4,24 @@ title: Ruby製ノコギリで株価を切り刻もう!
 date: 2010-03-02
 comments: true
 categories:
+tags: [ruby, gem, stock]
 ---
 
-
-株式投資は社会人のたしなみである
-投資をせずしてリアル経済を知ることはできない
-ところが就業中に君がWebにアクセスして
-株価をチェックしていると上司は怒る
-場合によっては君を解雇する
-そんなばかなことはあってはならない
+株式投資は社会人のたしなみである。投資をせずしてリアル経済を知ることはできない。ところが就業中に君がWebにアクセスして株価をチェックしていると、上司は怒る。場合によっては君を解雇する。そんなばかなことはあってはならない。
 
 ##yahoo_stockライブラリ
-君がRubyを使えるなら上司に気づかれずに
-株価をチェックできるかもしれない
-幸いRubyにはyahoo_stockというライブラリがある
+君がRubyを使えるなら、上司に気づかれずに株価をチェックできるかもしれない。幸いRubyにはyahoo_stockというライブラリがある。
 
 [Ruby gem for stock / finance data &#171; Nasir Jamal](http://nasir.wordpress.com/2009/10/28/ruby-gem-for-finance-data/)
 
-yahoo_stockはYahoo!Financeが提供するCSVデータにアクセスする
-gem install yahoo_stockでインストールして{% fn_ref 1 %}
-Terminalを開いて以下のように使う
+yahoo_stockはYahoo!Financeが提供するCSVデータにアクセスする。`gem install yahoo_stock`でインストールして{% fn_ref 1 %}、Terminalを開いて以下のように使う。
 {% highlight ruby %}
 % irb -r yahoo_stock
 irb> YahooStock::Quote.new(:stock_symbols => "GOOG").results.output
 => ""3/1/2010",532.69\r\n"
 {% endhighlight %}
 
-もう少し詳しい情報が必要なら以下のようにする
+もう少し詳しい情報が必要なら以下のようにする。
 {% highlight ruby %}
 irb> q = YahooStock::Quote.new(:stock_symbols => "GOOG")
 irb> q.standard
@@ -38,13 +29,13 @@ irb> q.results(:to_hash).output
 => [{:ask=>"533.25", :average_daily_volume=>"3013950", :bid=>"532.75", :bid_size=>"113.302", :change=>"+5.89", :change_in_percent=>"+1.12%", :change_with_percent_change=>"+5.89 - +1.12%", :day_high=>"533.29", :day_low=>"527.74", :day_range=>"527.74 - 533.29", :last_trade_date=>"3/1/2010", :last_trade_price_only=>"532.69", :last_trade_time=>"4:00pm", :last_trade_with_time=>"4:00pm - <b>532.69</b>", :name=>"Google Inc.", :open=>"530.07", :previous_close=>"526.80", :symbol=>"GOOG", :ticker_trend=>"&nbsp;++--==&nbsp;", :volume=>"2238234"}]
 {% endhighlight %}
 
-証券Symbolがわからないなら以下のようにする
+証券Symbolがわからないなら以下のようにする。
 {% highlight ruby %}
 irb> YahooStock::ScripSymbol.new('microsoft').results.output
 => "MSFT.MX,MICROSOFT,369.50,Stock,,MEX\r\nMS-U.TI,MICROSOFT,21.21,Stock,,TLO\r\nMSF.AS,MICROSOFT,28.75,Stock,,AMS\r\nMSF.BE,MICROSOFT,20.96,Stock,,BER\r\nMSF.DE,MICROSOFT,21.37,Stock,,GER\r\nMSF.DU,MICROSOFT,21.01,Stock,,DUS\r\nMSF.F,MICROSOFT,21.41,Stock,,FRA\r\nMSF.HA,MICROSOFT,21.25,Stock,,HAN\r\nMSF.HM,MICROSOFT,21.31,Stock,,HAM\r\nMSF.MU,MICROSOFT,21.06,Stock,,MUN\r\nMSF.NX,MICROSOFT,28.92,Stock,,ENX\r\nMSF.SG,MICROSOFT,21.35,Stock,,STU\r\nMSFT.BA,MICROSOFTCORP.,22.85,Stock,,BUE\r\n4338.HK,MICROSOFT-T,217.00,Stock,,HKG\r\nMSFT,MicrosoftCorporation,29.02,Stock,ApplicationSoftware,NMS"
 {% endhighlight %}
 
-株価履歴情報が知りたいなら以下のようにする
+株価履歴情報が知りたいなら以下のようにする。
 {% highlight ruby %}
 irb> st = Date.parse('2010/2/1')
 irb> ed = Date.parse('2010/2/10')
@@ -55,17 +46,15 @@ irb> h.results(:to_hash).output
 これで上司に悟られずに株価をチェックできる!
 
 えっ? 日本市場が見られない?
-君がまだ日本株に興味があるなんて知らなかった
+
+君がまだ日本株に興味があるなんて知らなかった。
 
 ##Nokogiriライブラリ
-残念なことにYahoo!ファイナンスは
-APIやCSVデータを用意してくれてはいない
+残念なことにYahoo!ファイナンスはAPIやCSVデータを用意してくれてはいない。
 
-でも消沈する必要はないRubyにはNokogiriがある
+でも、消沈する必要はないRubyにはNokogiriがある。
 
-Nokogiriは取得したHTMLを解析するためのライブラリだ
-gem install nokogiriでインストールして
-以下のように使う
+Nokogiriは取得したHTMLを解析するためのライブラリだ。`gem install nokogiri`でインストールして、以下のように使う。
 {% highlight ruby %}
 % irb -rnokogiri -ropen-uri
 irb> uri = 'http://finance.yahoo.co.jp'
@@ -80,23 +69,21 @@ irb> end
 <img alt="日経平均先物1限月" src="http://gchart.yahoo.co.jp/s?s=5040469.O">
 <img alt="アメリカ　ドル / 日本　円" src="http://gchart.yahoo.co.jp/z?s=....">
 {% endhighlight %}
-ノコギリがあれば株価だろうがニュースだろうが
-天気だろうがなんでも切り刻める
+
+ノコギリがあれば株価だろうがニュースだろうが天気だろうが、なんでも切り刻める。
 ##yahoojp_stockライブラリ
-Nokogiriを使ってYahoo!ファイナンスから
-株価を取得する簡単なライブラリyahoojp_stockを書いてみた
-これは以下のように使う
+Nokogiriを使ってYahoo!ファイナンスから株価を取得する簡単なライブラリyahoojp_stockを書いてみた。これは以下のように使う。
 {% highlight ruby %}
 % irb -ryahoojp_stock
 irb> YahooJPStock::Quote.new('7203').output
 => {:current_price=>["現在値（11:00）", "3,290"], :day_range=>["値幅制限", "2,595～3,995（03/02）"], :year_high=>["年初来高値", "4,235（10/01/21）"], :pbr=>["PBR（実績）", "(連) 1.03倍（11:00）"], :last_trade_price=>["前日終値", "3,295（03/01）"], :market_cap=>["時価総額", "11,343,912百万円（11:00）"], :year_low=>["年初来安値", "2,750（09/01/26）"], :open_price=>["始値", "3,285（09:00）"], :eps=>["EPS（実績）", "(連) -139.13（2009/03）"], :volume=>["出来高", "3,901,200株（11:00）"], :shares=>[" 発行済株式数", "3,447,997,492株（03/02）"], :outstand_margin_buy=>["信用買残", "11,390,600株（02/19）"], :day_high=>["高値", "3,315（09:16）"], :bps=>["BPS（実績）", "(連) 3,180.36（2009/09）"], :div_yield=>["配当利回り（実績）", "3.04%（11:00）"], :margin_buy_week_change=>["前週比", "+1,259,200株（02/19）"], :day_low=>["安値", "3,285（09:00）"], :minimum_cost=>["最低購入 代金", "329,000（11:00）"], :name=>["名称", "トヨタ自動車(株)"], :symbol=>["コード", "7203"], :dividend=>["1株配当（実績）", "100.00（2009/03）"], :oustand_margin_sell=>["信用売残", "4,218,100株（02/19）"], :exchange=>["市場", "東証1部"], :trade_amount=>["売買代金", "12,860,783千円（11:00）"], :minimum_shares=>["単元株数", "100株"], :day_change=>["前日比", "-5（-0.15%）"], :per=>["PER（実績）", "(連) ---倍（11:00）"], :margin_sell_week_change=>["前週比", "-1,513,600株（02/19）"]}
 {% endhighlight %}
-証券コードが分らなければ以下のようにする
+証券コードが分らなければ以下のようにする。
 {% highlight ruby %}
 irb> YahooJPStock::Find.new('toyota').output
 => [["コード", "市場", "名称", "取引値", "前日比", "出来高"], ["7203", "東証1部", "トヨタ自動車(株)", "3,290(11:00)", "-5(-0.15%)", "3,901,200"], ["3116", "東証1部", "トヨタ紡織(株)", "1,515(11:00)", "-22(-1.43%)", "349,800"], ["8015", "東証1部", "豊田通商(株)", "1,275(11:00)", "-7(-0.55%)", "156,800"], ["6201", "東証1部", "(株)豊田自動織機", "2,380(10:59)", "+19(+0.80%)", "429,100"], ["7221", "東証1部", "トヨタ車体(株)", "1,459(11:00)", "+30(+2.10%)", "170,100"]]
 {% endhighlight %}
-履歴情報が知りたければ以下のようにする
+履歴情報が知りたければ以下のようにする。
 {% highlight ruby %}
 irb> YahooJPStock::History.new('7203', '2010/2/1', '2010/2/10').output
 => [["日付", "始値", "高値", "安値", "終値", "出来高", "調整後終値*"], ["2010年2月10日", "3,390", "3,415", "3,330", "3,390", "18,972,600", "3,390"], ["2010年2月9日", "3,265", "3,415", "3,260", "3,375", "28,934,300", "3,375"], ["2010年2月8日", "3,335", "3,355", "3,265", "3,280", "19,349,000", "3,280"], ["2010年2月5日", "3,255", "3,350", "3,250", "3,315", "45,835,400", "3,315"], ["2010年2月4日", "3,260", "3,295", "3,195", "3,280", "56,511,500", "3,280"], ["2010年2月3日", "3,535", "3,540", "3,400", "3,400", "35,380,300", "3,400"], ["2010年2月2日", "3,610", "3,650", "3,595", "3,605", "23,837,300", "3,605"], ["2010年2月1日", "3,495", "3,505", "3,415", "3,450", "22,342,100", "3,450"]]
@@ -104,80 +91,58 @@ irb> YahooJPStock::History.new('7203', '2010/2/1', '2010/2/10').output
 これで日本株もばっちりだ!
 
 えっ?こんなんじゃ使いづらい?
-それなら[Termtter](http://termtter.org/)を使おう
+
+それなら[Termtter](http://termtter.org/)を使おう。
 
 ##Termtterなら日本株だって
-以前にyahoo_stockライブラリを使って
-Termtterで株価情報を取得するコマンドを作った
+以前にyahoo_stockライブラリを使ってTermtterで株価情報を取得するコマンドを作った。
 
 [TermtterならGOOGだってAAPLだって]({{ site.url }}/2010/02/19/Termtter-GOOG-AAPL/)
 
-だけれどもそれは
-日本のマーケットには対応していないという
-致命的な欠陥を持っていた
-だからyahoojp_stockライブラリを作って
-Termtterでも日本株の情報が取得できるようにしてみた
+だけれどもそれは日本のマーケットには対応していないという、致命的な欠陥を持っていた。だからyahoojp_stockライブラリを作って、Termtterでも日本株の情報が取得できるようにしてみた。
 
-以前作った3つのコマンドstock_price stock_find stock_historyを
-それぞれ拡張して日本株にも対応するようにした
+以前作った3つのコマンドstock_price stock_find stock_historyを、それぞれ拡張して日本株にも対応するようにした。
 
-stock_price(またはstp)コマンドでは
-証券Symbolを渡せば
-Yahoo!Financeにアクセスして米国等株情報を取得し
-証券コードを渡せば
-Yahoo!ファイナンスにアクセスして日本株情報を取得する
+stock_price(またはstp)コマンドでは証券Symbolを渡せば、Yahoo!Financeにアクセスして米国等株情報を取得し、証券コードを渡せば、Yahoo!ファイナンスにアクセスして日本株情報を取得する。
 {% highlight ruby %}
 > stock_price 4689 7203
 {% endhighlight %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100302/20100302132909.png)
 
 
-stock_find(またはstf)コマンドでは
-大文字で始まる英単語を渡せば
-Yahoo!Financeにアクセスして証券Symbolを取得し
-小文字で始まる英単語または日本語を渡せば
-Yahoo!ファイナンスにアクセスして証券コードを取得する
+stock_find(またはstf)コマンドでは、大文字で始まる英単語を渡せば、Yahoo!Financeにアクセスして証券Symbolを取得し、小文字で始まる英単語または日本語を渡せば、Yahoo!ファイナンスにアクセスして証券コードを取得する。
 {% highlight ruby %}
 > stock_find toyota
 {% endhighlight %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100302/20100302132911.png)
 
 
-stock_history(またはsth)コマンドでも
-証券Symbolを渡せば
-Yahoo!Financeにアクセスして米国等株情報を取得し
-証券コードを渡せば
-Yahoo!ファイナンスにアクセスして日本株情報を取得する
-日本株については:daily :weekly :monthlyの指定ができる{% fn_ref 2 %}
+stock_history(またはsth)コマンドでも証券Symbolを渡せば、Yahoo!Financeにアクセスして米国等株情報を取得し、証券コードを渡せば、Yahoo!ファイナンスにアクセスして日本株情報を取得する。日本株については:daily :weekly :monthlyの指定ができる{% fn_ref 2 %}。
 {% highlight ruby %}
 > stock_history 4689 2008/1/1 2009/1/1 :monthly
 {% endhighlight %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100302/20100302132910.png)
 
 
-さらに日本株についてはポートフォリオの現在価値を計算する
-stock_portfolio(またはstpo)コマンドを用意した
-予め自分のポートフォリオ情報を.termtter/configに
-証券コード 持株数 平均取得単価の順にセットして使う
+さらに日本株についてはポートフォリオの現在価値を計算するstock_portfolio(またはstpo)コマンドを用意した。予め自分のポートフォリオ情報を.termtter/configに、証券コード 持株数 平均取得単価の順にセットして使う。
 {% highlight ruby %}
  config.plugins.stock = [['4689.t', 1000, 28000], ['7203.t', 3500, 6520.30]]
 {% endhighlight %}
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100302/20100302141638.png)
 
 
-Termtterなら就業時間中に使っても怒られることはない
+Termtterなら就業時間中に使っても怒られることはない。
 
-出力がうまく整列できていないところはご勘弁を
+出力がうまく整列できていないところはご勘弁を。
 
-yahoojp_stockライブラリは以下のリンクにあります
-このライブラリはYahoo!ファイナンスの配置構成や
-色などの仕様に依存している微妙な作りになっています
-従ってサイトのデザイン上の仕様が変更されただけで機能しなくなります
-このライブラリはRubyライセンスにより提供されます
+yahoojp_stockライブラリは以下のリンクにあります。このライブラリはYahoo!ファイナンスの配置構成や色などの仕様に依存している微妙な作りになっています。従ってサイトのデザイン上の仕様が変更されただけで機能しなくなります。このライブラリはRubyライセンスにより提供されます。
 
 (追記：2010/3/9）stock_portfolioコマンドにIndex情報を追加しました。
+
 [gist: 297408 - Termtter plugins- GitHub](http://gist.github.com/297408)
+
 {% footnotes %}
    {% fn ruby1.9対応版はこちらを使用してください。https://github.com/nas/yahoo_stock %}
    {% fn defaultは:daily %}
 {% endfootnotes %}
+

@@ -26,8 +26,8 @@ Sapphire試験は難易度がかなり高く、熟練Rubyプログラマでも�
 
 1. Arrayクラスのinstance methodの数よりもStringクラスのinstance methodの数のほうが多い。
 1. sort_byはEnumerableに定義されたメソッドであるが、sort_by!はArrayに定義されたメソッドである。
-1. 末尾が!で終わるメソッドを一番多く持つ組み込みクラスはFileである。
 1. 小文字ではじまる組み込みクラスが存在する。
+1. File::Statクラスの42あるインスタンスメソッドの半数は末尾が?で終わる。
 1. selectメソッドはArray, Hash, IO, File, Kernel, Enumerable, Structに存在する。
 1. Symbol#lengthは1.9系で追加されたメソッドである。
 1. ARGFオブジェクトのクラスはARGF.classである。
