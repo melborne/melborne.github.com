@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)
+title: 'Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)'
 date: 2009-05-01
 comments: true
 categories:

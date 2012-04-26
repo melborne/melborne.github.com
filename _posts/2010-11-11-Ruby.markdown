@@ -4,25 +4,23 @@ title: Rubyのメソッドに別名があってもいいじゃないか
 date: 2010-11-11
 comments: true
 categories:
+tags: [ruby]
 ---
 
 
-Rubyのメソッドに別名を付ける方法を勉強したので
-ここにまとめておきます
+Rubyのメソッドに別名を付ける方法を勉強したので、ここにまとめておきます。
+
 ##オブジェクトの別名
-Rubyの変数はオブジェクトの参照にすぎないから
-オブジェクトに別名を付けるのは簡単だ
+Rubyの変数はオブジェクトの参照にすぎないから、オブジェクトに別名を付けるのは簡単だ。
 {% highlight ruby %}
 a_friend = 'Charlie'
 a_coworker = a_friend
 database = DataBase.new
 source = database
 {% endhighlight %}
-そう　オブジェクトを参照している変数を
-別の変数に代入すればいい
+そう、オブジェクトを参照している変数を別の変数に代入すればいい。
 
-でもRubyではメソッドはオブジェクトではないから
-Pythonのようにメソッドを変数に代入することはできない
+でも、Rubyではメソッドはオブジェクトではないから、Pythonのようにメソッドを変数に代入することはできない。
 {% highlight ruby %}
 def methodA
   :method_is_A
@@ -30,18 +28,15 @@ end
 a_method = methodA # => :method_is_A
 {% endhighlight %}
 
-一見　代入が問題なく行われているように見えるけれども
-変数a_methodに代入されているのは
-methodAメソッドの実行結果に過ぎない
+一見、代入が問題なく行われているように見えるけれども、変数a_methodに代入されているのはmethodAメソッドの実行結果に過ぎない。
 {% highlight ruby %}
 a_method.class # => Symbol
 {% endhighlight %}
 
 ##メソッドの別名
-ではどうすればメソッドに別名を付けられるのか
+ではどうすればメソッドに別名を付けられるのか。
 
-いくつかの方法があって
-その代表的な方法はaliasキーワードを使う方法だ
+いくつかの方法があってその代表的な方法はaliasキーワードを使う方法だ。
 {% highlight ruby %}
 def base(name, rep)
   (["Great #{name}!"] * rep).join(", Yes, ")
@@ -51,11 +46,9 @@ parms = ['Charlie', 2]
 base(*parms)      # => "Great Charlie!, Yes, Great Charlie!"
 by_alias(*parms)  # => "Great Charlie!, Yes, Great Charlie!"
 {% endhighlight %}
-aliasには上のようにシンボルかメソッド名を新旧の順で渡す
-引数の間にカンマがないのでこれがメソッドではなくて
-キーワードだということが分かる
+aliasには上のようにシンボルかメソッド名を新旧の順で渡す。引数の間にカンマがないのでこれがメソッドではなくてキーワードだということが分かる。
 
-別名を付けるにはModule#alias_methodを利用する方法もある
+別名を付けるにはModule#alias_methodを利用する方法もある。
 {% highlight ruby %}
 module Base
   alias_method :by_alias_method, :base
@@ -65,16 +58,12 @@ parms = ['Charlie', 2]
 by_alias_method(*parms) # => "Great Charlie!, Yes, Great Charlie!"
 {% endhighlight %}
 
-alias_methodは
-Moduleクラスのプライベート・インスタンスメソッドなので
-モジュールの文脈で呼ぶ必要がある
-aliasと異なり引数に文字列を受け取ることができ
-そこに式を置くこともできる
+alias_methodはModuleクラスのプライベート・インスタンスメソッドなので、モジュールの文脈で呼ぶ必要がある。aliasと異なり引数に文字列を受け取ることができ、そこに式を置くこともできる。
 {% highlight ruby %}
   alias_method :by_alias_method, (if today.sunny? then 'base' else 'base2' end)
 {% endhighlight %}
 
-またメソッド定義により別名を付ける方法がある
+またメソッド定義により別名を付ける方法がある。
 {% highlight ruby %}
 def by_method(*arg)
   base(*arg)
@@ -82,9 +71,9 @@ end
 parms = ['Charlie', 2]
 by_method(*parms)  # => "Great Charlie!, Yes, Great Charlie!"
 {% endhighlight %}
-受け取った引数をオリジナルのメソッドに委譲する形だ
+受け取った引数をオリジナルのメソッドに委譲する形だ。
 
-またメソッドをオブジェクト化して別名を付ける方法もある
+またメソッドをオブジェクト化して別名を付ける方法もある。
 {% highlight ruby %}
 by_lambda = lambda { |*args| base(*args) }
 by_method_obj = method(:base)
@@ -92,20 +81,11 @@ parms = ['Charlie', 2]
 by_lambda[*parms]     # => "Great Charlie!, Yes, Great Charlie!"
 by_method_obj[*parms] # => "Great Charlie!, Yes, Great Charlie!"
 {% endhighlight %}
-１つはKernel#lambdaを使って
-メソッドをProcオブジェクトにして変数に代入する方法
-１つはObject#methodを使って
-メソッドをMethodオブジェクトにして変数に代入する方法だ
+１つはKernel#lambdaを使ってメソッドをProcオブジェクトにして変数に代入する方法。１つはObject#methodを使ってメソッドをMethodオブジェクトにして変数に代入する方法だ。
 
-何れのオブジェクトもcallメソッドを呼ぶことで実行される
-各callメソッドには別名としてそれぞれ
-Proc#［］ Method#［］が定義されていて
-それを使うことで関数呼出しの構文的にその実行ができる
+何れのオブジェクトもcallメソッドを呼ぶことで実行される。各callメソッドには別名としてそれぞれProc#［］、Method#［］が定義されていて、それを使うことで関数呼出しの構文的にその実行ができる。
 
-このように複数の別名定義方法があるけれど
-注意しなければいけないことが１つある
-それはベースのメソッドが再定義されたときの
-挙動が異なるという点だ
+このように複数の別名定義方法があるけれど、注意しなければいけないことが１つある。それはベースのメソッドが再定義されたときの挙動が異なるという点だ。
 {% highlight ruby %}
 def base(name, rep)
   (["Great #{name}!"] * rep).join(", Yes, ")
@@ -139,10 +119,5 @@ by_lambda[*parms]       # => "Poor Charlie!, No, Poor Charlie!"
 by_method_obj[*parms]   # => "Great Charlie!, Yes, Great Charlie!"
 {% endhighlight %}
 
-このコードの結果で分かるように
-alias alias_method Methodオブジェクトを使った別名定義では
-元のメソッドが実行される
-つまりこれらの別名定義ではそのコンテキストを共有できない
-従って元のメソッドが定義されたコンテキストを共有したい場合は
-メソッド再定義かProcオブジェクトによる
-別名の方法を利用する必要がある
+このコードの結果で分かるように、alias alias_method Methodオブジェクトを使った別名定義では元のメソッドが実行される。つまり、これらの別名定義ではそのコンテキストを共有できない。従って元のメソッドが定義されたコンテキストを共有したい場合は、メソッド再定義かProcオブジェクトによる別名の方法を利用する必要がある。
+

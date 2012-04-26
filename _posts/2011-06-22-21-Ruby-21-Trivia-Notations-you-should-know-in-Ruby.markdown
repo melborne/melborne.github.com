@@ -394,11 +394,19 @@ Rubyでアルファベットの配列を作るときなどは通常、以下の�
 > :"aaa" は別のリテラル
 >>ujihisaさん<br>コメントありがとう。でも僕の1.9.2p180環境だとuninitialized constantとなってしまうんです。最新版が必要なのかな<br><br>
 >>sora_hくん<br>コメントありがとう<br>それは別のシンボルという意味ですか？<br>でも:hello.equal? :'hello' #=> true になるよ
+
 >"aaa bbb"のシンボルを作りたい時に:"aaa bbb"することができるようになっている． 文字列を作る "" リテラルの手前に : をつけるとsymbolのリテラルにはなるが，文字列のオブジェクトの手前に:をつけてもならないよね?<br>:""という別のリテラルがある．リテラルは "String" や 1 (数値)や 'String' や [Array] などの事ね．
 >>sora_hくん<br>なるほど確かにそうですね。記述を少し直しました。ありがとう。
 >>ujihisaさん<br>あーやっとわかりました。係り受けが曖昧でしたね。記述を直しました。
+
 >-> も curry もその存在を知らずに読んでちょっとビックリ。<br><br>->range,date{...}.curry より<br><br>->range{->date{...}} がわりやすいかなと思いました
 >>s-:さん<br>コメントありがとう。あーこの例だとそれでもよいですね。ただcurryは動的に引数の数を変えられるのがいいんですよね- :)
+
+
+{{ 4873113946 | amazon_medium_image }}
+{{ 4873113946 | amazon_link }}
+
+
 {% footnotes %}
    {% fn @no6v1さんに教えていただきました. http://friendfeed.com/no6v1/0d7a24e4/loop-with_index-_-i-break-if-p-3-qt-merborne %}
 {% endfootnotes %}

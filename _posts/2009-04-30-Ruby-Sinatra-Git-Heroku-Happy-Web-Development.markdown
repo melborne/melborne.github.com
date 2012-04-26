@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Ruby.Sinatra.Git.Heroku  #=> "Happy Web Development!"
+title: 'Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"'
 date: 2009-04-30
 comments: true
 categories:
@@ -105,7 +105,7 @@ Webサーバが起動するので、ブラウザでhttp://localhost:4567/にア�
  end
 {% endhighlight %}
 
-\_\_END__以下を次のように変えます。
+\_\_END\_\_以下を次のように変えます。
 {% highlight ruby %}
  __END__
  @@layout

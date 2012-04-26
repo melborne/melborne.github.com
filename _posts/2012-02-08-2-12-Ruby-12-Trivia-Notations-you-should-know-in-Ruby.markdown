@@ -199,7 +199,7 @@ Array#first/lastは個数の引数を取れるよ。
 {% endhighlight %}
 
 ##8.正規表現:名前付き参照
-正規表現中で()を使うと部分マッチを捕捉できるよね。で、それに名前を付けたいときは?<pattern>を使えばいいよ。
+正規表現中で()を使うと部分マッチを捕捉できるよね。で、それに名前を付けたいときは?\<pattern\>を使えばいいよ。
 {% highlight ruby %}
 langs = "python lisp ruby haskell erlang scala"
 m = langs.match(/(?<lang>\w+)/) # => #<MatchData "python" lang:"python">
@@ -254,7 +254,7 @@ a_day.unpack('A4A2A2') # => ["2012", "02", "14"]
 {% endhighlight %}
 
 ##12.DATA.rewind
-DATAは\_\_END__以降をFileとしたオブジェクトだよ。だからrewindクラスメソッドが使えるんだけど、これは\_\_END__の最初の行に戻るんじゃなくてファイルのトップに戻るんだよ。だからこれを使えば、なんちゃってQuineができるんだ。
+DATAは\_\_END\_\_以降をFileとしたオブジェクトだよ。だからrewindクラスメソッドが使えるんだけど、これは\_\_END\_\_の最初の行に戻るんじゃなくてファイルのトップに戻るんだよ。だからこれを使えば、なんちゃってQuineができるんだ。
 {% highlight ruby %}
 #!/usr/bin/env ruby
 require "g"
@@ -283,6 +283,14 @@ __END__
 
 [Ruby Trick Shots: A Video of 24 Ruby Tips and Tricks](http://rubyreloaded.com/trickshots/)
 
+
+{{ 4873113946 | amazon_medium_image }}
+{{ 4873113946 | amazon_link }}
+
+
+(追記:2012-04-26) 第３弾を書きました。
+
+[第３弾！知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/04/26/ruby-trivias-you-should-know/ '第３弾！知って得する12のRubyのトリビアな記法')
 
 {% footnotes %}
    {% fn @no6vさんより https://twitter.com/no6v/statuses/104161174823780352 %}

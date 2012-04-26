@@ -363,7 +363,7 @@ Ralf, 29, M, DE, Programmer
 Naomi, 16, F, FR, Student
 {% endhighlight %}
 
-ここでは\_\_END__以下のデータを読み取って、各ユーザ毎にPersonオブジェクトを生成してpeople変数に格納し、これを先のクエリー言語で評価しています。結果は以下のとおりです。
+ここでは\_\_END\_\_以下のデータを読み取って、各ユーザ毎にPersonオブジェクトを生成してpeople変数に格納し、これを先のクエリー言語で評価しています。結果は以下のとおりです。
 {% highlight ruby %}
 puts none_japanese.evaluate(people)
 #<struct Census::Person name="Joe", age=25, sex=:M, nationality=:US, job="Programmer">
