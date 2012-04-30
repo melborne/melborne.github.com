@@ -4,7 +4,7 @@ title: '第３弾！知って得する12のRubyのトリビアな記法'
 tagline: '12 Trivia Notations you should know in Ruby'
 description: ""
 category: 
-tags:
+tags: [ruby, tips]
 date: 2012-04-26
 published: true
 ---

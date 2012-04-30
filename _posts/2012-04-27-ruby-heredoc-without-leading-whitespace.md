@@ -175,8 +175,8 @@ __END__
 {% highlight ruby %}
 class String
   def ~
-    indent = self.lines.map { |l| l[/^ +/] }.compact.map(&:size).min
-    self.lines.map { |line| line[indent..-1] }
+    margin = scan(/^ +/).map(&:size).min
+    gsub(/^ {#{margin}}/, '')
   end
 end
 {% endhighlight %}
@@ -222,7 +222,23 @@ puts ATool.help
 
 `~`、いいですね！
 
-参考：
+____
 
-[第３弾！知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/04/26/ruby-trivias-you-should-know/ '第３弾！知って得する12のRubyのトリビアな記法')
+{{ 4892950947 | amazon_medium_image }}
+{{ 4892950947 | amazon_link }} by {{ 4892950947 | amazon_authors }}
+
+____
+
+関連記事：[第３弾！知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/04/26/ruby-trivias-you-should-know/ '第３弾！知って得する12のRubyのトリビアな記法')
+
+
+(追記:2012-04-27) String#~にバグがあったので直しました。
+
+(追記:2012-04-27) @n0kadaさんのツイートを受けてString#~を変更しました。無駄なことしていました。([Twitter / @n0kada: gsub(/^ {#{self.scan(/^ +/ ...](https://twitter.com/#!/n0kada/status/195763435932356608 'Twitter / @n0kada: gsub(/^ {#{self.scan(/^ +/ ...'))
+
+    (修正前)
+    def ~
+      indent = lines.map { |l| l[/^ +/] }.compact.map(&:size).min
+      lines.map { |line| line[indent..-1] || "\n" }.join
+    end
 
