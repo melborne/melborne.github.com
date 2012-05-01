@@ -12,11 +12,10 @@ published: true
 
 なぜかトリビア人気が再燃しています。
 
-<a href="http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/" target="_blank">知って得する21のRubyのトリビアな記法</a>
-<a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/" alt="" class="http-bookmark"></a>
+{% hatebu http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/ 知って得する21のRubyのトリビアな記法 %}
 
-<a href="http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/" target="_blank">第2弾!知って得する12のRubyのトリビアな記法</a>
-<a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/" alt="" class="http-bookmark"></a>
+{% hatebu http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/ 第2弾!知って得する12のRubyのトリビアな記法 %}
+
 
 みんながトリビア好きだということが分かりました。
 
