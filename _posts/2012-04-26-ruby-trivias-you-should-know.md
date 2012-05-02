@@ -14,7 +14,7 @@ published: true
 
 {% hatebu http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/ 知って得する21のRubyのトリビアな記法 %}
 
-{% hatebu http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/ 第2弾!知って得する12のRubyのトリビアな記法 %}
+{% hatebu http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/ 第２弾！知って得する12のRubyのトリビアな記法 %}
 
 
 みんながトリビア好きだということが分かりました。

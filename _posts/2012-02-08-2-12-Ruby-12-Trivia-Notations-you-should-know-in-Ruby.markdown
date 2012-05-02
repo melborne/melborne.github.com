@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 第2弾!知って得する12のRubyのトリビアな記法
+title: 第２弾！知って得する12のRubyのトリビアな記法
 tagline: 12 Trivia Notations you should know in Ruby
 date: 2012-02-08
 comments: true
