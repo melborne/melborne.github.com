@@ -3,7 +3,7 @@ layout: post
 title: "一生涯はてな記法しますか？それともMarkdownしますか？"
 description: ""
 category: 
-tags: 
+tags: [ruby, gem, blog] 
 date: 2012-05-05
 published: true
 ---
@@ -18,20 +18,20 @@ published: true
 
 はてなダイアリーには別の不満もあります。次のようなものです。
 
-1. HTML整形後の文章をローカル環境で確認できない。
-1. 記事に変更が生じてWeb上で直接編集した場合に、ローカルデータと内容が不一致となり、その管理が煩雑となる{% fn_ref 1 %}。
-1. あんなにサンプルがあるのに、イケてるデザインが見当たらない{% fn_ref 2 %}。
-1. 基本的にサイトが重い。
+> 1. HTML整形後の文章をローカル環境で確認できない。
+> 1. 記事に変更が生じてWeb上で直接編集した場合に、ローカルデータと内容が不一致となり、その管理が煩雑となる{% fn_ref 1 %}。
+> 1. あんなにサンプルがあるのに、イケてるデザインが見当たらない{% fn_ref 2 %}。
+> 1. 基本的にサイトが重い。
 
 ## Github Pages + Jekyll
 そんな理由から私は[GitHub Pages](http://pages.github.com/ 'GitHub Pages')と[Jekyll](https://github.com/mojombo/jekyll 'mojombo/jekyll')を利用して、自分でブログを構築することにしたのです。この利点は次のようなものです。
 
-1. HTML簡略記法のDe-Facto Standardとなっている[Markdown記法](http://blog.2310.net/archives/6 'Markdown文法の全訳')が使える。
-1. テンプレート言語[Liquid](https://github.com/shopify/liquid/wiki/liquid-for-designers 'Liquid for Designers · Shopify/liquid Wiki')を使って、syntax highlight, amazonその他のタグの埋め込みができる。
-1. HTML整形後の文章をローカル環境で確認できる。
-1. githubにおいてgitによるsourceおよびblog dataの一元管理ができる。
-1. [Jekyll-Bootstrap](http://jekyllbootstrap.com/ 'Jekyll-Bootstrap')などをベースに、自由なデザインでサイトを構築できる。
-1. Jekyllは静的サイトを構築するためサイトが軽い。
+> 1. HTML簡略記法のDe-Facto Standardとなっている[Markdown記法](http://blog.2310.net/archives/6 'Markdown文法の全訳')が使える。
+> 1. テンプレート言語[Liquid](https://github.com/shopify/liquid/wiki/liquid-for-designers 'Liquid for Designers · Shopify/liquid Wiki')を使って、syntax highlight, amazonその他のタグの埋め込みができる。
+> 1. HTML整形後の文章をローカル環境で確認できる。
+> 1. githubにおいてgitによるsourceおよびblog dataの一元管理ができる。
+> 1. [Jekyll-Bootstrap](http://jekyllbootstrap.com/ 'Jekyll-Bootstrap')などをベースに、自由なデザインでサイトを構築できる。
+> 1. Jekyllは静的サイトを構築するためサイトが軽い。
 
 ## 過去データの変換
 しかしここで一つの問題が浮上します。それは過去にはてなで投稿した記事の取り扱いです。記事は自分の資産です。できれば同時に移管したい。自分がその一番の読者ですし。しかしそれらは当然に、はてな記法で書かれていてMarkdownへの変換が必要です。記事の数は300を超えるので手作業は現実的ではありません。
