@@ -14,3 +14,4 @@ published: true
 [Translation of Jekyll Plugins — Gist](https://gist.github.com/2643985 'Translation of Jekyll Plugins — Gist')
 
 Original: [Plugins · mojombo/jekyll Wiki](https://github.com/mojombo/jekyll/wiki/Plugins 'Plugins · mojombo/jekyll Wiki')
+

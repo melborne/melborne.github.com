@@ -4,7 +4,6 @@ title: "30分のチュートリアルでJekyllを理解する"
 description: ""
 category: 
 tags: [jekyll, ruby, tutorial]
-date: 2012-05-12
 published: true
 ---
 {% include JB/setup %}
@@ -70,7 +69,7 @@ jkディレクトリに移動してトップページを作ります{% fn_ref 2 
     ---
     #Welcome to my JK Home Page!
 
-もう一度jekyllして`tree`します。
+もう一度`jekyll`して`tree`します。
 {% highlight bash %}
 % jekyll
 % tree
@@ -220,7 +219,7 @@ layout: layout
   <h1>{{ "{{ page.title"}} }}</h1>
 </header>
 
-<div class='body'>
+<div class='main'>
   {{ "{{ content"}} }}
 </div>
 
@@ -259,7 +258,7 @@ Front-Matterでlayout.htmlを読み込むようにします。これによりpos
   <h1>Jekyll Tutorial</h1>
 </header>
 
-<div class='body'>
+<div class='main'>
   <p>Jekyll is a simple, blog aware, static site generator.</p>
 </div>
 
@@ -286,7 +285,7 @@ Front-Matterでlayout.htmlを読み込むようにします。これによりpos
 
 ![Alt title]({{ site.url }}/assets/images/jk05.png)
 
-投稿日とタイトルが変わりました。つまりYAML Front-Matterの記述によってDefaultの設定が上書きされました。
+投稿日とタイトルが変わりました。つまりYAML Front-Matterの記述によってDefaultの設定が上書きされました。この場合、元のMarkdownファイルのファイル名における日付と、パスの日付が一致しなくなる点注意が必要です。
 
 ##_config.yml
 個別ページの設定はそのFront-Matterで行うということが分かりました。では全体的な設定はどこでするのでしょうか。それはルートに_config.ymlというファイルを用意して、そこで行います。試しに記事のパス形式を変えてみます。
@@ -310,7 +309,7 @@ Front-Matterでlayout.htmlを読み込むようにします。これによりpos
     
     5 directories, 7 files
 
-`_site`ディレクトリを見てわかるように、記事のパスが変わりました。この場合、元のMarkdownファイルのファイル名における日付と、パスの日付が一致しなくなる点注意が必要です。
+`_site`ディレクトリを見てわかるように、記事のパスが変わりました。
 
 
 ##Style
