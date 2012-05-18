@@ -312,14 +312,17 @@ module Chat
     puts "-- someone connected"
     @sid = @@channel.subscribe { |data| send_data ">> #{data}" }
   end
+
   def receive_data(data)
     @@channel.push data
   end
+
   def unbind
     puts "-- someone disconnected from the server"
     @@channel.unsubscribe(@sid)
   end
 end
+
 EM.run do
   EM.start_server('localhost', 60000, Chat)
 end
