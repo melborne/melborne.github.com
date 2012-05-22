@@ -105,7 +105,7 @@ mdb.save_to_files
 {% highlight ruby %}
 # はてな記法によるwikipediaタグをliquid tagに変換するフィルタを定義する
 mdb.filter(/\[wikipedia:(.*?)\]/) do |md|
-  "{{ "{% wikipedia #{md[1]}"}} %}"
+  "{ % wikipedia #{md[1]} % }"
 end
 {% endhighlight %}
 フィルタ定義のやり方はhateda2mdが依存している[gsub-filter](https://github.com/melborne/gsub-filter 'melborne/gsub-filter')のreadmeと、HateDa::Converterで定義しているfilterの内容を参照してください。

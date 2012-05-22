@@ -15,8 +15,11 @@ tags: [ruby, recursion]
 
 階乗を考えてみよう。階乗は数学的にこう定義できる。
  
-> n! = n * (n-1)!
-> 但し、自然数n=1のときは1
+{% math %}
+n! = n * (n-1)!\\
+
+但し、自然数n=1のときは1
+{% endmath %}
 
 
 ふつうRubyで階乗メソッドはこう書く。
@@ -163,9 +166,13 @@ Rubyで末尾再帰を使っても、ふつうの再帰と同様に分身が呼�
 
 フィボナッチ数を考えよう。n番目のフィボナッチ数は数学的に次のように定義できる。
  
-> fn = 0 : n = 0のとき
-> fn = 1 : n = 1のとき
-> fn = f(n-1) + f(n-2) : それ以外のとき
+{% math %}
+fn = 0 : n = 0のとき\\
+
+fn = 1 : n = 1のとき\\
+
+fn = f(n-1) + f(n-2) : それ以外のとき
+{% endmath %}
 
 
 これをRubyで書くとこうなる。
@@ -187,29 +194,33 @@ Rubyで末尾再帰を使っても、ふつうの再帰と同様に分身が呼�
 
 すると、高々20番目のフィボナッチ数を求めるのにfibメソッドは21891回も呼ばれることになる。
  
-> % _ruby -rprofile fib.rb
-> % cumulative self self total time seconds seconds calls  ms/call  ms/call  name
->  69.45     2.16      2.16    21891     0.10     1.93  Object#fib
->  15.76     2.65      0.49    39601     0.01     0.01  Fixnum#==
->  10.61     2.98      0.33    21890     0.02     0.02  Fixnum#-
->   4.18     3.11      0.13    10945     0.01     0.01  Fixnum#+
->   0.00     3.11      0.00        1     0.00     0.00  Module#method_added
->   0.00     3.11      0.00        2     0.00     0.00  IO#set_encoding
->   0.00     3.11      0.00        1     0.00  3110.00  #toplevel
+{% highlight bash %}
+% ruby -rprofile fib.rb
+% cumulative self self total time seconds seconds calls  ms/call  ms/call  name
+ 69.45     2.16      2.16    21891     0.10     1.93  Object#fib
+ 15.76     2.65      0.49    39601     0.01     0.01  Fixnum#==
+ 10.61     2.98      0.33    21890     0.02     0.02  Fixnum#-
+  4.18     3.11      0.13    10945     0.01     0.01  Fixnum#+
+  0.00     3.11      0.00        1     0.00     0.00  Module#method_added
+  0.00     3.11      0.00        2     0.00     0.00  IO#set_encoding
+  0.00     3.11      0.00        1     0.00  3110.00  #toplevel
+{% endhighlight %}
 
 
 fibメソッドを末尾再帰で書けたなら、fibメソッドの呼び出し回数は21回で済む。だからRubyでも検討する価値がある。
 
 今8番目のフィボナッチ数を求める演算をfib8とすると、これは以下のように展開できる。
  
-> fib8 = 1*fib8 + 0*fib7
-> = 1*fib7 + 1*fib6 = (fib6 + fib5) + fib6
-> = 2*fib6 + 1*fib5
-> = 3*fib5 + 2*fib4
-> = 5*fib4 + 3*fib3
-> = 8*fib3 + 5*fib2
-> =13*fib2 + 8*fib1
-> = 21*fib1 + 13*fib0 = 21
+{% highlight bash %}
+fib8 =  1*fib8 +  0*fib7
+     =  1*fib7 +  1*fib6 = (fib6 + fib5) + fib6
+     =  2*fib6 +  1*fib5
+     =  3*fib5 +  2*fib4
+     =  5*fib4 +  3*fib3
+     =  8*fib3 +  5*fib2
+     = 13*fib2 +  8*fib1
+     = 21*fib1 + 13*fib0 = 21
+{% endhighlight %}
 
 
 各項の係数をそれぞれa, bとすると、各ステップでbには前のステップのaの値が、aにはa+bの値が与えられていることがわかる。また最後のステップをみると、fib0が0なので第2項の演算結果は結果的に答えに反映されないことがわかる。だから１つのfibメソッドにa、bを渡していき、fib1に達したところでaの値を返すようにすればいい。
@@ -240,7 +251,9 @@ fibメソッドを末尾再帰で書けたなら、fibメソッドの呼び出�
 
 （訂正：末尾再帰であることはfibメソッドの呼び出し回数とは直接関係しないことが分かりましたので訂正します）
 
-末尾再帰かどうかとfibの呼び出し回数には関係ないですよ。<br>アルゴリズムの違いが呼び出し回数に関係してます。<br>例えば、効率の悪い方のアルゴリズムを使って以下のように末尾再帰でfibを書けます。<br>def fib(n)<br>  fib_loop([n], 0)<br>end<br><br>def fib_loop(arr, sum)<br>  if arr.length == 0<br>    sum<br>  elsif arr[0] <= 1<br>    fib_loop(arr[1..-1], sum+1)<br>  else<br>    fib_loop([arr[0]-1, arr[0]-2] + arr[1..-1], sum)<br>  end<br>end>Mozkさん<br>なるほど、僕の理解が違ってました。ご指摘助かります。
+> 末尾再帰かどうかとfibの呼び出し回数には関係ないですよ。<br>アルゴリズムの違いが呼び出し回数に関係してます。<br>例えば、効率の悪い方のアルゴリズムを使って以下のように末尾再帰でfibを書けます。<br>def fib(n)<br>  fib_loop([n], 0)<br>end<br><br>def fib_loop(arr, sum)<br>  if arr.length == 0<br>    sum<br>  elsif arr[0] <= 1<br>    fib_loop(arr[1..-1], sum+1)<br>  else<br>    fib_loop([arr[0]-1, arr[0]-2] + arr[1..-1], sum)<br>  end<br>end>
+>> Mozkさん<br>なるほど、僕の理解が違ってました。ご指摘助かります。
+
 {% footnotes %}
    {% fn [再帰：Wikipediaより](http://ja.wikipedia.org/wiki/再帰 %}
 {% endfootnotes %}
