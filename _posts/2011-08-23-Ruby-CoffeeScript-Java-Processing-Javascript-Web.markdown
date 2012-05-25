@@ -51,18 +51,18 @@ CoffeeScriptとProcessing.jsを使ってビジュアライジング・データ�
 
 ##ディレクトリ構成
 最終的なファイル構成は以下のようになります。
-{% highlight ssh %}
+{% highlight bash %}
 .
 ├── Gemfile
 ├── Gemfile.lock
 ├── app.rb
 ├── config.ru
 ├── public
-│&#160;&#160; ├── census.ssv
-│&#160;&#160; ├── js
-│&#160;&#160; │&#160;&#160; ├── graph.coffee
-│&#160;&#160; │&#160;&#160; └── processing-1.2.3.min.js
-│&#160;&#160; └── milk-tea-coffee.tsv
+│  ├── census.ssv
+│  ├── js
+│  │  ├── graph.coffee
+│  │  └── processing-1.2.3.min.js
+│  └── milk-tea-coffee.tsv
 └── views
     ├── index.haml
     ├── layout.haml
@@ -70,7 +70,7 @@ CoffeeScriptとProcessing.jsを使ってビジュアライジング・データ�
 {% endhighlight %}
 
 ##設計方針
-以下のような方針でビジュアライジング・データを実現します
+以下のような方針でビジュアライジング・データを実現します。
 
 1. データを格納したcensus.ssv{% fn_ref 3 %}とmilk-tea-coffee.tsv{% fn_ref 4 %}をrubyで読みだして解析する。
 1. 解析したデータをJSON APIとして特定のURLで提供できるようにする。
@@ -83,11 +83,13 @@ Webフレームワークのコントローラとなるapp.rbの要点だけを�
 get "/milk" do
   haml :index
 end
+
 get "/milk.json" do
   redirect '/milk' unless request.xhr?
   content_type :json
   parse_data('public/milk-tea-coffee.tsv', '\t', [5, 2.5, 10]).to_json
 end
+
 helpers do
   def parse_data(path, sep, intervals)
     q = {}
@@ -114,6 +116,7 @@ $ ->
     dataMax = Math.ceil(json.dataMax/10.0)*10
     dataMin = if json.dataMin > 0 then 0 else json.dataMin
     [yInterval, yIntervalMinor, xInterval] = json.intervals
+
     canvas = $("canvas#processing")[0]
     processing = new Processing(canvas, graph)
 {% endhighlight %}
@@ -136,6 +139,7 @@ graph = (p) ->
     for row in [0..rowCount]
       interpolators[row] = new Integrator(0)
       interpolators[row].set_target(data[row][0])
+
   p.draw = ->
     drawMainFrame(p)
     
@@ -184,6 +188,7 @@ class Integrator
     @targeting = false
     @vel = 0
     @force = 0.1
+
   update: ->
     if @targeting
       @force += @attraction * (@target - @value)
@@ -191,6 +196,7 @@ class Integrator
     @vel = (@vel + accel) * @damping
     @value += @vel
     @force = 0
+
   set_target: (t) ->
     @targeting = true
     @target = t
@@ -226,13 +232,17 @@ coffeeファイルを'text/coffeescript' mime_typeで扱えるようconfig.ruで
 
 説明が大雑把で詳細が掴めないと思いますが、ソースコードを添付しますので、そちらを参照頂ければ助かります^ ^;
 
-https://github.com/melborne/ProcessingDemo
+[melborne/ProcessingDemo](https://github.com/melborne/ProcessingDemo 'melborne/ProcessingDemo')
+
 
 参考サイト:
 
 [CoffeeScript + Processing.js == Crazy Delicious](http://dry.ly/2011/02/21/coffeescript--processingjs--crazy-delicious/)
 
+----
+
 関連記事:
+
 [Processingアプレットをはてダに貼り付けよう！]({{ site.url }}/2011/02/04/Processing/)
 
 [fun of Processing]({{ site.url }}/2011/01/31/fun-of-Processing/)
