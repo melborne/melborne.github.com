@@ -10,28 +10,25 @@ published: true
 ---
 {% include JB/setup %}
 
-なぜかトリビア人気が再燃しています。
+なぜかトリビア人気が再燃しているよ。
 
 {% hatebu http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/ 知って得する21のRubyのトリビアな記法 %}
 
 {% hatebu http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/ 第２弾！知って得する12のRubyのトリビアな記法 %}
 
 
-みんながトリビア好きだということが分かりました。
+これでみんながトリビア好きだということが分かったので、何とか絞り出して第３弾を書いたよ。ここでは第１弾、第２弾で使ったテクニックも使ってるから、知らないテクニックがあったら先に見てもらえるいいかもね。
 
-何とか絞り出して第３弾を書きました。ここでは第１弾、第２弾で示したトリビアを使っているので、これらに目を通していなければ先に見て頂けると理解が早いです。
-
-では、始めます。
 _____
 
 ##1. Enumerable#each_with_object
-Enumerable#mapではブロックの代わりに&付きのシンボルを渡す技が知られています。
+Enumerable#mapではブロックの代わりに&付きのシンボルを渡す技が知られているよ。
 {% highlight ruby %}
 langs = ["ruby", "python", "lisp", "haskell"]
 langs.map(&:capitalize) # => ["Ruby", "Python", "Lisp", "Haskell"]
 {% endhighlight %}
 
-しかし、この技は引数をとるようなメソッドには使えないという問題があります。そこで、以前に引数をとれるmappというメソッドを書きました。
+だけど、この技は引数をとるようなメソッドには使えないという問題があるよ。で、これに不満があって、引数をとれるmappというメソッドを前に書いたんだ。
 {% highlight ruby %}
 module Enumerable
   def mapp(op=nil, *args, &blk)
@@ -47,7 +44,7 @@ langs.mapp(:+, 'ist') # => ["Rubyist", "Pythonist", "Lispist", "Haskellist"]
 {% endhighlight %}
 [RubyのEnumerable#mapをもっと便利にしたいよ](http://melborne.github.com/2012/02/11/Ruby-Enumerable-map/ 'RubyのEnumerable#mapをもっと便利にしたいよ')
 
-最近、同等のことを`each_with_object`でできるということを知りました。
+でも、同等のことは`each_with_object`でできるんだね。最近、知ったんだ。
 {% highlight ruby %}
 langs.each_with_object('ist').tap{|_|p _.to_a}.map(&:+) # => ["rubyist", "pythonist", "lispist", "haskellist"]
 
@@ -57,11 +54,11 @@ langs.each_with_object('ist').tap{|_|p _.to_a}.map(&:+) # => ["rubyist", "python
 (1..5).each_with_object(2).map(&:**) # => [1, 4, 9, 16, 25]
 [[1,2,3,4], [5,6,7,8], [9,10,11,12]].each_with_object(2).map(&:last) # => [[3, 4], [7, 8], [11, 12]]
 {% endhighlight %}
-tapで取ったeach_with_objectの返り値を見れば、挙動が理解できます。
+tapで取ったeach_with_objectの返り値を見れば、挙動が理解できるよね。
 
-しかしeach_with_objectという名前は長いです。短くなればより人気が出ると思います。
+けど、each_with_objectという名前はちょっと長いよねー。
 
-`with`としてみましょう。
+`with`としてみようか。
 
 {% highlight ruby %}
 Enumerable.send(:alias_method, :with, :each_with_object)
@@ -73,10 +70,10 @@ langs.with('ist').map(&:+) # => ["rubyist", "pythonist", "lispist", "haskellist"
 (1..5).with(2).map(&:**) # => [1, 4, 9, 16, 25]
 [[1,2,3,4], [5,6,7,8], [9,10,11,12]].with(2).map(&:last) # => [[3, 4], [7, 8], [11, 12]]
 {% endhighlight %}
-良くなりましたね。
+なんかよくない？
 
 ##2. Float::INFINITY
-任意の数列を作りたい、しかしその大きさは事前に決めたくないというときがあります。思いつくのは`Enumerator`です。
+任意の数列を作りたい、けど、その大きさは事前に決めたくない、ってときあるよね。ここで思いつくのは`Enumerator`だよ。
 
 {% highlight ruby %}
 sequence = Enumerator.new { |y| i=1; loop { y << i; i+=1 } }
@@ -85,7 +82,7 @@ sequence.take(10) # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 100.times.map { sequence.next } # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
 {% endhighlight %}
 
-しかし似たようなことは無限大定数の`Float::INFINITY`を使ってできます。
+でも`Enumerator`を使わなくても、似たようなことは無限大定数の`Float::INFINITY`でできるんだ。
 {% highlight ruby %}
 sequence = 1..Float::INFINITY
 sequence.take(10) # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -93,7 +90,7 @@ seq = sequence.to_enum
 100.times.map { seq.next } # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
 {% endhighlight %}
 
-Infinityはゼロ除算で得られますから、次のように書いてもいいです。
+Infinityはゼロ除算で取れるから、次のように書いてもいいよ。
 {% highlight ruby %}
 (1..1.0/0).take(10) # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -101,7 +98,7 @@ Infinityはゼロ除算で得られますから、次のように書いてもい
 {% endhighlight %}
 
 ##3. Enumerable#grep
-caseにおける同値判定は再定義可能な`===`で行われます。
+caseにおける同値判定は再定義可能な`===`でされるよね。
 {% highlight ruby %}
 temp = 85
 status =
@@ -135,9 +132,9 @@ res =
 res # => "31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679 must be 'SOMETHING ELSE'"
 {% endhighlight %}
 
-それぞれ`Range#===`、`Module#===`、`Proc#===`による判定で比較をしています。
+それぞれ`Range#===`、`Module#===`、`Proc#===`による判定で比較をしているよ。
 
-実は`Enumerable#grep`におけるパターンマッチも===で判定されます。
+実は`Enumerable#grep`におけるパターンマッチも===で判定されるんだよ。
 {% highlight ruby %}
 numbers = 5.step(80, 5).to_a # => [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
 numbers.grep(20..50) # => [20, 25, 30, 35, 40, 45, 50]
@@ -153,7 +150,7 @@ numbers.grep(lacky) # => [7, 37, 67, 97, 127, 157, 187, 217, 247, 277, 307, 337,
 {% endhighlight %}
 
 ##4. String#gsub
-文字列の中に現れる部分文字列の繰り返し回数を数えたい、というときがあります。おそらく`String#scan`を使います。
+文字列の中に現れる部分文字列の繰り返し回数を数えたい、というときがあるよ。普通、`String#scan`を使うと思うんだ。
 {% highlight ruby %}
 DATA.read.scan(/hello/i).count # => 48
 
@@ -191,9 +188,9 @@ Hela, heba, helloa. Hela, heba, helloa. Hela, heba, helloa.
 Hela, heba, helloa. (Hela.) Hela, heba, helloa. Hela, heba, helloa.
 Hela, heba, helloa. Hela, heba, helloa. Hela, heba, helloa.
 {% endhighlight %}
-いい歌詞ですね。
+いい歌詞だよねー。
 
-`String#gsub`はブロックを渡さないとEnumeratorを返すので、同じようなことができます。
+でも`String#gsub`はブロックを渡さないとEnumeratorを返すから、同じことができるよ。
 {% highlight ruby %}
 DATA.read.gsub(/hello/i).count # => 48
 
@@ -206,14 +203,14 @@ You say "Goodbye" and I say "Hello, hello, hello".
 {% endhighlight %}
 
 ##5. 変数のnil初期化 
-多数の変数を`nil`で初期化したいときがあります。例えばこんな風にします。
+多数の変数を`nil`で初期化したいときってある？そんなときはこうするのかな？
 {% highlight ruby %}
 a, b, c, d, e, f, g, h, i, k = [nil] * 10
 
 [a, b, c, d, e, f, g, h, i, k].map.to_a # => [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
 {% endhighlight %}
 
-しかし多重代入で対応する値がない場合はnilが入るので、これは次で足ります。
+でも、多重代入で対応する値がない場合はnilが入るから、これは次で足りるんだ。
 {% highlight ruby %}
 a, b, c, d, e, f, g, h, i, k = nil
 
@@ -221,7 +218,7 @@ a, b, c, d, e, f, g, h, i, k = nil
 {% endhighlight %}
 
 ##6. クラスメソッド定義 
-クラスやモジュールのメソッドを定義するときは、通常次のようにします。
+クラスやモジュールのメソッドを定義するときは、普通次のようにするよね。
 {% highlight ruby %}
 class Calc
   class << self
@@ -235,7 +232,7 @@ Calc >> '1 + 2' # => 3
 Calc >> '10 ** 2' # => 100
 {% endhighlight %}
 
-外側のクラス定義を`Class.new`や`Module.new`で行えば、次のような書き方もできます。
+外側のクラス定義を`Class.new`や`Module.new`で行えば、次のような書き方もできるんだよ。
 {% highlight ruby %}
 class << Calc = Class.new
   def >>(exp)
@@ -247,11 +244,11 @@ Calc >> '123 / 4.0' # => 30.75
 Calc >> '2 * Math::PI' # => 6.283185307179586
 {% endhighlight %}
 
-そんなことよりも、`Calc.>>`ってメソッド名、良くないですか？irb風で。
+このネタは大したことないけど、`Calc.>>`ってメソッド名、良くない？irb風で。
 
 
 ##7. true, false, nil
-知っての通り、Rubyが取り扱うデータはすべてオブジェクトで、Rubyの世界では数字も、クラスも、そして`true`, `false`, `nil`もすべてオブジェクトです。よって当然に、それらはメソッドを持っており、あとからメソッドを追加することもできます。
+Rubyが取り扱うデータはすべてオブジェクトで、Rubyの世界では数字も、クラスも、そして`true`, `false`, `nil`もすべてオブジェクトってこと、知ってるよね。だから当然、これらはメソッドを持っていて、後からメソッドを追加することもできるんだ。
 {% highlight ruby %}
 def true.true?
   'Beleive me. you are true.'
@@ -272,7 +269,7 @@ your_result # => false
 your_result.true? # => "I said, you are false!"
 {% endhighlight %}
 
-`nil`にもメソッド定義してみます。`===`メソッドを定義してcaseで使います。
+`nil`にもメソッド定義してみるよ。`===`メソッドを定義してcaseで使おう。
 {% highlight ruby %}
 def nil.===(other)
   other.nil? || other.empty?
@@ -304,10 +301,10 @@ end
 # >> h*e*l*l*o*w*o*r*l*d
 # >> Stop it! `{}` is empty or nil.
 {% endhighlight %}
-ちょっと凝り過ぎました。
+ちょっと凝り過ぎちゃったね。
 
 ##8. Rubyのキーワード 
-Rubyのキーワードは予約語ではないので、それが明示的な文脈で使われる限り、メソッド名などにも使えます。ここでは`case`, `if`, `for`をTriviaクラスに定義してみます。
+Rubyのキーワードは予約語じゃないから、それが明示的な文脈で使われる限り、メソッド名などにも使えるんだ。ここでは`case`, `if`, `for`をTriviaクラスに定義してみるよ。
 {% highlight ruby %}
 class Trivia
   def case(klass)
@@ -342,7 +339,7 @@ t.for([*1..10]) { |i| i**2 } # => [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
 {% endhighlight %}
 
 ##9. YAMLタグ指定
-ユーザデータなどのプログラムに書き込みたくないデータをRubyで扱うには、`yamlライブラリ`が便利です。
+ユーザデータなどのプログラムに書き込みたくないデータをRubyで扱うには、`yamlライブラリ`が便利だよね。
 {% highlight ruby %}
 require "yaml"
 
@@ -359,7 +356,7 @@ __END__
 - Lisp
 - C++
 {% endhighlight %}
-ここで`!ruby/`ではじまるタグを使えば、その文字列に対するクラス指定ができますが、`!ruby/object:<クラス名>`というタグを使えば、独自クラスの指定もできます。ここではLanguageクラスのオブジェクトとしてYAMLデータを読みだしてみます。
+ここで`!ruby/`ではじまるタグを使えば、その文字列に対するクラス指定ができるけど、`!ruby/object:<クラス名>`というタグを使えば、独自クラスの指定もできるんだ。LanguageクラスのオブジェクトとしてYAMLデータを読みだしてみるよ。
 
 {% highlight ruby %}
 require "yaml"
@@ -395,7 +392,7 @@ __END__
 {% endhighlight %}
 
 ##10. 単項演算子 ~ (チルダ)
-単項演算子`~`は実はメソッドですが、これはどこで定義されているでしょう。そう、`Fixnum`と`Bignum`でNOT演算をするために用意されています。
+単項演算子`~`は実はメソッドだけど、これはどこで定義されているか知ってる？そう、`Fixnum`と`Bignum`でNOT演算をするために用意されてるんだ。
 {% highlight ruby %}
 ~1 # => -2
 ~2 # => -3
@@ -413,7 +410,7 @@ __END__
 (~7).to_s(2) # => "-1000"
 {% endhighlight %}
 
-それからもう一つ、`Regexp`にも定義されています。これはgetsからの入力を受ける変数`$_`とのパターンマッチをするためのものです。
+それからもう一つ、`Regexp`にも定義されているよ。これはgetsからの入力を受ける変数`$_`とのパターンマッチをするためのものなんだ。
 {% highlight ruby %}
 $_ = 'Ruby is a dynamic, open source programming language with a focus on simplicity and productivity.'
 
@@ -423,7 +420,7 @@ puts "8+long-word `#{$&}` appeared at #{pos}"
 # >> 8+long-word `programming` appeared at 31
 {% endhighlight %}
 
-単項演算子がユニークなのは、レシーバーがメソッドの後ろに来るということです。こんなユニークで使い勝手のいいメソッドはどんどん定義するべきです。結合強度も強いのでメソッドチェーン上も問題ありません。
+単項演算子がユニークなのは、レシーバーがメソッドの後ろに来る、ってことだよ。こんなユニークで使い勝手のいいメソッドはどんどん定義するべきだよね。結合強度も強いからメソッドチェーン上も問題ないし。
 {% highlight ruby %}
 class String
   def ~
@@ -461,10 +458,10 @@ s = 'godtoh'
 ~{ruby: 1, lisp: 2} # => {1=>:ruby, 2=>:lisp}
 {% endhighlight %}
 
-まあ確かに、`~(にょろ)`だけではメソッドの意図がわかりづらいですが。
+まあ確かに、`~(にょろ)`だけじゃ、メソッドの意図がわかりづらいけどね。
 
 ##11. マルチバイトメソッド
-1.9からメソッド名などにマルチバイト文字を使えるようになりましたが、あまり活用事例を見ません。それではRubyが可哀想なので、ここで例を示して布教します。
+1.9からメソッド名などにマルチバイト文字を使えるようになったけど、あまり活用事例を見ないよね。それじゃRubyが可哀想なので、ここで例を示して布教するよ。
 {% highlight ruby %}
 class String
   def ©(name='anonymous')
@@ -501,7 +498,7 @@ puts poetry.©
 {% endhighlight %}
 ``はMacのkeyboardだと`~$k`(Option+Shift+k)を押します。
 
-`Numeric`には通貨メソッドを追加してみます。ここでは`def_method`というメソッド定義メソッドを作って、クラスをオープンする手間を省きます。
+`Numeric`には通貨メソッドを追加してみるよ。ここでは`def_method`というメソッド定義メソッドを作って、クラスをオープンする手間を省いてるよ。
 {% highlight ruby %}
 def def_method(name, klass=self.class, &body)
   blk = block_given? ? body : ->{ "#{name}: not implemented yet." }
@@ -529,11 +526,11 @@ end
 1000000.£ # => "£620,000.0"
 {% endhighlight %}
 
-まあ入力が難ですが..
+まあ入力が難だけど..
 
 
 ##12. 秘伝メソッド
-上でみたようにRubyではキーワードや記号文字をメソッド名に使えますが、それでも使えないものもあります。例えば、`.`, `,`, `@`, `=`, `(`, `#`, `$` などはメソッド名には使えません。
+上で見たようにRubyではキーワードや記号文字をメソッド名に使えるけど、使えないものもあるよ。例えば、`.`, `,`, `@`, `=`, `(`, `#`, `$` なんかはメソッド名には使えないよね。
 {% highlight ruby %}
 def .
 end
@@ -564,7 +561,7 @@ end
 # ~> -:1: syntax error, unexpected $undefined
 {% endhighlight %}
 
-と、普通思いますよね。しかし実はこれらも`define_method`を使うことで定義できるのです。ここでは、先のdef_methodを使ってこれらのメソッドを定義してみます。
+と、普通思うよ。けど、実はこれらも`define_method`を使えば、定義できるんだよ。先のdef_methodを使ってこれらのメソッドを定義してみるよ。
 {% highlight ruby %}
 def def_method(name, klass=self.class, &body)
   blk = block_given? ? body : ->{ "#{name}: not implemented yet." }
@@ -581,13 +578,13 @@ methods.each { |meth| def_method meth, Trivia }
 Trivia.public_instance_methods(false) # => [:".", :",", :"@", :"=", :"(", :"#", :"$"]
 {% endhighlight %}
 
-定義できました。
+ね？
 
-ただ、これらのメソッドにはひとつだけ問題があります..
+ただ、これらのメソッドにはひとつだけ問題があるんだ..
 
 それは...
 
-それらの呼び出しができないんです..
+呼び出しができないんだよ ^ ^;
 
 {% highlight ruby %}
 
@@ -619,7 +616,7 @@ t.$ # =>
 # ~> -:65: syntax error, unexpected $end, expecting ')'
 {% endhighlight %}
 
-しかし`Object#send`や`Method#call`を使って呼び出す、という手段は残されています。
+ただ、`Object#send`や`Method#call`を使って呼び出す、という手段はあるんだ。
 {% highlight ruby %}
 t = Trivia.new
 
@@ -637,13 +634,16 @@ end
 t.send '@', 12 # => "@@@Trivia@@@"
 t.send '(', 'I love Ruby'  # => "( I love Ruby )"
 {% endhighlight %}
-つまり、これらの記号文字メソッドは、通常の方法では定義も呼び出しもできませんが、通常ではない特殊な方法を使えば定義も呼び出しもできる、特殊なメソッド群ということができます。私はこれらのメソッド群を、特殊な方法で隠されたメソッド、つまり`秘伝(hidden)`メソッドと名付けました。使い道は...これから考えます...
+つまり、これらの記号文字メソッドは、通常の方法じゃ定義も呼び出しもできないけど、通常でない特殊な方法を使えば定義も呼び出しもできる、特殊なメソッド群って言えると思うんだ。だから僕はこれらのメソッド群を、特殊な方法で隠されたメソッド、つまり`秘伝(hidden)`メソッドと名付けるよ。使い道は...なさそうだけど...
 
 
-今回は以上で終わりです。楽しんでもらえましたか？
+今回は以上で終わりだよ。
 
 
 
 {{ 4873113946 | amazon_medium_image }}
 {{ 4873113946 | amazon_link }}
+
+
+(追記:2012-06-12) 文体を変えました ^ ^;
 

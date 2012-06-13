@@ -18,21 +18,28 @@ Rubyのクラス継承では < 記号の右辺にクラス定数だけでなく�
  class Male
   def laugh; 'Ha ha ha!' end
  end
+
  class Female
   def laugh; 'Fu fu fu..' end
  end
+
  class Me < [Male, Female][rand 2]
  end
+
  Me.superclass # => Female
  Me.new.laugh # => 'Fu fu fu..'
 {% endhighlight %}
+
 {% highlight ruby %}
  def io(env=:development)
    env==:test ? StringIO : IO
  end
+
  env = :test
+
  class MyIO < io(env)
  end
+
  MyIO.superclass #=> StringIO
 {% endhighlight %}
 つまりRubyでは条件に応じて継承するクラスを動的に変えることができるんだよ。
@@ -44,6 +51,7 @@ Rubyでは通常メソッド名には英小文字を使うけど、英大文字�
      'www.google.com'
    end
    private :URL
+
    def search(word)
      get( URL(), word)
    end
@@ -57,6 +65,7 @@ Rubyでは通常メソッド名には英小文字を使うけど、英大文字�
    def search(word, code=:us)
      get( URL(code), word )
    end
+
    def URL(code)
      { us: 'www.google.com',
        ja: 'www.google.co.jp' }[code]
@@ -70,6 +79,7 @@ Rubyで引数付きメソッドを呼ぶときそのカッコを省略できる�
  def name(sym)
    @name = sym
  end
+
  name:charlie # => :charlie
 {% endhighlight %}
 こうするとより宣言的に見えるよね。
@@ -79,6 +89,7 @@ Rubyで引数付きメソッドを呼ぶときそのカッコを省略できる�
  def teach_me(question, * args, & block)
    google(question, * args, & block)
  end
+
  a, b, * c = 1,2,3,4
  c # => [3,4]
 {% endhighlight %}
@@ -147,6 +158,7 @@ Procの実行はcallメソッドを呼ぶことで実現できるけど、Proc#=
      (Fortune::Teller.ask(name, age, occupation) - Date.parse(date)).to_i
    end
  end
+
  charlie = Person.new('charlie', 13, :programmer)
  charlie.length_of_life('2011/6/22') # => 3
 {% endhighlight %}
@@ -331,7 +343,9 @@ Enumerable#each_with_objectならその手間は要らないよ。
 無限の繰り返しはコードのブロックをKernel#loopに渡すことで実現できるよね。
 {% highlight ruby %}
  require "mathn"
+
  prime = Prime.each
+
  n = 0
  loop do
    printf "%d " % prime.next

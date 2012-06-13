@@ -23,9 +23,11 @@ class Duck
   constructor: (@name, @age) ->
   say: ->
     "Quack Quack #{@name}!"
+
 mofi = new Duck('Mofi', 12)
 pipi = new Duck('Pipi', 9)
 tete  = new Duck('Tete', 5)
+
 mofi.say() # => "Quack Quack Mofi!"
 pipi.say() # => "Quack Quack Pipi!"
 tete.say() # => "Quack Quack Tete!"
@@ -43,9 +45,11 @@ class Duck
     "Quack Quack #{@name}"
   end
 end
+
 mofi = Duck.new('Mofi', 12)
 pipi = Duck.new('Pipi', 9)
 tete = Duck.new('Tete', 5)
+
 mofi.say # => "Quack Quack Mofi"
 pipi.say # => "Quack Quack Pipi"
 tete.say # => "Quack Quack Tete"
@@ -85,9 +89,11 @@ class Duck
     ->{ "Quack Quack #{@name}" }
   end
 end
+
 mofi = Duck.new('Mofi', 12)
 pipi = Duck.new('Pipi', 9)
 tete = Duck.new('Tete', 5)
+
 mofi.say.call # => "Quack Quack Mofi"
 pipi.say.() # => "Quack Quack Pipi"
 tete.say[] # => "Quack Quack Tete"
@@ -108,9 +114,11 @@ Duck = (function() {
   };
   return Duck;
 })();
+
 mofi = new Duck('Mofi', 12);
 pipi = new Duck('Pipi', 9);
 tete = new Duck('Tete', 5);
+
 mofi.say();
 pipi.say();
 tete.say();
@@ -128,6 +136,7 @@ class Duck
     ->{ "I'm #{@age} years old." }
   end
 end
+
 mofi.how_old.call # => "I'm 12 years old."
 pipi.how_old.call # => "I'm 9 years old."
 {% endhighlight %}
@@ -136,6 +145,7 @@ Coffeeで同じことをするには上で学んだようにDuckのprototypeプ�
 {% highlight javascript %}
 Duck::howOld = ->
   "I'm #{@age} years old."
+
 mofi.howOld() # => "I'm 12 years old."
 pipi.howOld() # => "I'm 9 years old."
 {% endhighlight %}
@@ -146,6 +156,7 @@ JavaScriptにコンパイルするよ。
 Duck.prototype.howOld = function() {
   return "I'm " + this.age + " years old.";
 };
+
 mofi.howOld(); # => "I'm 12 years old." 
 pipi.howOld(); # => "I'm 9 years old."  
 {% endhighlight %}
@@ -157,6 +168,7 @@ Coffeeでは個々のオブジェクトに簡単にプロパティを設定で�
 pipi.color = 'brown'
 pipi.swim = ->
   "swim #{@age} days!"
+
 pipi.color # => 'brown'
 pipi.swim() # => 'swim 9 days!'
 {% endhighlight %}
@@ -173,6 +185,7 @@ pipi.color = 'brown';
 pipi.swim = function() {
   return "swim " + this.age + " days";
 };
+
 pipi.color;
 pipi.swim();
 {% endhighlight %}
@@ -187,6 +200,7 @@ class << pipi
     "swim #{@age} days!"
   end
 end
+
 pipi.color = 'brown'
 pipi.color # => "brown"
 pipi.swim # => "swim 9 days!"
@@ -202,9 +216,11 @@ class Duck
   constructor: (@name, @age) ->
   say: ->
     "Quack Quack #{@name}!"
+
 mofi = new Duck('Mofi', 12)
 pipi = new Duck('Pipi', 9)
 tete  = new Duck('Tete', 5)
+
 mofi.say = ->
   "Gaa Gaa #{@name}!"
 mofi.say() # => "Gaa Gaa Mofi!"
@@ -221,14 +237,17 @@ class Duck
   def self.count
     @@count
   end
+
   def initialize(name, age)
     @name, @age, = name, age
     @@count += 1
   end
 end
+
 mofi = Duck.new('Mofi', 12)
 pipi = Duck.new('Pipi', 9)
 tete = Duck.new('Tete', 5)
+
 Duck.count # => 3
 {% endhighlight %}
 クラス変数`@@count`を初期化しDuck.countメソッドを定義して、@@countにアクセスできるようにする。そしてinitializeでカウントアップするよ。
@@ -239,9 +258,11 @@ class Duck
   @count: 0  または @count = 0
   constructor: (@name, @age) ->
     Duck.count += 1
+
 mofi = new Duck('Mofi', 12)
 pipi = new Duck('Pipi', 9)
 tete  = new Duck('Tete', 5)
+
 Duck.count # => 3
 {% endhighlight %}
 インスタンス変数と同じ`@`を使うよ。ちょっと紛らわしいけどプロパティの中と外で`@`の意味が変わることを覚えとけばいいね。
@@ -253,11 +274,13 @@ class Duck
   def eat
     ->{ "eat " + food }
   end
+
   private
   def food
     "meat!"
   end
 end
+
 mofi = Duck.new('Mofi', 12)
 mofi.eat.call # => "eat meat!"
 mofi.food # => private method `food' called
@@ -269,11 +292,13 @@ class Duck
   def eat
     ->{ "eat " + food }
   end
+
   private
   def food
     "#{@age} meat!"
   end
 end
+
 mofi = Duck.new('Mofi', 12)
 mofi.eat.call # => "eat 12 meat!"
 {% endhighlight %}
@@ -311,6 +336,7 @@ mofi.eat() # => 'eat undefined beans'
 class Duck
   eat: ->
     "eat " + food(this)
+
   food = (obj)->
     "#{obj.age} beans"
  
