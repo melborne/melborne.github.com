@@ -637,6 +637,11 @@ injectを二重に使って要素を引き出します。
 
 [list method implementation with inject — Gist](https://gist.github.com/2944128 'list method implementation with `inject` — Gist')
 
+----
+(追記：2012-06-19) 関連記事を書きました。
+
+[Rubyのinjectで逆ポーランド記法電卓を書くYO!](http://melborne.github.com/2012/06/19/rpn-with-inject/ 'Rubyのinjectで逆ポーランド記法電卓を書くYO!')
+
 {% footnotes %}
   {% fn ええ、個人的極論です %}
   {% fn ええ、個人的感想です %}
