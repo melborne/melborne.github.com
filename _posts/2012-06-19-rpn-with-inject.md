@@ -97,50 +97,9 @@ RPN.run("1 2 3 4 5 sum 5 /") # => 3.0
 
 少しだけリファクタして完成です。
 
-{% highlight ruby %}
-class RPN
-  def self.run(exp)
-    res = tokenize(exp).inject([]) { |m, token| m << evaluate(token, m) }
-
-    raise(ArgumentError, "expression is not completed") unless res.size==1
-    res.first
-  end
-
-  def self.tokenize(s)
-    s.split
-  end
-
-  def self.evaluate(token, m)
-    case token
-    when /^[-+\/]|\*{1,2}$/
-      m.pop(2).inject($&)
-    when 'ln'
-      Math.log(m.pop)
-    when 'sum'
-      m.inject(:+).tap{ m.clear }
-    when /^[\d.]+$/
-      $&.to_f
-    else
-      raise ArgumentError, "operator `#{token}` not defined"
-    end
-  end
-  private_class_method :tokenize, :evaluate
-end
-
-if __FILE__ == $0
-  RPN.run("3 4 +") # => 7.0
-  RPN.run("3 4 + 5.5 *") # => 38.5
-  RPN.run("3 4 + 5 * 6 7 / -") # => 34.142857142857146
-  RPN.run("3 4 **") # => 81.0
-  RPN.run("2.7 ln") # => 0.9932517730102834
-  RPN.run("1 2 3 4 5 sum 5 /") # => 3.0
-end
-{% endhighlight %}
+<script src="https://gist.github.com/2948894.js?file=rpn.rb"></script>
 
 Rubyもなかなか簡潔ですよね！
-
-
-[RPN — Gist](https://gist.github.com/2948894 'RPN — Gist')
 
 ----
 {{ 4274068854 | amazon_medium_image }}

@@ -575,6 +575,18 @@ List[1,2,3,4,5,6,7].values_at(1,3,5) # => [2, 4, 6]
 {% endhighlight %}
 変数mはカウンタとして使い、結果を格納する配列lを別途用意します。
 
+ローカル変数lを避けたいなら、配列をinjectの引数に渡して、次のように書くこともできます。
+{% highlight ruby %}
+class List < Array
+  def values_at(*pos)
+    inject([0,[]]) { |(m, l), x| l << x if pos.include?(m); [m + 1, l] }.last
+  end
+end
+
+List[1,2,3,4,5,6,7].values_at(1,3,5) # => [2, 4, 6]
+{% endhighlight %}
+
+
 ##26. compact
 配列からnil要素を除去する`compact`を実装します。
 {% highlight ruby %}
@@ -600,8 +612,26 @@ class List < Array
     end
     l
   end
+end
+
+List[1,2,3,4,5,6,7].take(3) # => [1, 2, 3]
 {% endhighlight %}
 配列mをカウンタとして、別途用意した空配列lにカウンタがnになるまで要素を追加していきます。
+
+ローカル変数lを避けたいなら、配列をinjectの引数に渡して、次のように書くこともできます。
+{% highlight ruby %}
+class List < Array
+  def take(n)
+    inject([0,[]]) do |(m, l), x|
+      return l if m >= n
+      l << x
+      [m + 1, l]
+    end.last
+  end
+end
+
+List[1,2,3,4,5,6,7].take(3) # => [1, 2, 3]
+{% endhighlight %}
 
 ##28. flat_map
 ２次元配列に対するブロックの実行結果を１次元配列として返す`flat_map`を実装します。
@@ -641,6 +671,8 @@ injectを二重に使って要素を引き出します。
 (追記：2012-06-19) 関連記事を書きました。
 
 [Rubyのinjectで逆ポーランド記法電卓を書くYO!](http://melborne.github.com/2012/06/19/rpn-with-inject/ 'Rubyのinjectで逆ポーランド記法電卓を書くYO!')
+
+(追記：2012-06-29) values_atとtakeの記述にローカル変数を作らない例を追加しました。
 
 {% footnotes %}
   {% fn ええ、個人的極論です %}
