@@ -4,7 +4,7 @@ title: Tweette Dotteの遊び方
 date: 2011-11-02
 comments: true
 categories:
-tags: [ruby, pusher, webapp]
+tags: [ruby, pusher, webapp, twitter, heroku]
 ---
 
 先の記事でTweetでドット絵を描く実験的サイト「[Tweette Dotte](http://tweetdot.heroku.com/)」を紹介しました。

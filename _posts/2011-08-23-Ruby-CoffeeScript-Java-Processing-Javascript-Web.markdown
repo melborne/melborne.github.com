@@ -4,7 +4,7 @@ title: RubyのようなCoffeeScriptを使ってJavaのようなProcessingを書�
 date: 2011-08-23
 comments: true
 categories:
-tags: [coffeescript, processing, webapp]
+tags: [coffeescript, processing, webapp, Visualization]
 ---
 
 「ビジュアライジング・データ ―Processingによる情報視覚化手法」(Ben Fry著) という、情報視覚化の実践的テクニックを解説する素晴らしい本があります。

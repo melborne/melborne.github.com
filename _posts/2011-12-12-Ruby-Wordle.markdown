@@ -4,7 +4,7 @@ title: Rubyで英文小説をWordleしようよ
 date: 2011-12-12
 comments: true
 categories:
-tags: [ruby]
+tags: [ruby, wordle, Visualization]
 ---
 
 Wordleって知ってる？Wordleはテキスト中の単語をグラフィカルに配置して表示するツール／サービスだよ。

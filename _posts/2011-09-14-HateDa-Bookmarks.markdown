@@ -4,6 +4,7 @@ title: 僕はブログを書く ~ HateDa::Bookmarks の紹介
 date: 2011-09-14
 comments: true
 categories:
+tags: [ruby, hatena, visualization, processing]
 ---
 
 

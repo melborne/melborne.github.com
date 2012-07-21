@@ -247,6 +247,14 @@ repeatを使うと、次のように書けます。
 
 ----
 
+(追記：2012-07-20)
+
+本日、`Object#sequence`でFeatureリクエストを出しました。リクエストにおいては、コメントおよびツイートを通して頂いた名称のアイディアを共に記載しました。ありがとうございます。
+
+> [Feature #6758: Object#sequence - ruby-trunk - Ruby Issue Tracking System](http://bugs.ruby-lang.org/issues/6758 'Feature #6758: Object#sequence - ruby-trunk - Ruby Issue Tracking System')
+
+----
+
 関連記事：
 
 [Rubyのrepeat関数でフィボナッチ、トリボナッチ、テトラナッチ！](http://melborne.github.com/2011/07/01/Ruby-repeat/ 'Rubyのrepeat関数でフィボナッチ、トリボナッチ、テトラナッチ！')

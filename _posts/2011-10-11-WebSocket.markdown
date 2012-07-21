@@ -5,6 +5,7 @@ tagline: WebSocketのデモ
 date: 2011-10-11
 comments: true
 categories:
+tags: [ruby, webapp, lovelang, websocket, pusher, heroku]
 ---
 
 
