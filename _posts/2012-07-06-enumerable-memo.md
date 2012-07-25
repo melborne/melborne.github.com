@@ -174,6 +174,14 @@ puts date_range.memo { |m, d| m << d if d.day == 13 and d.friday? }.take(10)
 ちょっと手軽に遅延評価できる感じで、いいよね？
 
 ----
+(追記：2012-07-25) yharaさんの[yhara/enumerable-lazy · GitHub](https://github.com/yhara/enumerable-lazy/ 'yhara/enumerable-lazy · GitHub')をよく見たら、Enumerable::Lazy.newには既に上に書いたmemoの仕組みが用意してあって、しかも2.0.0-devを試してみたら、Enumerable#lazyが既にブロックを渡せるようになっていました。従って、何の苦もなく次のようにできるのでした。
+
+{% highlight ruby %}
+('A'..all_magazine).lazy { |y, w| y << w if w.match 'AKB' }
+{% endhighlight %}
+すばらしい！
+
+----
 
 参考資料：
 
