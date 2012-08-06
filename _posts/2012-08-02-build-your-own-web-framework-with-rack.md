@@ -3,7 +3,7 @@ layout: post
 title: "エラーメッセージから学ぶRack最初の一歩"
 description: ""
 category: 
-tags: 
+tags: [rack]
 date: 2012-08-02
 published: true
 ---
@@ -83,7 +83,7 @@ run 1
 今度はどうでしょう。
 {% highlight bash %}
 ArgumentError: wrong number of arguments (1 for 0)
-        /Users/keyes/Google Drive/playground/draque/config.ru:3:in `call'
+        config.ru:3:in `call'
 {% endhighlight %}
 
 引数がないと言われました。引数を付けてみます。
@@ -337,7 +337,7 @@ def draque(env)
   if res = @routes[:get][path]
     res.call(env)
   else
-    [ 400, headers, not_found]
+    [ 404, headers, not_found ]
   end
 end
 
@@ -350,7 +350,7 @@ get '/draque' do
 end
 
 get '/' do |env|
-  [200, headers, top_body(env)]
+  [ 200, headers, top_body(env) ]
 end
 
 def headers
@@ -385,7 +385,7 @@ module Draque
     if res = @@routes[:get][path]
       res.call(env)
     else
-      [ 400, headers, not_found]
+      [ 404, headers, not_found ]
     end
   end
 
@@ -405,7 +405,7 @@ get '/draque' do
 end
 
 get '/' do |env|
-  [200, headers, top_body(env)]
+  [ 200, headers, top_body(env) ]
 end
 
 def top_body(env)
@@ -427,6 +427,15 @@ run method(:draque)
 なんちゃってWebフレームワークdraqueの完成です^ ^;
 
 Rack、最初の一歩は踏み出せたでしょうか。
+
+
+[Joke Rack Web framework Draque — Gist](https://gist.github.com/3243357 'Joke Rack Web framework `Draque` — Gist')
+
+----
+
+(追記：2012-08-06) 続きを書きました。
+
+[エラーメッセージから学ぶRack次の一歩](http://melborne.github.com/2012/08/05/use-rack-middleware/ 'エラーメッセージから学ぶRack次の一歩')
 
 ----
 
