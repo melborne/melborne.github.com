@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "エラーメッセージから学ぶRack最初の一歩"
+title: "エラーメッセージから学ぶRack - 最初の一歩"
 description: ""
 category: 
 tags: [rack]
@@ -435,7 +435,7 @@ Rack、最初の一歩は踏み出せたでしょうか。
 
 (追記：2012-08-06) 続きを書きました。
 
-[エラーメッセージから学ぶRack次の一歩](http://melborne.github.com/2012/08/05/use-rack-middleware/ 'エラーメッセージから学ぶRack次の一歩')
+[エラーメッセージから学ぶRack - Middlewareの魔法](http://melborne.github.com/2012/08/06/use-rack-middleware/ 'エラーメッセージから学ぶRack - Middlewareの魔法')
 
 ----
 

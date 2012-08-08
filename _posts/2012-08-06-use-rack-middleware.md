@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "エラーメッセージから学ぶRack次の一歩"
-tagline: "Middlewareの魔法"
+title: "エラーメッセージから学ぶRack - Middlewareの魔法"
 description: ""
 category: 
 tags: [rack]
-date: 2012-08-05
+date: 2012-08-06
 published: true
 ---
 {% include JB/setup %}
 
 
-前回の記事「[エラーメッセージから学ぶRack最初の一歩](http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/ 'エラーメッセージから学ぶRack最初の一歩')」の続きです。
+前回の記事「[エラーメッセージから学ぶRack - 最初の一歩](http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/ 'エラーメッセージから学ぶRack最初の一歩')」の続きです。
 
 ----
 
@@ -683,6 +682,13 @@ Rack、次の一歩は踏み出せたでしょうか。
 
 
 [Joke Rack Web framework `Draque` — Gist](https://gist.github.com/3243357 'Joke Rack Web framework `Draque` — Gist')
+
+
+----
+
+(追記：2012-08-08) 続きを書きました。
+
+[Rackをminifyした僅か100行のLackで学ぶRackの中身](http://melborne.github.com/2012/08/08/learn-rack-with-lack/ 'Rackをminifyした僅か100行のLackで学ぶRackの中身')
 
 ----
 
