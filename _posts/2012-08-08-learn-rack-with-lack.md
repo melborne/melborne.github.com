@@ -490,7 +490,7 @@ Buider#to_appとそっくりな処理が出てきました。つまりto_appに�
 
 なるほど各Serverオブジェクトは、defaultで共通のmiddlewareをいくつか読み込むんですね。そして、それらをappにラップするというわけです。前回の記事でRack::Lint::LintErrorが吐かれていたのは、ここでLintを組み込んでいたからなんですね。なお、Lackではこれらのmiddlewareを持っていないので、コメントアウトして空のハッシュが返るようにしています。
 
-さあ以上で、wrapped_appメソッドにおいて@wrapped_appにmiddlewareでラップされたWebアプリがセットされました。そして、@startにおいてserver.runに渡される引数が確定したわけです。
+さあ以上で、wrapped_appメソッドにおいて@wrapped_appにmiddlewareでラップされたWebアプリがセットされました。そして、#startにおいてserver.runに渡される引数が確定したわけです。
 
 {% highlight ruby %}
 class Lack::Server

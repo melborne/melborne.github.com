@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Intel Mac mini 7,500円で生還！～HDD換装レポート
+title: "Intel Mac mini 7,500円で生還！～HDD換装レポート"
 date: 2008-02-13
 comments: true
 categories:

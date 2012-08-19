@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Gmail New Version Fixed!
+title: "Gmail New Version Fixed!"
 date: 2008-02-15
 comments: true
 categories:

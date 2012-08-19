@@ -68,7 +68,7 @@ Project-XYZ
 さあ仕事が終わったら上のファイルをRubyに読み込ませて集計しましょう。
 
 次のような出力が見やすくていいですね。
-{% highlight text %}
+{% highlight bash %}
 AA123
   Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012
   Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012
