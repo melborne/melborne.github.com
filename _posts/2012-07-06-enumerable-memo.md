@@ -62,7 +62,7 @@ all_magazine = 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
 # => ["*AKB48*", "A*AKB48*", "*AKB48*A", "*AKB48*B", "*AKB48*C", "*AKB48*D", "*AKB48*E", "*AKB48*F", "*AKB48*G", "*AKB48*H", "*AKB48*I", "*AKB48*J", "*AKB48*K", "*AKB48*L", "*AKB48*M", "*AKB48*N", "*AKB48*O", "*AKB48*P", "*AKB48*Q", "*AKB48*R", "*AKB48*S", "*AKB48*T", "*AKB48*U", "*AKB48*V", "*AKB48*W", "*AKB48*X", "*AKB48*Y", "*AKB48*Z", "B*AKB48*", "C*AKB48*", "D*AKB48*", "E*AKB48*", "F*AKB48*", "G*AKB48*", "H*AKB48*", "I*AKB48*", "J*AKB48*", "K*AKB48*", "L*AKB48*", "M*AKB48*", "N*AKB48*", "O*AKB48*", "P*AKB48*", "Q*AKB48*", "R*AKB48*", "S*AKB48*", "T*AKB48*", "U*AKB48*", "V*AKB48*", "W*AKB48*"]
 {% endhighlight %}
 
-Ruby1.9で試すなら、`gem install enumerable-lazy`して、`require "Enumerable/lazy"`する必要があるよ。
+Ruby1.9で試すなら、`gem install enumerable-lazy`して、`require "enumerable/lazy"`する必要があるよ。
 
 ここで`lazy`はEnumeratorのサブクラスであるLazyクラスのオブジェクトを返すよ。LazyクラスにはEnumeratorでラップしたselectやmapメソッドが定義してあって、それらが代わりに呼ばれるようになるんだ。lazyしないとselectは直ちにrangeオブジェクトに対する評価を始めるから答えが帰ってこないという事態になるけど、lazyで定義されたselectが呼ばれた場合には、それはEnumeratorでラップされていてその評価を先送りにできるんだよ。
 
