@@ -435,9 +435,6 @@ ____
 {{ 4873115736 | amazon_medium_image }}
 {{ 4873115736 | amazon_link }} by {{ 4873115736 | amazon_authors }}
 
-{{ 4873113911 | amazon_medium_image }}
-{{ 4873113911 | amazon_link }} by {{ 4873113911 | amazon_authors }}
-
 
 {% footnotes %}
   {% fn 変数はグローバルオブジェクトのプロパティです。 %}
