@@ -430,6 +430,11 @@ earl.ageInDays(); // 15330
 
 「継承」「Object.create」などについての説明が欠落していますが、JavaScriptのオブジェクト指向に対する僕の理解は今のところここまでです。最後までありがとうございますm(__)m
 
+----
+
+(追記：2012-09-11) 関連記事書きました。
+
+[JavaScript脳で理解するRubyのオブジェクト指向](http://melborne.github.com/2012/09/11/understand-ruby-oop-with-js-brain/ 'JavaScript脳で理解するRubyのオブジェクト指向')
 ____
 
 {{ 4873115736 | amazon_medium_image }}
