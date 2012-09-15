@@ -149,7 +149,7 @@ var person = {
 
 person.name; // 'unknown'
 person.age; // 1
-person.ageInDays(); // 365
+person.ageInDays(); // 1095
 {% endhighlight %}
 
 personオブジェクトが生成できました。これをcharlie, earlの各オブジェクトのプロトタイプとなるよう、それらの`__proto__`プロパティにセットして、ageInDaysを呼んでみます。
@@ -435,6 +435,10 @@ earl.ageInDays(); // 15330
 (追記：2012-09-11) 関連記事書きました。
 
 [JavaScript脳で理解するRubyのオブジェクト指向](http://melborne.github.com/2012/09/11/understand-ruby-oop-with-js-brain/ 'JavaScript脳で理解するRubyのオブジェクト指向')
+
+(追記：2012-09-15) 続きを書きました。
+
+[Ruby脳が理解するJavaScriptのオブジェクト指向（その２）](http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/ 'Ruby脳が理解するJavaScriptのオブジェクト指向（その２）')
 ____
 
 {{ 4873115736 | amazon_medium_image }}
