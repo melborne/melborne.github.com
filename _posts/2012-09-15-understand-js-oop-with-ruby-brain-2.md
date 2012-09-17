@@ -131,7 +131,7 @@ iPhone5.prototype.panorama = function() {
 };
 
 {% endhighlight %}
-`iPhone5.prototype = new iPhone4`としている点がポイントです。つまりiPhone5のprototypeプロパティに、iPhone4コンストラクタから生成されるオブジェクトをそのプロトタイプオブジェクトとしてセットしています。そしてそのプロトタイプオブジェクトに、iPhone5の独自機能である`panorame`を追加しました。
+`iPhone5.prototype = new iPhone4`としている点がポイントです。つまりiPhone5のprototypeプロパティに、iPhone4コンストラクタから生成されるオブジェクトをそのプロトタイプオブジェクトとしてセットしています。そしてそのプロトタイプオブジェクトに、iPhone5の独自機能である`panorama`を追加しました。
 
 さあもう一度、iPhone5オブジェクトを作ってみます。
 {% highlight javascript %}
@@ -166,7 +166,7 @@ iPhone5コンストラクタの`prototype`プロパティにはiPhone4コンス�
 
 あなた「iPadはどうなってんのよ。別に作れってか」
 
-蛇足と思われますが折角ここまで来たので、ご要望にお答えしまして上記生産システムにiPadの生産ラインも載せることにします。iPhoneとiPadのコアはご存知iOSですから、これをベースにしてiOSコンストラクタのラインも追加します。
+蛇足と思われますが折角ここまで来たので、ご要望にお答えしまして上記生産システムにiPadの生産ラインも載せることにします。iPhoneとiPadのコアはご存知iOSですから、これをベースにしてiPadコンストラクタのラインも追加します。
 
 {% highlight javascript %}
 function iOS () { };
@@ -252,10 +252,33 @@ iPhone4コンストラクタの`prototype`プロパティにセットしたオ�
 
 JavaScriptでは異なる実装による複数の継承が実現できるようですが、ここではnew演算子を使った最も一般的な方法による継承を説明してみました。
 
+----
+
+(追記：2012-09-16) 以下を追記しました。
+
+## Rubyにおける継承
+
+対比のためRubyにおける対応コードを貼っておきます。Rubyにはクラスと似たしかしインスタンスを生成しないモジュールというエンティティがあります。IOSはこれを使って実装し、IPhone4クラスおよびIPadクラスにincludeすることで、その機能を各クラスに付与するようにしています。
+
+<script src="https://gist.github.com/3727490.js?file=iphone5.rb"></script>
+
+## オブジェクト関係図
+上記コードに対応する図は次のようになります。
+
+
+![Ruby class inheritance noshadow]({{ site.url }}/assets/images/rb_proto01.png)
+
+Rubyではオブジェクトに対するアクセスはすべてメソッド呼び出しで、基本的にその実体はクラスが保持しています。各オブジェクトはその状態情報（ここではname, id）だけを保持しています。
+
+ここでは詳しい説明は割愛しますが、JavaScriptにおける図と対比して頂けると、２つの言語におけるオブジェクト指向の実現方法の違いが見えてくるかもしれません。
 
 サンプルコードは以下においておきます。
 
 [iPhone5 constructor for describing JavaScript prototype chain — Gist](https://gist.github.com/3727490 'iPhone5 constructor for describing JavaScript prototype chain — Gist')
+
+(追記：2012-09-18) 続きを書きました。
+
+[Ruby脳が理解するJavaScriptのオブジェクト指向（その３）](http://melborne.github.com/2012/09/17/understand-js-oop-with-ruby-brain-3/ 'Ruby脳が理解するJavaScriptのオブジェクト指向（その３）')
 
 ----
 
