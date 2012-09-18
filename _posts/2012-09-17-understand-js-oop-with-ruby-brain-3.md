@@ -109,7 +109,7 @@ scott.panorama(); // 'Scott Take a Panorama Photo!!'
 {% endhighlight %}
 うまくいきました。
 
-この時点でユーザがiPhone5コンストラクタをnewする場合と大きく異なるのは、ユーザはもはやiPhone5コンストラクタにアクセス出来ないという点です。その結果、new無しでiPhone5コンストラクタ呼んでしまうというリスクは消えました。確かめてみます。
+この時点でユーザがiPhone5コンストラクタをnewする場合と大きく異なるのは、ユーザはもはやiPhone5コンストラクタにアクセス出来ないという点です。その結果、new無しでiPhone5コンストラクタを呼んでしまうというリスクは消えました。確かめてみます。
 {% highlight javascript %}
 iPhone5 // ReferenceError: iPhone5 is not defined
 
