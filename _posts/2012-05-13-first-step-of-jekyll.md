@@ -663,6 +663,16 @@ Browserで確認します。
 > 1. Liquidテンプレート`{{ "{{"}} }}`または`{{ "{%"}} %}`を使ってサイトまたはページオブジェクトの埋め込みができる。
 > 1. `_plugins`ディレクトリ以下にPlugin Scriptを配置することにより、機能拡張が可能である。
 
+----
+
+関連記事：
+
+[Jekyll Wiki Pluginsの説明ページを勝手に翻訳しました](http://melborne.github.com/2012/05/09/translation-of-jekyll-plugins/ 'Jekyll Wiki Pluginsの説明ページを勝手に翻訳しました')
+
+[一生涯はてな記法しますか？それともMarkdownしますか？](http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/ '一生涯はてな記法しますか？それともMarkdownしますか？')
+
+----
+
 
 {{ 4003224221 | amazon_medium_image }}
 {{ 4003224221 | amazon_link }} by {{ 4003224221 | amazon_authors }}

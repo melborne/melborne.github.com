@@ -125,6 +125,11 @@ mdb.run(10,20)
 
 Enjoy your Blog life!
 
+----
+
+関連記事： [30分のチュートリアルでJekyllを理解する](http://melborne.github.com/2012/05/13/first-step-of-jekyll/ '30分のチュートリアルでJekyllを理解する')
+
+----
 
 {{ 4839914982 | amazon_medium_image }}
 {{ 4839914982 | amazon_link }} by {{ 4839914982 | amazon_authors }}
