@@ -339,6 +339,8 @@ Enjoy Metro Map with Gviz!
 
 [Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！](http://melborne.github.com/2012/09/27/usstates-map-data-vasualization-with-gviz/ 'Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！')
 
+[東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/03/draw-metro-logos-with-gviz/ '東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く')
+
 ----
 
 {{ 'B007OVX460' | amazon_medium_image }}

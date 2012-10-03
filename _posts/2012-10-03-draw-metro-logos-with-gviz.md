@@ -56,6 +56,8 @@ end
 
 以上ですm(__)m
 
+[Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist](https://gist.github.com/3815566#file_logo.rb 'Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist')
+
 ----
 
 関連記事：
