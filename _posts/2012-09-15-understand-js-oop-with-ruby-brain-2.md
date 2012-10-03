@@ -4,7 +4,7 @@ title: "Ruby脳が理解するJavaScriptのオブジェクト指向（その２�
 tagline: "私はいかにして誰よりも早くiPhone5を手に入れたか"
 description: ""
 category: 
-tags: 
+tags: [javascript, oop] 
 date: 2012-09-15
 published: true
 ---

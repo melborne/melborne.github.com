@@ -3,7 +3,7 @@ layout: post
 title: "Ruby脳が理解するJavaScriptのオブジェクト指向（その３）"
 description: ""
 category: 
-tags: 
+tags: [javascript, oop]
 date: 2012-09-17
 published: true
 ---

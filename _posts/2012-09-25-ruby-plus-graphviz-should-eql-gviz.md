@@ -3,7 +3,7 @@ layout: post
 title: "Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！"
 description: ""
 category: 
-tags: 
+tags: [graphviz, gem]
 date: 2012-09-25
 published: true
 ---
