@@ -232,8 +232,8 @@ Gviz ver0.0.4では正規化のために`Numeric#norm`というメソッドを�
 {% highlight ruby %}
 
 flatdata = metrodata.values.flatten(1)
-lon_minmax = flatdata.map { |d| d[11].to_f }.minmax_by { |d| d.to_f }
-lat_minmax = flatdata.map { |d| d[12].to_f }.minmax_by { |d| d.to_f }
+lon_minmax = flatdata.map { |d| d[11].to_f }.minmax
+lat_minmax = flatdata.map { |d| d[12].to_f }.minmax
 
 lon_range = Range.new(*lon_minmax) # => 139.612434..139.958972
 lat_range = Range.new(*lat_minmax) # => 35.586859..35.814544
