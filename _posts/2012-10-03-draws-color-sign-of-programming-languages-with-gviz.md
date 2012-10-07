@@ -23,9 +23,10 @@ published: true
 ### 決定された言語サイン
 
 <a href="{{ site.url }}/assets/images/2012/langlogo.png" rel="lightbox" title="Programming Language Sign System"><img src="{{ site.url }}/assets/images/2012/langlogo.png" alt="lang noshadow" /></a>
+
+（二文字タイプ）
+<a href="{{ site.url }}/assets/images/2012/langlogo2.png" rel="lightbox" title="Programming Language Sign System"><img src="{{ site.url }}/assets/images/2012/langlogo2.png" alt="lang noshadow" /></a>
 （クリックで拡大します）
-
-
 
 なお、各言語カラーまたは不在言語についての異議申立ては、本記事に対するブコメまたはツイートにより行うことができます。但し、申立てに対する決定がなされるか否かはまだ決定されていませんのでご了承下さい。
 
@@ -38,6 +39,14 @@ published: true
 ----
 
 <script src="https://gist.github.com/3815566.js?file=lang_logo.rb"></script>
+
+（二文字タイプ）
+[Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist](https://gist.github.com/3815566#file_lang_logo2.rb 'Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist')
+
+----
+
+(追記：2012-10-5) 二文字バージョンを追加しました。なんかAdobeスイーツ製品みたい？
+
 
 ----
 
