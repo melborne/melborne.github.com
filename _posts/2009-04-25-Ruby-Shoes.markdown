@@ -41,7 +41,7 @@ Shoesのスクリプトで図とマスクを作り
 ブラウザのウィンドウをリサイズするか
 グリッドを移動すれば馬が走り出します
 
-[ScanAnimation](http://scananimation.heroku.com/)
+[ScanAnimation](http://scanimation.herokuapp.com/ 'ScanAnimation')
 
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090425/20090425152212.png)
 
