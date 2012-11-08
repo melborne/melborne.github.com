@@ -114,7 +114,24 @@ desc "Launch preview environment"
 task :preview, :limit do |t, args|
   limit = "--limit_posts=#{args.limit}" if args.limit
   system "jekyll --auto --server #{limit}"
+  # puts "Starting thin on port 4000"
+  # jekyll_pid = Process.spawn("jekyll --auto #{limit}")
+  # thin_pid = Process.spawn("thin start --port 4000")
+  # trap("INT") do
+  #   [jekyll_pid, thin_pid].each { |pid| Process.kill(9, pid) rescue Errno::ESRCH }
+  # end
+  # [jekyll_pid, thin_pid].each { |pid| Process.wait(pid) }
 end # task :preview
+
+desc "Launch preview for 1"
+task :view1 do
+  system "jekyll --auto --server --limit_posts=1"
+end
+
+desc "Launch preview for 3"
+task :view3 do
+  system "jekyll --auto --server --limit_posts=3"
+end
 
 # Public: Alias - Maintains backwards compatability for theme switching.
 task :switch_theme => "theme:switch"
