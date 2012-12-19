@@ -8,6 +8,21 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2012-12-07)
+本記事を電子書籍化しました。「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して100円にて販売しています。内容についての追加・変更はありませんが、メディア向けの調整および誤記の修正を行っています。
+
+![Jekyll Ebook]({{ site.url }}/assets/images/2012/jekyll_cover.jpg)
+
+<a href="http://gum.co/xfJY" class="gumroad-button">電子書籍「30分のチュートリアルでJekyllを理解する」EPUB版</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
+購入ご検討のほどよろしくお願いしますm(__)m
+
+関連記事： [電子書籍「30分のチュートリアルでJekyllを理解する」EPUB版をGumroadから出版しました！]({{ site.url }}/2012/12/07/first-step-of-jekyll-on-ebook/ '電子書籍「30分のチュートリアルでJekyllを理解する」EPUB版をGumroadから出版しました！')
+
+---
+
 ##Jekyllとは
 [Jekyll](http://jekyllrb.com/ 'jekyll')は、ブログのような静的サイトを構築するためのRuby製ファイルジェネレータです。`Jekyll`はあくまでファイルジェネレータであり、[Rails](http://rubyonrails.org/ 'Ruby on Rails')のように、コマンド一つでサイトの基礎を全部構築してくれるフレームワークではありません。むしろ[Sinatra](http://www.sinatrarb.com/ 'Sinatra')の思想に近く、静的サイト版Sinatraといった趣のツールです。従って、Jekyllを使ってブログサイトを構築しようとする場合、その規約に従って、自分で１つずつファイルを用意していく必要があります。
 
@@ -662,6 +677,14 @@ Browserで確認します。
 > 1. ページ情報にはグローバル変数`page`でアクセスできる。
 > 1. Liquidテンプレート`{{ "{{"}} }}`または`{{ "{%"}} %}`を使ってサイトまたはページオブジェクトの埋め込みができる。
 > 1. `_plugins`ディレクトリ以下にPlugin Scriptを配置することにより、機能拡張が可能である。
+
+----
+
+![Jekyll Ebook]({{ site.url }}/assets/images/2012/jekyll_cover.jpg)
+
+<a href="http://gum.co/xfJY" class="gumroad-button">電子書籍「30分のチュートリアルでJekyllを理解する」EPUB版</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。購入ご検討のほどよろしくお願いしますm(__)m
 
 ----
 

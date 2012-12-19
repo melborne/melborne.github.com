@@ -9,6 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
+
 「世の中がRubyで埋まればいいのに」と思うあなたの気持ちとは裏腹に、世界は一層多様で複雑なものに向かっています。エントロピーは日々増大しています。
 
 人々は、その非効率性を指して**「多様性は悪である」**といいます。しかし画一的世界は創作の原動力となる人々のモチベーションを低下させ、そのやる気を奪います。つまり複雑で理解できない混沌として多様な世界こそが、人々に前に進むエネルギーを注入するのです。
@@ -454,6 +455,14 @@ jackie.class # => Person
 
 
 関連記事：[Ruby脳が理解するJavaScriptのオブジェクト指向](http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/ 'Ruby脳が理解するJavaScriptのオブジェクト指向')
+
+---
+
+![JS OOP Ebook]({{ site.url }}/assets/images/2012/js_oop_cover.png)
+
+<a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
 
 ---
 

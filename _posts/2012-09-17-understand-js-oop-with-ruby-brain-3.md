@@ -321,6 +321,14 @@ charlie.retweet('earl', 'JSのOOPって難しくね？'); // '@earl: JSのOOPっ
 
 以上、`Object.create`に対する現在の僕の理解を書いてみました。最後までありがとうございます。
 
+---
+
+![JS OOP Ebook]({{ site.url }}/assets/images/2012/js_oop_cover.png)
+
+<a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
 ----
 
 {{ 4873113911 | amazon_medium_image }}

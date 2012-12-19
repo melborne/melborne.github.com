@@ -21,6 +21,19 @@ published: true
 ![start Ruby]({{ site.url }}/assets/images/2012/start_ruby2.png)
 ![start Ruby]({{ site.url }}/assets/images/2012/start_ruby3.png)
 
+    本書は、ブログ「hp12c」( http://melborne.github.com/ ) における「これからRubyを始める人たちへ」の記事の電子書籍版であり、主として他言語におけるプログラミング経験者向けに書かれたプログラミング言語「Ruby」の入門書です。
+    （目次）
+    １章　Rubyの特徴
+    ２章　最初のRubyのコード
+    ３章　２つ目のRubyのコード
+    ４章　Rubyのクラス階層
+    ５章　My First Web Application
+    ６章　メタプログラミング
+    ７章　本の紹介
+    最後に
+    謝辞
+    
+    文庫本換算で50頁相当、DRMフリーです。
 
 価格は100円です。
 

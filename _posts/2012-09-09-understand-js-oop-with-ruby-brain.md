@@ -8,6 +8,24 @@ date: 2012-09-09
 published: true
 ---
 {% include JB/setup %}
+
+(追記：2012-12-15)
+本記事およびこれに続くその２，その３をまとめて電子書籍化しました。「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して100円にて販売しています。内容についての追加・変更はありませんが、誤記の修正およびメディア向けの調整を行っています。
+
+![JS OOP Ebook]({{ site.url }}/assets/images/2012/js_oop_cover.png)
+
+<a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
+購入ご検討のほどよろしくお願いしますm(__)m
+
+関連記事： [電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版をGumroadから出版しました！](http://localhost:4000/2012/12/15/javascript-oop-on-ebook/ '電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版をGumroadから出版しました！')
+
+---
+
+
 「世の中がRubyで埋まればいいのに」と思う僕の気持ちとは裏腹に、世界は一層多様で複雑なものに向かっています。エントロピーは日々増大しています。
 
 人々は、その競争原理を指して**「多様性は善である」**といいます。しかし他者の意見が理解できたとき、その多様性は失われるのです。つまり多様性とは他者に対する不理解が継続する状態を言うのです。他者を理解したときに歩み寄りのプロセスは開始され、それは統合に向かって動き出します。
@@ -429,6 +447,15 @@ earl.ageInDays(); // 15330
 
 
 「継承」「Object.create」などについての説明が欠落していますが、JavaScriptのオブジェクト指向に対する僕の理解は今のところここまでです。最後までありがとうございますm(__)m
+
+---
+
+![JS OOP Ebook]({{ site.url }}/assets/images/2012/js_oop_cover.png)
+
+<a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
 
 ----
 

@@ -6,6 +6,20 @@ comments: true
 categories:
 ---
 
+(追記：2012-12-13)
+本記事を電子書籍化しました。「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して100円にて販売しています。内容についての追加・変更はありませんが、文体の変更、誤記の修正およびメディア向けの調整を行っています。
+
+![Ruby Parallel Ebook]({{ site.url }}/assets/images/2012/ruby_parallel_cover.png)
+
+<a href="http://gum.co/PjVk" class="gumroad-button">電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
+購入ご検討のほどよろしくお願いしますm(__)m
+
+関連記事： [電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！]({{ site.url }}/2012/12/13/ruby-parallel-on-ebook/ '電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！')
+
+---
 世の中は並列化花ざかりだよ。人間はシングルタスクのままなのに、プログラミングするときはマルチタスクが要求されるなんて、世知辛い世の中になったものだね。
 
 でも、情報革命は始まったばかりだから、愚痴ってばかりもいられないよ。自分がその波にうまく乗れないとしても、うまく乗ってる人の様を間近で見てみたいと思うんだ。
@@ -96,11 +110,10 @@ $ telnet localhost 60000
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-3.times { puts "Hello, friend" }
+3.times.map { "Hello, friend" }
 Hello, friend
 Hello, friend
 Hello, friend
-3
 {% endhighlight %}
 いい感じだね。Ctrl+]に続きquitでtelnetの接続を切るよ。
 

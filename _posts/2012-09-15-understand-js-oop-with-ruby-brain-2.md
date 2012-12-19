@@ -276,6 +276,16 @@ Rubyではオブジェクトに対するアクセスはすべてメソッド呼�
 
 [iPhone5 constructor for describing JavaScript prototype chain — Gist](https://gist.github.com/3727490 'iPhone5 constructor for describing JavaScript prototype chain — Gist')
 
+---
+
+![JS OOP Ebook]({{ site.url }}/assets/images/2012/js_oop_cover.png)
+
+<a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
+---
+
 (追記：2012-09-18) 続きを書きました。
 
 [Ruby脳が理解するJavaScriptのオブジェクト指向（その３）](http://melborne.github.com/2012/09/17/understand-js-oop-with-ruby-brain-3/ 'Ruby脳が理解するJavaScriptのオブジェクト指向（その３）')
