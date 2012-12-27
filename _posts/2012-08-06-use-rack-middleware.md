@@ -683,12 +683,25 @@ Rack、次の一歩は踏み出せたでしょうか。
 
 [Joke Rack Web framework `Draque` — Gist](https://gist.github.com/3243357 'Joke Rack Web framework `Draque` — Gist')
 
-
 ----
 
 (追記：2012-08-08) 続きを書きました。
 
 [Rackをminifyした僅か100行のLackで学ぶRackの中身](http://melborne.github.com/2012/08/08/learn-rack-with-lack/ 'Rackをminifyした僅か100行のLackで学ぶRackの中身')
+
+---
+
+![Rack Ebook]({{ site.url }}/assets/images/2012/rack_cover.png)
+
+<a href="http://gum.co/ZqRt" class="gumroad-button">電子書籍「エラーメッセージから学ぶRack」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+
+このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。
+
+詳細は以下を参照して下さい。
+
+> [電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！](http://melborne.github.com/2012/12/24/learning-rack-on-ebook/ '電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！')
+
+購入ご検討のほどよろしくお願いしますm(__)m
 
 ----
 
