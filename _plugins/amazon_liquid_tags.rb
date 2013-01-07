@@ -14,13 +14,18 @@ module Jekyll
       @@instance
     end
 
-    def item_lookup(asin)
-      strip = asin.to_s.strip
+    def item_lookup(asin, try=5)
+      asin = asin.to_s.strip
       return @result_cache[asin] if @result_cache.has_key?(asin)
       il = Amazon::AWS::ItemLookup.new('ASIN', {'ItemId' => asin})
       resp = Amazon::AWS::Search::Request.new.search(il)
       @result_cache[asin] = resp
       return resp
+    rescue Amazon::AWS::HTTPError => e
+      p "retry:#{asin}: #{try}:#{e}"
+      try -= 1
+      sleep 0.5
+      retry if try > 0
     end
 
     private_class_method :new
@@ -38,7 +43,16 @@ module Jekyll
     def amazon_authors(text)
       resp = AmazonResultCache.instance.item_lookup(text)
       item = resp.item_lookup_response[0].items[0].item[0]
-      authors = item.item_attributes.author.collect(&:to_s)
+      item_attr = item.item_attributes
+      authors =
+        if au = item_attr.author
+          au.map(&:to_s)
+        elsif au = item_attr.artist
+          Array(au)
+        else
+          []
+        end
+      #authors = item.item_attributes.author.collect(&:to_s)
       array_to_sentence_string(authors)
     end
 
