@@ -674,7 +674,7 @@ nav.xhtml
 
 検証します。
 
-{% highlight bashy %}
+{% highlight bash %}
 % zip charlie.epub OEBPS/nav.xhtml 
 updating: OEBPS/nav.xhtml (deflated 16%)
 

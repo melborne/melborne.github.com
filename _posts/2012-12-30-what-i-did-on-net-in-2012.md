@@ -65,9 +65,9 @@ graphvizのRubyラッパーである`gviz`が2000超DLで一番人気だけど�
 
 ブログは[jekyll](http://jekyllrb.com/ 'jekyll')と[Jekyll-Bootstrap](http://jekyllbootstrap.com/ 'Blogging with Jekyll Tutorial | Jekyll-Bootstrap')を使って構築したんだ。移転は容易ならざるものだったけど、その過程でいろいろと勉強になることがあったよ。移転の工程は記事にできてないんだけど、関連記事として次のものを書いているよ。
 
-> [30分のチュートリアルでJekyllを理解する](http://melborne.github.com/2012/05/13/first-step-of-jekyll/ '30分のチュートリアルでJekyllを理解する')
+> {% hatebu http://melborne.github.com/2012/05/13/first-step-of-jekyll/ 30分のチュートリアルでJekyllを理解する %}
 > 
-> [一生涯はてな記法しますか？それともMarkdownしますか？](http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/ '一生涯はてな記法しますか？それともMarkdownしますか？')
+> {% hatebu http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/ 一生涯はてな記法しますか？それともMarkdownしますか？ %}
 
 ##４月　はじめてブックマークが1000を超える
 ブログを移転するにあたって心配だったのは、はてなを離れたら記事に対するアクセスがなくなるんじゃないかってことだったよ。まあ元々大した数じゃないから気にしてもしょうがないんだけどね。で、少し気合を入れてRubyの入門記事を移転に併せて書いてみたんだ。そうしたらそれが空前のアクセスとなってブクマが1,000を超えたんだ。

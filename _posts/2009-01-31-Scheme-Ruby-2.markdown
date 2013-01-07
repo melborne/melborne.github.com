@@ -8,7 +8,7 @@ tags: [ruby, scheme]
 ---
 
 
-[前回]({{ site.url }}/2009/01/29/Scheme-Ruby/)に引き続き「{{ 489471163X || amazon_link }}」を使って
+[前回]({{ site.url }}/2009/01/29/Scheme-Ruby/)に引き続き「{{ '489471163X' || amazon_link }}」を使って
 SchemeとRubyで平方根の求め方と
 手続きを出力とする高階手続きをまとめてみました
 なおSchemeのコードは本書からの抜粋で
@@ -331,6 +331,5 @@ average_dampはProcオブジェクトを返す
  3.sqrt # => 1.73205080756888
 {% endhighlight %}
 
-[rakuten:book:10825992:detail]
 (追記:2009/2/1）タイトルを「RubyでSchemeの高階関数を学ぼう~その2~」から「SchemeでRubyの高階関数を学ぼう~その2~」に変えました
 (追記:2009/2/5)　タイトルを「SchemeでRubyの高階関数を学ぼう~その2~」から「SchemeとRubyで高階関数を学ぼう~その2~」に変えました
