@@ -213,9 +213,11 @@ PDF/3,040円
 ---
 
 
-##[M'ELBORNE 出版](http://melborne.github.com/ 'hp12c')
+##[M'ELBORNE BOOKS](http://melborne.github.com/books.html 'M'ELBORNE BOOKS')
+「M'ELBORNE BOOKS」は今年創業したプログラミング言語Ruby専門の出版社です。というのはもちろん冗談で、「このブログの記事を電子書籍化して販売する」という僕の個人的なプロジェクトです。自分の書籍をここに並べるなど身の程知らずにも程がありますが、個人ブログということで許してください。
 
-「M'ELBORNE出版」は今年創業したプログラミング言語Ruby専門の出版社です。というのはもちろん冗談で、「このブログの記事を電子書籍化して販売する」という僕の個人的なプロジェクトです。自分の書籍をここに並べるなど身の程知らずにも程がありますが、個人ブログということで許してください。
+
+> [M'ELBORNE BOOKS](http://melborne.github.com/books.html 'M'ELBORNE BOOKS')
 
 他社電子書籍と比較した特徴は以下のようなものです。
 
@@ -279,4 +281,8 @@ PDF/3,040円
 [電子書籍「これからRubyを始める人たちへ」EPUB版をGumroadから出版しました！](http://melborne.github.com/2012/12/04/my-first-ebook-released/ '電子書籍「これからRubyを始める人たちへ」EPUB版をGumroadから出版しました！')
 
 [今年の冬休みにあなたが「The Ruby Programming Language」を電子書籍で読まなければいけないほんとうの理由](http://melborne.github.com/2012/12/26/must-read-the-ruby-programming-language-in-ebook/ '今年の冬休みにあなたが「The Ruby Programming Language」を電子書籍で読まなければいけないほんとうの理由')
+
+---
+
+(追記：2013-1-8) M'ELBORNE BOOKSへのリンクを追加しました。
 
