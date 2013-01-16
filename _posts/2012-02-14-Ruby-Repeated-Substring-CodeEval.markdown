@@ -8,6 +8,8 @@ tags: [ruby, codeeval]
 ---
 
 ##RubyでRepeated Substringを解く-CodeEval
+(追記：2013-1-16) tyama@cTouch(うつにーと)さんのコメントを受けてコードを修正したところ無事100でパスしました。next if substr.match(/^ +$/)を追加.
+
 バグ入りで80点^ ^;
 
 入出力情報少なすぎてバグ特定できない..まあいっか。str.gsub(substr).to_aという技を閃いた。
