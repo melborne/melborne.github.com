@@ -25,7 +25,7 @@ published: true
 > github: [melborne/yampla](https://github.com/melborne/yampla 'melborne/yampla · GitHub')
 
 ## Yamplaとは
-Yamplaとは、YAMLフォーマットで書かれたアイテム情報と、テンプレートファイルを入力として、アイテム一覧ページ(index page)およびアイテム個別ページ(item page)を出力するRuby製のツールです。テンプレート言語には[Liquid](http://liquidmarkup.org/ 'Liquid Templating language')を使っています。
+Yamplaとは、YAMLフォーマットで書かれたアイテム情報と、テンプレートファイルを入力として、アイテム一覧ページ(index page)およびアイテム個別ページ(item page)を出力するRuby製のドキュメント生成ツールです。テンプレート言語には[Liquid](http://liquidmarkup.org/ 'Liquid Templating language')を使っています。
 
 ## Yamplaの使い方
 Yamplaの最も簡単な使い方は、`yampla`コマンドを使う方法です。
