@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 class YouTube < Liquid::Tag
   Syntax = /^\s*([^\s]+)(\s+(\d+)\s+(\d+)\s*)?/
 

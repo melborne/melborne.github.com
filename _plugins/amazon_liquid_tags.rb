@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'amazon/aws'
 require 'amazon/aws/search'
 require 'cgi'

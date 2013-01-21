@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # A Liquid tag for Jekyll sites that allows embedding Gumroad Overlay link.
 # by: Kyo Endo
 # Source URL: https://gist.github.com/

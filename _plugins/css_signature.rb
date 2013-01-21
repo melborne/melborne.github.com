@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # A Liquid tag for Maliq that enable adding CSS signatures.
 # by: Kyo Endo
 # Source URL: https://gist.github.com/
