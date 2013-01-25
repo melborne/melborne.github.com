@@ -12,10 +12,10 @@ published: true
 
 ##─　問題　─
 
-> ５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ**scores**がある。
+> ５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ**data**がある。
 
 {% highlight ruby %}
-scores =<<EOS
+data =<<EOS
 player gameA gameB
 Bob    20    56
 Ross   68    33
@@ -58,7 +58,7 @@ Bob     110   147   257
 ###Step1. ヘッダーとスコアを分離し配列で管理する
 まあ普通に。
 {% highlight ruby %}
-headers, *scores = data.lines.map { |line| line.split(/\s+/) }
+headers, *scores = data.lines.map(&:split)
 headers # => ["player", "gameA", "gameB"]
 scores # => [["Bob", "20", "56"], ["Ross", "68", "33"], ["Bob", "78", "55"], ["Kent", "90", "15"], ["Alice", "84", "79"], ["Ross", "10", "15"], ["Jimmy", "80", "31"], ["Bob", "12", "36"], ["Kent", "88", "43"], ["Kent", "12", "33"], ["Alice", "90", "32"], ["Ross", "67", "77"], ["Alice", "56", "92"], ["Jimmy", "33", "88"], ["Jimmy", "11", "87"]]
 {% endhighlight %}
@@ -69,7 +69,7 @@ Enumerable#group_byを使う。
 scores_by_player = scores.group_by(&:first) # => {"Bob"=>[["Bob", "20", "56"], ["Bob", "78", "55"], ["Bob", "12", "36"]], "Ross"=>[["Ross", "68", "33"], ["Ross", "10", "15"], ["Ross", "67", "77"]], "Kent"=>[["Kent", "90", "15"], ["Kent", "88", "43"], ["Kent", "12", "33"]], "Alice"=>[["Alice", "84", "79"], ["Alice", "90", "32"], ["Alice", "56", "92"]], "Jimmy"=>[["Jimmy", "80", "31"], ["Jimmy", "33", "88"], ["Jimmy", "11", "87"]]}
 {% endhighlight %}
 
-###Step3. プレイヤー毎のデータを集計する
+###Step3. プレイヤー毎のデータを計算する
 Array#transposeがいいんじゃないかと。
 {% highlight ruby %}
 stat = scores_by_player.map do |player, values|
@@ -94,6 +94,14 @@ puts stat.sort_by{ |s| -s.last }.map { |line| "%s\t%d\t%d\t%d" % line }
 {% endhighlight %}
 
 あなたはどうしてますか？
+
+---
+
+(追記：2013-01-25) csvライブラリを使った別解を書きました。
+
+[Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について](http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/ 'Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について')
+
+---
 
 {% gist 4604530 game_scores.rb %}
 
