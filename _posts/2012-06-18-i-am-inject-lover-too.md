@@ -592,11 +592,11 @@ List[1,2,3,4,5,6,7].values_at(1,3,5) # => [2, 4, 6]
 {% highlight ruby %}
 class List < Array
   def compact
-    inject([]) { |m, x| x ? m << x : m }
+    inject([]) { |m, x| x.nil? ? m : m << x }
   end
 end
 
-List[:a, :b, nil, :c, nil, :d, nil, :e].compact # => [:a, :b, :c, :d, :e]
+List[:a, :b, nil, :c, nil, :d, nil, :e, false].compact # => [:a, :b, :c, :d, :e, false]
 {% endhighlight %}
 
 ##27. take
@@ -673,6 +673,8 @@ injectを二重に使って要素を引き出します。
 [Rubyのinjectで逆ポーランド記法電卓を書くYO!](http://melborne.github.com/2012/06/19/rpn-with-inject/ 'Rubyのinjectで逆ポーランド記法電卓を書くYO!')
 
 (追記：2012-06-29) values_atとtakeの記述にローカル変数を作らない例を追加しました。
+
+(追記：2013-01-28) @kakeru13493さんの指摘によりList#compactの実装を修正しました。ありがございます。
 
 {% footnotes %}
   {% fn ええ、個人的極論です %}

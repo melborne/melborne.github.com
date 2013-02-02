@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2013-01-28) コードを全面的に書き直しました。
+
+[RubyのコードをFlipして暗号化する？]({{ site.url }}/2013/01/28/make-ruby-script-encript-with-flippy/ 'RubyのコードをFlipして暗号化する？')
+
+---
+
 Twitterでよく見かける上下反転文字はこうやって作るのですね。
 
 > [twitter→ɹəʇʇɪʍʇのように英数字を180度回転して表示する方法｜Colorless Green Ideas](http://id.fnshr.info/2013/01/25/upsidedowntext/ 'twitter→ɹəʇʇɪʍʇのように英数字を180度回転して表示する方法｜Colorless Green Ideas')
