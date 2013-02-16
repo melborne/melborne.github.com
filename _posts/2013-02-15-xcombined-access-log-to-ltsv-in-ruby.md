@@ -96,7 +96,7 @@ ltsv = to_ltsv(tsv) # => "host:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009
 上記コードをクラス化したものを貼っておきます。
 
 
-{% gist 4960036 %}
+{% gist 4960036 access_log_like.rb %}
 
 で、ここまで書いてアレなんですが、Dankogai氏のPerl版（[combined2ltsv.pl](http://colabv6.dan.co.jp/ltsv/combined2ltsv.pl 'colabv6.dan.co.jp/ltsv/combined2ltsv.pl')）を見る限り、アクセスログの変換にはもっと複雑な処理が必要そうなので（Perlが読みきれない（泣））、やっぱりこのコードの実用性はなさそうです...
 
