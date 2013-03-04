@@ -63,7 +63,7 @@ def bonus_point(chara)
   end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -91,7 +91,7 @@ def bonus_point(chara)
   end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -120,7 +120,7 @@ def bonus_point(chara)
   end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -150,7 +150,7 @@ def bonus_point(chara)
   end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -176,7 +176,7 @@ puts charas
 
 {% highlight ruby %}
 def bonus_point(chara)
-  low, mid, high = [[1, 2, 3], [4, 5, 6, 7], [8, 9]]
+  low, mid, high = [1, 2, 3], [4, 5, 6, 7], [8, 9]
   case chara.level
   when *low
     chara.point += 10
@@ -189,7 +189,7 @@ def bonus_point(chara)
   end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -207,7 +207,7 @@ puts charas
 
 {% highlight ruby %}
 def bonus_point(chara)
-  low, mid, high = [[1, 2, 3], [4, 5, 6, 7], [8, 9]]
+  low, mid, high = [1, 2, 3], [4, 5, 6, 7], [8, 9]
   chara.point +=
     case chara.level
     when *low
@@ -221,7 +221,7 @@ def bonus_point(chara)
     end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -238,7 +238,7 @@ puts charas
 
 {% highlight ruby %}
 def bonus_point(chara)
-  low, mid, high = [[1, 2, 3], [4, 5, 6, 7], [8, 9]]
+  low, mid, high = [1, 2, 3], [4, 5, 6, 7], [8, 9]
   chara.point +=
     case chara.level
     when *low  then 10
@@ -248,7 +248,7 @@ def bonus_point(chara)
     end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -265,7 +265,7 @@ puts charas
 
 {% highlight ruby %}
 def bonus_point(chara)
-  low, mid, high = [[1, 2, 3], [4, 5, 6, 7], [8, 9]]
+  low, mid, high = [1, 2, 3], [4, 5, 6, 7], [8, 9]
   chara.point +=
     case chara.level
     when *low; 10
@@ -282,7 +282,7 @@ end
 
 {% highlight ruby %}
 def bonus_point(chara)
-  low, mid, high = [[1, 2, 3], [4, 5, 6, 7], [8, 9]]
+  low, mid, high = [1, 2, 3], [4, 5, 6, 7], [8, 9]
   chara.point += begin
     case chara.level
     when *low; 10
@@ -315,7 +315,7 @@ def bonus_point(chara)
     end
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -365,7 +365,7 @@ def high?
   ->lv{ [8, 9].include? lv }
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -408,7 +408,7 @@ def high?
   level_seed(8..9)
 end
 
-charas = charas.map { |chr| bonus_point(chr); chr }
+charas.each { |chr| bonus_point chr }
 
 puts charas
 
@@ -708,4 +708,8 @@ Ruby、20周年おめでとう
 参考記事：
 
 [ぼくがはてなブックマークの人に「ガツン」と申し上げたこと - カイ士伝](http://bloggingfrom.tv/wp/2012/06/01/7584)
+
+---
+
+(追記：2013-02-26) 一部コードを修正しました。
 
