@@ -705,7 +705,7 @@ puts MYARGF.filename
 % ruby argf_test.rb abc.txt
 -
 {% endhighlight %}
-残念！
+残念！{% fn_ref 1 %}
 
 ##33. Object#tap
 `tap`はそのブロックの評価結果を捨てるという風変わりなメソッドですが、その結果を欲しいときもたまにあります。そんなときはbreakします（thanks to knuさん）。
@@ -1575,6 +1575,12 @@ t.send '(', 'I love Ruby'  # => "( I love Ruby )"
 
 
 以上、Rubyにおける55個のトリビアを駆け足で紹介しました。新しい発見はありましたか？口元は緩みましたか？
+
+---
+
+{% footnotes %}
+{% fn newにファイル名を渡せばインスタンス化できることが後から分かりました。thanks to @n0kadaさん %}
+{% endfootnotes %}
 
 ---
 

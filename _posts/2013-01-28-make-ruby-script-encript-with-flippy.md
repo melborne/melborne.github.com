@@ -21,7 +21,7 @@ Gem化もしたので、`gem install flippy`で使うことができます。
 > [melborne/flippy · GitHub](https://github.com/melborne/flippy 'melborne/flippy · GitHub')
 
 ##Flippyモジュールの使い方
-FlippyモジュールはStringクラスにincludeするなどして使います。その場合、Stringに`#flip`および`#unflip`メソッドを追加します。`flip`は文字列を180度反転したような文字列をマッピングし、`unflip`はそれを元に戻します。
+<Del>FlippyモジュールはStringクラスにincludeするなどして使います。</Del>（flippyをrequireすればStringにincludeされるよう仕様を変更しました）。その場合、Stringに`#flip`および`#unflip`メソッドを追加します。`flip`は文字列を180度反転したような文字列をマッピングし、`unflip`はそれを元に戻します。
 
 {% highlight ruby %}
 require 'flippy'
@@ -278,8 +278,11 @@ X(U+0058) => X(U+0058)
 
 関連記事：
 
-[「twitter→ɹəʇʇɪʍʇのように英数字を180度回転して表示する方法」をRubyでやってみた]({{ site.url }}/2013/01/26/make-text-upside-down-with-ruby/ '「twitter→ɹəʇʇɪʍʇのように英数字を180度回転して表示する方法」をRubyでやってみた')
-
+> {% hatebu http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/ "RubyのコードをFlipして暗号化する？" %}
+>
+> {% hatebu http://melborne.github.com/2013/02/04/add-kernel-stnd-to-flippy-gem/ "flippy gemにKernel#stndを追加しましたので、お知らせします。" %}
+>
+> {% hatebu http://melborne.github.com/2013/02/19/flippy-console-now-added/ "flippy consoleで上下反転文字の不思議な感覚を味わってみませんか？" %}
 
 ---
 
@@ -289,5 +292,5 @@ X(U+0058) => X(U+0058)
 
 
 (追記：2013-01-29) FlippyのGem化に合わせて内容を加筆・修正しました。
-
+(追記：2013-03-18) FlippyのUpdateに合わせて内容を修正しました。
 
