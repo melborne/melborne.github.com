@@ -75,21 +75,21 @@ flippyコマンドに`-v`（または--vertical）オプションを追加しま
 
 これをお使いのTwitterクライアントにコピペすれば「縦つい。」できます。
 
-##文字列中の"//"の扱い
-version 0.1.0で、文字列中の`//`（半角スラッシュ）以降の文字列を横書きとする仕様を導入しました。
+##文字列中の"++"の扱い
+version 0.1.0で、文字列中の`++`以降の文字列を横書きとする仕様を導入しました。
 
 {% highlight bash %}
-% flippy -v "つまづいたって　いいじゃ　ないか　にんげんだ　もの//みつを #mitsuo"
+% flippy -v "つまづいたって　いいじゃ　ないか　にんげんだ　もの++ みつを #mitsuo"
 も　に　な　い　つ
 の　ん　い　い　ま
 　　げ　か　じ　づ
 　　ん　　　ゃ　い
 　　だ　　　　　た
 　　　　　　　　っ
-　　　　　　　　て　みつを #mitsuo
+　　　　　　　　て みつを #mitsuo
 {% endhighlight %}
 
-`//`が複数あるときは最後のもの以降が対象になります。従って、//をエスケープしたいときは文末に//を入れて下さい。
+`++`が複数あるときは最後のもの以降が対象になります。すべての++をエスケープしたいときは文末に++を入れて下さい。
 
 
 なお、flippyの他の使い方については、以下の記事を参考にしてください。
@@ -119,7 +119,7 @@ Flippy#verticalの該当コードをここに貼っておきます。<Del>ちな
 {% gist 5180832 ugly_update.rb %}
 
 
-また、@no6vさん作[earthquake](https://github.com/jugyo/earthquake "jugyo/earthquake · GitHub")用pluginもあります。
+また、@no6vさん作[earthquake](https://github.com/jugyo/earthquake "jugyo/earthquake · GitHub")用pluginもありますので、eqrthquakeをお使いの方はこちら。
 
 > [vertical.rb](https://gist.github.com/no6v/5187616 "vertical.rb")
 
@@ -150,6 +150,7 @@ Flippy#verticalの該当コードをここに貼っておきます。<Del>ちな
 (追記：2013-03-19) 実装の変更に伴い記述を変更しました。earthquake.gem用pluginについて追記しました。
 
 (追記：2013-03-20) 文字列中の"//"の扱いについて追記しました。
+(追記：2013-03-23) Flippy#verticalにおけるデリミタの変更に伴い記述を直しました。
 
 ---
 
