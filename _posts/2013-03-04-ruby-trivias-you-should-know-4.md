@@ -804,7 +804,7 @@ sym # => :hello
  # >> 2 3 5 7 11 13 17 19 23 29 31 37 
 {% endhighlight %}
 
-ここでloopにブロックを渡さないとEnumeratorが返ります。これを利用すればloopのインデックスを作ることができます（thanks to @no6v1さん）。
+ここでloopにブロックを渡さないとEnumeratorが返ります。これを利用すればloopのインデックスを作ることができます（thanks to @no6vさん）。
 {% highlight ruby %}
  loop # => #<Enumerator: main:loop>
  
@@ -929,7 +929,7 @@ a_day = '20120214'
 a_day.match(/(.{4})(.{2})(.{2})/).captures # => ["2012", "02", "14"]
 {% endhighlight %}
 
-`String#unpack`を使うともっと簡単かもしれません（thanks to @no6v1さん）。
+`String#unpack`を使うともっと簡単かもしれません（thanks to @no6vさん）。
 {% highlight ruby %}
 a_day = '20120214'
 a_day.unpack('A4A2A2') # => ["2012", "02", "14"]
@@ -1575,6 +1575,8 @@ t.send '(', 'I love Ruby'  # => "( I love Ruby )"
 
 
 以上、Rubyにおける55個のトリビアを駆け足で紹介しました。新しい発見はありましたか？口元は緩みましたか？
+
+(追記：2013-03-31)@no6vさんの名前が@no6v1さんとなっていました。訂正します。ごめんなさい。
 
 ---
 
