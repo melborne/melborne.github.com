@@ -1,7 +1,6 @@
 ---
 layout: post
-title: "どうやらRubyはPerlにマージされたそうですよ。"
-tagline: "Rubyの条件分岐をメソッド化する"
+title: "Rubyの条件分岐をメソッド化する"
 description: ""
 category: 
 tags: 
@@ -9,6 +8,10 @@ date: 2013-04-01
 published: true
 ---
 {% include JB/setup %}
+
+(追記：2013-04-02) 4月1日が終わったのでタイトルを変えました。
+
+---
 
 変数の値が真か偽で制御を分岐する場合、Rubyでは普通「**if-else**」を使います。
 
@@ -128,6 +131,5 @@ end
 
 ということで、どうやらRubyはPerlにマージされたそうですよ。
 
-今年もどうぞよろしくお願いしますm(__)m
 
 

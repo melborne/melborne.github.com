@@ -10,7 +10,7 @@ published: true
 {% include JB/setup %}
 
 
-Graphvizには「**osage**」という変わった名前のレイアウトがあります。これは多数のノードを整列して配置します。GraphvizのRubyラッパー「[gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")」を使って100個のノードを整列表示するには次のようにします。
+Graphvizには「**osage**」という変わった名前のレイアウトがあります。これは多数のノードを整列して配置します。GraphvizのRubyラッパー「[gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")」を使って100個のノードを整列表示するには次のようにします{% fn_ref 1 %}。
 
 #### graph.ru
 {% highlight ruby %}
@@ -388,4 +388,8 @@ save :invader
 <a href="{{ BASE_PATH }}/books/">
   <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="trivia" style="width:200px" />
 </a>
+
+{% footnotes %}
+{% fn patchworkというレイアウトでも同様のことができます。 %}
+{% endfootnotes %}
 
