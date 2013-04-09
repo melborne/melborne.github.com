@@ -33,25 +33,8 @@ Layouts:
 
 最初に、１つのノードに対し複数のノードを連結したグラフを書いてみます。コードは次のようになります{% fn_ref 1 %}。ノードの色付けをするために[Colorable gem](https://rubygems.org/gems/colorable "colorable | RubyGems.org | your community gem host")を使っています。
 
-####graph.ru
-{% highlight ruby %}
-require "colorable"
-cs = Colorable::Colorset[:hsb]
 
-layouts = %w(dot circo fdp sfdp neato twopi osage patchwork)
-ns = [*:A..:Z]
-
-nodes shape:'circle', style:'filled'
-layouts.each do |layout|
-  global layout:layout
-  route ns.first => ns.drop(1)
-  ns.each do |n|
-    c = cs.next
-    node n, color:c.hex, fillcolor:"#{c.hex}aa"
-  end
-  save layout.intern, :png
-end
-{% endhighlight %}
+{% gist 5292308 graph.ru %}
 
 このコードのディレクトリでgvizコマンドを実行し、各レイアウト毎のpng画像を得ます。
 {% highlight bash %}
@@ -114,40 +97,7 @@ end
 
 続いて、バイナリーツリー型のグラフを生成してみます。コードは以下のとおり。
 
-{% highlight ruby %}
-require "colorable"
-CS = Colorable::Colorset[:hsb]
-
-def build_tree(layout)
-  global layout:layout
-  nodes shape:'circle', style:'filled'
-
-  ns = [*:A..:Z]
-  ns.each do |n|
-    c = CS.next
-    node n, color:c.hex, fillcolor:"#{c.hex}aa"
-  end
-
-  targets = [ns.shift]
-  catch do |tag|
-    loop do
-      next_target ||= []
-      targets.each do |parent|
-        childs = ns.shift(2)
-        throw tag if childs.empty?
-        route parent => childs
-        next_target += childs
-      end
-      targets = next_target
-    end
-  end
-  save "tree_#{layout}".intern, :png
-end
-
-layouts = %w(dot circo fdp sfdp neato twopi osage patchwork)
-
-layouts.each { |layout| build_tree layout }
-{% endhighlight %}
+{% gist 5292308 tree.ru %}
 
 ツリー生成のコードが若干トリッキーかも知れませんが、上から順番にツリーを作っているので追えばわかると思います。loopとeachを一気に抜けて終了するために**catch-throw**を使っています。
 
