@@ -7,6 +7,9 @@ comments: true
 categories:
 ---
 
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 ##Rubyで100個の数を足す ～Rubyでオイラープロジェクトを解こう！Problem13
 [Problem 13 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=13)
 > 

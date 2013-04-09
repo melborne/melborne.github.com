@@ -8,6 +8,9 @@ tags: [ruby, scheme]
 ---
 
 
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
 「{{ '489471163X' | amazon_link }}」という本を図書館で借りた
 プログラマー必読の名著で
 Amazonによればこれ1冊でコンピュータのすべてがわかるらしい

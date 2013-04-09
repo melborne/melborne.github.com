@@ -8,6 +8,8 @@ published: true
 ---
 {% include JB/setup %}
 
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 (追記：2012-12-07)
 本記事を電子書籍化しました。「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して100円にて販売しています。内容についての追加・変更はありませんが、メディア向けの調整および誤記の修正を行っています。
 

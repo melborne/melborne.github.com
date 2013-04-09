@@ -7,6 +7,9 @@ comments: true
 categories:
 ---
 
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 ##Rubyでピタゴラスを求める ～Rubyでオイラープロジェクトを解こう！Problem9
 [Problem 9 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=9)
  
