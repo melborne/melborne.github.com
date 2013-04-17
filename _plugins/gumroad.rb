@@ -2,7 +2,7 @@
 
 # A Liquid tag for Jekyll sites that allows embedding Gumroad Overlay link.
 # by: Kyo Endo
-# Source URL: https://gist.github.com/
+# Source URL: https://gist.github.com/5393407
 #
 # Example usage: {% gumroad RjRO Title of Link %}
 module Jekyll

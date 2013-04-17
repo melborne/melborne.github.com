@@ -15,7 +15,7 @@ module Jekyll
     def render(context)
       url, title = @text.match(/(https?:\/\/\S+)(.*)/){ [$1, $2] }
       return "" unless url
-      bm_url = %{<a href="http://b.hatena.ne.jp/entry/#{url}" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/#{url}" alt="" class="http-bookmark"></a>}
+      bm_url = %{<a href="http://b.hatena.ne.jp/entry/#{url}" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/#{url}" alt="error" class="http-bookmark"></a>}
 
       unless title.nil?
         %{<a href="#{url}" target="_blank">#{title.strip} </a>} + bm_url
