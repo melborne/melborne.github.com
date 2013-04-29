@@ -495,7 +495,7 @@ Rubyではこれをメソッドの引数にも使えるのです。
 
 そろそろ本題に入りましょう。
 
-（続く）
+（[続く]({{ BASE_PATH }}/2013/04/29/find-most-frequently-words-with-ruby-2/ "Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その２）")）
 
 ---
 
@@ -509,12 +509,15 @@ Rubyではこれをメソッドの引数にも使えるのです。
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-[M'ELBORNE BOOKS]({{ site.url }}/books/ "M'ELBORNE BOOKS")
+[M'ELBORNE BOOKS]({{ BASE_PATH }}/books/ "M'ELBORNE BOOKS")
 
 <a href="{{ BASE_PATH }}/books/">
   <img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" style="width:200px" />
 </a>
 <a href="{{ BASE_PATH }}/books/">
   <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
+</a>
+<a href="{{ BASE_PATH }}/books/">
+  <img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" style="width:200px" />
 </a>
 
