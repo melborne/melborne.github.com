@@ -610,7 +610,7 @@ optメソッドのflag引数にデフォルトでtrueをセットしておきま
 
 take_by_value内で条件演算子(条件 ? 真 : 偽)を使って、ブロックの有無でyieldするかしないか分けています。
 
-（続く）
+（[続く]({{ BASE_PATH }}/2013/04/30/find-most-frequently-words-with-ruby-3/ "Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その３）")）
 
 ---
 
