@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2013-05-15) Colorableを大幅アップデートしました（version 0.2.0）。その結果、この記事で書かれたバージョンとの互換性がなくなっています。現在の機能に関しては以下の記事を参考にしてください。
+
+> {% hatebu http://melborne.github.io/2013/05/15/color-handler-colorable-gem-updated/ "Rubyで色を扱うライブラリ「Colorable」をアップデートしましたのでお知らせいたします" %}
+
+----
+
 Rubyで「色」というものを扱う機会はそう多くはないでしょう。Rubyはどちらかと言うと、クライアントサイドつまり接客系ではなく、サーバーサイドつまり裏方系言語ですからね。それでも接客系言語に向けて色情報を渡したり、そのラッパーになったりする機会はあるとおもいます。そんなときはRubyでも色を扱う必要がでてきます。
 
 実際、拙作GraphvizのRubyラッパー「[Gviz](https://rubygems.org/gems/gviz 'gviz')」で色付きグラフを作るときには、色指定で色々と苦労します。
