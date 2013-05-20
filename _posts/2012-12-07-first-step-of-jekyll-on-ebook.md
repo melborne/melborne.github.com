@@ -10,6 +10,12 @@ published: true
 {% include JB/setup %}
 
 
+(追記：2013-05-20) Jekyllバージョン1.0のリリースに伴い、本記事を改訂した記事を投稿しましたので、最新版に対応したチュートリアルおよび電子書籍についてはそちらを参照下さい。
+
+> {% hatebu http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/ "Jekyllいつやるの？ジキやルの？今でしょ！" %}
+
+---
+
 このブログにおける「[Jekyll](http://jekyllrb.com/ 'jekyll')」の入門記事「[30分のチュートリアルでJekyllを理解する](http://melborne.github.com/2012/05/13/first-step-of-jekyll/ '30分のチュートリアルでJekyllを理解する')」を電子書籍化し、「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して販売させて戴くことにしました。
 
 

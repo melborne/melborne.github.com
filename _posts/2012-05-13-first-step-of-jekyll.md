@@ -10,6 +10,10 @@ published: true
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
+(追記：2013-05-20) 本記事はJekyllバージョン0.12.0に対応しています。Jekyllバージョン1.0のリリースに伴い、本記事を改訂した記事を投稿しましたので、最新版に対応したチュートリアルについてはそちらを参照下さい。
+
+> {% hatebu http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/ "Jekyllいつやるの？ジキやルの？今でしょ！" %}
+
 (追記：2012-12-07)
 本記事を電子書籍化しました。「[Gumroad](https://gumroad.com/ 'Gumroad')」を通して100円にて販売しています。内容についての追加・変更はありませんが、メディア向けの調整および誤記の修正を行っています。
 
