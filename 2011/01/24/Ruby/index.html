@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>24 January 2011</span></div>
+  <h1 class='page-title'><a href="/2011/01/24/Ruby">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「Why Functional Programming Matters:なぜ関数プログラミングは重要か」(原著者：John Huges 邦訳：山下伸夫)という論文があります。</p>
+
+<p><a href="http://www.sampou.org/haskell/article/whyfp.html" target="_blank">なぜ関数プログラミングは重要か </a><a href="http://b.hatena.ne.jp/entry/http://www.sampou.org/haskell/article/whyfp.html" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://www.sampou.org/haskell/article/whyfp.html" alt="error" class="http-bookmark"></a></p>
+
+<p>これはMirandaという関数型言語を使って、プログラマにとって関数プログラミングがいかに重要であるかを論証したものです。これが書かれてからの年数<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>と被ブクマ数を見れば、極めて有益でmust_readであることは明らかでしょうが、自分にとっては高度な内容で読み解くのにかなり苦労しています。</p>
+
+<p>リストを使った関数の貼り合せ(3.の前半)までについてRubyでこれに近いことを記述し、自分の解釈でその骨子を説明してみました。関数プログラミングの妙味と、Rubyの記述も簡潔でパワフルであるということを示せればと思います。きっと理解不足による間違いが含まれていると思いますが..</p>
+
+<h2>なぜ関数プログラミングは重要か</h2>
+
+<p>モジュール化設計がプログラミングを成功させる鍵である。見過ごされがちだがプログラミング言語においてコードを自由にモジュール化するためには、それらを結合する糊が極めて重要な役割を担う。プログラマの目標は小さく、簡潔で、汎用的なモジュールを貼り合せてプログラムを構成することにある。関数プログラミングには二種類の強力な糊、つまり関数の貼り合せをする糊(高階関数)と、プログラムの貼り合せをする糊(遅延評価)がある。</p>
+
+<h2>関数の貼り合せ</h2>
+
+<p>Rubyにおける関数の貼り合せの能力を示すために最初にリストの処理を見ていく。</p>
+
+<p>Rubyにはリスト処理のためのArrayクラスがあるので、ここでは各関数をArrayクラスのメソッドとして定義していく。前処理として関数言語風にhead(リストの先頭要素)と、tail(リストの先頭要素を除いた残り)を定義する。さらにリストに要素を結合するconsを定義する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">head</span> <span class="n">first</span>
+  <span class="k">def</span> <span class="nf">tail</span>
+    <span class="n">drop</span> <span class="mi">1</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">cons</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">a</span><span class="o">]</span> <span class="o">+</span> <span class="nb">self</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">head</span> <span class="c1"># =&gt; 1</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">tail</span> <span class="c1"># =&gt; [2, 3, 4, 5]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 2, 3, 4, 5]</span>
+</code></pre></div>
+
+
+<p>最初にリストの要素を足し合わせるsum0を定義する。これは再帰を使って以下のように書くことができる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">sum0</span>
+    <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">head</span> <span class="o">+</span> <span class="n">tail</span><span class="o">.</span><span class="n">sum0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">sum0</span> <span class="c1"># =&gt; 15</span>
+</code></pre></div>
+
+
+<p>つまり空リストに対しては0を返すようにし、それ以外ではリストの最初の要素を残りの要素の和に足していくことで結果を得る。</p>
+
+<p>ここで、この定義における加算に固有の要素つまり0と+を一般化すると、リスト処理の汎用メソッドreduceができ上がる<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">f</span><span class="o">[</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Rubyではメソッドはそのままでは引数として渡すことができないので、ここではfとしてProcオブジェクトを受けるようにしProc#[]で実行するようにしている<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。</p>
+
+<p>今度はreduceとaddメソッドを使ってsumを再定義しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">sum</span>
+    <span class="n">reduce</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="k">end</span>
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">add</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span><span class="err">　</span><span class="c1"># lambda{ |a,b| a + b } と同じ</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">sum</span> <span class="c1"># =&gt; 15</span>
+</code></pre></div>
+
+
+<p>addメソッドはa,bを引数に取るProcオブジェクト、つまり手続きを返す高階関数である。</p>
+
+<p>同様にしてreduceとmultiplyメソッドを使って要素を掛け合わせるproductを定義する<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">product</span>
+    <span class="n">reduce</span> <span class="n">multiply</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="k">end</span>
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">multiply</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">product</span> <span class="c1"># =&gt; 120</span>
+</code></pre></div>
+
+
+<p>また真理値リストの要素のうち何れかが真かを検査するany_trueと、すべての要素が真であることを検査するall_trueを同様に定義する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">any_true</span>
+    <span class="n">reduce</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:or</span><span class="p">),</span> <span class="kp">false</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">all_true</span>
+    <span class="n">reduce</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:and</span><span class="p">),</span> <span class="kp">true</span>
+  <span class="k">end</span>
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">or</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">a</span> <span class="ow">or</span> <span class="n">b</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">and</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">a</span> <span class="ow">and</span> <span class="n">b</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">tf1</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">]</span>
+<span class="n">tf2</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="o">]</span>
+<span class="n">tf1</span><span class="o">.</span><span class="n">any_true</span> <span class="c1"># =&gt; true</span>
+<span class="n">tf2</span><span class="o">.</span><span class="n">any_true</span> <span class="c1"># =&gt; true</span>
+<span class="n">tf1</span><span class="o">.</span><span class="n">all_true</span> <span class="c1"># =&gt; false</span>
+<span class="n">tf2</span><span class="o">.</span><span class="n">all_true</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>Rubyにおいてorとandは予約語なのでそのままの形では引数として渡すことができない。ここではこの問題を回避するため、orとandをMethodオブジェクト化して渡している。</p>
+
+<p>さてここでreduce(f, a)をcons(a)との対比で理解してみよう。リスト[1,2,3]はconsを使って以下のように作ることができる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[].</span><span class="n">cons</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+</code></pre></div>
+
+
+<p>reduce(f,a)は上の式のconsをすべてfに置き換え、[ ]をaに置き換えたものとみなすことができる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>その結果先のsumのreduce add, 0とproductのreduce multiply, 1は、それぞれ以下のように理解できる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">0</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="mi">1</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>そうするとreduce cons, [ ]はリストを複写するものであることが理解できるだろう。consをreduceに渡せるように少し改良して複写メソッドdupを定義する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">cons</span>
+    <span class="o">-&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="o">[</span><span class="n">a</span><span class="o">]</span> <span class="o">+</span> <span class="n">ls</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">f</span><span class="o">[</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">dup</span>
+    <span class="n">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">dup</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+</code></pre></div>
+
+
+<p>consは他の補助メソッドと同様に２つの引数を取るようにし、かつ[]メソッドで実行されるようProcオブジェクト化する。</p>
+
+<p>ここでdupにおけるreduceの第二引数にリストを渡せるようにすれば、リストを結合するappendが定義できる。後にappendは関数合成しやすいように高階関数としよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">append</span>
+    <span class="o">-&gt;</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="n">ls</span><span class="o">.</span><span class="n">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="n">s</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="o">].</span><span class="n">append</span><span class="o">[</span><span class="n">ls</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6]</span>
+</code></pre></div>
+
+
+<p>続いてリストの要素を２倍するメソッドdouble_allを定義しよう。double_allはreduceとdouble_and_consを使って次のように書くことができる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">double_and_cons</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">double_and_cons</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">,</span><span class="n">ls</span><span class="p">{</span> <span class="n">cons</span><span class="o">[</span><span class="mi">2</span><span class="o">*</span><span class="n">num</span><span class="p">,</span> <span class="n">ls</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>ここでdouble_and_consはさらにdoubleとf_and_consにモジュール化することができる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">f_and_cons</span><span class="o">[</span><span class="n">double</span><span class="o">]</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+  
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">double</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num</span> <span class="p">}</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">f_and_cons</span>
+    <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span><span class="n">el</span><span class="p">,</span><span class="n">ls</span><span class="p">{</span> <span class="n">cons</span><span class="o">[</span><span class="n">f</span><span class="o">[</span><span class="n">el</span><span class="o">]</span><span class="p">,</span> <span class="n">ls</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>double_allにおいてreduceはその第1引数としてProcオブジェクトを受け取る必要がある。ここではf_and_consをカリー化することにより、それがdoubleのみを取ってProcオブジェクトを返せるよう工夫している。このような方法を関数の部分適用という。</p>
+
+<p>また2つの関数を合成するcomposeメソッドを定義することにより、consとdoubleを合成する方法がある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">compose</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="o">[]</span>
+  <span class="k">end</span>
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">double</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num</span> <span class="p">}</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">f</span><span class="o">[</span><span class="n">g</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="n">y</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>double_allはconsと合成する関数を一般化することによって更にモジュール化を進めることができる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">map</span> <span class="n">double</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">reduce</span> <span class="n">compose</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>mapは任意のメソッドfをリストのすべての要素に適用する。mapはreduceと並ぶもう一つの汎用的なメソッドである<sup id='fnref:5'><a href='#fn:5' rel='footnote'>5</a></sup>。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">map</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">{</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
+<span class="sx">%w(ruby haskell scheme)</span><span class="o">.</span><span class="n">map</span> <span class="o">-&gt;</span><span class="n">s</span><span class="p">{</span> <span class="n">s</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;RUBY&quot;, &quot;HASKELL&quot;, &quot;SCHEME&quot;]</span>
+</code></pre></div>
+
+
+<p>このようにしてメソッドを高階関数と、いくつかの単純なメソッドの合成としてモジュール化することにより、リストのための多数のメソッドを効果的に定義することができる。</p>
+
+<p>(続く？)<sup id='fnref:6'><a href='#fn:6' rel='footnote'>6</a></sup></p>
+
+<p>(追記：2011-1-29)appendの記述を修正しました。
+(追記：2011-2-1)続きを書きました。</p>
+
+<p><a href="http://melborne.github.com/2011/01/29/Ruby/" title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>1984年 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>同じ目的で既にEnumerable#reduceが存在します <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>Proc#.callまたはProc#.()という呼びだし方法もあります <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>Arrayには別の目的のためのproductメソッドがあるので警告がでます <a href='#fnref:4' rev='footnote'>↩</a></li><li id='fn:5'>同じ目的のArray#mapが存在するので警告がでます <a href='#fnref:5' rev='footnote'>↩</a></li><li id='fn:6'>この先は難しくて自分にはちょっと厳しいかも.. <a href='#fnref:6' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/01/24/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/01/24/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/01/24/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/01/24/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/01/20/Ruby" title="Rubyの末尾再帰最適化を理解する">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/01/27/Ruby" title="Rubyの目次">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#functional-ref">functional <span>2</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/01/24/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/01/24/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/01/24/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/01/24/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

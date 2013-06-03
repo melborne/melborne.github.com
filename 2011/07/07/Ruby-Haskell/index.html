@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyでHaskellの数列リストを真似てみよう！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>07 July 2011</span></div>
+  <h1 class='page-title'><a href="/2011/07/07/Ruby-Haskell">RubyでHaskellの数列リストを真似てみよう！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>HaskellのリストはRubyの配列と同じように、要素をカンマ区切りのカッコで区切って生成できるんだ。</p>
+
+<div class="highlight"><pre><code class="haskell"><span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">&#39;a&#39;</span><span class="p">,</span> <span class="n">&#39;b&#39;</span><span class="p">,</span> <span class="n">&#39;c&#39;</span><span class="p">]</span>
+<span class="s">&quot;abc&quot;</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&quot;one&quot;</span><span class="p">,</span><span class="s">&quot;two&quot;</span><span class="p">,</span><span class="s">&quot;three&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+
+<p>だけどHaskellのリストはRubyの配列よりもその記法に柔軟性があり、新しい集合を作るための演算式を書けるリスト内包表記や、数列を簡単に生成できる便利な記法があるんだよ。</p>
+
+<p>数列を生成する記法は以下のような感じだよ。</p>
+
+<div class="highlight"><pre><code class="haskell"><span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">21</span><span class="o">..</span><span class="mi">31</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">21</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">29</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">31</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">&#39;a&#39;</span><span class="o">..</span><span class="n">&#39;m&#39;</span><span class="p">]</span>
+<span class="s">&quot;abcdefghijklm&quot;</span>
+</code></pre></div>
+
+
+<p>Haskellでは文字列は文字のリストなので、最後の結果はaからmの文字列になるんだね。</p>
+
+<p>Rubyで上の式をそのまま書くと、１つのRangeオブジェクトをもつ配列と解釈されちゃうんだけど、*(splat)展開を使うと同じことができるんだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<span class="o">[*</span><span class="mi">21</span><span class="o">.</span><span class="n">.</span><span class="mi">31</span><span class="o">]</span> <span class="c1">#=&gt; [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]</span>
+<span class="o">[*</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;m&#39;</span><span class="o">]</span> <span class="c1">#=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;l&quot;, &quot;m&quot;]</span>
+</code></pre></div>
+
+
+<p>これは<a href="/2011/06/22/notitle/">以前の投稿</a>でも紹介したよね。</p>
+
+<p>でもHaskellの数列展開ではさらに次のようなこともできちゃうんだよ。</p>
+
+<div class="highlight"><pre><code class="haskell"><span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">..</span><span class="mi">50</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">35</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="mi">50</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.3</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.7</span><span class="p">,</span><span class="mf">5.9</span><span class="p">,</span><span class="mf">7.1</span><span class="p">,</span><span class="mf">8.3</span><span class="p">,</span><span class="mf">9.5</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">&#39;a&#39;</span><span class="p">,</span> <span class="n">&#39;c&#39;</span><span class="o">..</span><span class="n">&#39;m&#39;</span><span class="p">]</span>
+<span class="s">&quot;acegikm&quot;</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="p">[</span><span class="sc">&#39;A&#39;</span><span class="p">,</span> <span class="sc">&#39;I&#39;</span><span class="o">..</span><span class="n">&#39;z&#39;</span><span class="p">]</span>
+<span class="s">&quot;AIQYaiqy&quot;</span>
+</code></pre></div>
+
+
+<p>すごいよね？いわゆる等差数列が簡単にできちゃった。</p>
+
+<p>それだけじゃないんだ。等差数列の無限リストだってできちゃうんだよ！</p>
+
+<div class="highlight"><pre><code class="haskell"><span class="kt">Hugs</span><span class="o">&gt;</span> <span class="n">take</span> <span class="mi">20</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="o">..</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">33</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">49</span><span class="p">,</span><span class="mi">57</span><span class="p">,</span><span class="mi">65</span><span class="p">,</span><span class="mi">73</span><span class="p">,</span><span class="mi">81</span><span class="p">,</span><span class="mi">89</span><span class="p">,</span><span class="mi">97</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">113</span><span class="p">,</span><span class="mi">121</span><span class="p">,</span><span class="mi">129</span><span class="p">,</span><span class="mi">137</span><span class="p">,</span><span class="mi">145</span><span class="p">,</span><span class="mi">153</span><span class="p">]</span>
+<span class="kt">Hugs</span><span class="o">&gt;</span> <span class="n">take</span> <span class="mi">20</span> <span class="p">[</span><span class="sc">&#39;A&#39;</span><span class="p">,</span> <span class="sc">&#39;D&#39;</span><span class="o">..</span><span class="p">]</span>
+<span class="s">&quot;ADGJMPSVY</span><span class="se">\\</span><span class="s">_behknqtwz&quot;</span>
+</code></pre></div>
+
+
+<p>使うかどうかはわからないけど、なんかかっこいいよねZen-Codingみたいで！</p>
+
+<p>そんなわけで..</p>
+
+<p>Rubyでもこれと似たようなことをできるようにしてみるね。</p>
+
+<p>Rubyでは[1, 3..10]も有効な構文なので、これをそのまま展開するのは都合が悪いよね。だからここではArray#to_aを拡張して数列展開するようにしてみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">__to_a__</span> <span class="nb">to_a</span>
+  <span class="k">def</span> <span class="nf">to_a</span>
+    <span class="k">if</span> <span class="o">[</span><span class="no">Numeric</span><span class="p">,</span> <span class="no">Range</span><span class="o">]</span> <span class="o">===</span> <span class="nb">self</span>
+      <span class="n">n</span><span class="p">,</span> <span class="n">range</span> <span class="o">=</span> <span class="nb">self</span>
+      <span class="n">dist</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="n">begin</span> <span class="o">-</span> <span class="n">n</span>
+      <span class="n">res</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="n">dist</span> <span class="p">}</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">range</span><span class="o">.</span><span class="n">end</span> <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="n">__to_a__</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>だいたいこんな感じでどうかな？</p>
+
+<p>配列の要素が数字とRangeのセットの場合に特別な扱いをするよ。if節の条件式の実装はあとで見せるね。最初の数字とRangeの先頭との差distを取って、Enumeratorで等差数列を作るよ。そしてEnumerator#take_whileを使ってRangeの最後までの数列を返すようにする。</p>
+
+<p>if節の条件で使ったArray#===の実装は次のような感じだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">__eq__</span> <span class="o">===</span>
+  <span class="k">def</span> <span class="nf">===</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span><span class="o">.</span><span class="n">instance_of?</span> <span class="no">Class</span> <span class="p">}</span>
+      <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">to_enum</span>
+      <span class="k">return</span> <span class="n">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span> <span class="o">===</span> <span class="n">other</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="n">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあ実行してみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1, 2, 3, 4]</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1..10]</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9]</span>
+<span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span>
+</code></pre></div>
+
+
+<p>いい感じだね</p>
+
+<p>でもFloatを渡すと..</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1.1, 2.3, 3.4999999999999996, 4.699999999999999, 5.899999999999999, 7.099999999999998, 8.299999999999997, 9.499999999999996]</span>
+</code></pre></div>
+
+
+<p>浮動小数点演算における丸め誤差がでちゃうんだ。</p>
+
+<p>bigdecimalというライブラリを使うと、丸め誤差の問題を回避できるようなんだけど、ここではFloat#to_iを改良してごまかしてみるね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Float</span>
+  <span class="k">alias</span> <span class="n">__to_i__</span> <span class="n">to_i</span>
+  <span class="k">def</span> <span class="nf">to_i</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="nb">self</span><span class="c1">##*n).__to_i__/10.0**n : __to_i__</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">23456</span><span class="o">.</span><span class="n">to_i</span> <span class="c1"># =&gt; 1</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">23456</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; 1.2</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">23456</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 1.23</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">23456</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 1.234</span>
+</code></pre></div>
+
+
+<p>Float#to_iが切り捨てする小数点桁数を引数として取れるようにする。</p>
+
+<p>これを使ってArray#to_aを変更しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">__to_a__</span> <span class="nb">to_a</span>
+  <span class="k">def</span> <span class="nf">to_a</span><span class="p">(</span><span class="n">decimal</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="err">　</span><span class="c1"># 小数点2位以上は引数を渡す</span>
+    <span class="k">if</span> <span class="o">[</span><span class="no">Numeric</span><span class="p">,</span> <span class="no">Range</span><span class="o">]</span> <span class="o">===</span> <span class="nb">self</span>
+      <span class="n">n</span><span class="p">,</span> <span class="n">range</span> <span class="o">=</span> <span class="nb">self</span>
+      <span class="n">dist</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="n">begin</span> <span class="o">-</span> <span class="n">n</span>
+      <span class="n">res</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="n">dist</span> <span class="p">}</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">range</span><span class="o">.</span><span class="n">end</span> <span class="p">}</span>
+                <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span> <span class="k">rescue</span> <span class="n">i</span> <span class="p">}</span>  <span class="c1"># ここを追加</span>
+    <span class="k">end</span>
+    <span class="n">__to_a__</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9]</span>
+<span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1.1, 2.3, 3.4, 4.6, 5.8, 7.0, 8.2, 9.4]</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">32</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; [1.11, 2.31, 3.52, 4.73, 5.94, 7.15, 8.36, 9.57]</span>
+</code></pre></div>
+
+
+<p>いい感じだね！</p>
+
+<p>さあ次はアルファベットの等差数列だ。</p>
+
+<p>ここでもArray#to_aはあまりいじりたくないので、Stringクラスで算術演算できるようにしてみよう。つまりString#+ が数字を受け取ったときはその文字コード分シフトした文字を返すようにする。またString#- を定義して文字を受け取ったときは、その文字コードの差を返すようにする。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">alias</span> <span class="n">__plus__</span> <span class="o">+</span>
+  <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">is_a?</span> <span class="nb">Integer</span>
+      <span class="k">return</span> <span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">ord</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">chr</span>
+    <span class="k">end</span>
+    <span class="n">__plus__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">other</span>
+    <span class="k">when</span> <span class="nb">String</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">ord</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">ord</span>
+    <span class="k">when</span> <span class="nb">Integer</span>
+      <span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">ord</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">chr</span>
+    <span class="k">else</span>
+      <span class="k">raise</span> <span class="no">ArgumentError</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="s1">&#39;a&#39;</span> <span class="o">+</span> <span class="mi">5</span> <span class="c1"># =&gt; &quot;f&quot;</span>
+<span class="s1">&#39;f&#39;</span> <span class="o">-</span> <span class="s1">&#39;a&#39;</span> <span class="c1"># =&gt; 5</span>
+<span class="s1">&#39;f&#39;</span> <span class="o">-</span> <span class="mi">5</span> <span class="c1"># =&gt; &quot;a&quot;</span>
+</code></pre></div>
+
+
+<p>なんとなく汎用性がありそうだよね。</p>
+
+<p>こうすればArray#to_aは条件判定のNumericをObjectに代えるだけでいい<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">__to_a__</span> <span class="nb">to_a</span>
+  <span class="k">def</span> <span class="nf">to_a</span><span class="p">(</span><span class="n">decimal</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="o">[</span><span class="no">Object</span><span class="p">,</span> <span class="no">Range</span><span class="o">]</span> <span class="o">===</span> <span class="nb">self</span> <span class="c1"># NumericをObjectに変更</span>
+      <span class="n">n</span><span class="p">,</span> <span class="n">range</span> <span class="o">=</span> <span class="nb">self</span>
+      <span class="n">dist</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="n">begin</span> <span class="o">-</span> <span class="n">n</span>
+      <span class="n">res</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="n">dist</span> <span class="p">}</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">range</span><span class="o">.</span><span class="n">end</span> <span class="p">}</span>
+                <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span> <span class="k">rescue</span> <span class="n">i</span> <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="n">__to_a__</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;m&#39;</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;c&quot;, &quot;e&quot;, &quot;g&quot;, &quot;i&quot;, &quot;k&quot;, &quot;m&quot;]</span>
+<span class="o">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;I&quot;, &quot;Q&quot;, &quot;Y&quot;, &quot;a&quot;, &quot;i&quot;, &quot;q&quot;, &quot;y&quot;]</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9]</span>
+<span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span> <span class="c1"># =&gt; [1.1, 2.3, 3.4, 4.6, 5.8, 7.0, 8.2, 9.4]</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">32</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">to_a</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; [1.11, 2.31, 3.52, 4.73, 5.94, 7.15, 8.36, 9.57]</span>
+</code></pre></div>
+
+
+<p>うまくいったね。</p>
+
+<p>さあ、最後は無限リストだ。Rubyでは[1, 3..]という記法は構文エラーになるので、Rangeの最後が-1(文字の場合は'-1')なら無限リストにするのはどうかな。</p>
+
+<p>Array#to_aの変更は簡単だよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">alias</span> <span class="n">__to_a__</span> <span class="nb">to_a</span>
+  <span class="k">def</span> <span class="nf">to_a</span><span class="p">(</span><span class="n">decimal</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="o">[</span><span class="no">Object</span><span class="p">,</span> <span class="no">Range</span><span class="o">]</span> <span class="o">===</span> <span class="nb">self</span>
+      <span class="n">n</span><span class="p">,</span> <span class="n">range</span> <span class="o">=</span> <span class="nb">self</span>
+      <span class="n">dist</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="n">begin</span> <span class="o">-</span> <span class="n">n</span>
+      <span class="n">res</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="n">dist</span> <span class="p">}</span> <span class="p">}</span>
+      <span class="k">unless</span> <span class="n">range</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">to_i</span> <span class="o">&lt;</span> <span class="mi">0</span>   <span class="c1"># ここを追加</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">range</span><span class="o">.</span><span class="n">end</span> <span class="p">}</span>
+                  <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span> <span class="k">rescue</span> <span class="n">i</span> <span class="p">}</span>
+      <span class="k">else</span>
+        <span class="k">return</span> <span class="n">res</span>                     <span class="c1"># ここを追加</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">__to_a__</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Array#to_aの内部ではEnumeratorを使っているのでEnumerable#take_whileしなければそのまま無限リストが返るよ。</p>
+
+<p>さあ実行してみよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="o">].</span><span class="n">to_a</span><span class="o">.</span><span class="n">take</span> <span class="mi">20</span> <span class="c1"># =&gt; [1, 9, 17, 25, 33, 41, 49, 57, 65, 73, 81, 89, 97, 105, 113, 121, 129, 137, 145, 153]</span>
+<span class="o">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;-1&#39;</span><span class="o">].</span><span class="n">to_a</span><span class="o">.</span><span class="n">take</span> <span class="mi">20</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;D&quot;, &quot;G&quot;, &quot;J&quot;, &quot;M&quot;, &quot;P&quot;, &quot;S&quot;, &quot;V&quot;, &quot;Y&quot;, &quot;\\&quot;, &quot;_&quot;, &quot;b&quot;, &quot;e&quot;, &quot;h&quot;, &quot;k&quot;, &quot;n&quot;, &quot;q&quot;, &quot;t&quot;, &quot;w&quot;, &quot;z&quot;]</span>
+</code></pre></div>
+
+
+<p>うまくいったよ！</p>
+
+<p>Haskellには敵わないけど、Rubyも柔軟だってことがこの投稿で伝わったらうれしいよ。</p>
+
+<p>(追記：2011-7-9)
+ああ、Rubyには偉大なるRange#stepがあったんだね。通りすがりさんありがとう！</p>
+
+<p>だからわざわざ上のようなことをしなくても大体のことはできるんだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1, 3, 5, 7, 9]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1.1, 2.3, 3.5, 4.699999999999999, 5.9, 7.1, 8.299999999999999, 9.5]</span>
+<span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;m&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [&quot;a&quot;, &quot;c&quot;, &quot;e&quot;, &quot;g&quot;, &quot;i&quot;, &quot;k&quot;, &quot;m&quot;]</span>
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="o">.</span><span class="n">ord</span><span class="o">-</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">ord</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [&quot;A&quot;, &quot;I&quot;, &quot;Q&quot;, &quot;Y&quot;, &quot;a&quot;, &quot;i&quot;, &quot;q&quot;, &quot;y&quot;]</span>
+</code></pre></div>
+
+
+<p>またNumeric#stepもあるから数字なら以下のように書いてもいいよね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1, 3, 5, 7, 9]</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1">#=&gt; [1.1, 2.3, 3.5, 4.699999999999999, 5.9, 7.1, 8.299999999999999, 9.5]</span>
+</code></pre></div>
+
+
+<p>こうなるとString#stepもほしいよね。こんな感じかな？</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">nxt</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">ord</span><span class="p">,</span> <span class="n">nxt</span><span class="o">.</span><span class="n">ord</span><span class="o">-</span><span class="nb">self</span><span class="o">.</span><span class="n">ord</span>
+    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+      <span class="k">until</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">last</span><span class="o">.</span><span class="n">ord</span>
+        <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="o">.</span><span class="n">chr</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">dist</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;c&quot;, &quot;e&quot;, &quot;g&quot;, &quot;i&quot;, &quot;k&quot;, &quot;m&quot;]</span>
+<span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;I&quot;, &quot;Q&quot;, &quot;Y&quot;, &quot;a&quot;, &quot;i&quot;, &quot;q&quot;, &quot;y&quot;]</span>
+<span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;l&quot;, &quot;m&quot;]</span>
+</code></pre></div>
+
+
+
+
+<div><script src='https://gist.github.com/1069573.js?file=haskell_sequence.rb'></script>
+<noscript><pre><code># encoding: UTF-8
+class Array
+  alias __eq__ ===
+  def ===(other)
+    if self.size == other.size and any? { |item| item.instance_of? Class }
+      other = other.to_enum
+      return all? { |item| item === other.next }
+    end
+    __eq__(other)
+  end
+
+  alias __to_a__ to_a
+  def to_a(decimal=1)
+    if [Object, Range] === self
+      n, range = self
+      dist = range.begin - n
+      res = Enumerator.new { |y| loop { y &lt;&lt; n; n += dist } }
+      unless range.end.to_s.to_i &lt; 0
+        return res.take_while { |i| i &lt;= range.end }
+                  .map { |i| i.to_i(decimal) rescue i }
+      else
+        return res
+      end
+    end
+    __to_a__
+  end
+end
+
+class Float
+  alias __to_i__ to_i
+  def to_i(n=0)
+    n &gt; 0 ? (self*10**n).__to_i__/10.0**n : __to_i__
+  end
+end
+
+class String
+  alias __plus__ +
+  def +(other)
+    if other.is_a? Integer
+      return (self.ord + other).chr
+    end
+    __plus__(other)
+  end
+
+  def -(other)
+    case other
+    when String
+      self.ord - other.ord
+    when Integer
+      (self.ord - other).chr
+    else
+      raise ArgumentError
+    end
+  end
+end
+
+[1,2,3,4].to_a # =&gt; [1, 2, 3, 4]
+[1..10].to_a # =&gt; [1..10]
+[1, 3..10].to_a # =&gt; [1, 3, 5, 7, 9]
+[0, 5..50].to_a # =&gt; [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+[1.1, 2.3..10].to_a # =&gt; [1.1, 2.3, 3.4, 4.6, 5.8, 7.0, 8.2, 9.4]
+[1.11, 2.32..10].to_a(2) # =&gt; [1.11, 2.31, 3.52, 4.73, 5.94, 7.15, 8.36, 9.57]
+[&#39;a&#39;, &#39;c&#39;..&#39;m&#39;].to_a # =&gt; [&quot;a&quot;, &quot;c&quot;, &quot;e&quot;, &quot;g&quot;, &quot;i&quot;, &quot;k&quot;, &quot;m&quot;]
+[&#39;A&#39;, &#39;I&#39;..&#39;z&#39;].to_a # =&gt; [&quot;A&quot;, &quot;I&quot;, &quot;Q&quot;, &quot;Y&quot;, &quot;a&quot;, &quot;i&quot;, &quot;q&quot;, &quot;y&quot;]
+[1, 9..-1].to_a.take 20 # =&gt; [1, 9, 17, 25, 33, 41, 49, 57, 65, 73, 81, 89, 97, 105, 113, 121, 129, 137, 145, 153]
+[&#39;A&#39;, &#39;D&#39;..&#39;-1&#39;].to_a.take 20 # =&gt; [&quot;A&quot;, &quot;D&quot;, &quot;G&quot;, &quot;J&quot;, &quot;M&quot;, &quot;P&quot;, &quot;S&quot;, &quot;V&quot;, &quot;Y&quot;, &quot;\\&quot;, &quot;_&quot;, &quot;b&quot;, &quot;e&quot;, &quot;h&quot;, &quot;k&quot;, &quot;n&quot;, &quot;q&quot;, &quot;t&quot;, &quot;w&quot;, &quot;z&quot;]
+</code></pre></noscript></div>
+
+
+<p>(comment)</p>
+
+<blockquote><p>(1..4).to_a  # => [1, 2, 3, 4]<br><br>(1..10).step(2).to_a # => [1, 3, 5, 7, 9]<br><br>(0..50).step(5).to_a # => [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]<br><br>(1.1 .. 10).step(1.2).to_a # => [1.1, 2.3, 3.5, 4.7, 5.9, 7.1, 8.3, 9.5]</p>
+
+<blockquote><p>通りすがりさん<br>コメントどうもです。あーなんという... そうですRubyにはRange#stepがあったのですよね..</p></blockquote></blockquote>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>手抜きですね^ ^; <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/07/Ruby-Haskell/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでHaskellの数列リストを真似てみよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/07/Ruby-Haskell/" data-text="RubyでHaskellの数列リストを真似てみよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/07/Ruby-Haskell/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/07/Ruby-Haskell/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/07/01/Ruby-repeat" title="Rubyのrepeat関数でフィボナッチ、トリボナッチ、テトラナッチ！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/07/11/Heroku-Sinatra-memcached" title="HerokuでSinatraでmemcachedしようよ!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#haskell-ref">haskell <span>2</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/07/Ruby-Haskell/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでHaskellの数列リストを真似てみよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/07/Ruby-Haskell/" data-text="RubyでHaskellの数列リストを真似てみよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/07/Ruby-Haskell/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/07/Ruby-Haskell/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

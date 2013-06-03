@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>16 January 2013</span></div>
+  <h1 class='page-title'><a href="/2013/01/16/build-xml-with-yampla">Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="http://melborne.github.com/2013/01/15/build-book-pages-with-yampla-gem/" title="Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？">前回</a>紹介したRuby製ドキュメント生成ツール「<a href="https://rubygems.org/gems/yampla" title="yampla | RubyGems.org | your community gem host">Yampla</a>」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しますね。</p>
+
+<p>対象情報はプログラミング言語にしましょう。まずは以下のサイトから任意に選択した言語についての情報を取得します。</p>
+
+<blockquote><p><a href="http://www.freebase.com/" title="Freebase">Freebase</a></p></blockquote>
+
+<p>任意ディレクトリを用意し、取得した情報をYAMLフォーマットでファイルに記述します。ここでは各言語についてのデザイナ<code>designer</code>、公開年<code>year</code>、影響を与えた言語<code>influenced</code>を対象にします。要素名と値の関係はハッシュ（key: value）で表現します。１要素に複数の値があり得る場合は値を配列（- value）で表現します。</p>
+
+<h4>language.yaml</h4>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">Lisp</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">John McCarthy</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1958</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Python</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Perl</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Ruby</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Caml</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Pike</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Dylan</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">CLOS</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Smalltalk</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Logo</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Emacs Lisp</span>
+<span class="l-Scalar-Plain">C</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Dennis Ritchie</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1972</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">C++</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">PHP</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Vala</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">LPC</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Perl</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Objective-C</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">C--</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">PCASTL</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">AWK</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">JavaScript</span>
+<span class="l-Scalar-Plain">C++</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Bjarne Stroustrup</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1983</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">D</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">C#</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Dylan</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Perl</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">PHP</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Dao Language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Aikido Programming Language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">LPC</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Ferite</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">URBI</span>
+<span class="l-Scalar-Plain">Perl</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Larry Wall</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1987</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Ruby</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">PHP</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Python</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">JavaScript</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ECMAScript</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Windows PowerShell</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Dao Language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Groovy</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Frink</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">LPC</span>
+<span class="l-Scalar-Plain">Erlang</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Ericsson</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1987</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Scala</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Clojure</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Fan</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">F#</span>
+<span class="l-Scalar-Plain">Haskell</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Simon Peyton Jones</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Philip Wadler</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Paul Hudak</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1990</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Python</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Scala</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Mercury</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Clean programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Language Integrated Query</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Generic Java programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Perl 6</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Epigram programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Cayenne programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">F#</span>
+<span class="l-Scalar-Plain">Ruby</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Yukihiro Matsumoto</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1995</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Mantra</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Groovy</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Perl 6</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Frink</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Windows PowerShell</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">BeanShell</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Ferite</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Judoscript</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">URBI</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Nu</span>
+<span class="l-Scalar-Plain">JavaScript</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Brendan Eich</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1995</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mjt</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ActionScript</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Aikido Programming Language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Objective-J</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">DECLAN Pro</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Squirrel programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Script.NET</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Curl programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">JScript</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">JScript .NET</span>
+<span class="l-Scalar-Plain">Scala</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">designer</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Martin Odersky</span>
+  <span class="l-Scalar-Plain">year</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2001</span>
+  <span class="l-Scalar-Plain">influenced</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Fortress programming language</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Fan</span>
+</code></pre></div>
+
+
+<p>次に、XMLテンプレートをindex_template.xmlという名前で用意します。YAMLデータには<strong>items</strong>という変数でアクセスできます。Liquidの式<code>{% %}</code>または出力<code>{{ }}</code>タグを使ってテンプレートにYAML上の情報を埋め込みます。配列要素を展開するには<code>{% for item in items %}</code>式が使えます。</p>
+
+<h4>index_template.xml</h4>
+
+<div class="highlight"><pre><code class="xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;language&gt;</span>
+  {% for lang in items %}
+  <span class="nt">&lt;name&gt;</span>{{ lang.id }}<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    {% for name in lang.designer %}
+    <span class="nt">&lt;name&gt;</span>{{ name }}<span class="nt">&lt;/name&gt;</span>
+    {% endfor %}
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>{{ lang.year }}<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    {% for lang in lang.influenced %}
+    <span class="nt">&lt;language&gt;</span>}}<span class="nt">&lt;/language&gt;</span>
+    {% endfor %}
+  <span class="nt">&lt;/influenced&gt;</span>
+  {% endfor %}
+<span class="nt">&lt;/language&gt;</span>
+</code></pre></div>
+
+
+<p>次にこれらファイルを生成したディレクトリ<strong>lang</strong>において、次のコマンドを実行します。</p>
+
+<div class="highlight"><pre><code class="bash">lang% yampla
+</code></pre></div>
+
+
+<p>これによりそのサブディレクトリ<strong>out</strong>に<code>index.xml</code>ファイルが生成されます。</p>
+
+<div class="highlight"><pre><code class="bash">lang% tree
+.
+├── index_template.xml
+├── languages.yaml
+└── out
+    └── index.xml
+</code></pre></div>
+
+
+<p>以上により、上記YAMLフィアルから以下のようなXMLデータが生成出来ました。</p>
+
+<div class="highlight"><pre><code class="xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;language&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Lisp<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>John McCarthy<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1958<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Python<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Perl<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Ruby<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Caml<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Pike<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Dylan<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>CLOS<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Smalltalk<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Logo<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Emacs Lisp<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>C<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Dennis Ritchie<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1972<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>C++<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>PHP<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Vala<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>LPC<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Perl<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Objective-C<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>C--<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>PCASTL<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>AWK<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>JavaScript<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>C++<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Bjarne Stroustrup<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1983<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>D<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>C#<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Dylan<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Perl<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>PHP<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Dao Language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Aikido Programming Language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>LPC<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Ferite<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>URBI<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Perl<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Larry Wall<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1987<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Ruby<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>PHP<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Python<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>JavaScript<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>ECMAScript<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Windows PowerShell<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Dao Language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Groovy<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Frink<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>LPC<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Erlang<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Ericsson<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1987<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Scala<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Clojure<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Fan<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>F#<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Haskell<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Simon Peyton Jones<span class="nt">&lt;/name&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Philip Wadler<span class="nt">&lt;/name&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Paul Hudak<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1990<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Python<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Scala<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Mercury<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Clean programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Language Integrated Query<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Generic Java programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Perl 6<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Epigram programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Cayenne programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>F#<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Ruby<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Yukihiro Matsumoto<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1995<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Mantra<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Groovy<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Perl 6<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Frink<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Windows PowerShell<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>BeanShell<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Ferite<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Judoscript<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>URBI<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Nu<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>JavaScript<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Brendan Eich<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>1995<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>mjt<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>ActionScript<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Aikido Programming Language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Objective-J<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>DECLAN Pro<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Squirrel programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Script.NET<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Curl programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>JScript<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>JScript .NET<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+  <span class="nt">&lt;name&gt;</span>Scala<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;designer&gt;</span>
+    
+    <span class="nt">&lt;name&gt;</span>Martin Odersky<span class="nt">&lt;/name&gt;</span>
+    
+  <span class="nt">&lt;/designer&gt;</span>
+  <span class="nt">&lt;year&gt;</span>2001<span class="nt">&lt;/year&gt;</span>
+  <span class="nt">&lt;influenced&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Fortress programming language<span class="nt">&lt;/language&gt;</span>
+    
+    <span class="nt">&lt;language&gt;</span>Fan<span class="nt">&lt;/language&gt;</span>
+    
+  <span class="nt">&lt;/influenced&gt;</span>
+  
+<span class="nt">&lt;/language&gt;</span>
+</code></pre></div>
+
+
+<p>簡単ですね！</p>
+
+<p>「<a href="https://rubygems.org/gems/yampla" title="yampla | RubyGems.org | your community gem host">Yampla</a>」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しました。</p>
+
+<hr />
+
+<p>関連記事： <a href="/2013/01/15/build-book-pages-with-yampla-gem/" title="Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？">Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/XML-Hacks-―エキスパートのためのデータ処理テクニック-Michael-Fitzgerald/dp/4873112214?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873112214"><img class="amazon" src="http://ecx.images-amazon.com/images/I/4169RE5A08L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/XML-Hacks-―エキスパートのためのデータ処理テクニック-Michael-Fitzgerald/dp/4873112214?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873112214">XML Hacks ―エキスパートのためのデータ処理テクニック</a> by Michael Fitzgerald, 佐藤 直生, 木下 哲也, and 福竜興業</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/01/16/build-xml-with-yampla/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" data-text="Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/01/15/build-book-pages-with-yampla-gem" title="Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2013/01/21/why-fp-with-ruby" title="Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（改定）─ 前編 ─ 但し後編の予定なし">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/01/16/build-xml-with-yampla/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" data-text="Ruby製ドキュメント生成ツール「Yampla」でYAMLファイルからXMLファイルを生成する" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/01/16/build-xml-with-yampla/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

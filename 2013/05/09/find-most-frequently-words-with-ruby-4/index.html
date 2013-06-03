@@ -1,0 +1,939 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>09 May 2013</span></div>
+  <h1 class='page-title'><a href="/2013/05/09/find-most-frequently-words-with-ruby-4">Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>この記事は、─   <a href="http://melborne.github.io/books/20130426ruby_tutorial.html" title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!">電子書籍「Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!」EPUB/MOBI版</a>─の公開第４弾です（<a href="/2013/04/26/find-most-frequently-words-with-ruby/" title="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─">第１弾はこちら</a>）。本書第２章のバージョン22以降を掲載しています。</p>
+
+<p>電子書籍版は、タブレット端末向けのEPUBとKindle向けのMOBI形式を用意しています。もちろんデスクトップ向けのEPUBリーダー（<a href="https://itunes.apple.com/jp/app/kitabu/id492498910?mt=12" title="Mac App Store - Kitabu">Kitabu他</a>）および<a href="http://www.amazon.com/gp/feature.html?ie=UTF8&amp;docId=1000493771" title="Amazon.com: Free Kindle Reading Apps">Kindleリーダー</a>も提供されていますので、本書をPCまたはMacで読むこともできます。１００円と大変お求めやすい価格になっておりますので、ご購入検討頂けましたら大変に嬉しく思いますm(__)m</p>
+
+<p><img src="/assets/images/2013/04/ruby_tutorial_cover.png" alt="Alt title" /></p>
+
+<p><a href="http://gum.co/DBgJ" class="gumroad-button">電子書籍「Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!」EPUB/MOBI版</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<pre><code>（目次）
+序章
+１章　Rubyの特徴
+  Rubyはオブジェクト指向です
+  Rubyのブロックは仮装オブジェクトです
+  クラスはオブジェクトの母であってクラスの子であるオブジェクトです
+  Rubyはユーザフレンドリです
+２章　最頻出ワードを見つける
+  バージョン01（最初の一歩）
+  バージョン02（処理の分離）
+  バージョン03（injectメソッド）
+  バージョン04（sort_byメソッド）
+  バージョン05（takeメソッド）
+  バージョン06（take_byメソッドの定義）
+  バージョン07（Enumerable#take_byの定義）
+  バージョン08（top_by_valueの定義）
+  バージョン09（top_by_valueの改良）
+  バージョン10（DRY原則）
+  バージョン11（block_given?メソッド）
+  バージョン12（DRY再び）
+  バージョン13（block_given?の移動）
+  バージョン14（ARGF.take_wordsの定義）
+  バージョン15（make_freq_dicの定義）
+  バージョン16（スクリプトのクラス化）
+  バージョン17（top_by_lengthの定義）
+  バージョン18（DRY三度）
+  バージョン19（入力の拡張）
+  バージョン20（ネットアクセス）
+  バージョン21（メソッドの追加）
+  バージョン22（出力形式の再考）
+  バージョン23（pretty_printの定義）
+  バージョン24（GUI版）
+  バージョン25（クラスの拡張）
+  バージョン26（他の演算メソッドの定義）
+  バージョン27（DRY四度）
+  バージョン28（ユニークワードの抽出）
+  バージョン29（仕上げ）
+終章
+謝辞
+</code></pre>
+
+<hr />
+
+<h2 id="version22" class="version">バージョン22（出力形式の再考）</h2>
+
+
+<p>っと、その前に...</p>
+
+<p>アウトプットのしょぼさに今さらながら気が付いてしまいました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="c1">#&gt; [[&quot;the&quot;, 16077], [&quot;of&quot;, 9823], [&quot;and&quot;, 7482], [&quot;to&quot;, 7098], [&quot;in&quot;, 4456], [&quot;a&quot;, 3841], [&quot;that&quot;, 3161], [&quot;was&quot;, 3040], [&quot;it&quot;, 2919], [&quot;i&quot;, 2881], [&quot;her&quot;, 2550], [&quot;she&quot;, 2313], [&quot;as&quot;, 2134], [&quot;you&quot;, 2071], [&quot;not&quot;, 2057], [&quot;be&quot;, 2044], [&quot;is&quot;, 2033], [&quot;his&quot;, 2009], [&quot;he&quot;, 1940], [&quot;for&quot;, 1927]]</span>
+</code></pre></div>
+
+
+<p>これが上司に対する報告か何かの類いのものならまず却下です。これをもう少しマシなものにしましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">freq</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+<span class="c1">#&gt;</span>
+ <span class="mi">16077</span><span class="ss">:the</span>
+ <span class="mi">9823</span><span class="ss">:of</span>
+ <span class="mi">7482</span><span class="ss">:and</span>
+ <span class="mi">7098</span><span class="ss">:to</span>
+ <span class="mi">4456</span><span class="ss">:in</span>
+ <span class="mi">3841</span><span class="ss">:a</span>
+ <span class="mi">3161</span><span class="ss">:that</span>
+ <span class="mi">3040</span><span class="ss">:was</span>
+ <span class="mi">2919</span><span class="ss">:it</span>
+ <span class="mi">2881</span><span class="ss">:i</span>
+ <span class="mi">2550</span><span class="ss">:her</span>
+ <span class="mi">2313</span><span class="ss">:she</span>
+ <span class="mi">2134</span><span class="ss">:as</span>
+ <span class="mi">2071</span><span class="ss">:you</span>
+ <span class="mi">2057</span><span class="ss">:not</span>
+ <span class="mi">2044</span><span class="ss">:be</span>
+ <span class="mi">2033</span><span class="ss">:is</span>
+ <span class="mi">2009</span><span class="ss">:his</span>
+ <span class="mi">1940</span><span class="ss">:he</span>
+ <span class="mi">1927</span><span class="ss">:for</span>
+</code></pre></div>
+
+
+<p>これだけでも大分よくなりました。しかし上司はもっと視覚的にアピールするものを好むでしょうね。</p>
+
+<h2 id="version23" class="version">バージョン23（pretty_printの定義）</h2>
+
+
+<p>単語の出現数を*の数で視覚化する、pretty_printメソッドを定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+   <span class="n">max_stars</span> <span class="o">=</span> <span class="mi">60</span>
+   <span class="n">max_value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+   <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span>
+     <span class="n">stars</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_stars</span> <span class="o">*</span> <span class="p">(</span><span class="n">freq</span><span class="o">/</span><span class="n">max_value</span><span class="o">.</span><span class="n">to_f</span><span class="p">))</span><span class="o">.</span><span class="n">ceil</span>
+     <span class="nb">printf</span> <span class="s2">&quot;%5d:%-5s %s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">stars</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="n">pretty_print</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>出力は次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">16077</span><span class="ss">:the</span>   <span class="o">************************************************************</span>
+ <span class="mi">9823</span><span class="ss">:of</span>    <span class="o">*************************************</span>
+ <span class="mi">7482</span><span class="ss">:and</span>   <span class="o">****************************</span>
+ <span class="mi">7098</span><span class="ss">:to</span>    <span class="o">***************************</span>
+ <span class="mi">4456</span><span class="ss">:in</span>    <span class="o">*****************</span>
+ <span class="mi">3841</span><span class="ss">:a</span>     <span class="o">***************</span>
+ <span class="mi">3161</span><span class="ss">:that</span>  <span class="o">************</span>
+ <span class="mi">3040</span><span class="ss">:was</span>   <span class="o">************</span>
+ <span class="mi">2919</span><span class="ss">:it</span>    <span class="o">***********</span>
+ <span class="mi">2881</span><span class="ss">:i</span>     <span class="o">***********</span>
+ <span class="mi">2550</span><span class="ss">:her</span>   <span class="o">**********</span>
+ <span class="mi">2313</span><span class="ss">:she</span>   <span class="o">*********</span>
+ <span class="mi">2134</span><span class="ss">:as</span>    <span class="o">********</span>
+ <span class="mi">2071</span><span class="ss">:you</span>   <span class="o">********</span>
+ <span class="mi">2057</span><span class="ss">:not</span>   <span class="o">********</span>
+ <span class="mi">2044</span><span class="ss">:be</span>    <span class="o">********</span>
+ <span class="mi">2033</span><span class="ss">:is</span>    <span class="o">********</span>
+ <span class="mi">2009</span><span class="ss">:his</span>   <span class="o">********</span>
+ <span class="mi">1940</span><span class="ss">:he</span>    <span class="o">********</span>
+ <span class="mi">1927</span><span class="ss">:for</span>   <span class="o">********</span>
+</code></pre></div>
+
+
+<p>いい感じですね。</p>
+
+<p>prinftを使って出力をフォーマットしています。フォーマットについては、公式マニュアルの以下の頁が参考になります。</p>
+
+<p><a href="http://doc.ruby-lang.org/ja/1.9.3/method/Kernel/m/format.html" title="module function Kernel.#format">module function Kernel.#format</a></p>
+
+<h2 id="version24" class="version">バージョン24（GUI版）</h2>
+
+
+<p>「おいおい未だにCUIかよ！」</p>
+
+<p>いつか言われると思いました。</p>
+
+<p>だから先回りして、GUI版を用意しておきました。</p>
+
+<p><img src="/assets/images/2013/04/shoes_app.png" alt="shoes noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>ShoesというRubyのGUIフレームワークで書いています。もちろんWordDictionaryクラスで生成したオブジェクトを使い、Shoesではその描画だけをしています。<strong>Open</strong>で対象ファイルを開き、<strong>Show</strong>でグラフが描画されます。</p>
+
+<p>実装は褒められたものじゃありませんが、これも合せて公開しておきます。実行にはShoesのインストールが必要です。</p>
+
+<p><a href="http://gist.github.com/93900">gist: 93900 - GitHub</a></p>
+
+<p><a href="http://shoesrb.com/" title="Shoes! The easiest little GUI toolkit, for Ruby.">Shoes! The easiest little GUI toolkit, for Ruby.</a></p>
+
+<h2 id="version25" class="version">バージョン25（クラスの拡張）</h2>
+
+
+<p>さてGUIで出力も魅力的なものになりました。もうやり残すことはなさそうです。当初単なる制御構造であったスクリプトが、WordDictionaryという立派なクラスになりました。これで将来このクラスを拡張したり、このクラスをベースにしたアプリケーションを作れます。</p>
+
+<p>で、将来っていつ？</p>
+
+<p>...</p>
+
+<p>そうです。DogYearのこの時代に、いつ来るか分からない将来を待っているゆとりなんて私たちにはないのです！自分たちから未来に向かって進むのです！何らかの形ある結果を残すのです！！</p>
+
+<p>...</p>
+
+<p>ということで...</p>
+
+<p>なんか息巻いている人がいるので、もう少し進みましょう。
+まずはもう少し機能拡張しましょう。WordDictionaryクラスから生成した複数の単語辞書オブジェクトを、相互作用させるような機能があったら楽しそうです。</p>
+
+<p>まずは2つのオブジェクトを結合する +メソッドを定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="kp">protected</span> <span class="ss">:words</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p><strong>+</strong>メソッドは他の単語辞書オブジェクトを引数に取って、自身と引数の単語を結合した単語辞書オブジェクトを返します。つまりAオブジェクトにrubyという単語が32個あり、Bオブジェクトに18個あった場合、これらを結合したCオブジェクトにはrubyは50個あることになります。</p>
+
+<p>attr_reader :wordsは、<strong>+</strong>メソッドの実装において他のオブジェクトの@wordsインスタンス変数にアクセスできるようにします。protected :wordsにおいてその可視性を、同系のオブジェクトからのアクセスに限定します。</p>
+
+<p><strong>+</strong>メソッドのresultには2つの単語オブジェクトの単語をスペースで結合してなる文字列が入り、その文字列でWordDictionaryクラスのオブジェクトを作って返り値とします。@wordsは配列を指していますから、実装においては配列の+メソッドが使えます。</p>
+
+<p>これによって通常の算術演算のような記法で、2つの単語辞書オブジェクトを結合できるようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">alice</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/alice.txt&#39;</span><span class="p">)</span>
+ <span class="n">romeo_juliet</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/romeo_juliet.txt&#39;</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="n">romeo_juliet</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="p">(</span><span class="n">alice</span> <span class="o">+</span> <span class="n">romeo_juliet</span><span class="p">)</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="c1">#&gt; [[&quot;caterpillar&quot;, 28, 11], [&quot;everything&quot;, 14, 10], [&quot;adventures&quot;, 12, 10], [&quot;foundation&quot;, 25, 10], [&quot;electronic&quot;, 27, 10], [&quot;paragraph&quot;, 11, 9], [&quot;anxiously&quot;, 14, 9], [&quot;beautiful&quot;, 13, 9], [&quot;agreement&quot;, 18, 9], [&quot;trademark&quot;, 11, 9]]</span>
+ <span class="c1">#&gt; [[&quot;distributed&quot;, 18, 11], [&quot;shakespeare&quot;, 17, 11], [&quot;electronic&quot;, 19, 10], [&quot;therefore&quot;, 23, 9], [&quot;gentleman&quot;, 14, 9], [&quot;gutenberg&quot;, 24, 9], [&quot;gentlemen&quot;, 11, 9], [&quot;copyright&quot;, 16, 9], [&quot;benvolio&quot;, 17, 8], [&quot;daughter&quot;, 17, 8]]</span>
+<span class="no">Argument</span> <span class="n">has</span> <span class="n">assumed</span> <span class="n">as</span> <span class="n">a</span> <span class="n">text</span> <span class="n">string</span>
+ <span class="c1">#&gt; [[&quot;distribution&quot;, 16, 12], [&quot;shakespeare&quot;, 18, 11], [&quot;caterpillar&quot;, 28, 11], [&quot;opportunity&quot;, 11, 11], [&quot;information&quot;, 13, 11], [&quot;distributed&quot;, 22, 11], [&quot;everything&quot;, 15, 10], [&quot;adventures&quot;, 12, 10], [&quot;foundation&quot;, 25, 10], [&quot;permission&quot;, 16, 10]]</span>
+</code></pre></div>
+
+
+
+
+<h2 id="version26" class="version">バージョン26（他の演算メソッドの定義）</h2>
+
+
+<p>じゃあ次に<strong>-</strong>メソッドを定義しましょう。ついでに<strong>&amp;</strong>メソッドと<strong>|</strong>メソッドも定義しましょう。 <strong>-</strong>メソッドは2つのオブジェクトの差分を、<strong>&amp;</strong>メソッドと<strong>|</strong>メソッドはそれぞれそれらの積と和を出力します。なお先のrubyの例を<strong>-</strong>メソッドに適用した場合、Cオブジェクトのrubyの個数は14でなく0になります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="kp">protected</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+
+
+<h2 id="version27" class="version">バージョン27（DRY四度）</h2>
+
+
+<p>さて次にやるべきことは分かってますね？そう、Don't Repeat Yourself!です。</p>
+
+<p>上の4つの演算はその中の演算子が異なるだけです。先の例のようにこれをブロックやオブジェクト化して渡す方法がありますが、ここではもっとスマートにシンボルを使って渡してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:-</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:&amp;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:|</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">arithmetics</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span><span class="o">.</span><span class="n">send</span> <span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>arithmeticsメソッド内でsendメソッドを使っている点がポイントです。sendメソッドは、シンボルで表現されたメソッドを実行できるようにします。これでコードがすっきりしました。</p>
+
+<h2 id="version28" class="version">バージョン28（ユニークワードの抽出）</h2>
+
+
+<p>さてこれらの演算子を使って何かしたいですね...</p>
+
+<p>いいのを思いつきました。</p>
+
+<p>ある小説を元にしたオブジェクトから、基本単語からなるオブジェクトを差し引けば、その小説にユニークな単語が抽出できるかもしれません。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+
+   <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+     <span class="n">text</span> <span class="o">=</span>
+        <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span> <span class="o">=~</span> <span class="n">regexp</span> <span class="p">}</span>
+                 <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="p">:</span> <span class="n">freq</span> <span class="p">}</span>
+                 <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">freq</span> <span class="p">}</span>
+                 <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+   <span class="k">end</span>
+
+   <span class="k">def</span> <span class="nf">uniq_words</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">base</span><span class="p">)</span>
+     <span class="n">base</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_self</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">_self</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="sr">/./</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">freq</span><span class="o">|</span> <span class="n">freq</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">}</span>  <span class="p">}</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>uniq_wordsは個数nと複数の基本単語オブジェクトbaseを取って、そのオブジェクトに固有のワードトップnを出力します。injectメソッドのブロックの中で先ほど定義した-メソッドを使っています。</p>
+
+<p>ここでselectメソッドを使ってbaseオブジェクトにおける、対象単語をその頻度が10以上のものに限定することで、baseオブジェクトにおけるゴミ(基本単語でないもの)をある程度排除するようにしています。そのためselectメソッドをブロックを取れるように修正しました。</p>
+
+<p>さて、早速「不思議の国のアリス」のユニークなワードを出力してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">if</span> <span class="vg">$0</span> <span class="o">==</span> <span class="bp">__FILE__</span>
+  <span class="n">base</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/base.txt&#39;</span><span class="p">)</span>
+  <span class="n">alice</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/alice.txt&#39;</span><span class="p">)</span>
+  <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+ <span class="k">end</span> 
+ <span class="o">&gt;</span><span class="c1"># Argument has assumed as a text string</span>
+ <span class="o">&gt;</span><span class="c1"># Argument has assumed as a text string</span>
+ <span class="o">&gt;</span><span class="c1"># [[&quot;alice&quot;, 403], [&quot;turtle&quot;, 59], [&quot;mock&quot;, 56], [&quot;hatter&quot;, 56], [&quot;gryphon&quot;, 55], [&quot;rabbit&quot;, 51], [&quot;got&quot;, 45], [&quot;mouse&quot;, 44], [&quot;duchess&quot;, 42], [&quot;tone&quot;, 40], [&quot;dormouse&quot;, 40], [&quot;cat&quot;, 37], [&quot;hare&quot;, 31], [&quot;caterpillar&quot;, 28], [&quot;jury&quot;, 22], [&quot;sort&quot;, 20], [&quot;tea&quot;, 19], [&quot;soup&quot;, 18], [&quot;bill&quot;, 17], [&quot;hastily&quot;, 16], [&quot;bit&quot;, 16], [&quot;doesn&quot;, 16], [&quot;didn&quot;, 14], [&quot;dinah&quot;, 14], [&quot;anxiously&quot;, 14], [&quot;baby&quot;, 14], [&quot;footman&quot;, 14], [&quot;trying&quot;, 14], [&quot;cook&quot;, 13], [&quot;wouldn&quot;, 13]]</span>
+</code></pre></div>
+
+
+<p>なんかいい感じじゃないですか！</p>
+
+<p>なお最後のif $0 == __FILE__ はこのスクリプトを他のスクリプトからrequireしたときにはこの部分が、require先で実行されないようにするための技法です。$0はrubyインタプリタに渡したスクリプト名__FILE__はこのスクリプト名を参照します。</p>
+
+<h2 id="version29" class="version">バージョン29（仕上げ）</h2>
+
+
+<p>でも、さっきからうっとうしい文字が一緒に出力されていますね。オブジェクトを内部で再構築するとき文字列を渡すのでそれが原因です。フラグを立ててこれに対処します。</p>
+
+<p>WordDictionaryクラス内部でオブジェクトを生成するときはinner_callにtrueを渡して、"Argument has..."のメッセージがでないようにします。</p>
+
+<p>ついでに最後の仕上げとして、クラスは入力データの名前nameを受け取れるようにし、また総単語種数を出力するsizeメソッドも定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="n">att_reader</span> <span class="ss">:words</span><span class="p">,</span> <span class="ss">:name</span>
+   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="nb">name</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">inner_call</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
+     <span class="n">input</span> <span class="o">=</span> <span class="n">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
+     <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+     <span class="n">text</span> <span class="o">=</span> <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span> <span class="o">=~</span> <span class="n">regexp</span> <span class="p">}</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="p">:</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="vi">@name</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">size</span>
+     <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">length</span>
+   <span class="k">end</span>
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">input</span>
+    <span class="k">when</span> <span class="nb">String</span>
+      <span class="k">begin</span>
+        <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+      <span class="k">rescue</span>
+        <span class="nb">puts</span> <span class="s2">&quot;Argument has assumed as a text string&quot;</span> <span class="k">unless</span> <span class="n">inner_call</span>
+        <span class="n">input</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">arithmetics</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span><span class="o">.</span><span class="n">send</span> <span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあこれで完成です！完成したスクリプト全体を眺めてみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;open-uri&quot;</span>
+  <span class="k">module</span> <span class="nn">Enumerable</span>
+    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">nth</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">class</span> <span class="nc">WordDictionary</span>
+    <span class="kp">include</span> <span class="no">Enumerable</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:words</span>
+ 
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="nb">name</span><span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">inner_call</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
+      <span class="n">input</span> <span class="o">=</span> <span class="n">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
+      <span class="vi">@words</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z&#39;]+/</span><span class="p">)</span>
+      <span class="vi">@freq_dic</span> <span class="o">=</span> <span class="vi">@words</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">each</span>
+      <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">top_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">bottom_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">top_by_length</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">list</span> <span class="o">=</span> <span class="n">take_by_key</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="o">-</span><span class="n">word</span><span class="o">.</span><span class="n">length</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">list</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="o">[</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">word</span><span class="o">.</span><span class="n">length</span><span class="o">]</span> <span class="p">}</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+      <span class="n">text</span> <span class="o">=</span> <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span> <span class="o">=~</span> <span class="n">regexp</span> <span class="p">}</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="p">:</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+      <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="vi">@name</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+    <span class="k">end</span>
+ 
+    <span class="k">def</span> <span class="nf">to_s</span>
+      <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">to_s</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">size</span>
+      <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">length</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:-</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:&amp;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:|</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">uniq_words</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">*</span><span class="n">base</span><span class="p">)</span>
+      <span class="n">base</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_self</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">_self</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="sr">/./</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">freq</span><span class="o">|</span> <span class="n">freq</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">}</span>  <span class="p">}</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="kp">protected</span> <span class="ss">:words</span> 
+    <span class="kp">private</span>
+    <span class="k">def</span> <span class="nf">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
+     <span class="k">case</span> <span class="n">input</span>
+     <span class="k">when</span> <span class="sr">/^http/</span>
+       <span class="k">begin</span>
+         <span class="nb">open</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+       <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
+         <span class="nb">puts</span> <span class="n">e</span>
+         <span class="nb">exit</span>
+       <span class="k">end</span>
+     <span class="k">when</span> <span class="nb">String</span>
+       <span class="k">begin</span>
+         <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+       <span class="k">rescue</span>
+         <span class="no">STDERR</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Argument has assumed as a text string&quot;</span> <span class="k">unless</span> <span class="n">inner_call</span>
+         <span class="n">input</span>
+       <span class="k">end</span>
+     <span class="k">when</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span>
+       <span class="n">input</span><span class="o">.</span><span class="n">read</span>
+     <span class="k">else</span>
+       <span class="k">raise</span> <span class="s2">&quot;Wrong argument. ARGF, file or string are acceptable.&quot;</span>
+     <span class="k">end</span>
+    <span class="k">end</span>
+   
+    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">val</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span>
+      <span class="n">take_by_key_or_val</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">take_by_key</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="n">key</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">key</span> <span class="p">}</span>
+      <span class="n">take_by_key_or_val</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">take_by_key_or_val</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
+      <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">by</span><span class="o">[</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">]]</span> <span class="p">}</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">arithmetics</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span><span class="o">.</span><span class="n">send</span> <span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+      <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">max_stars</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="n">max_value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span>
+      <span class="n">stars</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_stars</span> <span class="o">*</span> <span class="p">(</span><span class="n">freq</span><span class="o">/</span><span class="n">max_value</span><span class="o">.</span><span class="n">to_f</span><span class="p">))</span><span class="o">.</span><span class="n">ceil</span>
+      <span class="nb">printf</span> <span class="s2">&quot;%5d:%-5s %s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">stars</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+ 
+ <span class="k">if</span> <span class="vg">$0</span> <span class="o">==</span> <span class="bp">__FILE__</span>
+  <span class="n">base</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/base.txt&#39;</span><span class="p">)</span>
+  <span class="n">alice</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/alice.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;Alice&#39;s Adventures in Wonderland&quot;</span><span class="p">)</span>
+  <span class="n">jp_history</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/japanese_history.txt&#39;</span><span class="p">)</span>
+  <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+  <span class="nb">p</span> <span class="n">jp_history</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<h2>最後に</h2>
+
+<p>英文小説の最頻出ワードを見つける旅はこれで終わりです。長い道のりでした。でもわたしは楽しめました。そして大変勉強になりました。</p>
+
+<p>そう、このチュートリアルは皆様のためにではなく、実は私自身のために書かれたものなのです。Rubyのエキスパートが余裕を持って書いたものではなく、プログラム新人が学び試行錯誤しながら、その知力の限界を引き出して書いたものなのです。</p>
+
+<p>でも一方で、このチュートリアルを役に立ったと言ってくれる人がいつか現れると信じてもいるのです。それがRubyを学びその成果をブログで公開するわたしのエンジンになっているのです。</p>
+
+<p>最後にこのWordDictionaryクラスを使ったWebアプリケーションを構築してみました。これが今回のチュートリアルの一応の成果です。よろしければアクセスしてみてください。</p>
+
+<p><a href="http://wordsinbooks.herokuapp.com/" title="WORDS in Books">WORDS in Books</a></p>
+
+<p><img src="/assets/images/2013/04/web_app.png" alt="webapp noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>機能は次の3つだけです。</p>
+
+<ol>
+<li>いくつかの英文小説の特徴、つまりタイトル、総単語種数(Total Words in Kind)、最頻出ワードtop30(Most Used Words)、最ワード長top10(Longest Words)、特徴ワード20(Characteristic Words)を表示します。</li>
+<li>小説タイトルをクリックするとその文章の頁に遷移します。</li>
+<li>右端の入力欄に英文または英文の置かれたURLを入れることで、その文章の特徴を抽出して表示します。</li>
+</ol>
+
+
+<p>サイトの構築には、<a href="http://www.sinatrarb.com/">Sinatra</a>というWebフレームワークと、<a href="http://heroku.com/">heroku</a>というサービスを使いました。</p>
+
+<p>すべてのスクリプトは以下に公開しています。</p>
+
+<blockquote><p><a href="http://gist.github.com/93900">gist: 93900 - GitHub</a></p></blockquote>
+
+<hr />
+
+<p><img src="/assets/images/2013/04/ruby_tutorial_cover.png" alt="Alt title" /></p>
+
+<p><a href="http://gum.co/DBgJ" class="gumroad-button">電子書籍「Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!」EPUB/MOBI版</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" style="width:200px" />
+</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" data-text="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/04/30/find-most-frequently-words-with-ruby-3" title="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その３）">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2013/05/15/color-handler-colorable-gem-updated" title="Rubyで色を扱うライブラリ「Colorable」をアップデートしましたのでお知らせいたします">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" data-text="Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─（その４）" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/05/09/find-most-frequently-words-with-ruby-4/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

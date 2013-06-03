@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyのProcオブジェクトはキューティーハニーだ!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>01 September 2009</span></div>
+  <h1 class='page-title'><a href="/2009/09/01/Ruby-Proc">RubyのProcオブジェクトはキューティーハニーだ!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>RubyのブロックとそのオブジェクトであるProcオブジェクトはとても魅惑的だ。優しそうでいてなかなか複雑だ。外からは浅そうに見えて、中に入ると底が見えてこない。</p>
+
+<p>単純に見えて使い方は実に多様だ。あるときはイテレータであり、またあるときはコールバック関数である。あるときはフィルターであり、またあるときはジェネレーターである。</p>
+
+<p>Procオブジェクトに関し試してみたことを書いてみます。きっと勘違いがあるので指摘してくれるとうれしいです。</p>
+
+<h2>あるときはSingletonメソッド・ジェネレータになる</h2>
+
+<p>Rubyのブロックはメソッドと同じように手続きの塊を作り、それはlambdaでオブジェクト(Procオブジェクト)化できる。このときProcオブジェクトは外側の変数の参照を自身の状態として取りこめる。ブロック内の手続きは、Proc#callメソッドを呼ぶことによって実行される。こんな感じだ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+ 
+ <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
+   <span class="nb">puts</span> <span class="nb">name</span>
+   <span class="nb">puts</span> <span class="n">party</span>
+   <span class="nb">puts</span> <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">party</span><span class="si">}</span><span class="s2">&quot;</span>
+ <span class="k">end</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ 
+ <span class="c1"># &gt;&gt; taro</span>
+ <span class="c1"># &gt;&gt; jimin</span>
+ <span class="c1"># &gt;&gt; Hello, I&#39;m taro of jimin</span>
+ 
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ 
+ <span class="c1"># &gt;&gt; yukio</span>
+ <span class="c1"># &gt;&gt; minshu</span>
+ <span class="c1"># &gt;&gt; Hello, I&#39;m yukio of minshu</span>
+</code></pre></div>
+
+
+<p>外側の変数(name,party)の参照先が変わると、それに合わせてProcオブジェクト(pm)の状態も変わる。</p>
+
+<p>pmはオブジェクトだからユーザがメソッドを追加してもいい。こんなときsingletonクラス(特異クラス)が使える。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+ 
+ <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
+   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">pm</span>
+     <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:party</span>
+     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+       <span class="vi">@name</span><span class="p">,</span> <span class="vi">@party</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">party</span>
+     <span class="k">end</span>
+     <span class="k">def</span> <span class="nf">greeting</span>
+       <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">&quot;</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="n">pm</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;taro&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;jimin&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m taro of jimin&quot;</span>
+ 
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
+ 
+ <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span>
+</code></pre></div>
+
+
+<p>例では先の例のブロック内の各文をメソッドで呼べるようにしている。singletonクラスの参照オブジェクトをpmとしメソッドを定義して、Proc#callでinitメソッドが実行されるようにする。</p>
+
+<p>ただ上のコードはブロックの内部で変数pmを参照しているので、pmの参照先が変わると問題が起きる。ブロックの引数として対象のオブジェクトを渡して問題を解決しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+ 
+ <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="o">|</span>
+   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
+     <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:party</span>
+     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+       <span class="vi">@name</span><span class="p">,</span> <span class="vi">@party</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">party</span>
+     <span class="k">end</span>
+     <span class="k">def</span> <span class="nf">greeting</span>
+       <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">&quot;</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="n">pm</span><span class="o">[</span><span class="n">pm</span><span class="o">]</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;taro&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;jimin&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m taro of jimin&quot;</span>
+ 
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
+ 
+ <span class="n">pm</span><span class="o">[</span><span class="n">pm</span><span class="o">]</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span>
+</code></pre></div>
+
+
+<p>ブロックを実行するpm[pm]（これはpm.call(pm)と等価）のところがちょっと変な感じがする。</p>
+
+<p>別のオブジェクトをブロック引数として渡したらどうなるんだろう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Person</span>
+ <span class="k">end</span>
+ <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+ <span class="nb">name</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+ 
+ <span class="n">pm</span><span class="o">[</span><span class="n">me</span><span class="o">]</span>
+ <span class="n">me</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+ <span class="n">me</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;N/A&quot;</span>
+ <span class="n">me</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m Charlie of N/A&quot;</span>
+</code></pre></div>
+
+
+<p>Personクラスのオブジェクトmeに先のメソッドが追加された。</p>
+
+<p>そうか、pmオブジェクトは任意のオブジェクトにsingletonメソッドを追加するジェネレータとして機能するんだ。じゃあもっとそれっぽく作ってみよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">singleton_generator</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="o">|</span>
+   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
+     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+       <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+       <span class="n">meta</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+         <span class="n">properties</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
+           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
+         <span class="k">end</span>
+       <span class="k">end</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Person</span>
+   <span class="kp">attr_reader</span> <span class="ss">:fname</span><span class="p">,</span> <span class="ss">:lname</span>
+   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="p">)</span>
+     <span class="vi">@fname</span><span class="p">,</span> <span class="vi">@lname</span> <span class="o">=</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lname</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">usp</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Barack&#39;</span><span class="p">,</span> <span class="s1">&#39;Obama&#39;</span><span class="p">)</span>
+ 
+ <span class="n">singleton_generator</span><span class="o">[</span><span class="n">usp</span><span class="p">,</span> <span class="ss">:mname</span> <span class="o">=&gt;</span> <span class="s1">&#39;Hussein&#39;</span><span class="p">,</span> <span class="ss">:party</span> <span class="o">=&gt;</span> <span class="s1">&#39;Democratic&#39;</span><span class="o">]</span>
+ 
+ <span class="nb">puts</span> <span class="s2">&quot;44th President of the United States is </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">mname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">lname</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">party</span><span class="si">}</span><span class="s2"> party.&quot;</span>
+ 
+  <span class="c1">#&gt;&gt; 44th President of the United States is Barack Hussein Obama of Democratic party.</span>
+</code></pre></div>
+
+
+<p>singletonメソッドを生成するsingleton_generatorオブジェクトにブロック引数として対象のオブジェクトと、任意のプロパティをハッシュで渡せるようにした。この例ではPersonクラスのオブジェクトuspに対してmnameとpartyメソッドを追加する例を示した。これでsingletonメソッド・ジェネレーターの完成だ！</p>
+
+<p>もっとも同じことは別にメソッドでもできるので、意味はなさそうだけど…</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">singleton_generator</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
+   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
+     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+       <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+       <span class="n">meta</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+         <span class="n">properties</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
+           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
+         <span class="k">end</span>
+       <span class="k">end</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<h2>あるときは再帰オブジェクトになる</h2>
+
+<p>以下のブログでY-Combinatorを使って再帰的な関数を手続きオブジェクトにするやり方が書かれている。</p>
+
+<p><a href="http://rubyist.g.hatena.ne.jp/muscovyduck/20060524/p1">「再帰的な関数」を手続きオブジェクトにする - バリケンのRuby日記 - Rubyist</a></p>
+
+<p>解説はとても丁寧になされていてとてもためになる。でもY-Combinatorについてはどうにも僕の頭がついていってくれないので、別の方法がないか考えてみた。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>ここでブロック内の変数を無くすために、手続きオブジェクトをブロック引数として渡すようにする。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>うまくいった。でもfactを呼ぶときfactを引数で渡すのは格好悪い。</p>
+
+<p>Ruby1.9のProcオブジェクトにはcurryというメソッドがあって、引数の一部を先に渡してそのオブジェクトに部分適用してくれるものがある。関数に対するこのような作用を論理学者ハスケル・カリーに因んでカリー化というらしい。</p>
+
+<p>これが使えるかもしれない。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ 
+ <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>factオブジェクトをカリー化し、最初にブロック引数としてfactオブジェクトだけを渡してfact_makerオブジェクトを作る。こうすればfact_makerに対する引数は1つだけになって目的は達成できる。</p>
+
+<p>でもまだブロック内のelse節でProcオブジェクトを渡してる。これも消したい。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ 
+ <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; TypeError:Proc can&#39;t be coerced into Fixnum</span>
+</code></pre></div>
+
+
+<p>もちろんエラーが出る。エラーがでないようにするためにはブロックに渡す引数は、factオブジェクトじゃなくて既にfactを渡して生成したProcオブジェクトつまりfact_makerじゃなくちゃいけない。</p>
+
+<p>そこでバリケンさんにあったアイディアをもらって、fact_makerを次のようにしてみる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ 
+ <span class="n">fact_maker</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+   <span class="n">fact</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>うまくいった。さらにfactにつけたcurryをfact_maker内に移動する。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact_maker</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+   <span class="n">fact</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>fact_makerをY-Combinatorのようにメソッドにしてみる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span>
+ 
+ <span class="k">def</span> <span class="nf">my_combinator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
+ <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
+</code></pre></div>
+
+
+<p>フィボナッチでも試してみる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fib</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+   <span class="k">case</span> <span class="n">n</span>
+   <span class="k">when</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">0</span>
+   <span class="k">when</span> <span class="mi">1</span> <span class="k">then</span> <span class="mi">1</span>
+   <span class="k">else</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="o">]</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">my_combinator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fib</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fib</span><span class="p">)</span>
+ <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span>
+</code></pre></div>
+
+
+<p>ここまで来たらProcのメソッドにもしてみる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Proc</span>
+   <span class="k">def</span> <span class="nf">recur</span>
+     <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">fact</span> <span class="o">=</span> <span class="n">fact</span><span class="o">.</span><span class="n">recur</span>
+ <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800 </span>
+ <span class="n">fib</span> <span class="o">=</span> <span class="n">fib</span><span class="o">.</span><span class="n">recur</span>
+ <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span>
+</code></pre></div>
+
+
+<p>トンチンカンなことやってないか心配だ…</p>
+
+<h2>あるときはcaseの判定ラベルになる</h2>
+
+<p>Ruby1.9ではProc#callの別名としてProc#===が用意されている。それを用いた楽しいサンプルをDave Thomasさんのブログで見つけた。</p>
+
+<p><a href="http://pragdave.blogs.pragprog.com/pragdave/2008/09/fun-with-procs.html">PragDave: Fun with Procs in Ruby 1.9</a></p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">is_weekday</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">day_of_week</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="n">time</span><span class="o">.</span><span class="n">wday</span> <span class="o">==</span> <span class="n">day_of_week</span><span class="p">}</span><span class="o">.</span><span class="n">curry</span>  
+   
+ <span class="n">sunday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>  
+ <span class="n">monday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>  
+ <span class="n">tuesday</span>   <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>  
+ <span class="n">wednesday</span> <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span>  
+ <span class="n">thursday</span>  <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">4</span><span class="o">]</span>  
+ <span class="n">friday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span>  
+ <span class="n">saturday</span>  <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">6</span><span class="o">]</span>  
+   
+ <span class="k">case</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>  
+ <span class="k">when</span> <span class="n">sunday</span>   
+   <span class="nb">puts</span> <span class="s2">&quot;Day of rest&quot;</span>  
+ <span class="k">when</span> <span class="n">monday</span><span class="p">,</span> <span class="n">tuesday</span><span class="p">,</span> <span class="n">wednesday</span><span class="p">,</span> <span class="n">thursday</span><span class="p">,</span> <span class="n">friday</span>  
+   <span class="nb">puts</span> <span class="s2">&quot;Work&quot;</span>  
+ <span class="k">when</span> <span class="n">saturday</span>  
+   <span class="nb">puts</span> <span class="s2">&quot;chores&quot;</span>  
+ <span class="k">end</span>  
+</code></pre></div>
+
+
+<p>sunday, monday..はis_weekdayに曜日数値だけを適用して生成されたProcオブジェクトだ。これをcaseの条件におくと、Proc#===つまりcallメソッドが呼ばれて、Time.nowを引数としてis_weekdayのブロックが評価される。そしてブロックの評価結果はcaseの条件になる。</p>
+
+<p>case式において比較条件の詳細が隠ぺいされていて簡潔だ。自分でも何か書いてみよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:height</span><span class="p">,</span> <span class="ss">:weight</span><span class="p">)</span>
+ 
+ <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;ichiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">75</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+ <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;jiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">65</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+ <span class="n">p3</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;saburo&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">90</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span>
+ 
+ <span class="no">BMI</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">min</span><span class="p">,</span> <span class="n">max</span><span class="p">,</span> <span class="n">person</span><span class="o">|</span>
+    <span class="p">(</span><span class="n">min</span><span class="o">.</span><span class="n">.max</span><span class="p">)</span><span class="o">.</span><span class="n">cover?</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">weight</span> <span class="o">/</span> <span class="n">person</span><span class="o">.</span><span class="n">height</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+ <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ 
+ <span class="n">upper</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">23</span><span class="p">,</span> <span class="mi">25</span><span class="o">]</span>
+ <span class="n">middle</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">23</span><span class="o">]</span>
+ <span class="n">lower</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">18</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">21</span><span class="o">]</span>
+ 
+ <span class="n">messages</span> <span class="o">=</span> <span class="o">[</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="n">p3</span><span class="o">].</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">testee</span><span class="o">|</span>
+   <span class="n">result</span> <span class="o">=</span> 
+     <span class="k">case</span> <span class="n">testee</span>
+     <span class="k">when</span> <span class="n">upper</span>
+       <span class="s2">&quot;You are in upper&quot;</span>
+     <span class="k">when</span> <span class="n">middle</span>
+       <span class="s2">&quot;You are great!&quot;</span>
+     <span class="k">when</span> <span class="n">lower</span>
+       <span class="s2">&quot;You are in lower&quot;</span>
+     <span class="k">else</span>
+       <span class="s2">&quot;Problem!&quot;</span>
+     <span class="k">end</span>
+     <span class="p">{</span><span class="n">testee</span><span class="o">.</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="n">result</span><span class="p">}</span>
+ <span class="k">end</span>
+ 
+ <span class="nb">puts</span> <span class="n">messages</span>
+ 
+ <span class="c1">#&gt;&gt; {&quot;ichiro&quot;=&gt;&quot;You are in lower&quot;}</span>
+ <span class="c1">#&gt;&gt; {&quot;jiro&quot;=&gt;&quot;Problem!&quot;}</span>
+ <span class="c1">#&gt;&gt; {&quot;saburo&quot;=&gt;&quot;You are great!&quot;}</span>
+</code></pre></div>
+
+
+<p>upper,middle,lowerはBMIオブジェクトにそれぞれの許容範囲の最大値、最小値を部分適用したProcオブジェクトだ。それらはcase式において各testeeの身長と体重を参照して各許容範囲と比較し結果を返す。</p>
+
+<p>もう少し面白い例が思いつけばよかったんだけど…</p>
+
+<p>こんなふうにProcオブジェクトはその使い方によってさまざまな形に化ける。</p>
+
+<p>そう、RubyのProcオブジェクトは状況に応じて七変化するキューティーハニーだったんだ!</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/09/01/Ruby-Proc/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのProcオブジェクトはキューティーハニーだ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/09/01/Ruby-Proc/" data-text="RubyのProcオブジェクトはキューティーハニーだ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/09/01/Ruby-Proc/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/09/01/Ruby-Proc/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/08/26/Ruby" title="Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/10/01/Ruby-Flickr" title="Rubyで写真にタイトルを付けてFlickrにアップしよう!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/09/01/Ruby-Proc/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのProcオブジェクトはキューティーハニーだ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/09/01/Ruby-Proc/" data-text="RubyのProcオブジェクトはキューティーハニーだ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/09/01/Ruby-Proc/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/09/01/Ruby-Proc/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

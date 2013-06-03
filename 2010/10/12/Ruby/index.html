@@ -1,0 +1,638 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyでソート・アルゴリズムを表現しよう!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>12 October 2010</span></div>
+  <h1 class='page-title'><a href="/2010/10/12/Ruby">Rubyでソート・アルゴリズムを表現しよう!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>アルゴリズムとその実装には往々にして乖離があります。アルゴリズムが理解できてもその実装が複雑で理解に苦しむ、ということが少なくありません。原因の１つはプログラミング言語の記述力にあると思います。</p>
+
+<p>Rubyは極めて記述力が高い言語です。人間の意志をコードで表現する上での制約が極めて少ないのです。これが動く疑似コードと言われる所以です。</p>
+
+<p>ソート・アルゴリズムは配列によるデータ構造を操作します。RubyのArrayクラスは強力だからRubyの記述力を証明するいい題材になります。早速、挿入ソート、選択ソート、バブルソート、クイックソート、マージソートをRubyで表現してみましょう。</p>
+
+<h2>挿入ソート</h2>
+
+<p>挿入ソートはデータの並びを維持しつつ、新たなデータをそこに挿入することでソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>ソート済みデータ群を格納するデータ構造を用意する。</li>
+<li>未整列のデータ群から１つデータをピックアップする。</li>
+<li>そのデータをソート済みデータ群の並びの正しい位置に挿入する。</li>
+<li>未整列データ群が無くなるまで2-3を繰り返す。</li>
+</ol>
+
+
+<p>これをRubyのArrayクラスに実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">insert_sort</span>
+    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">var</span><span class="o">|</span> <span class="n">mem</span><span class="o">.</span><span class="n">insert_with_order</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">insert_with_order</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">find_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">item</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="p">}</span> <span class="o">||</span> <span class="n">length</span>
+    <span class="n">insert</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではinjectメソッドの引数で配列を用意し、injectのブロックに順次渡されるデータをinsert_with_orderメソッドに渡しています。そしてinsert_with_orderにおいてこのデータを、並びの正しい位置に挿入しています。正しい位置はArray#find_indexで求まります。</p>
+
+<h2>選択ソート</h2>
+
+<p>選択ソートは未整列のデータ群から順次、最小のデータを選択することでソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>ソート済みデータ群を格納するデータ構造を用意する</li>
+<li>未整列のデータ群から最小(最大)のデータをピックアップする</li>
+<li>そのデータをソート済みデータ群の端に挿入する</li>
+<li>未整列データ群が無くなるまで2-3を繰り返す</li>
+</ol>
+
+
+<p>Rubyで実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">select_sort</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">dup</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">push</span> <span class="n">tmp</span><span class="o">.</span><span class="n">delete_min</span> <span class="k">until</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="n">res</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">delete_min</span>
+    <span class="n">min_idx</span> <span class="o">=</span> <span class="n">find_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span> <span class="o">==</span> <span class="nb">self</span><span class="o">.</span><span class="n">min</span> <span class="p">}</span>
+    <span class="n">delete_at</span><span class="p">(</span><span class="n">min_idx</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではresで参照できる配列を用意し、未整列のデータ群からdelete_minメソッドにより最小のデータを取り出して用意した配列の末尾に順次格納します。最小値はArray#minで求まります。なおArray#dupで元データは変更しないようにしています。</p>
+
+<h2>バブルソート</h2>
+
+<p>バブルソートは隣り合うデータを比較して入替えを行い、データ構造の末端に最小(最大)のデータを移動させてソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>ソート済みデータ群を格納するデータ構造を用意する。</li>
+<li>未整列のデータ群に対して最小(最大)のデータが末端に来るようバブリングする。</li>
+<li>バブリングでは端から順に隣り合うデータの比較・入替えを行う。</li>
+<li>末端に来たデータをソート済みデータ群の端に挿入する。</li>
+<li>未整列データ群が無くなるまで2-4を繰り返す。</li>
+</ol>
+
+
+<p>Rubyで実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">bubble_sort</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">dup</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">push</span> <span class="n">tmp</span><span class="o">.</span><span class="n">bubbling</span> <span class="k">until</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="n">res</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">bubbling</span>
+    <span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="nb">self</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="n">delete_at</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではresで参照できる配列を用意し、未整列のデータ群に対してbubblingメソッドを実行し、最小のデータが末尾に来るようにしています。末尾のデータはArray#delete_atで取り出し、用意した配列の末尾に挿入します。</p>
+
+<h2>クイックソート</h2>
+
+<p>クイックソートは１つのデータを基準に、未整列のデータ群を大小２つに分けることをそのデータ群が１つになるまで繰り返すことで、ソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>未整列のデータ群から任意の１つを取り出す</li>
+<li>これを基準に未整列のデータ群を大小２つに分ける</li>
+<li>分割したデータ群について1－2を繰り返す</li>
+<li>データ群が分割できなくなったところで結果を連結する</li>
+</ol>
+
+
+<p>Rubyで実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">quick_sort</span>
+    <span class="k">return</span> <span class="nb">self</span> <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">pop</span>
+    <span class="n">smaller</span><span class="p">,</span> <span class="n">bigger</span> <span class="o">=</span> <span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="n">base</span> <span class="p">}</span>
+    <span class="n">push</span> <span class="n">base</span>
+    <span class="n">smaller</span><span class="o">.</span><span class="n">quick_sort</span> <span class="o">+</span> <span class="o">[</span><span class="n">base</span><span class="o">]</span> <span class="o">+</span> <span class="n">bigger</span><span class="o">.</span><span class="n">quick_sort</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではArray#partitionでデータを大小に分割し、各分割データsmaller,biggerについてquick_sortを再帰的に繰り返しています。なおオリジナルを維持するために分割後push baseしています。</p>
+
+<h2>マージソート</h2>
+
+<p>マージソートは未整列のデータを一旦多数に分割し、各分割データ群でソート・統合を繰り返して、最終的に全体のソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>未整列のデータ群を半分に分ける操作を繰り返す</li>
+<li>データ群が分割できなくなったところで今度は分割データのマージを繰り返す</li>
+<li>マージはデータが整列するよう行う</li>
+</ol>
+
+
+<p>Rubyで実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">merge_sort</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">dup</span>
+    <span class="k">return</span> <span class="n">tmp</span> <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">half</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">merge_sort</span> <span class="p">}</span>
+    <span class="n">merge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">half</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="n">length</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">mid</span><span class="p">),</span> <span class="n">slice</span><span class="p">(</span><span class="n">mid</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="k">until</span> <span class="n">a</span><span class="o">.</span><span class="n">empty?</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="o">.</span><span class="n">empty?</span>
+      <span class="n">res</span> <span class="o">&lt;&lt;</span>
+        <span class="k">case</span>
+        <span class="k">when</span> <span class="n">a</span><span class="o">.</span><span class="n">empty?</span> <span class="k">then</span> <span class="n">b</span><span class="o">.</span><span class="n">shift</span>
+        <span class="k">when</span> <span class="n">b</span><span class="o">.</span><span class="n">empty?</span> <span class="k">then</span> <span class="n">a</span><span class="o">.</span><span class="n">shift</span>
+        <span class="k">when</span> <span class="n">a</span><span class="o">.</span><span class="n">first</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">first</span> <span class="k">then</span> <span class="n">a</span><span class="o">.</span><span class="n">shift</span>
+        <span class="k">else</span> <span class="n">b</span><span class="o">.</span><span class="n">shift</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">res</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではhalfメソッドでデータ群を二分割し、分割した各データ群についてmerge_sortを呼ぶことでこれを繰り返します。分割によって双方の配列要素が１になるとa,bが返り、次にmergeメソッドが呼ばれて分割データのマージが始まります。mergeメソッドではcase式によって整列された配列データが得られます。</p>
+
+<h2>テスト</h2>
+
+<p>これらのアルゴリズムのテストを用意しました。ここでは速度の比較も行っています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;test/unit&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;sorts&quot;</span>
+<span class="vc">@@result</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">class</span> <span class="nc">TestSorts</span> <span class="o">&lt;</span> <span class="ss">Test</span><span class="p">:</span><span class="ss">:Unit</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="k">def</span> <span class="nf">setup</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="vi">@list</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">num</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@list</span> <span class="o">&lt;&lt;</span> <span class="nb">rand</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>  <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="k">yield</span>
+    <span class="vc">@@result</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span>
+    <span class="n">res</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">test_insert_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Insert</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">insert_sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_select_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Select</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">select_sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_bubble_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Bubble</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">bubble_sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_quick_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Quick</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">quick_sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_merge_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Merge</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">merge_sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">test_sort</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@list</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="ss">:Sort</span><span class="p">){</span> <span class="vi">@list</span><span class="o">.</span><span class="n">sort</span> <span class="p">})</span>
+  <span class="k">end</span>
+  <span class="c1"># def test_keep_self</span>
+  <span class="c1">#   original = @list.dup</span>
+  <span class="c1">#   %w(insert select bubble quick merge).each do |name|</span>
+  <span class="c1">#     @list.send(&quot;#{name}_sort&quot;)</span>
+  <span class="c1">#     assert_equal(original, @list)</span>
+  <span class="c1">#   end</span>
+  <span class="c1"># end</span>
+<span class="k">end</span>
+<span class="k">END</span><span class="p">{</span>
+  <span class="k">END</span><span class="p">{</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="vc">@@result</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">v</span><span class="o">/</span><span class="vc">@@result</span><span class="o">[</span><span class="ss">:Sort</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span> <span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="p">}</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="se">\t</span><span class="s2">=&gt;</span><span class="se">\t</span><span class="si">#{</span><span class="n">v</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Loaded</span> <span class="n">suite</span> <span class="n">sorts</span>
+<span class="no">Started</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+<span class="no">Finished</span> <span class="k">in</span> <span class="mi">42</span><span class="o">.</span><span class="mi">917957</span> <span class="n">seconds</span><span class="o">.</span>
+<span class="mi">6</span> <span class="n">tests</span><span class="p">,</span> <span class="mi">6</span> <span class="n">assertions</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">0</span> <span class="n">errors</span><span class="p">,</span> <span class="mi">0</span> <span class="n">skips</span>
+<span class="no">Test</span> <span class="n">run</span> <span class="ss">options</span><span class="p">:</span> <span class="o">--</span><span class="n">seed</span> <span class="mi">43474</span>
+<span class="no">Sort</span>    <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mo">000432</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="no">Quick</span>   <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mo">007363</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span>
+<span class="no">Merge</span>   <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mo">02633</span><span class="mi">8</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="no">Insert</span>  <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mi">080093</span><span class="p">(</span><span class="mi">185</span><span class="p">)</span>
+<span class="no">Bubble</span>  <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mi">782067</span><span class="p">(</span><span class="mi">1810</span><span class="p">)</span>
+<span class="no">Select</span>  <span class="o">=&gt;</span>      <span class="mi">42</span><span class="o">.</span><span class="mo">0075</span><span class="p">(</span><span class="mi">97239</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>クイックソートが最速でArray#sortの17倍、選択ソートが最も遅くsortの97239倍でした。速度はともかく、Rubyの記述力はやっぱりすごいですね。</p>
+
+<p><a href="http://gist.github.com/622151">gist: 622151 - GitHub</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/10/12/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでソート・アルゴリズムを表現しよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/10/12/Ruby/" data-text="Rubyでソート・アルゴリズムを表現しよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/10/12/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/10/12/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2010/07/14/Ruby" title="Rubyのクラスとメソッドを全部いっぺんに！ - 再改訂版">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2010/10/17/Ruby" title="Rubyで文字列検索アルゴリズムを表現しよう!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#algorithm-ref">algorithm <span>4</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/10/12/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでソート・アルゴリズムを表現しよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/10/12/Ruby/" data-text="Rubyでソート・アルゴリズムを表現しよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/10/12/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/10/12/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

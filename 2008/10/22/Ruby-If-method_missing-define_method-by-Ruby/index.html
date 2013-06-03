@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>22 October 2008</span></div>
+  <h1 class='page-title'><a href="/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby">メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>メソッド定義</h2>
+
+<p>Rubyのオブジェクトはメッセージに反応する。つまりオブジェクトがメッセージを受けると、オブジェクトは対応するメソッドを見つけてその結果を返す。</p>
+
+<p>Rubyではオブジェクト自身はメソッドを持っていない。だからオブジェクトは自身が属するクラスにアクセスして、対応するメソッドを得てその結果を返す。</p>
+
+<p>つまりRubyのメソッドはクラスに定義される。</p>
+
+<p>メソッド定義はdef文で行う。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Person</span>
+   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="s2">&quot;My name is </span><span class="si">#{</span><span class="n">arg</span><span class="si">}</span><span class="s2">&quot;</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie&quot;</span>
+</code></pre></div>
+
+
+<p>特定のクラスで定義されたメソッドは、そのクラスから生成されるオブジェクトで使えるようになる。</p>
+
+<p>RubyではすべてのクラスはClassクラスから生成されたオブジェクトである。だからClassクラスで定義されたメソッドは、すべてのクラスで使えるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Class</span>
+    <span class="k">def</span> <span class="nf">mother</span>
+      <span class="s2">&quot;My mother is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Person</span>
+   <span class="nb">p</span> <span class="n">mother</span>
+  <span class="k">end</span>
+    <span class="c1"># &gt;&gt; &quot;My mother is Class&quot;</span>
+</code></pre></div>
+
+
+<p>もちろんClassクラスでも！</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Class</span>
+    <span class="nb">p</span> <span class="n">mother</span>
+  <span class="k">end</span>
+    <span class="c1"># &gt;&gt; &quot;My mother is Class&quot;</span>
+</code></pre></div>
+
+
+<h2>singletonクラスでのメソッド定義</h2>
+
+<p>通常一つのクラスからは複数のオブジェクトが生成されるので、それらのオブジェクトは同じメソッドを共有することになる。だけど、特定のオブジェクトだけが使えるメソッドを定義したい場合もある。</p>
+
+<p>そのためにRubyではsingletonクラス(特異クラス)が用意されている。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">his</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">my</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My account number is #100789&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My account number is #100789&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; 15: undefined method `secret&#39; for #&lt;Person:0x23168&gt; (NoMethodError)</span>
+</code></pre></div>
+
+
+<p>略記法もある<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">def</span> <span class="nc">my</span><span class="o">.</span><span class="nf">secret</span>  <span class="c1">#myのselfメソッドにする</span>
+    <span class="s2">&quot;My account number is #100789&quot;</span>
+  <span class="k">end</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My account number is #100789&quot;</span>
+</code></pre></div>
+
+
+<p>前にも書いたようにRubyではクラスもオブジェクトだから、クラスに対してもsingletonクラスを用意して
+そこでメソッドを定義できる。このsingletonクラスで定義されるメソッドは、そのクラスだけが使えるメソッドになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">Person</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">Person</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is nosreP.&quot;</span>
+</code></pre></div>
+
+
+<p>略記法のほうが広く使われている。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">Person</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is nosreP.&quot;</span>
+</code></pre></div>
+
+
+<p>このようなクラスが使うメソッドは、一般にクラスメソッドと呼ばれるけれど、機能上普通のオブジェクトが使うメソッドと変わりはない。もちろんClassクラスもオブジェクトだから、singletonクラスを定義できる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Class</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">Class</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is ssalC.&quot;</span>
+</code></pre></div>
+
+
+<h2>モジュールにおけるメソッド定義</h2>
+
+<p>Rubyにはモジュールというクラスに似たオブジェクトがある。モジュールはクラスと違ってオブジェクトを生成できないけれども、そこにメソッドを定義することはできる。特定のクラスに特定のモジュールをincludeすることによって、そのクラスから生成されるオブジェクトにおいて、モジュールに定義されたメソッドが使えるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Secret</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="kp">include</span> <span class="no">Secret</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is &gt;46a32x0:nosreP&lt;#.&quot;</span>
+</code></pre></div>
+
+
+<p>モジュールもクラス同様オブジェクトだから、モジュールに対してもsingletonクラスを定義できる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Secret</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">Secret</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">Secret</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is terceS.&quot;</span>
+</code></pre></div>
+
+
+<p>クラス同様略記法の方が一般的だ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Secret</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">Secret</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is terceS.&quot;</span>
+</code></pre></div>
+
+
+<p>モジュールはModuleクラスから生成されるので、Moduleクラスに定義されたメソッドはすべてのモジュールで使えるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Module</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">module</span> <span class="nn">Secret</span>
+  <span class="k">end</span>
+  <span class="no">Secret</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is terceS.&quot;</span>
+</code></pre></div>
+
+
+<p>なおClassクラスはModuleクラスのサブクラスだから、Moduleクラスに定義されたメソッドはClassクラスに定義されたメソッドとなり、従ってすべてのクラスでも使えるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Module</span>
+    <span class="k">def</span> <span class="nf">secret</span>
+      <span class="s2">&quot;My secret code is </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">reverse</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">end</span>
+  <span class="no">Person</span><span class="o">.</span><span class="n">secret</span> <span class="c1"># =&gt; &quot;My secret code is nosreP.&quot;</span>
+</code></pre></div>
+
+
+<h2>動的メソッド定義 -define_method</h2>
+
+<p>メソッドはクラスにdef文で定義すると書いた。つまり通常メソッドはクラスの設計時に定義される。だけどメソッドを必要に応じて後から定義したい場合もある。</p>
+
+<p>そのような場合メソッド定義をネストすればいい。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span>
+      <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="s2">&quot;My name is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie&quot;</span>
+</code></pre></div>
+
+
+<p>こうすれば外側のメソッドが呼ばれたとき、初めて内側のメソッドが定義されるようになる。</p>
+
+<p>でもせっかく後から定義するんだからもっと柔軟に定義できたらうれしい。例えばメソッド名をユーザの入力で決めるとか。</p>
+
+<p>それに答えるのがModuleクラスのdefine_methodだ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+        <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span>
+</code></pre></div>
+
+
+<p>これでmethod_makerによってnameメソッドが作られて、myオブジェクトから呼べるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="c1"># ~&gt; -:5:in `method_maker&#39;: undefined method `define_method&#39; for #&lt;Person:0x23f14&gt; (NoMethodError)</span>
+  <span class="c1"># ~&gt;  from -:12</span>
+</code></pre></div>
+
+
+<p>残念ながらこれはうまくいかないようだ。エラーメッセージをよく見ると、Personクラスのオブジェクトに対してdefine_methodを呼んでるようだ。つまりdef文の中のコンテキストは、Personクラスのオブジェクトということらしい。確かめてみよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span>
+      <span class="nb">p</span> <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+    <span class="c1"># &gt;&gt; #&lt;Person:0x23c08&gt;</span>
+</code></pre></div>
+
+
+<p>やっぱりそうだ。def文の中ではselfはPersonクラスのオブジェクトになってる。Personクラスにメソッドを定義したいんだからそれじゃだめだ。Personクラスのコンテキストでdefine_methodを呼びたいんだ。</p>
+
+<p>こんなときはeval系メソッドが使える。class_evalはクラスのコンテキストで渡されたブロックを評価する。だからPersonクラスに対してclass_evalを呼び出して、そのブロックの中でdefine_methodを定義すればいい。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span>
+      <span class="no">Person</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+        <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span><span class="p">(</span><span class="ss">:old_name</span><span class="p">)</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;Henry&quot;</span> <span class="c1"># =&gt; &quot;My old_name is Henry.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span><span class="p">(</span><span class="ss">:size</span><span class="p">)</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;XXL&quot;</span> <span class="c1"># =&gt; &quot;My size is XXL.&quot;</span>
+</code></pre></div>
+
+
+<p>クラスのユーザが後からメソッドを追加できるなんて素敵だ。</p>
+
+<p>method_makerに可変長引数を渡せるようにすれば、もう少しよくなる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span><span class="p">(</span><span class="o">*</span><span class="n">meth_names</span><span class="p">)</span>
+      <span class="n">meth_names</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">meth_name</span><span class="o">|</span>
+        <span class="no">Person</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+          <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+            <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:old_name</span><span class="p">,</span> <span class="ss">:size</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;Henry&quot;</span> <span class="c1"># =&gt; &quot;My old_name is Henry.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;XXL&quot;</span> <span class="c1"># =&gt; &quot;My size is XXL.&quot;</span>
+</code></pre></div>
+
+
+<p>ここでdefine_methodは、Personクラスのコンテキストで評価されているので、Personクラスの特定のオブジェクト(my)でmethod_makerを呼ぶと、Personクラスの他のオブジェクトでは既にname, old_name, sizeの各メソッドが使える。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">his</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Peter&quot;</span> <span class="c1"># =&gt; &quot;My name is Peter.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;arthur&quot;</span> <span class="c1"># =&gt; &quot;My old_name is arthur.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;M&quot;</span> <span class="c1"># =&gt; &quot;My size is M.&quot;</span>
+</code></pre></div>
+
+
+<p>でも各オブジェクト毎に使えるメソッドを変えたい場合もある。そんなときはオブジェクトのsingletonクラスのコンテキストで、define_methodが評価されるようにすればいい。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span>
+    <span class="k">def</span> <span class="nf">method_maker</span><span class="p">(</span><span class="o">*</span><span class="n">meth_names</span><span class="p">)</span>
+      <span class="n">obj_singleton</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+      <span class="n">meth_names</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">meth_name</span><span class="o">|</span>
+        <span class="n">obj_singleton</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+          <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+            <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">method_maker</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:old_name</span><span class="p">,</span> <span class="ss">:size</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;Henry&quot;</span> <span class="c1"># =&gt; &quot;My old_name is Henry.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;XXL&quot;</span> <span class="c1"># =&gt; &quot;My size is XXL.&quot;</span>
+  <span class="n">his</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Peter&quot;</span> <span class="c1"># ~&gt; -:25: undefined method `name&#39; for #&lt;Person:0x1f824&gt; (NoMethodError)</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">method_maker</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:address</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Peter&quot;</span> <span class="c1"># =&gt; &quot;My name is Peter.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">age</span> <span class="mi">21</span> <span class="c1"># =&gt; &quot;My age is 21.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">address</span> <span class="s2">&quot;New York&quot;</span> <span class="c1"># =&gt; &quot;My address is New York.&quot;</span>
+</code></pre></div>
+
+
+<h2>動的メソッド定義 -method_missing</h2>
+
+<p>ここまで来ると欲が出てくる。メソッドを追加するのにいちいちmethod_makerメソッドを、呼ばなければならないのはスマートじゃない。</p>
+
+<p>そこでmethod_missingメソッドの出番だ。method_missingは呼び出されたメソッドが未定義のときに、Rubyが自動で起動するフックメソッドだ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">BasicObject</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="o">*</span><span class="n">meths</span><span class="p">)</span>
+      <span class="n">meths</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">meth</span><span class="o">|</span> <span class="nb">__send__</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span>
+      <span class="n">obj_singleton</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+      <span class="n">obj_singleton</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+        <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:old_name</span><span class="p">,</span> <span class="ss">:size</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;Henry&quot;</span> <span class="c1"># =&gt; &quot;My old_name is Henry.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;XXL&quot;</span> <span class="c1"># =&gt; &quot;My size is XXL.&quot;</span>
+  <span class="n">his</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:address</span><span class="p">,</span> <span class="ss">:class</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Peter&quot;</span> <span class="c1"># =&gt; &quot;My name is Peter.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">age</span> <span class="mi">21</span> <span class="c1"># =&gt; &quot;My age is 21.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">address</span> <span class="s2">&quot;New York&quot;</span> <span class="c1"># =&gt; &quot;My address is New York.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">class</span> <span class="s2">&quot;Premier&quot;</span> <span class="c1"># =&gt; &quot;My class is Premier.&quot;</span>
+</code></pre></div>
+
+
+<p>上のコードではinitializeメソッドにおいて、引き渡されたメソッド名を呼び出すようにしている。こうすればオブジェクトの生成時にmethod_missingが呼ばれて、対応するメソッドが定義されるようになる。</p>
+
+<p>でもユーザがクラス階層にある既存のメソッドを引き渡した場合、Rubyはそのクラス階層をすべて探索して、そのメソッドを見つけるからmethod_missingは当然呼ばれない。例のようにPersonクラスをBasicObjectのサブクラスにすれば、そのリスクは最小になる(例ではObject#class)。</p>
+
+<p>さらにmethod_missingが、定義したメソッドの結果を返すようにすれば、オブジェクト生成時にメソッド名を渡す必要もなくなる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">BasicObject</span>
+    <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="n">meth_name</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+      <span class="n">obj_singleton</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+      <span class="n">obj_singleton</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+        <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="s2">&quot;My </span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="nb">__send__</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>  <span class="c1">#定義したメソッドを返す</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Charlie&quot;</span> <span class="c1"># =&gt; &quot;My name is Charlie.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">old_name</span> <span class="s2">&quot;Henry&quot;</span> <span class="c1"># =&gt; &quot;My old_name is Henry.&quot;</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">size</span> <span class="s2">&quot;XXL&quot;</span> <span class="c1"># =&gt; &quot;My size is XXL.&quot;</span>
+  <span class="n">his</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Peter&quot;</span> <span class="c1"># =&gt; &quot;My name is Peter.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">age</span> <span class="mi">21</span> <span class="c1"># =&gt; &quot;My age is 21.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">address</span> <span class="s2">&quot;New York&quot;</span> <span class="c1"># =&gt; &quot;My address is New York.&quot;</span>
+  <span class="n">his</span><span class="o">.</span><span class="n">class</span> <span class="s2">&quot;Premier&quot;</span> <span class="c1"># =&gt; &quot;My class is Premier.&quot;</span>
+</code></pre></div>
+
+
+<p>上の例では未定義のinstanceメソッドの呼び出しに対して、method_missingが起動して対応するinstanceメソッドが定義されるようにした。</p>
+
+<p>こうなると未定義のクラスメソッドの呼び出しに対しても、method_missingを起動させて対応するクラスメソッドを定義できるようにもしたくなる。その場合、method_missingおよびdefine_methodをクラスのsingletonクラスのコンテキスト、つまりクラスメソッドで定義すればいい。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Country</span> <span class="o">&lt;</span> <span class="no">BasicObject</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">method_missing</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span>
+      <span class="n">cls_singleton</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+      <span class="n">cls_singleton</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+        <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">capital</span><span class="p">;</span> <span class="n">language</span><span class="p">;</span> <span class="n">population</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Japan</span> <span class="o">&lt;</span> <span class="no">Country</span>
+    <span class="n">capital</span> <span class="s2">&quot;Tokyo&quot;</span>
+    <span class="n">language</span> <span class="s2">&quot;Japanese&quot;</span>
+    <span class="n">population</span> <span class="mi">127433494</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">to_s</span>
+      <span class="s2">&quot;Japan</span><span class="se">\n</span><span class="s2"> Capital: </span><span class="si">#{</span><span class="vi">@capital</span><span class="si">}</span><span class="se">\n</span><span class="s2"> Language: </span><span class="si">#{</span><span class="vi">@language</span><span class="si">}</span><span class="se">\n</span><span class="s2"> Population: </span><span class="si">#{</span><span class="vi">@population</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Denmark</span> <span class="o">&lt;</span> <span class="no">Country</span>
+    <span class="n">capital</span> <span class="s2">&quot;Copenhagen&quot;</span>
+    <span class="n">language</span> <span class="s2">&quot;Danish&quot;</span>
+    <span class="n">population</span> <span class="mi">5475791</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">to_s</span>
+      <span class="s2">&quot;Denmark</span><span class="se">\n</span><span class="s2"> Capital: </span><span class="si">#{</span><span class="vi">@capital</span><span class="si">}</span><span class="se">\n</span><span class="s2"> Language: </span><span class="si">#{</span><span class="vi">@language</span><span class="si">}</span><span class="se">\n</span><span class="s2"> Population: </span><span class="si">#{</span><span class="vi">@population</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="nb">puts</span> <span class="no">Japan</span>
+  <span class="nb">puts</span> <span class="no">Denmark</span>
+  <span class="c1"># =&gt;</span>
+    <span class="no">Japan</span>
+      <span class="ss">Capital</span><span class="p">:</span> <span class="no">Tokyo</span>
+      <span class="ss">Language</span><span class="p">:</span> <span class="no">Japanese</span>
+      <span class="ss">Population</span><span class="p">:</span> <span class="mi">127433494</span>
+    <span class="no">Denmark</span>
+      <span class="ss">Capital</span><span class="p">:</span> <span class="no">Copenhagen</span>
+      <span class="ss">Language</span><span class="p">:</span> <span class="no">Danish</span>
+      <span class="ss">Population</span><span class="p">:</span> <span class="mi">5475791</span>
+</code></pre></div>
+
+
+<p>この例ではCountryクラスの最後でクラスメソッドを呼ぶことでそれらを定義し、CountryクラスのサブクラスであるJapanとDenmarkで、それらのメソッドを使っている。定義したメソッドはメソッド名のインスタンス変数に引数をセットする。</p>
+
+<p>なおBasicObjectは他のクラス同様、Classクラスのオブジェクトなので、instanceメソッドの場合と異なって、そこから継承された多数のクラスメソッドがある。だからそれらとの衝突が起きないよう注意が必要だ。</p>
+
+<h2>まとめ</h2>
+
+<ol>
+<li>メソッドはクラスに定義される。</li>
+<li>クラスに定義されるメソッドはそのクラスから生成される各オブジェクトで使える。</li>
+<li>クラスはClassクラスのオブジェクト(インスタンス)だからClassクラスに定義されたメソッドは各クラスで使える。</li>
+<li>singletonクラスに定義されるメソッドはそのオブジェクト専用になる。</li>
+<li>クラスメソッドとはクラスのsingletonクラスに定義されたメソッドである。</li>
+<li>モジュールに定義されるメソッドはそれがincludeされたクラスのオブジェクト(インスタンス)で使える。</li>
+<li>メソッド定義をネストすれば外側のメソッドが呼ばれたときに内側のメソッドが定義されるようになる。</li>
+<li>class_evalとdefine_methodを使って動的にメソッドを定義できる。</li>
+<li>method_missingを使って自動的にメソッドが生成されるようにできる。</li>
+</ol>
+
+
+<p>追記2008-10-26：Countryクラスでclass_variable_setでなくinstance_variable_setを使うよう修正。</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>適切じゃないけど理解を容易にするために <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" data-text="メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2008/10/02/Graphviz-Ruby" title="GraphvizでRubyのクラス階層を視覚化しよう！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/01/11/Ruby" title="Rubyでフィボナッチ、トリボナッチ、テトラナッチ！そして僕はヒトリボッチ">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" data-text="メソッドが見つからないならRubyに作ってもらえばいいよ！ - If method_missing, define_method by Ruby -" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/10/22/Ruby-If-method_missing-define_method-by-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

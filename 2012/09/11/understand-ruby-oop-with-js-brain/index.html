@@ -1,0 +1,883 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>JavaScript脳で理解するRubyのオブジェクト指向</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>11 September 2012</span></div>
+  <h1 class='page-title'><a href="/2012/09/11/understand-ruby-oop-with-js-brain">JavaScript脳で理解するRubyのオブジェクト指向</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「世の中がRubyで埋まればいいのに」と思うあなたの気持ちとは裏腹に、世界は一層多様で複雑なものに向かっています。エントロピーは日々増大しています。</p>
+
+<p>人々は、その非効率性を指して<strong>「多様性は悪である」</strong>といいます。しかし画一的世界は創作の原動力となる人々のモチベーションを低下させ、そのやる気を奪います。つまり複雑で理解できない混沌として多様な世界こそが、人々に前に進むエネルギーを注入するのです。</p>
+
+<p>僕たちはハリウッド映画を見るとき、韓国ドラマを見るとき、それから日本人が演じるドラマを見るときに、その文化や歴史的背景に基づく演出の僅かな違いに目ざとく気付きます。そしてその違いによって脳は刺激を受け活動を開始するのです。何一つ同じものなどありません。</p>
+
+<p>僕の脳は完全にJavaScript脳です<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。他言語の知識は無いと言っていいです<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。その結果、プログラム言語の世界が極めて画一的に見えています。これは極めて不健全で、何も生み出せない危険な状態です。あまり時間はありませんが、何とかして僕はこの多様な世界を受容する力を手に入れなければなりません。世界平和のためにも。</p>
+
+<p>そんなわけで...</p>
+
+<p>JavaScript脳の僕がRubyのオブジェクト指向をここ数日学んだので、今の理解を書いておきます。当然に不理解に基づく間違いが含まれています。ご指摘助かります。なお、以下のコードの実行結果はruby1.9.3に基づいています。</p>
+
+<h2>オブジェクトの生成</h2>
+
+<p>Rubyはプロトタイプベースのオブジェクト指向言語です。オブジェクトは一または複数のプロパティを持てます。プロパティとは、そのオブジェクトに紐付いたデータ（オブジェクトを含む）で、ラベルで参照できるものです。今、<code>name</code>と<code>age</code>というプロパティを持った２つのオブジェクトCharlie, Earlを生成します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Charlie</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Charlie&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">12</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Earl</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Earl&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">14</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 12</span>
+
+<span class="no">Earl</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Earl&quot;</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 14</span>
+</code></pre></div>
+
+
+<p>オブジェクト生成に<code>class</code>式を使っていますが、これはクラスベースのオブジェクト指向をイミテートしたものです。勘違いを生むのでclassを<strong>「良くない部品（The Bad Parts）」</strong>に分類するRubyistもいるようです。各オブジェクトのプロパティに対するアクセスは、上述のようにJavaScriptのプロパティ参照と同じ方法で、<code>.(ピリオド)</code>を使って行うことができます。<code>def</code>式における<code>self</code>はそのオブジェクト自身を指しているので重要です。これを忘れてdefすると誤動作を起こすので、これをThe Bad Partsに分類する人もいます。</p>
+
+<p>なお、生成時のオブジェクト名は大文字からという制約がありますが、気に入らないなら次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">charlie</span> <span class="o">=</span> <span class="no">Charlie</span>
+<span class="n">earl</span> <span class="o">=</span> <span class="no">Earl</span>
+
+<span class="n">charlie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+<span class="n">charlie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 12</span>
+
+<span class="n">earl</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Earl&quot;</span>
+<span class="n">earl</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 14</span>
+</code></pre></div>
+
+
+<p>また、オブジェクトに対するプロパティの追加や変更は、変数に値を代入するが如くに極めて簡単に行えます。各オブジェクトに、生まれた日からの日数を計算する<code>age_in_days</code>プロパティを追加してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span>
+</code></pre></div>
+
+
+<p>JavaScript同様Rubyにおいて関数（定義）はオブジェクトであり、このようにプロパティにセットできます。プロパティ名を介して参照される関数は、<code>[]</code>(角括弧)を付することで実行されます。従って<code>[]</code>は必須です。以下ではプロパティにセットされた関数を<code>メソッド</code>と呼ぶことがあります。さて、メソッドを実際に呼んでみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; undefined method `age_in_days=&#39; for Charlie:Class (NoMethodError) </span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; undefined method `age_in_days=&#39; for Earl:Class (NoMethodError)</span>
+</code></pre></div>
+
+
+<p>エラーが出ました。どうやら1.9系にはバグがあるようです。次のパッチを当てて、もう一度試してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="no">Charlie</span><span class="p">,</span> <span class="no">Earl</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">klass</span><span class="o">|</span>
+  <span class="k">def</span> <span class="nc">klass</span><span class="o">.</span><span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nb">name</span>
+    <span class="k">when</span> <span class="sr">/^(.+)=$/</span>
+      <span class="p">(</span><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:attr_accessor</span><span class="p">,</span> <span class="vg">$1</span><span class="p">)</span>
+      <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Earl</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 4380</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 5110</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+
+<p>未定義のプロパティの参照に対しては<code>undefined</code>が返されます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">job</span> <span class="c1"># =&gt; `method_missing&#39;: undefined method `job&#39; for Charlie:Class (NoMethodError)</span>
+</code></pre></div>
+
+
+<h2>プロパティ探索</h2>
+
+<p>しかし一方で、未定義ながら特定のプロパティに対しては所定の値が返されます。<code>class</code>プロパティを呼んでみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>CharlieオブジェクトのコンストラクタはClassオブジェクトであるという結果が返ってきました。</p>
+
+<p>未定義のプロパティが呼べたという事実をどう解釈すればいいでしょうか。可能性の一つはオブジェクトの生成時にRubyが自動でそのようなプロパティをセットしたということです。</p>
+
+<p>確かめてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:age</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:class</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:methods</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+</code></pre></div>
+
+
+<p><code>methods</code>メソッドに対して、上で定義した<code>age</code>はtrueを返しましたが、<code>class</code>およびこの呼び出しメソッド自体もfalseを返しました。つまりこれらのプロパティはCharlieオブジェクトには存在しないのです。</p>
+
+<p>つまりCharlieオブジェクトにはそのプロパティ探索に関して、別のオブジェクトがリンクされているのです。この別のオブジェクトは<code>superclass</code>プロパティで参照できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Object</span>
+</code></pre></div>
+
+
+<p><code>Object</code>オブジェクトがCharlieオブジェクトにリンクしていることが分かりました。このオブジェクトをRubyではプロトタイプオブジェクトといいます。<code>superclass</code>というプロパティ名はミスリーディングですね。では、このオブジェクトが先のプロパティを持っているかを確かめてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Object</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:class</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+<span class="no">Object</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:methods</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+</code></pre></div>
+
+
+<p>残念ながら、持ってませんでした...えーっと...</p>
+
+<p>実はこれらは（Kernelモジュールのインスタンスメソッド）-> （Classクラスのインスタンスメソッド）-> （Objectクラスのクラスメソッド）という流れになるのですが、話が複雑になるのでここでは持っているとしてください。話し合わないし。m(__)m</p>
+
+<p>参考までに。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Kernel</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:class</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+<span class="no">Kernel</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:methods</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+<span class="no">Class</span><span class="o">.</span><span class="n">instance_methods</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:class</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+<span class="no">Class</span><span class="o">.</span><span class="n">instance_methods</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="ss">:methods</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>以上により、オブジェクトのプロパティが呼ばれたとき、そのオブジェクトに対象プロパティがあればそれを返すが、無い場合はsuperclassプロパティにセットされたオブジェクトのプロパティを探索する。そして対象プロパティがそこにあればそれを返すということが分かりました。</p>
+
+<p>ここで仮に、プロトタイプオブジェクトにも対象プロパティが見つからなかった場合はどうなるのでしょうか。これは想像が付きますよね。プロトタイプオブジェクトもCharlieオブジェクトと同種のオブジェクトですから、superclassプロパティを持ってるはずです。よって、ここから更にその先のオブジェクトを辿るのでしょう。Charlieの先の先、つまりそのプロトタイプオブジェクトのsuperclassにセットされたオブジェクトを見てみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; BasicObject</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; nil</span>
+</code></pre></div>
+
+
+<p><code>BasicObject</code>が返ってきました。更にそのsuperclassを調べると、今度は<code>nil</code>が返ってきました。つまりこの場合、プロパティ探索の旅（プロトタイプチェーン）はここで終了ということですね。</p>
+
+<h2>プロトタイプチェーンを使う</h2>
+
+<p>さて、この辺で最初のコードに戻ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Charlie</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Charlie&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">12</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Earl</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Earl&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">14</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1">### a patch</span>
+<span class="o">[</span><span class="no">Charlie</span><span class="p">,</span> <span class="no">Earl</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">klass</span><span class="o">|</span>
+  <span class="k">def</span> <span class="nc">klass</span><span class="o">.</span><span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nb">name</span>
+    <span class="k">when</span> <span class="sr">/^(.+)=$/</span>
+      <span class="p">(</span><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:attr_accessor</span><span class="p">,</span> <span class="vg">$1</span><span class="p">)</span>
+      <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="c1">### end of a patch</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Earl</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="p">}</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 12</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 4380</span>
+
+<span class="no">Earl</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Earl&quot;</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 14</span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 5110</span>
+</code></pre></div>
+
+
+<p>このコードを見て、ムズムズしない人はいないでしょう。そう<code>age_in_days</code>メソッドがDRY原則に反しています。その結果どういった問題が生じるでしょう。</p>
+
+<p>仮に、銀河の歪みによって地球の公転周期が今の３倍、つまり１年が365*3=1095日になったらどうなりますか？その場合、あなたはすべての人オブジェクトのage_in_daysメソッドを１つづつ修正しなければなりません。</p>
+
+<p>先ほどのプロパティ探索の機構を利用してこの問題を解決します。つまり人の原型となる<code>Person</code>オブジェクトを定義してプロトタイプチェーンに組み込むのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;unknown&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">1</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age_in_days</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="no">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Person</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;unknown&quot;</span>
+<span class="no">Person</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 1</span>
+<span class="no">Person</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 1095</span>
+</code></pre></div>
+
+
+<p>Personオブジェクトが生成できました。これをCharlie, Earlの各オブジェクトのプロトタイプとなるよう、それらのsuperclassにセットして、age_in_daysを呼んでみます。<code>class SUBCLASS &lt; SUPERCLASS; end</code>という構文を使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Charlie</span> <span class="o">&lt;</span> <span class="no">Person</span><span class="p">;</span> <span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Earl</span> <span class="o">&lt;</span> <span class="no">Person</span><span class="p">;</span> <span class="k">end</span>
+
+<span class="c1"># ~&gt; superclass mismatch for class Charlie (TypeError)</span>
+<span class="c1"># ~&gt; superclass mismatch for class Earl (TypeError)</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; </span>
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; </span>
+</code></pre></div>
+
+
+<p>superclassがミスマッチであるとのエラーが出ました。どうやらまだバグがあるようです。</p>
+
+<p>時間の関係上、誰かからパッチが出るのを期待しつつ<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>^ ^;、ここではCharlie, Earlオブジェクトを再定義することで話を進めます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;unknown&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">1</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age_in_days</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="nb">self</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Charlie</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Charlie&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">12</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Earl</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Earl&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">14</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Charlie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 13140</span>
+
+<span class="no">Earl</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 15330</span>
+</code></pre></div>
+
+
+<p>プロトタイプチェーンがどう変化したか確認してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Person</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Object</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; BasicObject</span>
+<span class="no">Charlie</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; nil</span>
+</code></pre></div>
+
+
+<p>見事にpersonオブジェクトが間に差し込まれています。</p>
+
+<h2>オブジェクトコンストラクタ</h2>
+
+<p>さて、引き続きPersonを型とする別のオブジェクトを生成してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;unknown&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">1</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age_in_days</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="nb">self</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Zena</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Zena&#39;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Rio</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Rio&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">18</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Jackie</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s1">&#39;Jackie&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age</span>
+    <span class="mi">21</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Zena</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Zena&quot;</span>
+<span class="no">Zena</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 1</span>
+<span class="no">Zena</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 1095</span>
+
+<span class="no">Rio</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Rio&quot;</span>
+<span class="no">Rio</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 18</span>
+<span class="no">Rio</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 19710</span>
+
+<span class="no">Jackie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Jackie&quot;</span>
+<span class="no">Jackie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 21</span>
+<span class="no">Jackie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 22995</span>
+</code></pre></div>
+
+
+<p>クラスベースのオブジェクト指向に慣れた人にとって、このオブジェクト生成プロセスは面倒に感じられることでしょう。もっと簡便にオブジェクトを生成する方法はないでしょうか。</p>
+
+<p>Rubyの関数が使えそうです。そう関数でオブジェクトのコンストラクタを作るのです。nameとageを引数にとって、これらをプロパティとしたオブジェクトを返す、そんな関数です。コンストラクタらしく、大文字から始まるPersonコンストラクタを定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">Person</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+  <span class="k">unless</span> <span class="no">Object</span><span class="o">.</span><span class="n">const_defined?</span><span class="p">(</span><span class="ss">:Person</span><span class="p">)</span>
+    <span class="n">proto</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">age_in_days</span>
+        <span class="o">-&gt;</span><span class="p">{</span> <span class="nb">self</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="no">Object</span><span class="o">.</span><span class="n">const_set</span><span class="p">(</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span> <span class="n">proto</span><span class="p">)</span>
+  <span class="k">end</span>
+  
+  <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Person</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+    <span class="p">(</span><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span><span class="p">)</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="nb">name</span> <span class="p">}</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="ss">:age</span><span class="p">)</span> <span class="p">{</span> <span class="n">age</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここでの重要なポイントは、age_in_daysプロパティを持ったプロトタイプオブジェクト（Person）を生成し、返されるオブジェクトのsuperclassにこれをセットすることです。一応、Personが存在する場合はunless式で無駄な処理が繰り返されないようにします。これで先のコードとほぼ同様のオブジェクトをコンストラクタを使って生成できそうです。</p>
+
+<p>やってみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Zena</span> <span class="o">=</span> <span class="no">Person</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; Zena</span>
+<span class="no">Rio</span> <span class="o">=</span> <span class="no">Person</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span> <span class="c1"># =&gt; Rio</span>
+<span class="no">Jackie</span> <span class="o">=</span> <span class="no">Person</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span> <span class="c1"># =&gt; Jackie</span>
+
+<span class="no">Zena</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Zena&quot;</span>
+<span class="no">Zena</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 1</span>
+<span class="no">Zena</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 1095</span>
+<span class="no">Zena</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Person</span>
+
+<span class="no">Rio</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Rio&quot;</span>
+<span class="no">Rio</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 18</span>
+<span class="no">Rio</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 19710</span>
+<span class="no">Rio</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Person</span>
+
+<span class="no">Jackie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Jackie&quot;</span>
+<span class="no">Jackie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 21</span>
+<span class="no">Jackie</span><span class="o">.</span><span class="n">age_in_days</span><span class="o">[]</span> <span class="c1"># =&gt; 22995</span>
+<span class="no">Jackie</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Person</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+
+<h2>Person.new</h2>
+
+<p>ここまで来れば僕が何を言いたいのかが分かると思います。</p>
+
+<p>えっ？何ですか？</p>
+
+<p>a Rubyist: 「Rubyってクラスベースのオブジェクト指向なんだけど」</p>
+
+<p>...</p>
+
+<p>まさか！</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">age_in_days</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">365</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Person</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Object</span>
+
+<span class="n">zena</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Person:0x00000101043600 @name=&quot;Zena&quot;, @age=1&gt;</span>
+<span class="n">rio</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Person:0x00000101043150 @name=&quot;Rio&quot;, @age=18&gt;</span>
+<span class="n">jackie</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Person:0x00000101042d40 @name=&quot;Jackie&quot;, @age=21&gt;</span>
+
+<span class="n">zena</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Zena&quot;</span>
+<span class="n">zena</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 1</span>
+<span class="n">zena</span><span class="o">.</span><span class="n">age_in_days</span> <span class="c1"># =&gt; 365</span>
+<span class="n">zena</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Person</span>
+
+<span class="n">rio</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Rio&quot;</span>
+<span class="n">rio</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 18</span>
+<span class="n">rio</span><span class="o">.</span><span class="n">age_in_days</span> <span class="c1"># =&gt; 6570</span>
+<span class="n">rio</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Person</span>
+
+<span class="n">jackie</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Jackie&quot;</span>
+<span class="n">jackie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 21</span>
+<span class="n">jackie</span><span class="o">.</span><span class="n">age_in_days</span> <span class="c1"># =&gt; 7665</span>
+<span class="n">jackie</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Person</span>
+</code></pre></div>
+
+
+<p>関連記事：<a href="http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" title="Ruby脳が理解するJavaScriptのオブジェクト指向">Ruby脳が理解するJavaScriptのオブジェクト指向</a></p>
+
+<hr />
+
+<p><img src="/assets/images/2012/js_oop_cover.png" alt="JS OOP Ebook" /></p>
+
+<p><a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/メタプログラミングRuby-Paolo-Perrotta/dp/4048687158?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4048687158"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51TODrMIEnL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/メタプログラミングRuby-Paolo-Perrotta/dp/4048687158?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4048687158">メタプログラミングRuby</a> by Paolo Perrotta</p>
+
+<hr />
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>嘘です。 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>Rubyしか知りません。 <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>僕にはうまく出来ませんでした。Rubyの力で僕のパパを貧乏父さんから金持ち父さんにしてよ！ http://melborne.github.com/2012/05/19/rich-dad-poor-dad/ <a href='#fnref:3' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" class="hatena-bookmark-button" data-hatena-bookmark-title="JavaScript脳で理解するRubyのオブジェクト指向" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" data-text="JavaScript脳で理解するRubyのオブジェクト指向" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/09/09/understand-js-oop-with-ruby-brain" title="Ruby脳が理解するJavaScriptのオブジェクト指向">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/09/15/understand-js-oop-with-ruby-brain-2" title="Ruby脳が理解するJavaScriptのオブジェクト指向（その２）">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#oop-ref">oop <span>5</span></a></li>
+     
+    	<li><a href="/tags.html#metaprogramming-ref">metaprogramming <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" class="hatena-bookmark-button" data-hatena-bookmark-title="JavaScript脳で理解するRubyのオブジェクト指向" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" data-text="JavaScript脳で理解するRubyのオブジェクト指向" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/09/11/understand-ruby-oop-with-js-brain/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

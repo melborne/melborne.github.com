@@ -1,0 +1,765 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby脳でCoffeeScriptのクラスを理解する</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>08 September 2011</span></div>
+  <h1 class='page-title'><a href="/2011/09/08/Ruby-CoffeeScript">Ruby脳でCoffeeScriptのクラスを理解する</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><code>Ruby</code>は最高の言語だから、もっと普及していいと思うけれども、その障害となっているのはたぶん「Rubyがビジュアルに訴えない言語」となっているからだよ。たしかにRubyにはRuby/TkとかShoesとかがあるけど、現代のプログラミングで「ビジュアル」と言ったら、暗黙的に「Web上の」という修飾が付くよね。</p>
+
+<p>一方で<code>JavaScript</code>は、<code>jQuery</code>や<code>CoffeeScript</code>の人気を見る限り、最高とは言えない言語だけれども「ビジュアルに訴える言語」となっている点が普及の大きな要因になっていると思うよ。つまりブラウザ上で実行できる唯一の言語たる地位が、JavaScriptの大きなアドバンテージなんだね。</p>
+
+<p>だから今のところ「最高の言語でビジュアルなプログラミング」をすることはできないけれども、僕らにはCoffeeScriptがあるよ。CoffeeScriptはRubyの影響を大きく受けてるから、この言語を使って「ビジュアル」なプログラミングをすることが現時点での最良の選択だと僕は思うんだよ。</p>
+
+<p>そんなわけで..</p>
+
+<p>JavaScriptのことをよく知らないRuby脳の僕が、Coffeescriptのクラスのことを少し学んだので、ここでRubyのクラスと対比しつつ説明してみるよ。きっと誤解があると思うけど間違っていたら教えてね。なお以下ではCoffeeScriptのことを単にCoffeeと呼ぶよ。</p>
+
+<p>さっそくCoffeeを使って簡単なクラスを定義してみるよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kr">class</span> <span class="nx">Duck</span>
+  <span class="nx">constructor</span><span class="o">:</span> <span class="p">(</span><span class="err">@</span><span class="nx">name</span><span class="p">,</span> <span class="err">@</span><span class="nx">age</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="nx">say</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;Quack Quack #{@name}!&quot;</span>
+
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nx">pipi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="nx">tete</span>  <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Quack Quack Mofi!&quot;</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Quack Quack Pipi!&quot;</span>
+<span class="nx">tete</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Quack Quack Tete!&quot;</span>
+</code></pre></div>
+
+
+<p>Rubyを知っているならこのコードはすぐ読めるよね。new関数でDuckオブジェクトを生成して、sayメソッドを呼んでいるよ。</p>
+
+<p>対応するRubyコードはこんな感じかな。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">,</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">say</span>
+    <span class="s2">&quot;Quack Quack </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">pipi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">tete</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">mofi</span><span class="o">.</span><span class="n">say</span> <span class="c1"># =&gt; &quot;Quack Quack Mofi&quot;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">say</span> <span class="c1"># =&gt; &quot;Quack Quack Pipi&quot;</span>
+<span class="n">tete</span><span class="o">.</span><span class="n">say</span> <span class="c1"># =&gt; &quot;Quack Quack Tete&quot;</span>
+</code></pre></div>
+
+
+<p>インスタンス変数への初期値の代入構文はRubyにもほしい機能だよね。</p>
+
+<p>一見これらのコードは同じに見えるけど、異なる挙動が２つほどあるよ。</p>
+
+<p>１つ目はCoffeeでは先のコードで、既にインスタンス変数への外部からのアクセスが可能になっている点だよ。確かめてみよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">mofi</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mofy&quot;</span>
+<span class="n">mofi</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; mofy</span>
+<span class="n">mofi</span><span class="o">.</span><span class="n">say</span><span class="p">()</span> <span class="c1"># =&gt; Quack Quack Mofy!</span>
+</code></pre></div>
+
+
+<p>読み出しも書き込みもできる。Rubyではメソッドを介してじゃないとインスタンス変数にアクセスすることはできないので、Coffeeと等価にするにはアクセッサメソッドを定義する必要があるよ。</p>
+
+<p>２つ目はsayの呼び出しには常にカッコが必要な点だよ。CoffeeでRubyのようにカッコを省略すると次のような結果が返るよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">mofi</span><span class="p">.</span><span class="nx">say</span>
+<span class="err">#</span> <span class="o">=&gt;</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>                                
+         <span class="k">return</span> <span class="s2">&quot;Quack Quack &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
+       <span class="p">}</span>                                         
+</code></pre></div>
+
+
+<p>これはJavaScriptに変換されたsayのコードそのものだよ。そしてCoffeeではsayの後のカッコがそのメソッドを実行させるんだね。</p>
+
+<p>つまりこういうことだよ。Coffee(JavaScript)ではオブジェクトの後に続く.nameや.sayはオブジェクトの内部変数nameやsayにセットされた値にアクセスする方法なんだよ。そしてJavaScriptでは関数はファーストクラスのオブジェクトだから、他のデータと同じように内部変数にそのままセットできるんだ。JavaScriptではこのような内部変数をプロパティと呼ぶそうだよ。</p>
+
+<p>さてこれらの点を考慮してRubyのコードを修正すると次のようになるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">,</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">say</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">&quot;Quack Quack </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">pipi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">tete</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">mofi</span><span class="o">.</span><span class="n">say</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;Quack Quack Mofi&quot;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">say</span><span class="o">.</span><span class="p">()</span> <span class="c1"># =&gt; &quot;Quack Quack Pipi&quot;</span>
+<span class="n">tete</span><span class="o">.</span><span class="n">say</span><span class="o">[]</span> <span class="c1"># =&gt; &quot;Quack Quack Tete&quot;</span>
+<span class="n">tete</span><span class="o">.</span><span class="n">say</span> <span class="c1"># =&gt; #&lt;Proc:0x00000100866680@-:8 (lambda)&gt;</span>
+</code></pre></div>
+
+
+<p>attr_accessorの説明は不要だよね。sayメソッドはProcオブジェクトを返すようにして、呼び出し側でProc#callすればCoffeeと同様の結果が得られるよ。Proc#callの別名() []もここで示したよ。</p>
+
+<p>さて一応先のCoffeeコードをJavaScriptにコンパイルしたものにも目を通してみるよ。CoffeeScriptの<a href="http://jashkenas.github.com/coffee-script/#top">公式サイト</a>でTRY COFFSCRIPTすると、次のJavaScriptのコードが得られるんだ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">Duck</span><span class="p">,</span> <span class="nx">mofi</span><span class="p">,</span> <span class="nx">pipi</span><span class="p">,</span> <span class="nx">tete</span><span class="p">;</span>
+<span class="nx">Duck</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Duck</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">Duck</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">say</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Quack Quack &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">Duck</span><span class="p">;</span>
+<span class="p">})();</span>
+
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="nx">pipi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="nx">tete</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">say</span><span class="p">();</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">say</span><span class="p">();</span>
+<span class="nx">tete</span><span class="p">.</span><span class="nx">say</span><span class="p">();</span>
+</code></pre></div>
+
+
+<p>JavaScriptのことはよくわからないから、ここからの説明は僕の推測を大いに含んでいるよ。まずCoffeeにおける<code>constructor: () -&gt;</code> というのが<code>function Duck(){}</code> に変換されているから、constructorは関数定義になることがわかるよ。このDuck関数を実行してnewに渡すとnameとageのプロパティを持ったオブジェクトが生成されるんだね。JavaScriptはRubyのようなクラスベースのオブジェクト指向ではなくて、コピーベースのオブジェクト指向だから、ここで生成された３つのオブジェクトmofi, pipi, teteは、Duckオブジェクトのコピーと考えればいいのかな。</p>
+
+<p>次にCoffeeにおける <code>say: -&gt;</code> が、<code>Duck.prototype.say = function(){}</code> と変換されているよ。つまり、Duckオブジェクトのprototypeという名のプロパティにsayプロパティが生成されてここに関数がセットされている。なるほどコピーベースのオブジェクト指向においては、Duck.say = function(){} とすると関数の実体がすべてのオブジェクトにコピーされてしまって、効率上問題がある。だからprototypeという共通の器を作ってそこに関数を置けるようにしたんだね。</p>
+
+<h2>メソッドの追加</h2>
+
+<p>さて次にオブジェクトに別のメソッドを追加してみよう。Rubyでインスタンスメソッドを追加するにはクラスを再オープンすればいいよね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="k">def</span> <span class="nf">how_old</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">&quot;I&#39;m </span><span class="si">#{</span><span class="vi">@age</span><span class="si">}</span><span class="s2"> years old.&quot;</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span><span class="o">.</span><span class="n">how_old</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;I&#39;m 12 years old.&quot;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">how_old</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;I&#39;m 9 years old.&quot;</span>
+</code></pre></div>
+
+
+<p>Coffeeで同じことをするには上で学んだようにDuckのprototypeプロパティに関数をセットすればいいはずだよ。これはCoffeeでは次のようにするよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">Duck</span><span class="o">::</span><span class="nx">howOld</span> <span class="o">=</span> <span class="o">-&gt;</span>
+  <span class="s2">&quot;I&#39;m #{@age} years old.&quot;</span>
+
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">howOld</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;I&#39;m 12 years old.&quot;</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">howOld</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;I&#39;m 9 years old.&quot;</span>
+</code></pre></div>
+
+
+<p>Rubyで::は定数のスコープ演算子を表すから、これはちょっと間違えそうだね。</p>
+
+<p>JavaScriptにコンパイルするよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">Duck</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">howOld</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;I&#39;m &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">+</span> <span class="s2">&quot; years old.&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">howOld</span><span class="p">();</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;I&#39;m 12 years old.&quot;</span> 
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">howOld</span><span class="p">();</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;I&#39;m 9 years old.&quot;</span>  
+</code></pre></div>
+
+
+<p>いいみたいだね。ちなみにJavaScriptではクラスを再オープンすることはできなさそうだね。Duckを再定義すると別のDuckオブジェクトが定義されてしまうよ。</p>
+
+<h2>プロパティの追加</h2>
+
+<p>Coffeeでは個々のオブジェクトに簡単にプロパティを設定できるよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">pipi</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">swim</span> <span class="o">=</span> <span class="o">-&gt;</span>
+  <span class="s2">&quot;swim #{@age} days!&quot;</span>
+
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">color</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s1">&#39;brown&#39;</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">swim</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s1">&#39;swim 9 days!&#39;</span>
+</code></pre></div>
+
+
+<p>もちろんこれらは他のオブジェクトからは参照できないよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">tete</span><span class="p">.</span><span class="nx">color</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="kc">undefined</span>
+<span class="nx">tete</span><span class="p">.</span><span class="nx">swim</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="nx">TypeError</span><span class="o">:</span> <span class="nb">Object</span> <span class="err">#</span><span class="o">&lt;</span><span class="nx">Duck</span><span class="o">&gt;</span> <span class="nx">has</span> <span class="nx">no</span> <span class="nx">method</span> <span class="s1">&#39;swim&#39;</span>
+</code></pre></div>
+
+
+<p>JavaScriptの対応コードは次のようになるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">pipi</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span><span class="p">;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">swim</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;swim &quot;</span> <span class="o">+</span> <span class="n">this</span><span class="o">.</span><span class="n">age</span> <span class="o">+</span> <span class="s2">&quot; days&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">pipi</span><span class="o">.</span><span class="n">color</span><span class="p">;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">swim</span><span class="p">();</span>
+</code></pre></div>
+
+
+<p>Coffeeのオブジェクトにおけるこの軽量さはRuby脳にはちょっと驚きだよ。まるでRubyのHashのようだね。</p>
+
+<p>さてRubyでもオブジェクト固有のメソッドを定義できるので、等価コードを書いてみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">pipi</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:color</span>
+  <span class="k">def</span> <span class="nf">swim</span>
+    <span class="s2">&quot;swim </span><span class="si">#{</span><span class="vi">@age</span><span class="si">}</span><span class="s2"> days!&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">pipi</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">color</span> <span class="c1"># =&gt; &quot;brown&quot;</span>
+<span class="n">pipi</span><span class="o">.</span><span class="n">swim</span> <span class="c1"># =&gt; &quot;swim 9 days!&quot;</span>
+<span class="n">tete</span><span class="o">.</span><span class="n">color</span> <span class="c1"># =&gt; undefined method `color&#39;</span>
+<span class="n">tete</span><span class="o">.</span><span class="n">swim</span> <span class="c1"># =&gt; undefined method `swim&#39;</span>
+</code></pre></div>
+
+
+<p>Rubyではpipiオブジェクトについてシングルトンクラスを開いて、各メソッドを定義する必要があるよ。</p>
+
+<p>ちなみにprototypeプロパティに定義された関数と同名の関数をプロパティにセットすると、どうなるかは想像がつくよね。そのオブジェクトに関してはそれが優先して呼び出されるんだ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kr">class</span> <span class="nx">Duck</span>
+  <span class="nx">constructor</span><span class="o">:</span> <span class="p">(</span><span class="err">@</span><span class="nx">name</span><span class="p">,</span> <span class="err">@</span><span class="nx">age</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="nx">say</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;Quack Quack #{@name}!&quot;</span>
+
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nx">pipi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="nx">tete</span>  <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">say</span> <span class="o">=</span> <span class="o">-&gt;</span>
+  <span class="s2">&quot;Gaa Gaa #{@name}!&quot;</span>
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Gaa Gaa Mofi!&quot;</span>
+<span class="nx">pipi</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Quack Quack Pipi!&quot;</span>
+<span class="nx">tete</span><span class="p">.</span><span class="nx">say</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s2">&quot;Quack Quack Tete!&quot;</span>
+</code></pre></div>
+
+
+<p>この挙動はRubyでも同じだね</p>
+
+<h2>クラスメソッド</h2>
+
+<p>さて次にDuckクラスにクラスメソッドを定義することを考えてみるよ。まずはRubyにDuckの総数をカウントするcountクラスメソッドを定義してみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="vc">@@count</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">count</span>
+    <span class="vc">@@count</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">,</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span>
+    <span class="vc">@@count</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">pipi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">tete</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="no">Duck</span><span class="o">.</span><span class="n">count</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>クラス変数<code>@@count</code>を初期化しDuck.countメソッドを定義して、@@countにアクセスできるようにする。そしてinitializeでカウントアップするよ。</p>
+
+<p>CoffeeにおいてDuckクラスの外でDuckのプロパティをセットするのは<code>Duck.count = 0</code>でできるけど、クラス定義の中では次のように書くみたいだね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="vi">@count</span><span class="p">:</span> <span class="mi">0</span>  <span class="err">または</span> <span class="vi">@count</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="ss">constructor</span><span class="p">:</span> <span class="p">(</span><span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="no">Duck</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="kp">new</span> <span class="no">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">pipi</span> <span class="o">=</span> <span class="kp">new</span> <span class="no">Duck</span><span class="p">(</span><span class="s1">&#39;Pipi&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">tete</span>  <span class="o">=</span> <span class="kp">new</span> <span class="no">Duck</span><span class="p">(</span><span class="s1">&#39;Tete&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="no">Duck</span><span class="o">.</span><span class="n">count</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>インスタンス変数と同じ<code>@</code>を使うよ。ちょっと紛らわしいけどプロパティの中と外で<code>@</code>の意味が変わることを覚えとけばいいね。</p>
+
+<h2>プライベート・メソッド</h2>
+
+<p>さて次にDuckにプライベートメソッドを定義してみるよ。Rubyではprivateキーワードで簡単にできるよね。eatメソッドで呼ばれるfoodメソッドを定義するね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="k">def</span> <span class="nf">eat</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">&quot;eat &quot;</span> <span class="o">+</span> <span class="n">food</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">food</span>
+    <span class="s2">&quot;meat!&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">mofi</span><span class="o">.</span><span class="n">eat</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;eat meat!&quot;</span>
+<span class="n">mofi</span><span class="o">.</span><span class="n">food</span> <span class="c1"># =&gt; private method `food&#39; called</span>
+</code></pre></div>
+
+
+<p>それでプライベートメソッドでインスタンス変数を呼ぶことももちろんできるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Duck</span>
+  <span class="k">def</span> <span class="nf">eat</span>
+    <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">&quot;eat &quot;</span> <span class="o">+</span> <span class="n">food</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">food</span>
+    <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@age</span><span class="si">}</span><span class="s2"> meat!&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">mofi</span> <span class="o">=</span> <span class="no">Duck</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">mofi</span><span class="o">.</span><span class="n">eat</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;eat 12 meat!&quot;</span>
+</code></pre></div>
+
+
+<p>Coffeeでプライベートメソッドを定義するには、ちょっとわからないけど次のようにするのかな。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kr">class</span> <span class="nx">Duck</span>
+  <span class="nx">eat</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;eat &quot;</span> <span class="o">+</span> <span class="nx">food</span><span class="p">()</span>
+  <span class="nx">food</span> <span class="o">=</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;beans&quot;</span>
+ 
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">eat</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s1">&#39;eat beans&#39;</span>
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">food</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="nx">TypeError</span><span class="o">:</span> <span class="nb">Object</span> <span class="err">#</span><span class="o">&lt;</span><span class="nx">Duck</span><span class="o">&gt;</span> <span class="nx">has</span> <span class="nx">no</span> <span class="nx">method</span> <span class="s1">&#39;food&#39;</span>
+</code></pre></div>
+
+
+<p>オブジェクト内のfood変数に"beans"を返す無名関数をセットするよ。</p>
+
+<p>次にfoodでインスタンス変数を呼ぶよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kr">class</span> <span class="nx">Duck</span>
+  <span class="nx">eat</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;eat &quot;</span> <span class="o">+</span> <span class="nx">food</span><span class="p">()</span>
+  <span class="nx">food</span> <span class="o">=</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;#{@age} beans&quot;</span>
+ 
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">eat</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s1">&#39;eat undefined beans&#39;</span>
+</code></pre></div>
+
+
+<p>残念ながらこれがうまくいかないんだよ。ちょっと僕には理由がわからないんだけど..</p>
+
+<p>ここでは引数でオブジェクトを指し示すthisを受け渡して目的を達成するよ。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kr">class</span> <span class="nx">Duck</span>
+  <span class="nx">eat</span><span class="o">:</span> <span class="o">-&gt;</span>
+    <span class="s2">&quot;eat &quot;</span> <span class="o">+</span> <span class="nx">food</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+
+  <span class="nx">food</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span><span class="o">-&gt;</span>
+    <span class="s2">&quot;#{obj.age} beans&quot;</span>
+ 
+<span class="nx">mofi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Duck</span><span class="p">(</span><span class="s1">&#39;Mofi&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nx">mofi</span><span class="p">.</span><span class="nx">eat</span><span class="p">()</span> <span class="err">#</span> <span class="o">=&gt;</span> <span class="s1">&#39;eat 12 beans&#39;</span>
+</code></pre></div>
+
+
+<p>僕が勉強したのはここまでだよ。Coffeeではクラスの継承もできるみたいなんだけどそれはまた別機会にするよ。</p>
+
+<p>(追記:2011-09-09) 記述を一部加筆・修正しました。</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby脳でCoffeeScriptのクラスを理解する" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" data-text="Ruby脳でCoffeeScriptのクラスを理解する" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/09/02/Ruby" title="Rubyでもリスト内包表記したい？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/09/14/HateDa-Bookmarks" title="僕はブログを書く ~ HateDa::Bookmarks の紹介">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#coffeescript-ref">coffeescript <span>2</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby脳でCoffeeScriptのクラスを理解する" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" data-text="Ruby脳でCoffeeScriptのクラスを理解する" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/09/08/Ruby-CoffeeScript/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

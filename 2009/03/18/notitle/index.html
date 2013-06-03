@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>18 March 2009</span></div>
+  <h1 class='page-title'><a href="/2009/03/18/notitle">再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」で末尾再帰というものを知ったので勉強しました。自分の理解を書いてみます。</p>
+
+<h2>再帰</h2>
+
+<p>再帰呼び出しとはある手続きの中で、再びその手続き自身を呼び出すことと定義される<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。でもこの定義は正確じゃない。なぜなら再帰呼び出しは自分自身を呼んでいないからだ。</p>
+
+<p>階乗を考えてみよう。階乗は数学的にこう定義できる。</p>
+
+<script type="math/tex; mode=display">
+n! = n * (n-1)!\\
+
+但し、自然数n=1のときは1
+</script>
+
+
+<p>ふつうRubyで階乗メソッドはこう書く。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span> <span class="mi">5</span> <span class="c1">#&gt; 120</span>
+</code></pre></div>
+
+
+<p>factメソッドの中でfactメソッドが呼ばれているので、自分自身が呼ばれているように見える。でもそうじゃない。</p>
+
+<p>最初の引数5を受け取ったfactメソッド(彼をfact5と呼ぼう)は、引数4と共に自分が呼んだfactメソッド(fact4)の結果を待たなきゃならない。なぜならその結果と5をあとで掛けなきゃならないからだ。fact4もfact3もfact2も同じだ。自分が呼んだメソッドの結果を待たなきゃならない。</p>
+
+<p>人間が待ちながらその要求に答える、なんて芸当ができないのと同様に、Rubyにだってそんなことはできない。こういうときは誰か他の人に頼むしかない。だからfact4メソッドはfact5とは別人なんだ。fact3もfact2もfact1も全部別人なんだ。</p>
+
+<p>つまり上のコードはメソッド呼び出しに関して、次のコードとほぼ等価だ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact5</span>
+   <span class="mi">5</span> <span class="o">*</span> <span class="n">fact4</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">fact4</span>
+   <span class="mi">4</span> <span class="o">*</span> <span class="n">fact3</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">fact3</span>
+   <span class="mi">3</span> <span class="o">*</span> <span class="n">fact2</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">fact2</span>
+   <span class="mi">2</span> <span class="o">*</span> <span class="n">fact1</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">fact1</span>
+   <span class="mi">1</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact5</span> <span class="c1">#&gt; 120</span>
+</code></pre></div>
+
+
+<p>このコードではfact1が結果を返すまで、他のメソッドはRuby空間に止まってることははっきりしてる。これは再帰でも同じだ。各factメソッドは内容は同じだけれども、別のメソッドとしてRuby空間に置かれる。</p>
+
+<p>これはちょうど同じ文字列が、Rubyでは別のオブジェクトとして扱われるのと似ている。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+   <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;factorial&#39;</span>
+   <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">(id:</span><span class="si">#{</span><span class="n">s</span><span class="o">.</span><span class="n">__id__</span><span class="si">}</span><span class="s2">)&quot;</span>
+ <span class="k">end</span>
+ 
+ <span class="c1"># &gt;&gt; factorial(id:72570)</span>
+ <span class="c1"># &gt;&gt; factorial(id:72580)</span>
+ <span class="c1"># &gt;&gt; factorial(id:72560)</span>
+ <span class="c1"># &gt;&gt; factorial(id:72530)</span>
+ <span class="c1"># &gt;&gt; factorial(id:72500)</span>
+</code></pre></div>
+
+
+<p>つまりふつうの再帰は自分ではなく、自分とそっくりな人、そう、分身を呼んでいるんだ。</p>
+
+<h2>再帰の問題点</h2>
+
+<p>同じことをするのに反復手続きがあるのに、なぜ再帰を使う必要があるんだろう。</p>
+
+<p>反復手続きによる階乗メソッドを見てみよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="nb">p</span> <span class="o">=</span> <span class="mi">1</span>
+   <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+     <span class="nb">p</span> <span class="o">*=</span> <span class="n">n</span>
+     <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+   <span class="nb">p</span>
+ <span class="k">end</span>
+ 
+ <span class="nb">p</span> <span class="n">fact</span> <span class="mi">5</span>
+</code></pre></div>
+
+
+<p>これを見れば理由はわかる。そう反復手続きはエレガントじゃない。再帰では階乗の数学的表現をそのまま自然に記述できる。反復手続きではそうはいかない。</p>
+
+<p>でも、再帰はその度に別の手続きを呼び出すのと等価だから、深い再帰では手続きでRuby空間が溢れるという問題が生じる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact&#39;: stack level too deep (SystemStackError)</span>
+</code></pre></div>
+
+
+<h2>末尾再帰で階乗</h2>
+
+<p>そこで末尾再帰の出番だ。</p>
+
+<p>ふつうの再帰による階乗を再掲しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span> <span class="mi">5</span> <span class="c1">#&gt; 120</span>
+</code></pre></div>
+
+
+<p>再帰では手続きが次の手続きの結果を必要としてる。だからRuby空間で結果を待たなきゃならない。上のコードではelse節のnが掛けられるのを待ってる。それが問題になる。</p>
+
+<p>ならば待たないようにすればいい。つまりnを一緒に次のfactに投げちゃえばいい。それで知らぬ顔をしてRuby空間からおさらばする。そうすると困るのは最後のfact(fact1)だけだから、彼に後処理を全部やってもらえばいい。</p>
+
+<p>この考えに基づいたコードはこうなる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">mem</span><span class="o">=[]</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">mem</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:*</span><span class="p">)</span>     <span class="c1">#fact1が配列の要素を全部掛けて返す</span>
+   <span class="k">else</span>
+     <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="n">n</span>
+     <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mem</span><span class="p">)</span>   <span class="c1">#nを配列に入れて次のfactに順次渡す</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>これによって処理の末尾が再帰だけになるので、値を渡した手続きはもう結果を待たなくていい。最終的な結果は最後の手続きが返してくれる。つまり手続きを呼び出した手続きは、もう必要なくなるので呼び出した手続きとして使える。そう自分自身を使える！</p>
+
+<p>だから末尾再帰こそが真の再帰で、その名に値するんだ。</p>
+
+<p>fact1にすべてをさせるのが酷というなら、各人が自分のところの計算をやって、その結果を投げるようにすればいい。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">mem</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">mem</span>
+   <span class="k">else</span>
+     <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mem</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fact</span> <span class="mi">5</span> <span class="c1">#&gt; 120</span>
+</code></pre></div>
+
+
+<p>実は残念ながらSchemeとは違って現在のRubyの実装では、この末尾再帰のメリットは受けられないようだ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact&#39;: stack level too deep (SystemStackError)</span>
+</code></pre></div>
+
+
+<h2>末尾再帰によるフィボナッチ</h2>
+
+<p>Rubyで末尾再帰を使っても、ふつうの再帰と同様に分身が呼ばれるようだ。</p>
+
+<p>それでもRubyで末尾再帰するメリットはある。</p>
+
+<p>フィボナッチ数を考えよう。n番目のフィボナッチ数は数学的に次のように定義できる。</p>
+
+<script type="math/tex; mode=display">
+fn = 0 : n = 0のとき\\
+
+fn = 1 : n = 1のとき\\
+
+fn = f(n-1) + f(n-2) : それ以外のとき
+</script>
+
+
+<p>これをRubyで書くとこうなる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span>
+     <span class="mi">0</span>
+   <span class="k">elsif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="mi">1</span>
+   <span class="k">else</span>
+     <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fib</span> <span class="mi">10</span> <span class="c1">#&gt; 55</span>
+</code></pre></div>
+
+
+<p>これは数学的記述に従ったエレガントなコードだけれども、末尾再帰になっていない上に末尾の＋メソッドは、2つの再帰メソッドfibの結果を待たなきゃならない。呼び出された各メソッドfibはそれぞれにまた2つのfibを呼び、この数はフィボナッチ数的に増える。</p>
+
+<p>すると、高々20番目のフィボナッチ数を求めるのにfibメソッドは21891回も呼ばれることになる。</p>
+
+<div class="highlight"><pre><code class="bash">% ruby -rprofile fib.rb
+% cumulative self self total <span class="nb">time </span>seconds seconds calls  ms/call  ms/call  name
+ 69.45     2.16      2.16    21891     0.10     1.93  Object#fib
+ 15.76     2.65      0.49    39601     0.01     0.01  Fixnum#<span class="o">==</span>
+ 10.61     2.98      0.33    21890     0.02     0.02  Fixnum#-
+  4.18     3.11      0.13    10945     0.01     0.01  Fixnum#+
+  0.00     3.11      0.00        1     0.00     0.00  Module#method_added
+  0.00     3.11      0.00        2     0.00     0.00  IO#set_encoding
+  0.00     3.11      0.00        1     0.00  3110.00  <span class="c">#toplevel</span>
+</code></pre></div>
+
+
+<p>fibメソッドを末尾再帰で書けたなら、fibメソッドの呼び出し回数は21回で済む。だからRubyでも検討する価値がある。</p>
+
+<p>今8番目のフィボナッチ数を求める演算をfib8とすると、これは以下のように展開できる。</p>
+
+<div class="highlight"><pre><code class="bash"><span class="nv">fib8</span> <span class="o">=</span>  1*fib8 +  0*fib7
+     <span class="o">=</span>  1*fib7 +  1*fib6 <span class="o">=</span> <span class="o">(</span>fib6 + fib5<span class="o">)</span> + <span class="nv">fib6</span>
+     <span class="o">=</span>  2*fib6 +  1*fib5
+     <span class="o">=</span>  3*fib5 +  2*fib4
+     <span class="o">=</span>  5*fib4 +  3*fib3
+     <span class="o">=</span>  8*fib3 +  5*fib2
+     <span class="o">=</span> 13*fib2 +  8*fib1
+     <span class="o">=</span> 21*fib1 + 13*fib0 <span class="o">=</span> 21
+</code></pre></div>
+
+
+<p>各項の係数をそれぞれa, bとすると、各ステップでbには前のステップのaの値が、aにはa+bの値が与えられていることがわかる。また最後のステップをみると、fib0が0なので第2項の演算結果は結果的に答えに反映されないことがわかる。だから１つのfibメソッドにa、bを渡していき、fib1に達したところでaの値を返すようにすればいい。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span>
+     <span class="mi">0</span>
+   <span class="k">elsif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">a</span>
+   <span class="k">else</span>
+     <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">fib</span> <span class="mi">8</span> <span class="c1">#&gt; 21</span>
+</code></pre></div>
+
+
+<p>これでフィボナッチを末尾再帰で実現できた。これなら1000番目のフィボナッチ数だって直ぐ求められる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+ <span class="nb">p</span> <span class="n">fib</span> <span class="mi">1000</span>
+ <span class="nb">p</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span>
+ <span class="c1">#&gt;43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875</span>
+ <span class="mi">0</span><span class="o">.</span><span class="mo">0015</span><span class="mi">81</span>
+</code></pre></div>
+
+
+<p>関連：<a href="/2008/07/08/Ruby/">Ruby、同じことの繰り返しは君に任せるよ ～ 再帰でハノイの塔を解こう！～</a></p>
+
+<p>（訂正：末尾再帰であることはfibメソッドの呼び出し回数とは直接関係しないことが分かりましたので訂正します）</p>
+
+<blockquote><p>末尾再帰かどうかとfibの呼び出し回数には関係ないですよ。<br>アルゴリズムの違いが呼び出し回数に関係してます。<br>例えば、効率の悪い方のアルゴリズムを使って以下のように末尾再帰でfibを書けます。<br>def fib(n)<br>  fib_loop([n], 0)<br>end<br><br>def fib_loop(arr, sum)<br>  if arr.length == 0<br>    sum<br>  elsif arr[0] &lt;= 1<br>    fib_loop(arr[1..-1], sum+1)<br>  else<br>    fib_loop([arr[0]-1, arr[0]-2] + arr[1..-1], sum)<br>  end<br>end></p>
+
+<blockquote><p>Mozkさん<br>なるほど、僕の理解が違ってました。ご指摘助かります。</p></blockquote></blockquote>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>[再帰：Wikipediaより](http://ja.wikipedia.org/wiki/再帰 <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/03/18/notitle/" class="hatena-bookmark-button" data-hatena-bookmark-title="再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/03/18/notitle/" data-text="再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/03/18/notitle/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/03/18/notitle/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/03/17/notitle" title="我らにラテンの血を！！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/03/26/Ruby" title="Rubyでスペル修正プログラムを書こう！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#recursion-ref">recursion <span>3</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/03/18/notitle/" class="hatena-bookmark-button" data-hatena-bookmark-title="再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/03/18/notitle/" data-text="再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/03/18/notitle/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/03/18/notitle/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

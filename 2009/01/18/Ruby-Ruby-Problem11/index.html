@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyで縦横斜めの積を求める</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>18 January 2009</span></div>
+  <h1 class='page-title'><a href="/2009/01/18/Ruby-Ruby-Problem11">Rubyで縦横斜めの積を求める</a> <small> Rubyでオイラープロジェクトを解こう！Problem11 </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>Rubyで縦横斜めの積を求める ～Rubyでオイラープロジェクトを解こう！Problem11</h2>
+
+<p><a href="http://projecteuler.net/index.php?section=problems&amp;id=11">Problem 11 - Project Eulerより</a></p>
+
+<blockquote><p>In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
+<span style="font-size:x-small;">08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08</span>
+<span style="font-size:x-small;">49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00</span>
+<span style="font-size:x-small;">81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65</span>
+<span style="font-size:x-small;">52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91</span>
+<span style="font-size:x-small;">22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80</span>
+<span style="font-size:x-small;">24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50</span>
+<span style="font-size:x-small;">32 98 81 28 64 23 67 10 <span style="color:#FF0000;">26</span> 38 40 67 59 54 70 66 18 38 64 70</span>
+<span style="font-size:x-small;">67 26 20 68 02 62 12 20 95 <span style="color:#FF0000;">63</span> 94 39 63 08 40 91 66 49 94 21</span>
+<span style="font-size:x-small;">24 55 58 05 66 73 99 26 97 17 <span style="color:#FF0000;">78</span> 78 96 83 14 88 34 89 63 72</span>
+<span style="font-size:x-small;">21 36 23 09 75 00 76 44 20 45 35 <span style="color:#FF0000;">14</span> 00 61 33 97 34 31 33 95</span>
+<span style="font-size:x-small;">78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92</span>
+<span style="font-size:x-small;">16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57</span>
+<span style="font-size:x-small;">86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58</span>
+<span style="font-size:x-small;">19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40</span>
+<span style="font-size:x-small;">04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66</span>
+<span style="font-size:x-small;">88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69</span>
+<span style="font-size:x-small;">04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36</span>
+<span style="font-size:x-small;">20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16</span>
+<span style="font-size:x-small;">20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54</span>
+<span style="font-size:x-small;">01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48</span>
+The product of these numbers is 26×63×78×14 = 1788696.
+What is the greatest product of four adjacent numbers in any direction (up, down, left, right, or diagonally) in the 2020 grid?
+上の20×20グリッドにおいて、対角線に沿う4つの数字が赤く印されている。
+これら数字の積は、26×63×78×14 = 1788696である。
+この20×20グリッドにおいて、その並びの方向(上下左右または対角)を問わず、4つ並んだ数字の積の最大値は何か。</p></blockquote>
+
+<p><a href="/2009/01/17/Ruby/">Rubyで数字をスライスする</a>と同じ戦略で
+各列を配列に見立てそこから4つの数字をスライスする戦略を取る
+上下および対角方向の並びに対しては
+それらを左右方向に並び替えて処理する</p>
+
+<p>つまり上下方向の並びに対しては
+Array#transposeメソッドを使う
+対角方向の並びに対しては
+行方向の位置に応じて列をシフトしてからtransposeする</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">number</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="no">DATA</span>
+<span class="sh">08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08</span>
+<span class="sh">49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00</span>
+<span class="sh">81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65</span>
+<span class="sh">52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91</span>
+<span class="sh">22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80</span>
+<span class="sh">24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50</span>
+<span class="sh">32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70</span>
+<span class="sh">67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21</span>
+<span class="sh">24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72</span>
+<span class="sh">21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95</span>
+<span class="sh">78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92</span>
+<span class="sh">16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57</span>
+<span class="sh">86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58</span>
+<span class="sh">19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40</span>
+<span class="sh">04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66</span>
+<span class="sh">88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69</span>
+<span class="sh">04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36</span>
+<span class="sh">20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16</span>
+<span class="sh">20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54</span>
+<span class="sh">01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48</span>
+<span class="no">DATA</span>
+ <span class="k">def</span> <span class="nf">greatest_four</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+   <span class="n">horz</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\s</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span> <span class="p">}</span>
+   <span class="n">vert</span> <span class="o">=</span> <span class="n">horz</span><span class="o">.</span><span class="n">transpose</span>
+   <span class="n">diag_r</span><span class="p">,</span> <span class="n">diag_l</span> <span class="o">=</span> <span class="o">[]</span><span class="p">,</span> <span class="o">[]</span>
+   <span class="n">horz</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+     <span class="n">line_r</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">dup</span>
+     <span class="n">line_l</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">dup</span> <span class="o">+</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span>
+     <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+       <span class="n">line_r</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">line_r</span><span class="o">.</span><span class="n">shift</span><span class="p">)</span>
+       <span class="n">line_l</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="n">line_l</span><span class="o">.</span><span class="n">pop</span><span class="p">)</span>
+     <span class="k">end</span>
+     <span class="n">diag_r</span> <span class="o">&lt;&lt;</span> <span class="n">line_r</span>
+     <span class="n">diag_l</span> <span class="o">&lt;&lt;</span> <span class="n">line_l</span>
+   <span class="k">end</span>
+   <span class="o">[</span><span class="n">product_max</span><span class="p">(</span><span class="n">horz</span><span class="p">),</span> <span class="n">product_max</span><span class="p">(</span><span class="n">vert</span><span class="p">),</span> <span class="n">product_max</span><span class="p">(</span><span class="n">diag_r</span><span class="o">.</span><span class="n">transpose</span><span class="p">),</span> <span class="n">product_max</span><span class="p">(</span><span class="n">diag_l</span><span class="o">.</span><span class="n">transpose</span><span class="p">)</span><span class="o">].</span><span class="n">max</span>
+ <span class="k">end</span>
+ <span class="k">def</span> <span class="nf">product_max</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+   <span class="n">max</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="n">seq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+     <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+       <span class="n">_product</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:*</span><span class="p">)</span>
+       <span class="n">max</span> <span class="o">=</span> <span class="n">_product</span> <span class="k">if</span> <span class="n">_product</span> <span class="o">&gt;</span> <span class="n">max</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   <span class="n">max</span>
+ <span class="k">end</span>
+ <span class="n">greatest_four</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="c1"># =&gt; 70600674</span>
+</code></pre></div>
+
+
+<h2>Rubyでサブプライム問題解決！ ～Rubyでオイラープロジェクトを解こう！Problem10</h2>
+
+<p><a href="http://projecteuler.net/index.php?section=problems&amp;id=10">Problem 10 - Project Eulerより</a></p>
+
+<blockquote><p>The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+Find the sum of all the primes below two million.
+10未満の素数の和は、2 + 3 + 5 + 7 = 17 である。
+200万未満の素数すべての和を求めよ。</p></blockquote>
+
+<p><a href="/2009/01/13/Problem3/">Problem3</a>で既に素数を求めているので
+それを使って解く
+200万はちょっと大きいので
+まずは2万を入れて…</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">sum_prime</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+   <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="n">prime</span> <span class="o">=</span> <span class="mi">2</span>
+   <span class="kp">loop</span> <span class="k">do</span>
+     <span class="k">break</span> <span class="k">if</span> <span class="n">prime</span> <span class="o">&gt;</span> <span class="n">limit</span>
+     <span class="n">sum</span> <span class="o">+=</span> <span class="n">prime</span> <span class="k">if</span> <span class="n">prime?</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
+     <span class="n">prime</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+   <span class="n">sum</span>
+ <span class="k">end</span>
+ <span class="k">def</span> <span class="nf">prime?</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="mi">2</span><span class="o">.</span><span class="n">upto</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+     <span class="k">return</span> <span class="kp">false</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">modulo</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">end</span>
+   <span class="kp">true</span>
+ <span class="k">end</span>
+ <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+ <span class="n">sum_prime</span><span class="p">(</span><span class="mi">20_000</span><span class="p">)</span> <span class="c1"># =&gt;21171191</span>
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 73.649596</span>
+</code></pre></div>
+
+
+<p>ぎゃ！
+2万で73秒…
+200万だと…</p>
+
+<p>じゃあ…
+エラトステネスのふるいでやってみよう</p>
+
+<p><a href="http://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%A9%E3%83%88%E3%82%B9%E3%83%86%E3%83%8D%E3%82%B9%E3%81%AE%E7%AF%A9">エラトステネスの篩</a> - Wikipediaより</p>
+
+<blockquote><p>|
+ステップ 1
+　整数を最初の素数である 2 から昇順で探索リストに羅列する。
+　2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+ステップ 2
+　リストの先頭の数を素数リストに記録する。
+　素数リスト：2
+　探索リスト：2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+ステップ 3
+　前のステップで素数リストに加えられた数の全ての倍数を、探索リストから削除する。
+　素数リスト：2
+　探索リスト：3 5 7 9 11 13 15 17 19
+ステップ 4
+　探索リストの最大値が素数リストの最大値の平方よりも小さい場合、素数リストおよび探索リストに残っている数が素数となる。探索リストの最大値が素数リストの最大値の平方よりも大きい場合、ステップ 2 に戻る。
+|&lt;</p></blockquote>
+
+<p>各ステップをそのままコードにしてみた</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">sum_prime</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+   <span class="n">candidates</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="n">.limit</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+   <span class="n">primes</span> <span class="o">=</span> <span class="o">[]</span>
+   <span class="kp">loop</span> <span class="k">do</span>
+     <span class="n">primes</span> <span class="o">&lt;&lt;</span> <span class="n">candidates</span><span class="o">.</span><span class="n">shift</span>
+     <span class="n">candidates</span><span class="o">.</span><span class="n">delete_if</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+       <span class="n">primes</span><span class="o">.</span><span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">zero?</span> <span class="p">}</span>
+     <span class="k">end</span>
+     <span class="k">return</span> <span class="p">(</span><span class="n">primes</span> <span class="o">+</span> <span class="n">candidates</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="k">if</span> <span class="n">candidates</span><span class="o">.</span><span class="n">max</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">primes</span><span class="o">.</span><span class="n">max</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+ <span class="n">sum_prime</span><span class="p">(</span><span class="mi">20_000</span><span class="p">)</span> <span class="c1"># =&gt; 21171191</span>
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 6.052391</span>
+</code></pre></div>
+
+
+<p>6秒に短縮された
+でも200万を入れると…
+…
+…
+答えが出てこない！</p>
+
+<p>あきらめるか…</p>
+
+<p>と…
+mathnライブラリに
+Primeクラス発見！
+これ使っちゃお</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;mathn&quot;</span>
+ <span class="k">def</span> <span class="nf">sum_prime</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+   <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="no">Prime</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">prime</span><span class="o">|</span>
+     <span class="k">return</span> <span class="n">sum</span> <span class="k">if</span> <span class="n">prime</span> <span class="o">&gt;</span> <span class="n">limit</span>
+     <span class="n">sum</span> <span class="o">+=</span> <span class="n">prime</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+ <span class="n">sum_prime</span><span class="p">(</span><span class="mi">2_000_000</span><span class="p">)</span> <span class="c1"># =&gt; 142913828922</span>
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 26.524741</span>
+</code></pre></div>
+
+
+<p>これで
+サ<del datetime="2009-01-18T11:13:25+09:00">ブ</del>ムプライム問題
+無事解決！</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで縦横斜めの積を求める" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" data-text="Rubyで縦横斜めの積を求める" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/01/17/Ruby-Ruby-Problem9" title="Rubyでピタゴラスを求める">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/01/19/Ruby-100-Ruby-Problem13" title="Rubyで100個の数を足す">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで縦横斜めの積を求める" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" data-text="Rubyで縦横斜めの積を求める" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/01/18/Ruby-Ruby-Problem11/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

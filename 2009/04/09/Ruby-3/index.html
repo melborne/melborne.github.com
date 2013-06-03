@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>09 April 2009</span></div>
+  <h1 class='page-title'><a href="/2009/04/09/Ruby-3">Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>Rubyのブロックは仮装オブジェクトです</h2>
+
+<p>次にRubyのブロックを説明します。</p>
+
+<p>手続き型言語同様、Rubyもifやwhileなどの制御構造をサポートしており、メソッド定義式の中でこれらを使うことができます。<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+   <span class="k">if</span> <span class="nb">name</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">10</span>
+     <span class="nb">name</span><span class="o">.</span><span class="n">squeeze!</span>
+   <span class="k">else</span>
+     <span class="nb">name</span> <span class="o">+=</span> <span class="nb">name</span><span class="o">.</span><span class="n">reverse</span>
+   <span class="k">end</span>
+   <span class="s2">&quot;Hello, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">.&quot;</span>
+ <span class="k">end</span>
+ 
+ <span class="n">hello</span><span class="p">(</span><span class="s1">&#39;mississippi-hippopotamus&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Hello, misisipi-hipopotamus.&quot;</span>
+ <span class="n">hello</span><span class="p">(</span><span class="s1">&#39;donkey&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Hello, donkeyyeknod.&quot;</span>
+</code></pre></div>
+
+
+<p>case式というユニークな制御構造もあります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">good_bye</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+   <span class="n">new_name</span> <span class="o">=</span> <span class="k">case</span> <span class="nb">name</span><span class="o">.</span><span class="n">length</span>
+   <span class="k">when</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">8</span>
+     <span class="nb">name</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">capitalize</span>
+   <span class="k">when</span> <span class="mi">9</span><span class="o">.</span><span class="n">.</span><span class="mi">15</span>
+     <span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chop</span>
+   <span class="k">else</span>
+     <span class="nb">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;too-long-name&quot;</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="s2">&quot;Good-bye, </span><span class="si">#{</span><span class="n">new_name</span><span class="si">}</span><span class="s2">!!&quot;</span>
+ <span class="k">end</span>
+ 
+ <span class="n">good_bye</span><span class="p">(</span><span class="s1">&#39;donkey&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Good-bye, Donkez!!&quot;</span>
+ <span class="n">good_bye</span><span class="p">(</span><span class="s1">&#39;alligator&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Good-bye, ALLIGATO!!&quot;</span>
+ <span class="n">good_bye</span><span class="p">(</span><span class="s1">&#39;mississppi-hippopotamus&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Good-bye, too-long-name!!&quot;</span>
+</code></pre></div>
+
+
+<p>コードをよく見て頂ければわかると思いますが、caseはcase式であり値を返します。Rubyでは多くの制御構造や構文が式であり値を返します。つまりRubyでは制御構造もオブジェクト的なのです。</p>
+
+<p>しかし、これらの制御構造は真のオブジェクトではありません。したがってこのような制御構造をメソッドの引数として渡すことはできません。LispやSchemeなどの異次元言語では、これらの制御構造を何の苦もなく関数の引数として渡せるそうです。このような関数は高階関数などとブルジョワジーに呼ばれます。</p>
+
+<p>しかしハンカチを噛む必要はありません。Rubyにはブロックがあります。制御構造をdo endまたは{ }のブロックに入れると、メソッドに引数のように渡せるようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="o">[</span><span class="s1">&#39;donkey&#39;</span><span class="p">,</span> <span class="s1">&#39;alligator&#39;</span><span class="p">,</span> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+   <span class="n">salute</span> <span class="o">=</span> <span class="k">if</span> <span class="nb">name</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;hip&#39;</span><span class="p">)</span>
+     <span class="s1">&#39;ばか！&#39;</span>
+   <span class="k">else</span>
+     <span class="s1">&#39;やあ！&#39;</span>
+   <span class="k">end</span>
+   <span class="nb">puts</span> <span class="n">salute</span> <span class="o">+</span> <span class="nb">name</span>
+ <span class="k">end</span>
+ <span class="c1"># &gt;&gt; やあ！donkey</span>
+ <span class="c1"># &gt;&gt; やあ！alligator</span>
+ <span class="c1"># &gt;&gt; ばか！hippopotamus</span>
+</code></pre></div>
+
+
+<p>例では配列オブジェクトにeachメソッドを送る際にブロックを渡しています。これを受け取った配列オブジェクトは、各要素をブロック引数nameに順番に渡して、ブロックの制御構造を起動するのです。eachに渡すブロックの中身を変えれば、eachメソッドの働きは大幅に変更できます。</p>
+
+<p>この項の表題における「仮装」はtypoではありません。そう制御構造はブロックでオブジェクトに仮装して、他のオブジェクトに入り込むのです！</p>
+
+<p>制御構造をメソッドに付けてオブジェクトに渡せるようにする方法はまだあります。勘のいい人は気が付いたかもしれません。そう制御構造をオブジェクト化すればいいのです。手続きオブジェクト、メソッドオブジェクト、スレッドオブジェクト、ファイバーオブジェクト、継続オブジェクトなどがこれを可能にします。先を急がれるでしょうからこの話題はこれで終わりにします。</p>
+
+<p>興味のある方は以下が参考になるかもしれません。
+<a href="/2008/08/09/Ruby-Mix-in/">Rubyのブロックはメソッドに対するメソッドのMix-inだ！</a></p>
+
+<p>(<a href="/2009/04/10/Ruby-4/">次回に続く</a>）</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>メソッド定義の外でも使えます <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/04/09/Ruby-3/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/04/09/Ruby-3/" data-text="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/04/09/Ruby-3/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/04/09/Ruby-3/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/04/08/Ruby-2" title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その2)">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/04/10/Ruby-4" title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その4)">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/04/09/Ruby-3/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/04/09/Ruby-3/" data-text="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その3)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/04/09/Ruby-3/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/04/09/Ruby-3/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

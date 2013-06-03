@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyで三角形の最大ルートを求める</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>25 January 2009</span></div>
+  <h1 class='page-title'><a href="/2009/01/25/Ruby-Ruby-Problem18">Rubyで三角形の最大ルートを求める</a> <small> Rubyでオイラープロジェクトを解こう！Problem18 </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="http://projecteuler.net/index.php?section=problems&amp;id=18">Problem 18 - Project Eulerより</a></p>
+
+<blockquote><p>By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.</p>
+
+<pre><code>   &lt;span style="color:#FF0000;"&gt;3&lt;/span&gt;
+ &lt;span style="color:#FF0000;"&gt;7&lt;/span&gt; 5
+</code></pre>
+
+<p>   2 <span style="color:#FF0000;">4</span> 6
+ 8 5 <span style="color:#FF0000;">9</span> 3
+That is, 3 + 7 + 4 + 9 = 23.
+Find the maximum total from top to bottom of the triangle below:
+次の三角形の頂点から始めて、隣接するその下の列の番号に移動していく場合、頂点から底辺までの合計の最大値は23である。
+つまり、3 + 7 + 4 + 9 = 23である。
+次の三角形の頂点から底辺までの合計の最大値を求めよ。</p></blockquote>
+
+<p>難しかったけど以下の方針でなんとか</p>
+
+<ol>
+<li>三角形のデータを二次元配列のデータとして読み込む。</li>
+<li>底辺の各点から頂点に向かってそれぞれ合計を再帰的に求める(route_sum)。</li>
+<li>それらの合計から最大値を選ぶ(max_route)。</li>
+</ol>
+
+
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="no">DATA</span>
+<span class="sh">75</span>
+<span class="sh">95 64</span>
+<span class="sh">17 47 82</span>
+<span class="sh">18 35 87 10</span>
+<span class="sh">20 04 82 47 65</span>
+<span class="sh">19 01 23 75 03 34</span>
+<span class="sh">88 02 77 73 07 63 67</span>
+<span class="sh">99 65 04 28 06 16 70 92</span>
+<span class="sh">41 41 26 56 83 40 80 70 33</span>
+<span class="sh">41 48 72 33 47 32 37 16 94 29</span>
+<span class="sh">53 71 44 65 25 43 91 52 97 51 14</span>
+<span class="sh">70 11 33 28 77 73 17 78 39 68 17 57</span>
+<span class="sh">91 71 52 38 17 14 91 43 58 50 27 29 48</span>
+<span class="sh">63 66 04 68 89 53 67 30 73 16 69 87 40 31</span>
+<span class="sh">04 62 98 27 23 09 70 98 73 93 38 53 60 04 23</span>
+<span class="no">DATA</span>
+ <span class="no">TRI</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\n+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span> <span class="p">}</span>
+ <span class="k">def</span> <span class="nf">max_route</span>
+   <span class="n">ans</span> <span class="o">=</span> <span class="o">[]</span>
+   <span class="n">lev</span> <span class="o">=</span> <span class="no">TRI</span><span class="o">.</span><span class="n">length</span>
+   <span class="n">lev</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+     <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="n">route_sum</span><span class="p">(</span><span class="n">lev</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="n">ans</span><span class="o">.</span><span class="n">max</span>
+ <span class="k">end</span>
+ <span class="k">def</span> <span class="nf">route_sum</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+   <span class="k">return</span> <span class="no">TRI</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="k">if</span> <span class="n">lev</span> <span class="o">==</span> <span class="mi">0</span>
+   <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">lev</span>
+   <span class="o">[</span><span class="n">route_sum</span><span class="p">(</span><span class="n">lev</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">route_sum</span><span class="p">(</span><span class="n">lev</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">].</span><span class="n">max</span> <span class="o">+</span> <span class="no">TRI</span><span class="o">[</span><span class="n">lev</span><span class="o">][</span><span class="n">x</span><span class="o">]</span>
+ <span class="k">end</span>
+ <span class="n">max_route2</span> <span class="c1"># =&gt; 10xx</span>
+</code></pre></div>
+
+
+<p>Euler Projectのフォーラムで
+三角形の上から攻められることを知って愕然とする
+そのほうがずっとエレガントだ</p>
+
+<p>上から攻める版に書き直す</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="no">DATA</span>
+<span class="sh">75</span>
+<span class="sh">95 64</span>
+<span class="sh">17 47 82</span>
+<span class="sh">18 35 87 10</span>
+<span class="sh">20 04 82 47 65</span>
+<span class="sh">19 01 23 75 03 34</span>
+<span class="sh">88 02 77 73 07 63 67</span>
+<span class="sh">99 65 04 28 06 16 70 92</span>
+<span class="sh">41 41 26 56 83 40 80 70 33</span>
+<span class="sh">41 48 72 33 47 32 37 16 94 29</span>
+<span class="sh">53 71 44 65 25 43 91 52 97 51 14</span>
+<span class="sh">70 11 33 28 77 73 17 78 39 68 17 57</span>
+<span class="sh">91 71 52 38 17 14 91 43 58 50 27 29 48</span>
+<span class="sh">63 66 04 68 89 53 67 30 73 16 69 87 40 31</span>
+<span class="sh">04 62 98 27 23 09 70 98 73 93 38 53 60 04 23</span>
+<span class="no">DATA</span>
+ <span class="no">TRI</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\n+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span> <span class="p">}</span>
+ <span class="k">def</span> <span class="nf">max_route</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+   <span class="k">return</span> <span class="no">TRI</span><span class="o">[</span><span class="n">lev</span><span class="o">][</span><span class="n">x</span><span class="o">]</span> <span class="k">if</span> <span class="n">lev</span> <span class="o">==</span> <span class="no">TRI</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span>
+   <span class="o">[</span><span class="n">max_route</span><span class="p">(</span><span class="n">lev</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">max_route</span><span class="p">(</span><span class="n">lev</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">max</span> <span class="o">+</span> <span class="no">TRI</span><span class="o">[</span><span class="n">lev</span><span class="o">][</span><span class="n">x</span><span class="o">]</span>
+ <span class="k">end</span>
+ <span class="n">max_route</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; 10xx</span>
+</code></pre></div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで三角形の最大ルートを求める" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" data-text="Rubyで三角形の最大ルートを求める" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/01/23/Ruby-Ruby-Problem17" title="Rubyで英数字を作って文字数を数える">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/01/26/Ruby-Ruby-Problem20" title="Rubyで階乗して桁を合計">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで三角形の最大ルートを求める" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" data-text="Rubyで三角形の最大ルートを求める" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/01/25/Ruby-Ruby-Problem18/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,613 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyのクラスの太った人たち</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>19 July 2012</span></div>
+  <h1 class='page-title'><a href="/2012/07/19/ruby-methods-visualization">Rubyのクラスの太った人たち</a> <small> Ruby Methods Visualization with Wordle </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>前回の記事「<a href="http://melborne.github.com/2012/07/16/ruby-methods-analysis/" title="Ruby、君のオブジェクトはなんて呼び出せばいいの？">Ruby、君のオブジェクトはなんて呼び出せばいいの？</a>」で、Rubyには大量のメソッドがあることが分かりました。今回はその補足として、各クラスごとのメソッド数を数えてグラフ化してみます。</p>
+
+<h2>インスタンスメソッドを数える</h2>
+
+<p>まずは、インスタンスメソッドを数えましょう。グラフ化の対象は、10以上のメソッドを持つクラスです。最初にクラスごとのメソッド数をリストアップします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">klasses</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span><span class="p">(</span><span class="no">Module</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">live</span><span class="p">(</span><span class="nb">methods</span><span class="p">)</span>
+  <span class="nb">methods</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">start_with?</span> <span class="s1">&#39;_deprecated&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="nb">methods</span> <span class="o">=</span> <span class="n">klasses</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span>
+  <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="c1"># List of Instance Methods</span>
+<span class="n">ims</span> <span class="o">=</span> <span class="nb">methods</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">im</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
+
+<span class="nb">puts</span> <span class="n">ims</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kim</span><span class="o">|</span> <span class="n">kim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; =&gt; &quot;</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>結果は次のようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">String</span> <span class="o">=&gt;</span> <span class="mi">109</span><span class="p">,</span> <span class="no">Pathname</span> <span class="o">=&gt;</span> <span class="mi">92</span><span class="p">,</span> <span class="nb">Array</span> <span class="o">=&gt;</span> <span class="mi">88</span><span class="p">,</span> <span class="no">IO</span> <span class="o">=&gt;</span> <span class="mi">70</span><span class="p">,</span> <span class="no">Time</span> <span class="o">=&gt;</span> <span class="mi">54</span><span class="p">,</span> <span class="no">Hash</span> <span class="o">=&gt;</span> <span class="mi">53</span><span class="p">,</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span> <span class="o">=&gt;</span> <span class="mi">51</span><span class="p">,</span> <span class="no">Kernel</span> <span class="o">=&gt;</span> <span class="mi">48</span><span class="p">,</span> <span class="no">Enumerable</span> <span class="o">=&gt;</span> <span class="mi">47</span><span class="p">,</span> <span class="no">Module</span> <span class="o">=&gt;</span> <span class="mi">43</span><span class="p">,</span> <span class="nb">Float</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="ss">File</span><span class="p">:</span><span class="ss">:Stat</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="no">Numeric</span> <span class="o">=&gt;</span> <span class="mi">41</span><span class="p">,</span> <span class="no">Complex</span> <span class="o">=&gt;</span> <span class="mi">37</span><span class="p">,</span> <span class="no">Bignum</span> <span class="o">=&gt;</span> <span class="mi">36</span><span class="p">,</span> <span class="no">Fixnum</span> <span class="o">=&gt;</span> <span class="mi">34</span><span class="p">,</span> <span class="no">Thread</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="no">Rational</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="nb">Integer</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">Symbol</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">MatchData</span> <span class="o">=&gt;</span> <span class="mi">19</span><span class="p">,</span> <span class="no">Range</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">,</span> <span class="no">Proc</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="p">,</span> <span class="no">Regexp</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Struct</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Method</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="ss">Process</span><span class="p">:</span><span class="ss">:Status</span> <span class="o">=&gt;</span> <span class="mi">15</span><span class="p">,</span> <span class="ss">Encoding</span><span class="p">:</span><span class="ss">:Converter</span> <span class="o">=&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="no">NilClass</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">Enumerator</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">UnboundMethod</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">File</span> <span class="o">=&gt;</span> <span class="mi">11</span><span class="p">,</span> <span class="no">Dir</span> <span class="o">=&gt;</span> <span class="mi">11</span>
+</code></pre></div>
+
+
+<p>なるほど、<code>String</code>のインスタンスメソッドは100を超えてるんですね！あれ、なんで<code>Pathname</code>がいるのかな...理由は分かりませんが、メソッド多いですねー。そして、<code>Array</code>, <code>IO</code>, <code>Time</code>, <code>Hash</code>と続きます。</p>
+
+<p>さあ、次にこれをGoogle Chart APIでグラフ化します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">ims</span><span class="o">.</span><span class="n">transpose</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="nb">puts</span> <span class="no">Gchart</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
+             <span class="ss">:max_value</span> <span class="o">=&gt;</span> <span class="mi">110</span><span class="p">,</span>
+             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">&#39;t,y,x&#39;</span><span class="p">,</span>
+             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
+             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">&#39;390x760&#39;</span><span class="p">,</span>
+             <span class="ss">:bar_width_and_spacing</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="p">,</span>
+             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">&#39;Instance Methods&#39;</span><span class="p">,</span>
+             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">&#39;efefdd&#39;</span><span class="p">,</span>
+             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span>
+             <span class="p">)</span>
+
+<span class="c1">#&gt;&gt; http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|100|110|1:|Dir|File|UnboundMethod|Enumerator|NilClass|Encoding%3A%3AConverter|Process%3A%3AStatus|Method|Struct|Regexp|Proc|Range|MatchData|Symbol|Integer|Rational|Thread|Fixnum|Bignum|Complex|Numeric|File%3A%3AStat|Float|Module|Enumerable|Kernel|ARGF.class|Hash|Time|IO|Array|Pathname|String|2:|0|10|20|30|40|50|60|70|80|90|100|110&amp;chxt=t,y,x&amp;chbh=17&amp;chf=bg,s,efefdd&amp;chd=s:9zxnedcbaYXXXUUTOONNKKJJJJIHGGGGG&amp;chtt=Instance+Methods&amp;cht=bhs&amp;chs=390x760&amp;chxr=0,109,110</span>
+</code></pre></div>
+
+
+<p>前回同様、<a href="https://developers.google.com/chart/" title="Google Chart Tools — Google Developers">Google Chart API</a>を使って、次のグラフが得られました。</p>
+
+<p><img src="http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|100|110|1:|Dir|File|UnboundMethod|Enumerator|NilClass|Encoding%3A%3AConverter|Process%3A%3AStatus|Method|Struct|Regexp|Proc|Range|MatchData|Symbol|Integer|Rational|Thread|Fixnum|Bignum|Complex|Numeric|File%3A%3AStat|Float|Module|Enumerable|Kernel|ARGF.class|Hash|Time|IO|Array|Pathname|String|2:|0|10|20|30|40|50|60|70|80|90|100|110&amp;chxt=t,y,x&amp;chbh=17&amp;chf=bg,s,efefdd&amp;chd=s:9zxnedcbaYXXXUUTOONNKKJJJJIHGGGGG&amp;chtt=Instance+Methods&amp;cht=bhs&amp;chs=390x760&amp;chxr=0,109,110" alt="instance methods noshadow" /></p>
+
+<p>個人的には、Symbolのメソッド数が少ないな、という印象です。</p>
+
+<h2>クラスメソッドを数える</h2>
+
+<p>次に、クラスメソッドを数えましょう。グラフ化の対象は、5以上のメソッドを持つクラスです。最初にクラスごとのメソッド数をリストアップします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># List of Class Methods</span>
+<span class="n">cms</span> <span class="o">=</span> <span class="nb">methods</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
+
+<span class="nb">puts</span> <span class="n">cms</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kcm</span><span class="o">|</span> <span class="n">kcm</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; =&gt; &quot;</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>結果は次のようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Gem</span> <span class="o">=&gt;</span> <span class="mi">89</span><span class="p">,</span> <span class="no">Kernel</span> <span class="o">=&gt;</span> <span class="mi">59</span><span class="p">,</span> <span class="no">File</span> <span class="o">=&gt;</span> <span class="mi">57</span><span class="p">,</span> <span class="no">Process</span> <span class="o">=&gt;</span> <span class="mi">39</span><span class="p">,</span> <span class="no">FileTest</span> <span class="o">=&gt;</span> <span class="mi">26</span><span class="p">,</span> <span class="no">Math</span> <span class="o">=&gt;</span> <span class="mi">26</span><span class="p">,</span> <span class="no">Dir</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="ss">Process</span><span class="p">:</span><span class="ss">:Sys</span> <span class="o">=&gt;</span> <span class="mi">15</span><span class="p">,</span> <span class="no">IO</span> <span class="o">=&gt;</span> <span class="mi">15</span><span class="p">,</span> <span class="no">Thread</span> <span class="o">=&gt;</span> <span class="mi">13</span><span class="p">,</span> <span class="no">Encoding</span> <span class="o">=&gt;</span> <span class="mi">11</span><span class="p">,</span> <span class="ss">Process</span><span class="p">:</span><span class="ss">:UID</span> <span class="o">=&gt;</span> <span class="mi">9</span><span class="p">,</span> <span class="ss">Process</span><span class="p">:</span><span class="ss">:GID</span> <span class="o">=&gt;</span> <span class="mi">9</span><span class="p">,</span> <span class="ss">GC</span><span class="p">:</span><span class="ss">:Profiler</span> <span class="o">=&gt;</span> <span class="mi">7</span><span class="p">,</span> <span class="no">GC</span> <span class="o">=&gt;</span> <span class="mi">7</span><span class="p">,</span> <span class="no">Time</span> <span class="o">=&gt;</span> <span class="mi">7</span><span class="p">,</span> <span class="ss">RubyVM</span><span class="p">:</span><span class="ss">:InstructionSequence</span> <span class="o">=&gt;</span> <span class="mi">7</span><span class="p">,</span> <span class="no">ObjectSpace</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">,</span> <span class="no">Regexp</span> <span class="o">=&gt;</span> <span class="mi">6</span>
+</code></pre></div>
+
+
+<p><code>Gem</code>は組み込みライブラリではないので、除外すべきだったのかもしれませんが、まあ兎に角、ダントツ１位です^ ^; <code>Kernel</code>はそのメソッドがモジュール関数になっているので多いのですね。従って、実質１位は<code>File</code>と言っていいんじゃないでしょうか。</p>
+
+<p>さあ、次にこれをGoogle Chart APIでグラフ化します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">transpose</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="nb">puts</span> <span class="no">Gchart</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
+             <span class="ss">:max_value</span> <span class="o">=&gt;</span> <span class="mi">90</span><span class="p">,</span>
+             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">&#39;t,y,x&#39;</span><span class="p">,</span>
+             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
+             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">&#39;600x500&#39;</span><span class="p">,</span>
+             <span class="ss">:bar_width_and_spacing</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">,</span>
+             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">&#39;Class Methods&#39;</span><span class="p">,</span>
+             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">&#39;efefdd&#39;</span><span class="p">,</span>
+             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span>
+             <span class="p">)</span>
+
+<span class="c1">#&gt;&gt; http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|1:|Regexp|ObjectSpace|RubyVM%3A%3AInstructionSequence|Time|GC|GC%3A%3AProfiler|Process%3A%3AGID|Process%3A%3AUID|Encoding|Thread|IO|Process%3A%3ASys|Dir|Math|FileTest|Process|File|Kernel|Gem|2:|0|10|20|30|40|50|60|70|80|90&amp;chxt=t,y,x&amp;chbh=18&amp;chf=bg,s,efefdd&amp;chd=s:9onaRRLKKIHGGEEEEEE&amp;chtt=Class+Methods&amp;cht=bhs&amp;chs=600x500&amp;chxr=0,89,90</span>
+</code></pre></div>
+
+
+<p>結果は次の通り。</p>
+
+<p><img src="http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|1:|Regexp|ObjectSpace|RubyVM%3A%3AInstructionSequence|Time|GC|GC%3A%3AProfiler|Process%3A%3AGID|Process%3A%3AUID|Encoding|Thread|IO|Process%3A%3ASys|Dir|Math|FileTest|Process|File|Kernel|Gem|2:|0|10|20|30|40|50|60|70|80|90&amp;chxt=t,y,x&amp;chbh=18&amp;chf=bg,s,efefdd&amp;chd=s:9onaRRLKKIHGGEEEEEE&amp;chtt=Class+Methods&amp;cht=bhs&amp;chs=600x500&amp;chxr=0,89,90" alt="class methods noshadow" /></p>
+
+<p>５以下のメソッドを削ってますが、ロングテールといった感じでしょうか。まあ、あまり感想はありません..</p>
+
+<h2>Wordleによるビジュアライゼーション</h2>
+
+<p>さて、実は今回はここからが本題です。</p>
+
+<p>クラスごとにメソッドをグラフ化しても面白みがないことが分かったので、以前に紹介した<a href="http://www.wordle.net/" title="Wordle - Beautiful Word Clouds">Wordle - Beautiful Word Clouds</a>を使って、Rubyのクラスごとのメソッド数をビジュアライズしてみたいと思います。Wordleはテキスト中の単語をその出現頻度から重み付けしてサイズを決定し、グラフィカルに配置して表示するツール／サービスです。このブログでも以前に２回ほど紹介しました。</p>
+
+<blockquote><p><a href="http://melborne.github.com/2011/12/12/Ruby-Wordle/" title="Rubyで英文小説をWordleしようよ">Rubyで英文小説をWordleしようよ</a></p>
+
+<p><a href="http://melborne.github.com/2011/12/18/Wordle/" title="Wordleでビジネスカードを作ろう!">Wordleでビジネスカードを作ろう!</a></p></blockquote>
+
+<p>Wordleではテキストを渡して画像を生成させるのが基本ですが、単語とその重み付けの情報を渡して画像を生成する方法も提供されています。今回はこれを使って、Rubyにおける各クラス名をそのメソッド数で重み付けして画像を生成してみたいと思います。</p>
+
+<p>まずは重み付けの情報を作ります。インスタンスメソッドから。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># Instance methods for Wordle</span>
+<span class="nb">puts</span> <span class="n">ims</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>次のようなデータが得られます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">String</span><span class="p">:</span><span class="mi">109</span>
+<span class="ss">Pathname</span><span class="p">:</span><span class="mi">92</span>
+<span class="nb">Array</span><span class="p">:</span><span class="mi">88</span>
+<span class="ss">IO</span><span class="p">:</span><span class="mi">70</span>
+<span class="ss">Time</span><span class="p">:</span><span class="mi">54</span>
+<span class="ss">Hash</span><span class="p">:</span><span class="mi">53</span>
+<span class="no">ARGF</span><span class="o">.</span><span class="n">class</span><span class="p">:</span><span class="mi">51</span>
+<span class="ss">Kernel</span><span class="p">:</span><span class="mi">48</span>
+<span class="ss">Enumerable</span><span class="p">:</span><span class="mi">47</span>
+<span class="ss">Module</span><span class="p">:</span><span class="mi">43</span>
+<span class="nb">Float</span><span class="p">:</span><span class="mi">42</span>
+<span class="ss">File</span><span class="p">:</span><span class="ss">:Stat</span><span class="p">:</span><span class="mi">42</span>
+<span class="ss">Numeric</span><span class="p">:</span><span class="mi">41</span>
+<span class="ss">Complex</span><span class="p">:</span><span class="mi">37</span>
+<span class="ss">Bignum</span><span class="p">:</span><span class="mi">36</span>
+<span class="ss">Fixnum</span><span class="p">:</span><span class="mi">34</span>
+<span class="ss">Thread</span><span class="p">:</span><span class="mi">25</span>
+<span class="ss">Rational</span><span class="p">:</span><span class="mi">25</span>
+<span class="nb">Integer</span><span class="p">:</span><span class="mi">24</span>
+<span class="ss">Symbol</span><span class="p">:</span><span class="mi">24</span>
+<span class="ss">MatchData</span><span class="p">:</span><span class="mi">19</span>
+<span class="ss">Range</span><span class="p">:</span><span class="mi">18</span>
+<span class="ss">Proc</span><span class="p">:</span><span class="mi">17</span>
+<span class="ss">Regexp</span><span class="p">:</span><span class="mi">16</span>
+<span class="ss">Struct</span><span class="p">:</span><span class="mi">16</span>
+<span class="ss">Method</span><span class="p">:</span><span class="mi">16</span>
+<span class="ss">Process</span><span class="p">:</span><span class="ss">:Status</span><span class="p">:</span><span class="mi">15</span>
+<span class="ss">Encoding</span><span class="p">:</span><span class="ss">:Converter</span><span class="p">:</span><span class="mi">14</span>
+<span class="ss">NilClass</span><span class="p">:</span><span class="mi">12</span>
+<span class="ss">Enumerator</span><span class="p">:</span><span class="mi">12</span>
+<span class="ss">UnboundMethod</span><span class="p">:</span><span class="mi">12</span>
+<span class="ss">File</span><span class="p">:</span><span class="mi">11</span>
+<span class="ss">Dir</span><span class="p">:</span><span class="mi">11</span>
+</code></pre></div>
+
+
+<p>クラスメソッドも同様にします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># Class methods for Wordle</span>
+<span class="nb">puts</span> <span class="n">cms</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>出力です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="ss">Gem</span><span class="p">:</span><span class="mi">89</span>
+<span class="ss">Kernel</span><span class="p">:</span><span class="mi">59</span>
+<span class="ss">File</span><span class="p">:</span><span class="mi">57</span>
+<span class="ss">Process</span><span class="p">:</span><span class="mi">39</span>
+<span class="ss">FileTest</span><span class="p">:</span><span class="mi">26</span>
+<span class="ss">Math</span><span class="p">:</span><span class="mi">26</span>
+<span class="ss">Dir</span><span class="p">:</span><span class="mi">16</span>
+<span class="ss">Process</span><span class="p">:</span><span class="ss">:Sys</span><span class="p">:</span><span class="mi">15</span>
+<span class="ss">IO</span><span class="p">:</span><span class="mi">15</span>
+<span class="ss">Thread</span><span class="p">:</span><span class="mi">13</span>
+<span class="ss">Encoding</span><span class="p">:</span><span class="mi">11</span>
+<span class="ss">Process</span><span class="p">:</span><span class="ss">:UID</span><span class="p">:</span><span class="mi">9</span>
+<span class="ss">Process</span><span class="p">:</span><span class="ss">:GID</span><span class="p">:</span><span class="mi">9</span>
+<span class="ss">GC</span><span class="p">:</span><span class="ss">:Profiler</span><span class="p">:</span><span class="mi">7</span>
+<span class="ss">GC</span><span class="p">:</span><span class="mi">7</span>
+<span class="ss">Time</span><span class="p">:</span><span class="mi">7</span>
+<span class="ss">RubyVM</span><span class="p">:</span><span class="ss">:InstructionSequence</span><span class="p">:</span><span class="mi">7</span>
+<span class="ss">ObjectSpace</span><span class="p">:</span><span class="mi">6</span>
+<span class="ss">Regexp</span><span class="p">:</span><span class="mi">6</span>
+</code></pre></div>
+
+
+<p>Wordleの<code>Advanced</code>タブを開いて、<code>Paste weighted words or phrases here:</code>に出力データを貼り付けます。そしてGoボタンを押せば自動でWordle画像が生成されます。後は、Randomizeボタンを押すなり、そのFont, Layout, Colorを変更するなりして、お好みを作り上げます。</p>
+
+<p>こうして生成された画像が以下になります。</p>
+
+<p>Ruby Classes emphasized with Number of Instance Methods</p>
+
+<p><img src="/assets/images/ruby_instance_methods.png" alt="instance methods noshadow" /></p>
+
+<p>Ruby Classes emphasized with Number of Class Methods</p>
+
+<p><img src="/assets/images/ruby_class_methods.png" alt="Alt title noshadow noshadow" /></p>
+
+<p>Cool！なかなかカッコイイでしょ？</p>
+
+<p>時間が許すなら、みなさんもこのブログのデータをコピーして、Wordleしてみてください。楽しめると思います。</p>
+
+<p>というわけで、Ruby大学におきましては、Stringクラスの生徒(Class Mates)たちと、新人先生Gem君が太ってるってことが分かりましたよ！</p>
+
+<p><a href="https://gist.github.com/3121898#file_methods_by_class.rb" title="Ruby Methods Analysis — Gist">Ruby Methods Analysis — Gist</a></p>
+
+<hr />
+
+<p><a href="http://www.wordle.net/show/wrdl/5511105/Ruby_Instance_Methods" title="Wordle: Ruby Instance Methods"><img src="http://www.wordle.net/thumb/wrdl/5511105/Ruby_Instance_Methods" alt="Wordle: Ruby Instance Methods noshadow" style="padding:4px;border:1px solid #ddd"></a></p>
+
+<p><a href="http://www.wordle.net/show/wrdl/5511131/Ruby_Class_Methods" title="Wordle: Ruby Class Methods"><img src="http://www.wordle.net/thumb/wrdl/5511131/Ruby_Class_Methods" alt="Wordle: Ruby Class Methods noshadow" style="padding:4px;border:1px solid #ddd"></a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/まんが-クラスメイトは外国人-多文化共生20の物語-みなみ-ななみ/dp/4750329665?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4750329665"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51%2B2pkSWGPL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/まんが-クラスメイトは外国人-多文化共生20の物語-みなみ-ななみ/dp/4750329665?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4750329665">まんが クラスメイトは外国人 -多文化共生20の物語-</a> by みなみ ななみ</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/19/ruby-methods-visualization/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのクラスの太った人たち" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" data-text="Rubyのクラスの太った人たち" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/07/16/ruby-methods-analysis" title="Ruby、君のオブジェクトはなんて呼び出せばいいの？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/08/02/build-your-own-web-framework-with-rack" title="エラーメッセージから学ぶRack - 最初の一歩">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#method-ref">method <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#wordle-ref">wordle <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Visualization-ref">Visualization <span>4</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/19/ruby-methods-visualization/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのクラスの太った人たち" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" data-text="Rubyのクラスの太った人たち" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/19/ruby-methods-visualization/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

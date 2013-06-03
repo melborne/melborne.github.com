@@ -1,0 +1,1014 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rackをminifyした僅か100行のLackで学ぶRackの中身</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>08 August 2012</span></div>
+  <h1 class='page-title'><a href="/2012/08/08/learn-rack-with-lack">Rackをminifyした僅か100行のLackで学ぶRackの中身</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack最初の一歩">エラーメッセージから学ぶRack最初の一歩</a>」および「<a href="http://melborne.github.com/2012/08/06/use-rack-middleware/" title="エラーメッセージから学ぶRack - Middlewareの魔法">エラーメッセージから学ぶRack - Middlewareの魔法</a>」の続きです。</p>
+
+<hr />
+
+<p>前２本の記事で、Rackは<code>rackup</code>コマンドを起動すると、defaultでconfig.ruを読み込みWebサーバを起動するということが分かりました。また、config.ruの中でuseを使ってmiddlewareを指定すると、Webアプリをラップして内側から外側に向けてそれらの#callを順次呼び出すということも分かりました。ちなみに僕はこの呼び出しスタイルを今後「マトリョーシカ呼び出し」と呼ぶことにしました。</p>
+
+<p>ここで２点気になることがあります。config.ruはRubyスクリプトです。rackupコマンドの実行からRackはどうやってこのファイルを実行しているのでしょうか。まあ簡単に想像はつきますが（エバるほどではない）、これが１点目です。もう１点は、マトリョーシカ呼び出しの実装がどうなってるかです。</p>
+
+<p>そんなわけで、今回はRackのソースを参照して、rackupコマンドからRackの起動の流れを追って行きたいと思います。つまりコードリーディングです。</p>
+
+<h2>Rackの起動の流れを追う</h2>
+
+<p>と、言いたいところですが、これについては僕の出る幕はもうありません。なぜなら、<strong>すがまさお</strong>さんによる素晴らしい解析記事がすでに存在するからです。</p>
+
+<blockquote><p><a href="http://d.hatena.ne.jp/seiunsky/20120213/1329152534" title="Rackの起動の流れを追う - @sugamasao.blog.title # =&gt; ”コードで世界を変えたい”">Rackの起動の流れを追う - @sugamasao.blog.title # => ”コードで世界を変えたい”</a></p></blockquote>
+
+<p>「先ずはこれを嫁」で、話は終わりなんですが、Rackのファイル構成を見ると、ここでは語られていない結構な数のファイルが存在することが分かります。このギャップから自分はRackの最小構成は一体何かということが気になったのでした。</p>
+
+<p>そんなわけで...</p>
+
+<p>Rackのミニマムを知るために、その最小構成だけを抽出したWebサーバインタフェース<code>Lack</code>を作りました^ ^;</p>
+
+<p><code>Lack</code>はRackに対し、次の欠落があります。</p>
+
+<blockquote><ol>
+<li>optionを一切受け付けない。</li>
+<li>mapが使えない。</li>
+<li>middlewareが１つも含まれていない。</li>
+<li>WEBRick, Thin以外のWebサーバを使えない。</li>
+<li>エラー処理がなされていない。</li>
+<li>Rackの各種ユーティリティ(Rack::Utils, Rack::Requestとか)が全く使えない。</li>
+</ol>
+</blockquote>
+
+<p>つまりLackは、Rackのdefaule設定でWebサーバを起動するための最低構成のインタフェースです。つまりLackは、Rackのベースを知るための教則コードです。以下では、先の記事で、すがまさおさんがRackのソースを使って行なっていたことと同じことを、Lackのソースを使って駆け足で行います。</p>
+
+<h2>Rackのファイル構成</h2>
+
+<p>Lackのソースを追う前に、まずは本家Rackのファイル構成を見てみます。Rack1.4.1のlib/rackディレクトリ以下は次のようになっています。</p>
+
+<div class="highlight"><pre><code class="bash"><span class="o">[</span>in<span class="o">]</span>: /gems/rack-1.4.1/lib/rack/
+..
++ auth/          
++ backports/     
++ handler/       
++ multipart/     
++ session/       
+- body_proxy.rb                               500B 
+- builder.rb                               3.79  K 
+- cascade.rb                                  808B 
+- chunked.rb                               1.32  K 
+- commonlogger.rb                          1.49  K 
+- conditionalget.rb                        1.97  K 
+- config.rb                                   277B 
+- content_length.rb                           765B 
+- content_type.rb                             672B 
+- deflater.rb                              2.71  K 
+- directory.rb                             4.0   K 
+- etag.rb                                  1.77  K 
+- file.rb                                  3.59  K 
+- handler.rb                               2.73  K 
+- head.rb                                     257B 
+- lint.rb                                  20.99 K 
+- lobster.rb                               1.83  K 
+- lock.rb                                     483B 
+- logger.rb                                   357B 
+- methodoverride.rb                           803B 
+- mime.rb                                  30.38 K 
+- mock.rb                                  5.24  K 
+- multipart.rb                             1.13  K 
+- nulllogger.rb                               386B 
+- recursive.rb                             1.71  K 
+- reloader.rb                              2.95  K 
+- request.rb                               10.66 K 
+- response.rb                              3.99  K 
+- rewindable_input.rb                      3.18  K 
+- runtime.rb                                  710B 
+- sendfile.rb                              4.43  K 
+- server.rb                                9.23  K 
+- showexceptions.rb                        11.64 K 
+- showstatus.rb                            3.46  K 
+- static.rb                                2.14  K 
+- urlmap.rb                                2.7   K 
+- utils.rb                                 15.70 K 
+
+10 directories, 63 files
+</code></pre></div>
+
+
+<p>ファイル行数も数えてみましょう。</p>
+
+<div class="highlight"><pre><code class="bash">/gems/rack-1.4.1% wc -l lib/rack/**/*
+   7126 total
+</code></pre></div>
+
+
+<p>これら63ファイルのトータル行数は7126行ありました。大量のファイルに目が眩みます。</p>
+
+<p>一方、これらのファイル郡を整理すると、おおまかに４つのグループ、すなわち（１）Core、（２）Helper、（３）Middleware、（４）sample Web Applicationに分類できました<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<div class="highlight"><pre><code class="bash"><span class="o">[</span>Core<span class="o">]</span>
+- server.rb                                9.23  K 
+- builder.rb                               3.79  K 
+- handler.rb                               2.73  K 
+
+<span class="o">[</span>Helper<span class="o">]</span>
++ backports/                         <span class="o">[</span>DIR<span class="o">]</span>         
++ handler/                           <span class="o">[</span>DIR<span class="o">]</span>         
++ multipart/                         <span class="o">[</span>DIR<span class="o">]</span>         
+- body_proxy.rb                               500B 
+- directory.rb                             4.0   K 
+- file.rb                                  3.59  K 
+- mime.rb                                  30.38 K 
+- mock.rb                                  5.24  K 
+- multipart.rb                             1.13  K 
+- request.rb                               10.66 K 
+- response.rb                              3.99  K 
+- rewindable_input.rb                      3.18  K 
+- urlmap.rb                                2.7   K 
+- utils.rb                                 15.70 K 
+
+<span class="o">[</span>Middleware<span class="o">]</span>
++ auth/                              <span class="o">[</span>DIR<span class="o">]</span>         
++ session/                           <span class="o">[</span>DIR<span class="o">]</span>         
+- cascade.rb                                  808B 
+- chunked.rb                               1.32  K 
+- commonlogger.rb                          1.49  K 
+- conditionalget.rb                        1.97  K 
+- config.rb                                   277B 
+- content_length.rb                           765B 
+- content_type.rb                             672B 
+- deflater.rb                              2.71  K 
+- etag.rb                                  1.77  K 
+- head.rb                                     257B 
+- lint.rb                                  20.99 K 
+- lock.rb                                     483B 
+- logger.rb                                   357B 
+- methodoverride.rb                           803B 
+- nulllogger.rb                               386B 
+- recursive.rb                             1.71  K 
+- reloader.rb                              2.95  K 
+- runtime.rb                                  710B 
+- sendfile.rb                              4.43  K 
+- showexceptions.rb                        11.64 K 
+- showstatus.rb                            3.46  K 
+- static.rb                                2.14  K 
+
+<span class="o">[</span>sample Web Application<span class="o">]</span>
+- lobster.rb                               1.83  K 
+</code></pre></div>
+
+
+<p>RackのCoreは僅か３ファイルで構成されており、ファイルの大半はMiddlewareということが分かりました。</p>
+
+<p>Coreの行数を見てみます。</p>
+
+<div class="highlight"><pre><code class="bash">/gems/rack-1.4.1% wc -l lib/rack/builder.rb lib/rack/handler.rb lib/rack/server.rb 
+     145 lib/rack/builder.rb
+      94 lib/rack/handler.rb
+     323 lib/rack/server.rb
+     562 total
+</code></pre></div>
+
+
+<p>思いの外サイズが小さいです。でもまだ読む気になりません。</p>
+
+<h2>Lackのファイル構成</h2>
+
+<p>さて、次にRackの欠落版<code>Lack</code>のファイル構成を見ます。</p>
+
+<div class="highlight"><pre><code class="bash">% tree lack 
+lack
+├── bin
+│   └── lackup
+└── lib
+    ├── lack
+    │   ├── builder.rb
+    │   ├── handler
+    │   │   ├── thin.rb
+    │   │   └── webrick.rb
+    │   ├── handler.rb
+    │   └── server.rb
+    └── lack.rb
+4 directories, 7 files
+</code></pre></div>
+
+
+<p>lib/lack内にはCoreとなるserver.rb, builder.br, handler.rbがあります。handlerディレクトリ内の２つのファイルはRackからそのままコピーしたそれらWebサーバのインタフェースです。</p>
+
+<p>Coreの３ファイルの行数を見てみます。</p>
+
+<div class="highlight"><pre><code class="bash">/lack% wc -l lib/lack/server.rb lib/lack/builder.rb lib/lack/handler.rb
+      61 lib/lack/server.rb
+      25 lib/lack/builder.rb
+       9 lib/lack/handler.rb
+      95 total
+</code></pre></div>
+
+
+<p>僅か95行です。これなら読む気になりますね！<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup></p>
+
+<h2>Coreファイルのソース</h2>
+
+<p>Coreファイルのソースを順番に載せます。なお、これらの各クラスにおけるメソッドの呼び出し構造は、オリジナルのものから変えていません。その結果、一見無駄なことをやっているように見える部分がありますが、その点ご了承ください。まずは、メインとなる<code>server.rb</code>です。</p>
+
+<script src="https://gist.github.com/3284736.js?file=lib/lack/server.rb"></script>
+
+
+<p>次に、<code>builder.rb</code>。</p>
+
+<script src="https://gist.github.com/3284736.js?file=lib/lack/builder.rb"></script>
+
+
+<p>最後に、<code>handler.rb</code>です。</p>
+
+<script src="https://gist.github.com/3284736.js?file=lib/lack/handler.rb"></script>
+
+
+<h2>Lackの起動の流れを追う</h2>
+
+<p>これらのファイルを見れば一目瞭然なので、説明はいらない気がしますが、一応追ってみます。</p>
+
+<p>まずはこれらのファイルで前回作った<code>draque</code>がちゃんと動くか確かめます。起動コマンドはもちろん<code>lackup</code>です。</p>
+
+<div class="highlight"><pre><code class="bash">/draque% ./lack/bin/lackup
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</code></pre></div>
+
+
+<p>browserでhttp://localhost:9292にアクセスします。</p>
+
+<p><img src="/assets/images/draque10.png" alt="draque10" /></p>
+
+<p>うまく動いていますね。</p>
+
+<p>まずは<code>lackup</code>コマンドの中身を見ます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="n">require_relative</span> <span class="s2">&quot;../lib/lack&quot;</span>
+<span class="ss">Lack</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">start</span> <span class="c1">#0</span>
+</code></pre></div>
+
+
+<p>僅か３行ですが、これは基本的に本家<code>rackup</code>と同じです。</p>
+
+<h2>server.rbを追う</h2>
+
+<p>lackupではLack::Serverクラスのstartクラスメソッドが呼ばれています。server.rbの対応箇所を見ます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">start</span> <span class="c1">#1</span>
+    <span class="kp">new</span><span class="o">.</span><span class="n">start</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">start</span> <span class="c1">#2</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">run</span> <span class="n">wrapped_app</span><span class="p">,</span> <span class="n">options</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">options</span> <span class="c1">#3</span>
+    <span class="vi">@options</span> <span class="o">||=</span> <span class="n">parse_options</span><span class="p">(</span><span class="no">ARGV</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">parse_options</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="c1">#4</span>
+    <span class="n">default_options</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">default_options</span> <span class="c1">#5</span>
+    <span class="p">{</span>
+      <span class="ss">:environment</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RACK_ENV&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;development&quot;</span><span class="p">,</span>
+      <span class="ss">:pid</span>         <span class="o">=&gt;</span> <span class="kp">nil</span><span class="p">,</span>
+      <span class="ss">:Port</span>        <span class="o">=&gt;</span> <span class="mi">9292</span><span class="p">,</span>
+      <span class="ss">:Host</span>        <span class="o">=&gt;</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+      <span class="ss">:AccessLog</span>   <span class="o">=&gt;</span> <span class="o">[]</span><span class="p">,</span>
+      <span class="ss">:config</span>      <span class="o">=&gt;</span> <span class="s2">&quot;config.ru&quot;</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>呼び出しの順位に従って番号を振ってあります。流れを追って行きましょう。</p>
+
+<blockquote><p>1.　Lack::Server.startは#newでServerオブジェクトを生成して#startメソッドを呼ぶ。</p>
+
+<p>2.　Server#startは、wrapped_appとoptionsを引数にserver.runを呼ぶ。</p></blockquote>
+
+<p>Server#startでLackのすべてが表現されている気がします。ここでwrapped_appは、前回の説明で想像できるように、Webアプリをmiddlewareでラップしたものと想像できます。wrapped_appを後にして、まずはoptionsを追ってみます。optionsはそのすぐ下にある通りメソッドです。</p>
+
+<blockquote><p>3.　#optionsは、ARGVつまりコマンドライン引数をparse_optionsメソッドに渡して、その解析結果を@optionsインスタンス変数へ代入する。</p>
+
+<p>4.　#parse_optionsは、単にdefault_optionsメソッドを呼び出す。オリジナルでは、ここで引数の解析を行います。</p>
+
+<p>5.　#default_optionsは、デフォルト設定のハッシュを返す。:configキーには'config.ru'がセットされる。</p></blockquote>
+
+<p>さて、Server#startに戻って、wrapped_appを追います。wrapped_appもメソッド呼び出しです。Rubyでは無引数のメソッド呼び出しとローカル変数は見た目が同じなので、これらは等価なものと考えていいと思います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nf">start</span> <span class="c1">#2</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">run</span> <span class="n">wrapped_app</span><span class="p">,</span> <span class="n">options</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">wrapped_app</span> <span class="c1">#6</span>
+    <span class="vi">@wrapped_app</span> <span class="o">||=</span> <span class="n">build_app</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">app</span> <span class="c1">#7</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="ss">Lack</span><span class="p">:</span><span class="ss">:Builder</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">options</span><span class="o">[</span><span class="ss">:config</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>6.　#wrapped_appは、appを引数にbuild_appメソッドを呼んで、その結果を@wrapped_appにセットします。</p></blockquote>
+
+<p>まずは引数のappメソッドを追います。</p>
+
+<blockquote><p>7.　#appは、options[:config]を引数に、Lack::Builder.parse_fileを呼び出し、結果を@appにセットします。</p></blockquote>
+
+<h2>builder.rbを追う</h2>
+
+<p>options[:config]は先ほど見た通り'config.ru'を指しています。ここから想像されるように、Lack::Builderは、config.ruをパースしてアプリオブジェクトを構築（ビルド）するようです。では、<code>builder.rb</code>に移ってコードを見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Builder</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">parse_file</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="c1">#8</span>
+    <span class="n">cfgfile</span> <span class="o">=</span> <span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="nb">eval</span> <span class="s2">&quot;Lack::Builder.new {</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">cfgfile</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}.to_app&quot;</span><span class="p">,</span> <span class="no">TOPLEVEL_BINDING</span><span class="p">,</span> <span class="n">config</span>
+    <span class="k">return</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="c1">#9</span>
+    <span class="vi">@use</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="nb">instance_eval</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>8.　Builder.parse_fileは、"Lack::Builder.new { }.to_app"をevalして、Webアプリオブジェクトを生成する。このブロックに<code>config.ru</code>ファイルの内容を渡す。</p></blockquote>
+
+<p>どうやら、気になる１点目に来たようです。やっぱりエバってました。evalの第2引数でevalするコンテキストをTOPLEVL_BINDING（つまりクラスの外側）としていますが、なければLack::Builderのコンテキストでevalされるので、必ずしもいらない気がします<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。また、次のような書き方もできますね。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">app</span> <span class="o">=</span> <span class="nb">eval</span> <span class="s2">&quot;new {</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">cfgfile</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}.to_app&quot;</span>
+</code></pre></div>
+
+
+<p>さて、次にBuilder#initializeを見ます。</p>
+
+<blockquote><p>9.　@useに空配列をセットし、ブロックをinstance_evalする。</p></blockquote>
+
+<p>ブロックつまりconfig.ruの内容は、そのインスタンスつまりBuilderオブジェクトのコンテキストでevalされます。ここで前の記事で作ったdraqueのconfig.ruを再掲します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="o">.</span><span class="n">reverse</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="vi">@pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+    <span class="n">replace</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">pat</span><span class="p">{</span> <span class="s2">&quot;&lt;em style=&#39;background-color:red&#39;&gt;</span><span class="si">#{</span><span class="n">pat</span><span class="si">}</span><span class="s2">&lt;/em&gt;&quot;</span> <span class="p">}</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">part</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">part</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="vi">@pattern</span><span class="p">)</span> <span class="p">{</span> <span class="n">replace</span><span class="o">[</span><span class="vg">$&amp;</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+    
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span><span class="p">,</span> <span class="sr">/rack|draque/i</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>さてconfig.ru内には<code>use</code>および<code>run</code>メソッド呼び出しが書かれています。initializeにおいてこのファイルをinstance_evalすることにより、これらはBuilderオブジェクトのメソッド呼び出しと評価されます。ちなみに、UpDownおよびFireの各クラスはトップレベルで定義されたものと解釈されるようです。では、use, runのメソッド定義を見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Builder</span>
+  <span class="k">def</span> <span class="nf">use</span><span class="p">(</span><span class="n">middleware</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="c1">#10</span>
+    <span class="vi">@use</span> <span class="o">&lt;&lt;</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span> <span class="n">middleware</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="c1">#11</span>
+    <span class="vi">@run</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>10.　#useは引数のmiddleware（これはクラス）を#newする処理をProcオブジェクトでラップして、@use配列に追加する。第2以降の引数とブロックは#newにそのまま渡される。</p></blockquote>
+
+<p>ここでのポイントは、Procオブジェクトの呼び出し時に、#newの第1引数にappが渡されてmiddleware#newの第1引数として渡される点です。ええ、例のマトリョーシカするためですね:)</p>
+
+<p>次に#runを見ます。</p>
+
+<blockquote><p>11.　#runは引数のappを@runにセットする。</p></blockquote>
+
+<p>これだけです。</p>
+
+<p>さて次に、Builder.parse_fileに戻って、続きを見ます。上記処理によりBuilderオブジェクトを生成した後に、すぐに#to_appし、evalはそれを評価するようになっています。evalしてから#to_appしてもいい気がしますが、どうなんでしょう。では#to_appを見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Builder</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">parse_file</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="c1">#8</span>
+    <span class="n">cfgfile</span> <span class="o">=</span> <span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="nb">eval</span> <span class="s2">&quot;Lack::Builder.new {</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">cfgfile</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}.to_app&quot;</span><span class="p">,</span> <span class="no">TOPLEVEL_BINDING</span><span class="p">,</span> <span class="n">config</span>
+    <span class="k">return</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">to_app</span> <span class="c1">#12</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="vi">@run</span>
+    <span class="vi">@use</span><span class="o">.</span><span class="n">reverse</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">[</span><span class="n">a</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>12.　@useに登録したmiddlewareのProcラッパーを逆順で呼び出し、injectで@runにセットしたappに順次畳み込む。</p></blockquote>
+
+<p>「マトリョーシカ」の登場です。先のconfig.ruの例で追ってみます。</p>
+
+<blockquote><ol>
+<li>appにはdraqueアプリがセットされる。</li>
+<li>@use.reverseで後からuseしたUpDown middlewareのProcラッパーが#[]つまり#callされ、その引数にdraqueが渡される。</li>
+<li>これによりdraqueをラップしたUpDownオブジェクトが生成され、injectのapp変数にセットされる。</li>
+<li>次にFire MiddlewareのProcラッパーが#callされ、その引数にUpDownオブジェクトが渡される。</li>
+<li>これによりUpDownオブジェクトをラップしたFireオブジェクトが生成され、injectのapp変数にセットされる。</li>
+<li>イテレーションが終了し、#to_appの返り値として上記Fireオブジェクトが返る。</li>
+</ol>
+</blockquote>
+
+<p>以上でbuilder.rbにおけるBuilder.parse_fileの呼び出しが完了しました。</p>
+
+<h2>server.rbに戻る</h2>
+
+<p>さて、Builder.parse_fileの呼び出し元sever.rbのappに戻ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nf">wrapped_app</span> <span class="c1">#6</span>
+    <span class="vi">@wrapped_app</span> <span class="o">||=</span> <span class="n">build_app</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">app</span> <span class="c1">#7</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="ss">Lack</span><span class="p">:</span><span class="ss">:Builder</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">options</span><span class="o">[</span><span class="ss">:config</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>#appでparse_fileからの返り値つまりビルドされたアプリが@appにセットされ、それは、#wrapped_appにおいて、更にbuild_appの引数として渡されます。ビルドされたアプリを、更にビルドするようです。#build_appを見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nf">build_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="c1">#13</span>
+    <span class="n">middleware</span><span class="o">[</span><span class="n">options</span><span class="o">[</span><span class="ss">:environment</span><span class="o">]].</span><span class="n">reverse</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">mid</span><span class="o">|</span> <span class="n">mid</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">middleware</span> <span class="c1">#14</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">middleware</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">middleware</span> <span class="c1">#15</span>
+    <span class="vi">@middleware</span> <span class="o">||=</span> <span class="k">begin</span>
+      <span class="n">m</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span><span class="o">|</span><span class="n">h</span><span class="p">,</span><span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span><span class="p">}</span>
+      <span class="c1"># m[&quot;deployment&quot;].concat [</span>
+      <span class="c1">#   [Rack::ContentLength],</span>
+      <span class="c1">#   [Rack::Chunked],</span>
+      <span class="c1">#   logging_middleware</span>
+      <span class="c1"># ]</span>
+      <span class="c1"># m[&quot;development&quot;].concat m[&quot;deployment&quot;] + [[Rack::ShowExceptions], [Rack::Lint]]</span>
+      <span class="n">m</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>13.　middlewareに登録したmiddlewareを逆順で呼び出し、injectでオブジェクト化してappに順次畳み込む。</p></blockquote>
+
+<p>Buider#to_appとそっくりな処理が出てきました。つまりto_appにおいてmiddlewareにラップされたappを、さらに別のmiddlewareでラップするようです。middlewareはメソッド呼び出しのようですから、これを追ってみましょう。</p>
+
+<blockquote><p>14.　#middlewareはServer.middlewareクラスメソッドを呼ぶ。</p>
+
+<p>15.　Server.middlewareは各環境ごとに選択された複数のmiddlewareを@middlewareに登録する。</p></blockquote>
+
+<p>なるほど各Serverオブジェクトは、defaultで共通のmiddlewareをいくつか読み込むんですね。そして、それらをappにラップするというわけです。前回の記事でRack::Lint::LintErrorが吐かれていたのは、ここでLintを組み込んでいたからなんですね。なお、Lackではこれらのmiddlewareを持っていないので、コメントアウトして空のハッシュが返るようにしています。</p>
+
+<p>さあ以上で、wrapped_appメソッドにおいて@wrapped_appにmiddlewareでラップされたWebアプリがセットされました。そして、#startにおいてserver.runに渡される引数が確定したわけです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nf">start</span> <span class="c1">#2</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">run</span> <span class="n">wrapped_app</span><span class="p">,</span> <span class="n">options</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">wrapped_app</span> <span class="c1">#6</span>
+    <span class="vi">@wrapped_app</span> <span class="o">||=</span> <span class="n">build_app</span> <span class="n">app</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあ、もう一歩です。serverもメソッド呼び出しですから見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Lack</span><span class="o">::</span><span class="no">Server</span>
+  <span class="k">def</span> <span class="nf">server</span> <span class="c1">#16</span>
+    <span class="vi">@_server</span> <span class="o">||=</span> <span class="ss">Lack</span><span class="p">:</span><span class="ss">:Handler</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>16.　Lack::Handler.default(options)を呼び出し、結果を@_serverにセットする。</p></blockquote>
+
+<h2>handler.rbを追う</h2>
+
+<p><code>handler.rb</code>に移って、その実装を見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Lack::Handler</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">default</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">{})</span> <span class="c1">#17</span>
+     <span class="ss">Lack</span><span class="p">:</span><span class="ss">:Handler</span><span class="o">::</span><span class="no">Thin</span>
+   <span class="k">rescue</span> <span class="no">LoadError</span>
+     <span class="ss">Lack</span><span class="p">:</span><span class="ss">:Handler</span><span class="o">::</span><span class="no">WEBrick</span>
+  <span class="k">end</span>
+  <span class="nb">autoload</span> <span class="ss">:WEBrick</span><span class="p">,</span> <span class="s2">&quot;lack/handler/webrick&quot;</span>
+  <span class="nb">autoload</span> <span class="ss">:Thin</span><span class="p">,</span> <span class="s2">&quot;lack/handler/thin&quot;</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<blockquote><p>17.　Lack::Handler::Thinをロードし、失敗した場合はLack::Handler::WEBrickをロードする。</p></blockquote>
+
+<p>本家Rackではもちろん引数のoptionsを使っていますが、Lackでは無視してまずはThinサーバを呼び、ダメならWEBrickを呼びます。</p>
+
+<p>これで無事、@_serverにThinまたはWEBrickサーバがセットされ、Server.startにおけるserver.runが呼べるようになりました。では、次にThinサーバのrunクラスメソッドを見てみましょう。</p>
+
+<h2>thin.rbを追う</h2>
+
+<p>Thin WebサーバのRackインタフェースはlack/handler/thin.rbです。見てみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;thin&quot;</span>
+
+<span class="k">module</span> <span class="nn">Lack::Handler</span>
+  <span class="k">class</span> <span class="nc">Thin</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{})</span> <span class="c1">#18</span>
+      <span class="n">server</span> <span class="o">=</span> <span class="o">::</span><span class="ss">Thin</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">options</span><span class="o">[</span><span class="ss">:Host</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span>
+                                  <span class="n">options</span><span class="o">[</span><span class="ss">:Port</span><span class="o">]</span> <span class="o">||</span> <span class="mi">8080</span><span class="p">,</span>
+                                  <span class="n">app</span><span class="p">)</span>
+      <span class="k">yield</span> <span class="n">server</span> <span class="k">if</span> <span class="nb">block_given?</span>
+      <span class="n">server</span><span class="o">.</span><span class="n">start</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">valid_options</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;Host=HOST&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Hostname to listen on (default: localhost)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Port=PORT&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Port to listen on (default: 8080)&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードはRackのコードそのままです。</p>
+
+<blockquote><p>18.　Thin.runでは、Thinサーバオブジェクトを生成し、#startで起動する。</p></blockquote>
+
+<p>ここでThinサーバにmiddlewareでラップされたWebアプリ（app）が渡されていることが確認できます。</p>
+
+<p>この状態で、BrowserからThinサーバに対してリクエストがあると、渡されたappのcallメソッドが呼び出され、アプリにおけるマトリョーシカ呼び出しが実行され、そのレスポンスが生成されることになります。一応、Thinサーバにおけるapp.call呼び出しのコードの部分を載せておきます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Thin</span>
+  <span class="k">class</span> <span class="nc">Connection</span> <span class="o">&lt;</span> <span class="ss">EventMachine</span><span class="p">:</span><span class="ss">:Connection</span>
+    <span class="k">def</span> <span class="nf">pre_process</span>
+
+      <span class="c1"># When we&#39;re under a non-async framework like rails, we can still spawn</span>
+      <span class="c1"># off async responses using the callback info, so there&#39;s little point</span>
+      <span class="c1"># in removing this.</span>
+      <span class="n">response</span> <span class="o">=</span> <span class="no">AsyncResponse</span>
+      <span class="kp">catch</span><span class="p">(</span><span class="ss">:async</span><span class="p">)</span> <span class="k">do</span>
+        <span class="c1"># Process the request calling the Rack adapter</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="vi">@request</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="n">response</span>
+    <span class="k">rescue</span> <span class="no">Exception</span>
+      <span class="n">handle_error</span>
+      <span class="n">terminate_request</span>
+      <span class="kp">nil</span> <span class="c1"># Signal to post_process that the request could not be processed</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>以上で、lackupから始まってサーバが起動されるまでの流れに沿った、<code>Lack</code>のコードリーディングは完了です。</p>
+
+<p>最後までお付き合いありがとうございますm(__)m</p>
+
+<p>しかし、高々100行のコードを説明するのがこんな大変なことだとは思いませんでしたorz</p>
+
+<p><a href="https://gist.github.com/3284736" title="Lack is a minified Rack just for study. — Gist">Lack is a minified Rack just for study. — Gist</a></p>
+
+<hr />
+
+<p><img src="/assets/images/2012/rack_cover.png" alt="Rack Ebook" /></p>
+
+<p><a href="http://gum.co/ZqRt" class="gumroad-button">電子書籍「エラーメッセージから学ぶRack」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<p>詳細は以下を参照して下さい。</p>
+
+<blockquote><p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p></blockquote>
+
+<p>購入ご検討のほどよろしくお願いしますm(__)m</p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/ミクロの決死圏-DVD-スティーブン・ボイド/dp/B003ZX8G5A?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B003ZX8G5A"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51VpW1uzs-L._SL160_.jpg" /></a></p>
+
+<p><a href="http://www.amazon.co.jp/ミクロの決死圏-DVD-スティーブン・ボイド/dp/B003ZX8G5A?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B003ZX8G5A">ミクロの決死圏 [DVD]</a></p>
+
+<hr />
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>精査していないので、間違いがあるかも知れません <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>すべてのファイルを含めると193行になります <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>第3引数を渡すために書いているのかもしれません <a href='#fnref:3' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/08/learn-rack-with-lack/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rackをminifyした僅か100行のLackで学ぶRackの中身" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" data-text="Rackをminifyした僅か100行のLackで学ぶRackの中身" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/08/06/use-rack-middleware" title="エラーメッセージから学ぶRack - Middlewareの魔法">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/08/10/build-a-matryoshka-with-ruby" title="マトリョーシカはRackだけのものじゃない、あなたのRubyにもマトリョーシカを！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/08/learn-rack-with-lack/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rackをminifyした僅か100行のLackで学ぶRackの中身" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" data-text="Rackをminifyした僅か100行のLackで学ぶRackの中身" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/08/learn-rack-with-lack/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>SchemeとRubyでデータ抽象を学ぼう</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>01 February 2009</span></div>
+  <h1 class='page-title'><a href="/2009/02/01/Scheme-Ruby">SchemeとRubyでデータ抽象を学ぼう</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="/2009/01/31/notitle/">前回</a>に引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
+今度はSchemeとRubyにおける
+データ抽象の違いを見ていこうと思います
+なおSchemeのコードは本書からの抜粋で
+説明は自分の要約です</p>
+
+<h2>有理数演算手続き</h2>
+
+<p>有理数に対する演算(例えばadd_rat)を考えるとき
+分子と分母の数値を個別で取り扱う手続きを考えるよりも
+分子と分母を対とした一つの有理数を対象に
+手続きを考えられたら楽である</p>
+
+<p>Schemeでは合成データを使って有理数を表現し
+この抽象データに対しての演算手続きを表現することで
+データ抽象を実現する</p>
+
+<p>Schemeで有理数に対する算術演算
+add_rat, sub_rat, mul_rat, div_rat, equal_rat?を考える
+有理数に対する演算式は次の通りである</p>
+
+<p><img src="/assets/images/2009-02-01-Scheme-Ruby.png" alt="Alt expression" /></p>
+
+<p>整数nと整数dを取って
+分子がn分母がdの有理数を返す手続きをmake_ratとし
+make_ratで作られた有理数の分子を返す手続きをnumer
+分母を返す手続きをdenomとした場合
+Schemeによる上の演算表現は以下のようになる</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">add_rat</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">make_rat</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))</span>
+                                <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)))</span>
+                           <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sub_rat</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">make_rat</span> <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)))</span>
+                           <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">mul_rat</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">make_rat</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">numer</span> <span class="nv">y</span><span class="p">))</span>
+                          <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">div_rat</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">make_rat</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))</span>
+                          <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">numer</span> <span class="nv">y</span><span class="p">))))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">equal_rat?</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">y</span><span class="p">))</span>
+            <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>これらの演算をRubyで表現してみる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">add_rat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">make_rat</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> 
+            <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">sub_rat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">make_rat</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">mul_rat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">make_rat</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+            <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">div_rat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">make_rat</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+            <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">equal_rat?</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<h2>有理数のデータ表現</h2>
+
+<p>Schemeに戻ろう
+次に有理数を表現するために
+手続きconsで構成される対を使う
+consは2つの引数を取り
+これらを部分として含む合成データオブジェクトを返す
+合成データオブジェクトの部分は手続きcarとcdrで取り出せる</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="nv">x</span> <span class="p">(</span><span class="nb">cons </span><span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
+ <span class="p">(</span><span class="nb">car </span><span class="nv">x</span><span class="p">)</span>
+ <span class="mi">1</span>
+ <span class="p">(</span><span class="nb">cdr </span><span class="nv">x</span><span class="p">)</span>
+ <span class="mi">2</span>
+</code></pre></div>
+
+
+<p>これらを使って有理数を表現する</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_rat</span> <span class="nv">n</span> <span class="nv">d</span><span class="p">)</span> <span class="p">(</span><span class="nb">cons </span><span class="nv">n</span> <span class="nv">d</span><span class="p">))</span>
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">car </span><span class="nv">x</span><span class="p">))</span>
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">x</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p>また結果を表示する手続きを加える</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">print_rat</span> <span class="nv">x</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">newline</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">display </span><span class="p">(</span><span class="nf">numer</span> <span class="nv">x</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">display </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">display </span><span class="p">(</span><span class="nf">denom</span> <span class="nv">x</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p>これで有理数演算ができるようになった</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="nv">one_half</span> <span class="p">(</span><span class="nf">make_rat</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="nf">print_rat</span> <span class="nv">one_half</span><span class="p">)</span>
+ <span class="mi">1</span><span class="nv">/2</span>
+ <span class="p">(</span><span class="k">define </span><span class="nv">one_third</span> <span class="p">(</span><span class="nf">make_rat</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="nf">print_rat</span> <span class="p">(</span><span class="nf">add_rat</span> <span class="nv">one_half</span> <span class="nv">one_third</span><span class="p">))</span>
+ <span class="mi">5</span><span class="nv">/6</span>
+ <span class="p">(</span><span class="nf">print_rat</span> <span class="p">(</span><span class="nf">mul_rat</span> <span class="nv">one_half</span> <span class="nv">one_third</span><span class="p">))</span>
+ <span class="mi">1</span><span class="nv">/6</span>
+ <span class="p">(</span><span class="nf">print_rat</span> <span class="p">(</span><span class="nf">add_rat</span> <span class="nv">one_third</span> <span class="nv">one_third</span><span class="p">))</span>
+ <span class="mi">6</span><span class="nv">/9</span>
+</code></pre></div>
+
+
+<p>なお最後の例を見るとわかるが
+先の手続きは簡約まではしない
+最大公約数gcdを使ってこれを改善する</p>
+
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_rat</span> <span class="nv">n</span> <span class="nv">d</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">g</span> <span class="p">(</span><span class="nb">gcd </span><span class="nv">n</span> <span class="nv">d</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n</span> <span class="nv">g</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">d</span> <span class="nv">g</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>さてRubyでも有理数を表現してみる
+Rubyでは配列を使うのがよさそうだ</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">reqire</span> <span class="s1">&#39;rational&#39;</span>
+ <span class="k">def</span> <span class="nf">make_rat</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+   <span class="n">g</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+   <span class="o">[</span><span class="n">n</span><span class="o">/</span><span class="n">g</span><span class="p">,</span> <span class="n">d</span><span class="o">/</span><span class="n">g</span><span class="o">]</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="n">x</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="n">x</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">print_rat</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">numer</span> <span class="n">x</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">denom</span> <span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>gcdを使うのにrationalライブラリをrequireする
+演算結果は以下の通り</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">one_half</span>
+   <span class="n">make_rat</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+ <span class="k">end</span>
+ <span class="n">print_rat</span> <span class="n">one_half</span>
+ 
+ <span class="k">def</span> <span class="nf">one_third</span>
+   <span class="n">make_rat</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>
+ <span class="k">end</span>
+ <span class="n">print_rat</span> <span class="n">one_third</span>
+ 
+ <span class="n">print_rat</span> <span class="n">add_rat</span><span class="p">(</span><span class="n">one_half</span><span class="p">,</span> <span class="n">one_third</span><span class="p">)</span>
+ 
+ <span class="n">print_rat</span> <span class="n">mul_rat</span><span class="p">(</span><span class="n">one_half</span><span class="p">,</span> <span class="n">one_third</span><span class="p">)</span>
+ 
+ <span class="n">print_rat</span> <span class="n">add_rat</span><span class="p">(</span><span class="n">one_third</span><span class="p">,</span> <span class="n">one_third</span><span class="p">)</span>
+ <span class="c1"># &gt;&gt; 1/2</span>
+ <span class="c1"># &gt;&gt; 1/3</span>
+ <span class="c1"># &gt;&gt; 5/6</span>
+ <span class="c1"># &gt;&gt; 1/6</span>
+ <span class="c1"># &gt;&gt; 2/3</span>
+</code></pre></div>
+
+
+<h2>クラスによるデータ抽象</h2>
+
+<p>でもこれは実にRubyっぽくない
+Rubyではデータ抽象にクラスを使うのがよさそうだ
+有理数クラスRatを定義してみる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;rational&quot;</span>
+ <span class="k">class</span> <span class="nc">Rat</span>
+   <span class="kp">attr_reader</span> <span class="ss">:numer</span><span class="p">,</span> <span class="ss">:denom</span>
+   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+     <span class="n">g</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">gcd</span> <span class="n">d</span>
+     <span class="vi">@numer</span><span class="p">,</span> <span class="vi">@denom</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="n">g</span><span class="p">,</span> <span class="n">d</span><span class="o">/</span><span class="n">g</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="nb">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span>
+             <span class="nb">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span><span class="p">)</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="nb">self</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span>
+             <span class="nb">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span><span class="p">)</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">*</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">numer</span><span class="p">,</span>
+             <span class="nb">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span><span class="p">)</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">/</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span>
+             <span class="nb">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">numer</span><span class="p">)</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">==</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="nb">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denom</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="nb">self</span><span class="o">.</span><span class="n">denom</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">to_s</span>
+     <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">numer</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">denom</span><span class="si">}</span><span class="s2">&quot;</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">one_half</span> <span class="o">=</span> <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Rat:0x140dc @numer=1, @denom=2&gt;</span>
+ <span class="n">one_third</span> <span class="o">=</span> <span class="no">Rat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt;#&lt;Rat:0x13ce0 @numer=1, @denom=3&gt;</span>
+ 
+ <span class="n">one_third</span><span class="o">.</span><span class="n">denom</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="n">one_half</span><span class="o">.</span><span class="n">to_s</span> <span class="c1"># =&gt; &quot;1/2&quot;</span>
+ <span class="p">(</span><span class="n">one_third</span> <span class="o">+</span> <span class="n">one_third</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span> <span class="c1"># =&gt; &quot;2/3&quot;</span>
+ <span class="p">(</span><span class="n">one_half</span> <span class="o">*</span> <span class="n">one_third</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span> <span class="c1"># =&gt; &quot;1/6&quot;</span>
+ <span class="p">(</span><span class="n">one_half</span> <span class="o">/</span> <span class="n">one_third</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span> <span class="c1"># =&gt; &quot;3/2&quot;</span>
+ <span class="n">one_half</span> <span class="o">==</span> <span class="n">one_third</span> <span class="c1"># =&gt; false</span>
+</code></pre></div>
+
+
+<p>newで渡した引数を分子分母とする
+有理数クラスのインスタンスを生成する
+分子分母にはnumer、denomメソッドでアクセスできる
+各算術演算は整数と同じ記号を使え
+算術の結果は有理数クラスのインスタンスで返される</p>
+
+<p>もちろんRubyには標準でRationalクラスがある</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">one_half</span> <span class="o">=</span> <span class="no">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+ <span class="n">one_third</span> <span class="o">=</span> <span class="no">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+ <span class="n">one_half</span> <span class="o">*</span> <span class="n">one_third</span> <span class="c1"># =&gt; Rational(1, 6)</span>
+ <span class="n">one_half</span> <span class="sr">/one_third # =&gt; Rational(3, 2)</span>
+</code></pre></div>
+
+
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
+
+<p>(追記:2009/2/5)　タイトルを「SchemeでRubyのデータ抽象を学ぼう」から「SchemeとRubyでデータ抽象を学ぼう」に変えました</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/02/01/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyでデータ抽象を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/02/01/Scheme-Ruby/" data-text="SchemeとRubyでデータ抽象を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/02/01/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/02/01/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/01/31/Scheme-Ruby-2" title="SchemeとRubyで高階関数を学ぼう ~その2~">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/02/05/Scheme-Ruby" title="SchemeとRubyでリストの操作を学ぼう">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#scheme-ref">scheme <span>8</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/02/01/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyでデータ抽象を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/02/01/Scheme-Ruby/" data-text="SchemeとRubyでデータ抽象を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/02/01/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/02/01/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

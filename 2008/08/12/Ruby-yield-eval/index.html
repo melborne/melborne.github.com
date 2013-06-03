@@ -1,0 +1,663 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyのyieldは羊の皮を被ったevalだ！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>12 August 2008</span></div>
+  <h1 class='page-title'><a href="/2008/08/12/Ruby-yield-eval">Rubyのyieldは羊の皮を被ったevalだ！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Yugui著「初めてのRuby」の９章に、Rubyの黒魔術の一つとしてeval族と称されるメソッド群が紹介されている。</p>
+
+<p><a href="http://www.amazon.co.jp/初めてのRuby-Yugui/dp/4873113679?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873113679"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41gCZhFayuL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/初めてのRuby-Yugui/dp/4873113679?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873113679">初めてのRuby</a></p>
+
+<p>危険らしい。素人が安易に手を出すべきではなさそうだ。でも魅力的らしい。</p>
+
+<p>暗黒の世界に引かれていく自分がいる…</p>
+
+<p>勉学のために覗くだけならいいだろうし、危険であればその正しい理解がより重要になるだろう。自分が学んで理解したことをここに整理してみよう。</p>
+
+<p>eval族と呼ばれるものには、instance_evalメソッド、class_evalメソッド(またはmodule_eval)、および組み込み関数evalがある。</p>
+
+<h2>instance_eval</h2>
+
+<p>Ruby空間における操作対象はオブジェクトである。オブジェクトは外からのメッセージを受け取ると、その中の対応するメソッドを起動して、そこに書かれている手続きを実行する。</p>
+
+<p>メソッドは他のオブジェクトを引数として取ることができる。引数として渡されたオブジェクトは、メソッドにおいてオブジェクトとして操作され、メソッド内の他のオブジェクトと協同して、その処理の結果をメッセージ送信者に返す。</p>
+
+<p>instance_evalメソッドは文字列オブジェクトを引数として取ることができる。しかし、このメソッドは他の一般的なメソッドとは異なり、これを文字列オブジェクトとしては扱わない。これをRubyの手続きとして扱う。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">instance_eval</span> <span class="s2">&quot;print &#39;Hello&#39;&quot;</span>   <span class="c1"># =&gt; Hello</span>
+</code></pre></div>
+
+
+<p>ここでprintは、トップレベルで実行されているように見えるけれども、"print 'Hello'"はinstance_evalの引数として、配列オブジェクト[1,2,3]に渡されているから、この配列オブジェクト内で実行されている、ということを理解しなければならない。</p>
+
+<p>そのことはこうするとよく分かるかもしれない。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">instance_eval</span> <span class="s2">&quot;print reverse&quot;</span>    <span class="c1"># =&gt; [3,2,1]</span>
+</code></pre></div>
+
+
+<p>文字列中のreverseは明らかに、メッセージを受け取る配列オブジェクトに適用されている。</p>
+
+<p>つまりinstance_evalはオブジェクトの外にいてオブジェクトの中のコンテキストで、渡された文字列をRubyコードとして評価する。</p>
+
+<p>これは確かに恐ろしいことかもしれない。なぜなら完成したプログラムに対して、そのユーザが後からキーボードで文字列を入力することによりコードを追加し改変し、場合によっては破壊できることを意味するからだ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Account</span>
+    <span class="vc">@@bank_money</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span>
+      <span class="vi">@balance</span> <span class="o">=</span> <span class="n">balance</span>
+      <span class="vc">@@bank_money</span> <span class="o">+=</span> <span class="vi">@balance</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance = @balance * 100&quot;</span>
+        <span class="c1"># =&gt;1000000</span>
+</code></pre></div>
+
+
+<p>インスタンス変数@balanceは、my_accountオブジェクトの内部状態を保持する。通常この値にアクセスするには、クラスにそのアクセッサメソッドを用意し、これを介さなければならない。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">balance</span>
+   <span class="vi">@balance</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">balance</span><span class="o">=</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span>
+   <span class="vi">@balance</span> <span class="o">=</span> <span class="n">amt</span>
+  <span class="k">end</span>
+<span class="err">または</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:balance</span>
+</code></pre></div>
+
+
+<p>Rubyのようなオブジェクト指向言語ではオブジェクトへのアクセスは原則、用意されたメソッドからしか行えない。これがオブジェクトを予期せぬ変更や破壊から守る。</p>
+
+<p>しかしinstance_evalを使えば上のようにアクセッサメソッドを介さずに、インスタンス変数@balanceの参照を変更し、その結果にアクセスすることが可能となる。</p>
+
+<p>instance_evalを使えばメソッド定義も難なくできてしまう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;def transfer_all_to_me; @balance += @@bank_money; end&quot;</span>
+   <span class="c1">#メソッドを定義する</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
+      <span class="c1"># =&gt; 50000</span>
+</code></pre></div>
+
+
+<p>transfer_all_to_meは
+僕のアカウントオブジェクトのコンテキストで生成されるので<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>、僕のオブジェクト専用のメソッド、つまりSingletonメソッド(抽象メソッド)だ。これで誰かが貯金をするたびに僕はお金持ちになっていく！</p>
+
+<p>ここでは示されていないけれども、instance_evalを使えば、ユーザから受け取った文字列を名前としてメソッドを動的に定義する、という荒技も可能だ</p>
+
+<p>行指向の文字列にはヒアドキュメントを使った方が見栄えがいい。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="o">&lt;&lt;</span><span class="no">DEF</span>
+<span class="err">    def transfer_all_to_me</span>
+<span class="err">      @balance += @@bank_money</span>
+<span class="err">    end</span>
+<span class="err">  DEF</span>
+    <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
+    <span class="k">end</span>
+  <span class="no">DEF</span>
+</code></pre></div>
+
+
+<p>こうすると、まるでブロックを渡しているように見える。</p>
+
+<p>期待に違わず、instance_evalはブロックも受け取る。ブロックの中身を受け取ったオブジェクトのコンテキストでRubyコードとして評価する。だから上のコードはこうも書ける。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+    <span class="k">def</span> <span class="nf">transfer_me_all</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>当然にブロックには引数を渡したくなる。それが人情というものだ。Ruby1.9ではinstance_execがそれを可能にする。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_exec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">arg</span><span class="o">|</span>
+    <span class="vc">@@bank_money</span> <span class="o">*=</span> <span class="n">arg</span>
+    <span class="k">def</span> <span class="nf">transfer_me_all_with_double</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_me_all_with_double</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
+      <span class="c1"># =&gt; 90000</span>
+</code></pre></div>
+
+
+<p>僕の口座が倍になった！</p>
+
+<h2>class_eval(module_eval)</h2>
+
+<p>でもあまりにこれじゃ不公平だ。僕にだって幾らかの良心というものがある。そう思ったらclass_evalを使おう。</p>
+
+<p>class_evalは、そのクラスのコンテキストで文字列やブロックを評価する。だからブロックでメソッド定義をすれば、そのメソッドはクラスのインスタンスメソッドになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="no">Account</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+    <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
+  <span class="n">his_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>  <span class="c1"># =&gt; 50000</span>
+  <span class="n">his_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>  <span class="c1"># =&gt; 70000</span>
+</code></pre></div>
+
+
+<p>これでみんながハッピーになれる！</p>
+
+<p>module_evalはclass_evalと同様に、そのモジュールのコンテキストで文字列やブロックを評価する。これを使えば後からモジュールにクラスを定義するようなことができる。</p>
+
+<h2>eval</h2>
+
+<p>Rubyにはオブジェクトを意識しないで使える、evalも用意されている。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="nb">eval</span> <span class="s2">&quot;print &#39;Hello&#39;&quot;</span>  <span class="c1"># =&gt; Hello</span>
+</code></pre></div>
+
+
+<p>evalはRubyの組み込み関数、つまりObjectクラスのインスタンスメソッドだ。これはトップレベルオブジェクトmainのinstance_evalと等価になる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="nb">eval</span> <span class="s2">&quot;print self&quot;</span>     <span class="c1"># =&gt; main</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print self&quot;</span>  <span class="c1"># =&gt; main</span>
+</code></pre></div>
+
+
+<p>つまりデフォルトでevalはmainオブジェクトのコンテキストで文字列を評価する。</p>
+
+<p>でも、第２引数に他のコンテキストを持ったBindingオブジェクトを与えた場合、evalはそのコンテキストで文字列を評価する。これによりevalの実行コンテキストをトップレベル以外にすることができる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Account</span>
+    <span class="vc">@@bank_money</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span>
+      <span class="vi">@balance</span> <span class="o">=</span> <span class="n">balance</span>
+      <span class="vc">@@bank_money</span> <span class="o">+=</span> <span class="vi">@balance</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">bind</span>    <span class="c1"># accountの環境情報を返すメソッド</span>
+      <span class="nb">binding</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="c1"># evalの第２引数にBindingオブジェクトを渡す</span>
+  <span class="c1"># ヒアドキュメントはこういうときでも便利に使える</span>
+  <span class="nb">eval</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="no">DEF</span><span class="p">,</span> <span class="n">my_account</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
+<span class="err">   def transfer_all_to_me</span>
+<span class="err">     @balance += @@bank_money</span>
+<span class="err">   end</span>
+<span class="err">  DEF</span>
+<span class="err">  my_account.transfer_all_to_me</span>
+<span class="err">  my_account.instance_eval &quot;print @balance&quot;</span>
+<span class="err">     # =&gt; 20000</span>
+   <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
+     <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
+   <span class="k">end</span>
+  <span class="no">DEF</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
+     <span class="c1"># =&gt; 20000</span>
+</code></pre></div>
+
+
+<p>これは先の例のinstance_evalの使い方と等価である。evalの第２引数にmy_accountオブジェクトのコンテキストを渡すことにより、そのコンテキストでブロックを評価する。</p>
+
+<p>evalはinstance_evalやclass_evalと異なり、引数にブロックを取れない。</p>
+
+<h2>yield</h2>
+
+<p>結局eval族は、その引数に与えられた文字列またはブロックを、それが置かれたコンテキストとは別のコンテキストで評価できるようにするものだ。</p>
+
+<p>Rubyにおいてブロックを評価する一般的方法は、ブロックを渡すメソッド内でyieldを呼ぶことである。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+    <span class="k">def</span> <span class="nf">speak</span>
+      <span class="k">yield</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="s2">&quot;hello&quot;</span> <span class="p">}</span>  <span class="c1"># =&gt; hello</span>
+</code></pre></div>
+
+
+<p>ブロックが評価されるコンテキストは基本的にそれが置かれたコンテキストだけれど、yieldに引数を取ることによってこれを変えることができる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+    <span class="k">def</span> <span class="nf">speak</span>
+      <span class="k">yield</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">talk</span>
+      <span class="k">yield</span> <span class="nb">self</span>   <span class="c1"># selfを引数に取る</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="nb">self</span> <span class="p">}</span>  <span class="c1"># =&gt; main</span>
+  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">talk</span> <span class="p">{</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span> <span class="nb">print</span> <span class="n">this</span> <span class="p">}</span>  <span class="c1"># =&gt; Charlie</span>
+</code></pre></div>
+
+
+<p>ブロックには当然メソッド定義を置くこともできるので、コンテキストの切替えと共にこれを用いれば、先に示したAccountクラスのインスタンス変数にもアクセスできるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Account</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span>
+      <span class="vi">@balance</span> <span class="o">=</span> <span class="n">balance</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">yield_eval</span>   <span class="c1">#ブロックを評価するための汎用メソッド</span>
+      <span class="k">yield</span> <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">yield_eval</span> <span class="k">do</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span>
+    <span class="k">def</span> <span class="nc">this</span><span class="o">.</span><span class="nf">add_money</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="nb">p</span> <span class="n">my_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>    <span class="c1"># =&gt; 20000</span>
+</code></pre></div>
+
+
+<p>ここでadd_moneyメソッドは、my_accountオブジェクトのSingletonメソッドである。だからブロックを受ける汎用メソッドを予め用意しておけば、先の例のinstance_eval相当のことができるようになる<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+
+<p>class_eval相当の処理をyieldで実現することもできる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="o">.</span><span class="n">yield_eval</span> <span class="k">do</span>
+    <span class="k">def</span> <span class="nf">add_money</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="vi">@balance</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">end</span>
+    <span class="kp">public</span> <span class="ss">:add_money</span>
+  <span class="k">end</span>
+  <span class="nb">p</span> <span class="n">my_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 20000</span>
+  <span class="nb">p</span> <span class="n">his_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 40000</span>
+</code></pre></div>
+
+
+<p>ここでyield_evalメソッドはAccountクラスにadd_moneyメソッドを追加する。これでみんながハッピーになれる！</p>
+
+<p>こうしてみるとyieldは、evalの底知れないパワーには及ばないとしても、プログラミングに高い自由度を与える強力なツールであることは間違いないし、まだまだ秘められたパワーを持っていそうだ。そう、だからRubyのyieldは…</p>
+
+<p>羊の皮を被ったevalに違いない！</p>
+
+<p>関連記事：
+<a href="/2008/08/02/Ruby/">Rubyのシンボルは文字列の皮を被った整数だ！</a>
+<a href="/2008/08/09/Ruby-Mix-in/">Rubyのブロックはメソッドに対するメソッドのMix-inだ！</a>
+<a href="/2008/08/16/Ruby/">Rubyのクラスはオブジェクトの母、モジュールはベビーシッター</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>Ruby1.9。Ruby1.8.7ではクラス変数@@bank_moneyがトップレベルのコンテキストで評価されてしまいうまく動作しません。なぜだろう？ <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>先の例におけるクラス変数@@bank_moneyのコンテキストは、yieldを用いる場合なぜかmainのまま変わりません。理由は分かりません。その対応版の作成は断念しました。 <a href='#fnref:2' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/08/12/Ruby-yield-eval/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのyieldは羊の皮を被ったevalだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" data-text="Rubyのyieldは羊の皮を被ったevalだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2008/08/09/Ruby-Mix-in" title="Rubyのブロックはメソッドに対するメソッドのMix-inだ！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2008/08/16/Ruby" title="Rubyのクラスはオブジェクトの母、モジュールはベビーシッター">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/08/12/Ruby-yield-eval/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのyieldは羊の皮を被ったevalだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" data-text="Rubyのyieldは羊の皮を被ったevalだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/08/12/Ruby-yield-eval/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

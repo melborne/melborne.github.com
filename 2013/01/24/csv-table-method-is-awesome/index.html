@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>24 January 2013</span></div>
+  <h1 class='page-title'><a href="/2013/01/24/csv-table-method-is-awesome">Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>─　問題１　─</h2>
+
+<blockquote><p><code>data.csv</code>ファイルには、５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をプレイした結果が次のような形で格納されている。各ゲームの平均点を求めよ。</p></blockquote>
+
+<h3>data.csv</h3>
+
+<div class="highlight"><pre><code class="text">player,gameA,gameB
+Alice,84.0,79.5
+Bob,20.0,56.5
+Jimmy,80.0,31.0
+Kent,90.5,15.5
+Ross,68.0,33.0
+</code></pre></div>
+
+
+<h2>─　僕の通った道　─</h2>
+
+<h3>1. File.readしてtransposeする</h3>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+
+<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">transpose</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;], [&quot;84.0&quot;, &quot;20.0&quot;, &quot;80.0&quot;, &quot;90.5&quot;, &quot;68.0&quot;], [&quot;79.5&quot;, &quot;56.5&quot;, &quot;31.0&quot;, &quot;15.5&quot;, &quot;33.0&quot;]]</span>
+
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span>
+</code></pre></div>
+
+
+<p>まあ、悪くはないですけど、String#linesして#splitしてってのはどうですかね。空白あっても困るし。正規表現ですか？Array#transposeはなかなかいいアイディアですけどね。</p>
+
+<h3>2. csvライブラリでreadする</h3>
+
+<p>CSVファイルって言ってるんですから、素直に標準添付ライブラリcsvを使えばいいんですよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+
+<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+
+<span class="n">headers</span> <span class="c1"># =&gt; [&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;]</span>
+<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">transpose</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;], [&quot;84.0&quot;, &quot;20.0&quot;, &quot;80.0&quot;, &quot;90.5&quot;, &quot;68.0&quot;], [&quot;79.5&quot;, &quot;56.5&quot;, &quot;31.0&quot;, &quot;15.5&quot;, &quot;33.0&quot;]]</span>
+
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span>
+</code></pre></div>
+
+
+<p>ワンステップ少なくなりましたね。それにしても、あなた、多重代入好きですねぇ。</p>
+
+<h3>3. csvライブラリで.tableする</h3>
+
+<p>でもね、このライブラリにはすごい必殺技があるんですよ。ヒヒィ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+
+<span class="n">table</span><span class="o">.</span><span class="n">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span>
+
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">table</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">table</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span>
+</code></pre></div>
+
+
+<p>えっ？何が起きたの？</p>
+
+<p>transposeは？to_fは？どこに逝ったの？誰がやったの？</p>
+
+<h2>CSV.tableって何？</h2>
+
+<p>先の<code>CSV.read</code>は二次元配列を返しますよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [[&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;], [&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+
+<span class="n">csv</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Array</span>
+<span class="n">csv</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; [&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;]</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;]</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;]</span>
+</code></pre></div>
+
+
+<p>でも、<code>CSV.table</code>はCSV::Tableというテーブル向けクラスのインスタンスを返すんですよ。ヘッダー要素には#headersでアクセスできますし。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
+<span class="n">table</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; CSV::Table</span>
+
+<span class="n">table</span><span class="o">.</span><span class="n">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span>
+</code></pre></div>
+
+
+<p>で、テーブルの各レコードは、CSV::Rowクラスのインスタンスでラップされとるんですな。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span>
+</code></pre></div>
+
+
+<p>CSV::Tableのインスタンスは、テーブルのアクセス方向を指定するモード（:row, :column, :col_or_rowの何れか）を持ってて、デフォルトでこれは<code>:col_or_row</code>（ミックスモード）にセットされますですよ。</p>
+
+<p>それでTable#[ ]メソッドに渡される引数に応じて、そのアクセス方向がよしなに判断されるってわけです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span>
+
+<span class="n">table</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;]</span>
+<span class="n">table</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="c1"># =&gt; [84.0, 20.0, 80.0, 90.5, 68.0]</span>
+<span class="n">table</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="c1"># =&gt; [79.5, 56.5, 31.0, 15.5, 33.0]</span>
+</code></pre></div>
+
+
+<p>ほら、特定フィールドのヘッダーを渡せば、そのフィールドの配列が返るだとか！</p>
+
+<p>しかも、ヘッダー値は文字列から自動的にシンボルに変換されているの、わかるでしょう？数値の値も自動でFloatになっているのわかるでしょう？</p>
+
+<p>CSV.table、最強！って、誰が言っても怒りませんよ。もう。</p>
+
+<h2>CSVインスタンスの生成オプション</h2>
+
+<p>CSVのインスタンスを生成するときに複数のオプションを渡すことができるんです。実は、CSV.tableはそのオプションの幾つかを自動設定するものなのでした。</p>
+
+<p>CSV.readにオプションを渡して、CSV.tableに対抗しますか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">,</span> <span class="ss">headers</span><span class="p">:</span><span class="kp">true</span><span class="p">,</span> <span class="ss">converters</span><span class="p">:</span> <span class="ss">:numeric</span><span class="p">,</span> <span class="n">header_converters</span><span class="p">:</span> <span class="ss">:symbol</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
+<span class="n">csv</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; CSV::Table</span>
+
+<span class="n">csv</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;]</span>
+<span class="n">csv</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="c1"># =&gt; [84.0, 20.0, 80.0, 90.5, 68.0]</span>
+<span class="n">csv</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="c1"># =&gt; [79.5, 56.5, 31.0, 15.5, 33.0]</span>
+</code></pre></div>
+
+
+<p>なあ〜るほど、なあ〜るほど。</p>
+
+<h2>─　問題２　─</h2>
+
+<blockquote><p><code>data2.csv</code>ファイルには、５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果が次のような形で格納されている。<strong>各プレイヤー毎</strong>の各ゲームの平均点を求めよ。</p></blockquote>
+
+<div class="highlight"><pre><code class="text">player,gameA,gameB
+Alice,84.0,79.5
+Bob,20.0,56.5
+Jimmy,80.0,31.0
+Kent,90.5,15.5
+Ross,68.0,33.0
+Alice,24.0,15.5
+Bob,60.0,16.5
+Jimmy,85.0,42.0
+Kent,55.5,15.5
+Ross,22.0,33.5
+Alice,64.5,39.5
+Bob,25.0,50.5
+Jimmy,60.0,61.0
+Kent,70.5,25.0
+Ross,48.0,36.5
+</code></pre></div>
+
+
+<p>次のような出力で。</p>
+
+<div class="highlight"><pre><code class="text">player  gamea  gameb
+Alice   57.50  44.83
+Bob     35.00  41.17
+Jimmy   75.00  44.67
+Kent    72.17  18.67
+Ross    46.00  34.33
+</code></pre></div>
+
+
+<p>なんか、昨日の問題に近づいて来ましたけど。</p>
+
+<blockquote><p><a href="http://melborne.github.com/2013/01/23/get-statistics-with-ruby/" title="Rubyで点数を集計するとき、あなたはどうしてますか？">Rubyで点数を集計するとき、あなたはどうしてますか？</a></p></blockquote>
+
+<h2>─　僕の通った道その２　─</h2>
+
+<h3>Enumerable#group_byを使う</h3>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data2.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
+
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Alice&quot;]=&gt;[#&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;, #&lt;CSV::Row player:&quot;Alice&quot; gamea:24.0 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Alice&quot; gamea:64.5 gameb:39.5&gt;], [:player, &quot;Bob&quot;]=&gt;[#&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;, #&lt;CSV::Row player:&quot;Bob&quot; gamea:60.0 gameb:16.5&gt;, #&lt;CSV::Row player:&quot;Bob&quot; gamea:25.0 gameb:50.5&gt;], [:player, &quot;Jimmy&quot;]=&gt;[#&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;, #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:85.0 gameb:42.0&gt;, #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:60.0 gameb:61.0&gt;], [:player, &quot;Kent&quot;]=&gt;[#&lt;CSV::Row player:&quot;Kent&quot; gamea:90.5 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Kent&quot; gamea:55.5 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Kent&quot; gamea:70.5 gameb:25.0&gt;], [:player, &quot;Ross&quot;]=&gt;[#&lt;CSV::Row player:&quot;Ross&quot; gamea:68.0 gameb:33.0&gt;, #&lt;CSV::Row player:&quot;Ross&quot; gamea:22.0 gameb:33.5&gt;, #&lt;CSV::Row player:&quot;Ross&quot; gamea:48.0 gameb:36.5&gt;]}</span>
+
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">rows</span><span class="o">|</span>
+  <span class="n">avgA</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="o">.</span><span class="n">size</span>
+  <span class="n">avgB</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="o">.</span><span class="n">size</span>
+  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, 57.5, 44.833333333333336], [&quot;Bob&quot;, 35.0, 41.166666666666664], [&quot;Jimmy&quot;, 75.0, 44.666666666666664], [&quot;Kent&quot;, 72.16666666666667, 18.666666666666668], [&quot;Ross&quot;, 46.0, 34.333333333333336]]</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s&quot;</span> <span class="o">%</span> <span class="n">table</span><span class="o">.</span><span class="n">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f&quot;</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; player  gamea  gameb</span>
+<span class="c1"># &gt;&gt; Alice   57.50  44.83</span>
+<span class="c1"># &gt;&gt; Bob     35.00  41.17</span>
+<span class="c1"># &gt;&gt; Jimmy   75.00  44.67</span>
+<span class="c1"># &gt;&gt; Kent    72.17  18.67</span>
+<span class="c1"># &gt;&gt; Ross    46.00  34.33</span>
+</code></pre></div>
+
+
+<p>概ねいい感じですか。でも、CSV::Tableのミックスモードのパワーが使えなくなっちゃった。mapして各rowから対象データを一つづつ取ってこなくちゃならないなんて。group_byがいかんですよ、これは。</p>
+
+<h3>group_byをハックする</h3>
+
+<p>なら、group_byをオーバーライドってことになりますな。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">CSV</span><span class="o">::</span><span class="no">Table</span>
+  <span class="k">def</span> <span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="ss">CSV</span><span class="p">:</span><span class="ss">:Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>さて。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data2.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
+
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Alice&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Bob&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Jimmy&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Kent&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Ross&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
+
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
+  <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span>
+  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, 57.5, 44.833333333333336], [&quot;Bob&quot;, 35.0, 41.166666666666664], [&quot;Jimmy&quot;, 75.0, 44.666666666666664], [&quot;Kent&quot;, 72.16666666666667, 18.666666666666668], [&quot;Ross&quot;, 46.0, 34.333333333333336]]</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s&quot;</span> <span class="o">%</span> <span class="n">table</span><span class="o">.</span><span class="n">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f&quot;</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; player  gamea  gameb</span>
+<span class="c1"># &gt;&gt; Alice   57.50  44.83</span>
+<span class="c1"># &gt;&gt; Bob     35.00  41.17</span>
+<span class="c1"># &gt;&gt; Jimmy   75.00  44.67</span>
+<span class="c1"># &gt;&gt; Kent    72.17  18.67</span>
+<span class="c1"># &gt;&gt; Ross    46.00  34.33</span>
+</code></pre></div>
+
+
+<p>いいんじゃないですかね！</p>
+
+<h2>CSV.new</h2>
+
+<p>ちなみに昨日の問題のような、スペース区切りの文字列データはどうですか？CSV.newしますか。col_sepオプション渡して。</p>
+
+<p>昨日の問題です。</p>
+
+<blockquote><p>５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ<strong>data</strong>がある。</p></blockquote>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span>
+<span class="sh">player gameA gameB</span>
+<span class="sh">Bob    20    56</span>
+<span class="sh">Ross   68    33</span>
+<span class="sh">Bob    78    55</span>
+<span class="sh">Kent   90    15</span>
+<span class="sh">Alice  84    79</span>
+<span class="sh">Ross   10    15</span>
+<span class="sh">Jimmy  80    31</span>
+<span class="sh">Bob    12    36</span>
+<span class="sh">Kent   88    43</span>
+<span class="sh">Kent   12    33</span>
+<span class="sh">Alice  90    32</span>
+<span class="sh">Ross   67    77</span>
+<span class="sh">Alice  56    92</span>
+<span class="sh">Jimmy  33    88</span>
+<span class="sh">Jimmy  11    87</span>
+<span class="no">EOS</span>
+</code></pre></div>
+
+
+<blockquote><p>結果を集計し以下の標準出力を得よ（totalで降順）。</p></blockquote>
+
+<div class="highlight"><pre><code class="bash">% ruby game_score.rb
+player  gameA gameB total
+Alice   230   203   433
+Jimmy   124   206   330
+Kent    190   91    281
+Ross    145   125   270
+Bob     110   147   257
+</code></pre></div>
+
+
+<h2>僕の答え</h2>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+<span class="k">class</span> <span class="nc">CSV</span>
+  <span class="k">def</span> <span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="ss">CSV</span><span class="p">:</span><span class="ss">:Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">col_sep</span><span class="ss">:&#39; &#39;</span><span class="p">,</span> <span class="ss">headers</span><span class="p">:</span><span class="kp">true</span><span class="p">,</span> <span class="ss">converters</span><span class="p">:</span> <span class="ss">:numeric</span><span class="p">,</span> <span class="n">header_converters</span><span class="p">:</span> <span class="ss">:symbol</span><span class="p">)</span> <span class="c1"># =&gt; &lt;#CSV io_type:StringIO encoding:UTF-8 lineno:0 col_sep:&quot; &quot; row_sep:&quot;\n&quot; quote_char:&quot;\&quot;&quot; headers:true&gt;</span>
+
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Ross&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Bob&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:3&gt;, [:player, &quot;Kent&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Alice&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Jimmy&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
+
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
+  <span class="n">ab</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Ross&quot;, 145, 125, 270], [&quot;Bob&quot;, 90, 91, 181], [&quot;Kent&quot;, 190, 91, 281], [&quot;Alice&quot;, 230, 203, 433], [&quot;Jimmy&quot;, 124, 206, 330]]</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total&quot;</span> <span class="o">%</span> <span class="n">csv</span><span class="o">.</span><span class="n">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">sort_by</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="o">-</span><span class="n">s</span><span class="o">.</span><span class="n">last</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d&quot;</span> <span class="o">%</span> <span class="n">line</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; player  gamea   gameb   total</span>
+<span class="c1"># &gt;&gt; Alice   230 203 433</span>
+<span class="c1"># &gt;&gt; Jimmy   124 206 330</span>
+<span class="c1"># &gt;&gt; Kent    190 91  281</span>
+<span class="c1"># &gt;&gt; Ross    145 125 270</span>
+<span class="c1"># &gt;&gt; Bob 90  91  181</span>
+</code></pre></div>
+
+
+<p>ほほぅ。</p>
+
+<hr />
+
+<br  />
+
+
+<p>本日知った<code>CSV.table</code>の感動を冷めやらぬ前に皆様にお届けしましたm(__)m</p>
+
+<hr />
+
+<blockquote><p><a href="http://doc.ruby-lang.org/ja/1.9.3/library/csv.html" title="library csv">library csv</a></p></blockquote>
+
+<hr />
+
+<p>電子書籍でRuby始めてみませんか？</p>
+
+<blockquote><p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p></blockquote>
+
+<hr />
+
+<p>(追記：2013-01-25)コード中のtypoを直しました。</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" data-text="Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/01/23/get-statistics-with-ruby" title="Rubyで点数を集計するとき、あなたはどうしてますか？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2013/01/26/make-text-upside-down-with-ruby" title="「twitter→ɹəʇʇɪʍʇのように英数字を180度回転して表示する方法」をRubyでやってみた">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" data-text="Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/01/24/csv-table-method-is-awesome/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

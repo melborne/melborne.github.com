@@ -1,0 +1,563 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>怠惰で短気で傲慢な君に贈るRubyの遅延評価</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>06 July 2012</span></div>
+  <h1 class='page-title'><a href="/2012/07/06/enumerable-memo">怠惰で短気で傲慢な君に贈るRubyの遅延評価</a> <small> Enumerable#lazyと#memoの紹介 </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Ruby2.0では<code>lazy</code>というメソッドがEnumerableモジュールに追加されるらしいよ。</p>
+
+<p><a href="https://github.com/yhara/enumerable-lazy/" title="yhara/enumerable-lazy · GitHub">yhara/enumerable-lazy · GitHub</a></p>
+
+<p><code>lazy</code>はリストに対する遅延評価を実現するメソッドなんだけど、それで意味がわからないって言うなら、それは、<strong>怠惰で短気で傲慢な君のためのメソッド</strong>だってことだから、喜んでほしいよ。</p>
+
+<p>君のような<strong>怠惰で短気で傲慢な人</strong>っていうのは、よく次のようなことを言うんだよ。</p>
+
+<pre><code>君　「おい、雑誌持って来い！」
+部下「どの雑誌ですか？」
+君　「全部だよ！」
+部下「全部って、日本で発行されてる雑誌全部ですか？」
+君　「全部ったら、全部だよ、バカが」
+
+    ...
+
+部下「全部持って来ました。ぜぇ、ぜぇ..。全部で、えっと..」
+君　「冊数なんて、どうでもいんだよ！じゃあ、そこからＡＫＢの記事、全部切り出せ！」
+部下「全部ですか... はっ、はい、分かりました...（まじか..）」
+
+    ...
+
+部下「はい、切り出しました。全部で、えっと..」
+君　「数なんて、どうでもいいって言ってんだろ、バカが。次は、タイトルのケツに４８くっ付けて、体よくしろ」
+部下「はぁ。わっ、わかりました..」
+
+    ...
+
+部下「ぜぇ、ぜぇ、ぜぇ...。終わりました...。ぜぇ、ぜぇ、ぜぇ...」
+君　「おっせーなあ。とりあえず５，６個見せろや」
+部下「はい、どうぞ...」
+
+    ...
+
+君　「あーこれでいいや、用は足りたよ。後は捨てとけ」
+
+部下「... （殺してやる）」
+</code></pre>
+
+<p>さすがに君のような人にはみんな付き合いきれないよね。で、当然にRubyもそうだったんだけど、世の中変わったんだね。2.0からは、そんな君のワガママにもRubyは答えてくれるようになるんだ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;enumerable/lazy&quot;</span>
+
+<span class="n">all_magazine</span> <span class="o">=</span> <span class="s1">&#39;ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ&#39;</span>
+
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.all_magazine</span><span class="p">)</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">w</span><span class="o">|</span> <span class="n">w</span><span class="o">.</span><span class="n">match</span> <span class="s1">&#39;AKB&#39;</span> <span class="p">}</span>
+                        <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">w</span><span class="o">|</span> <span class="n">w</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;AKB&#39;</span><span class="p">,</span> <span class="s1">&#39;*\048*&#39;</span><span class="p">)</span> <span class="p">}</span>
+                        <span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># =&gt; [&quot;*AKB48*&quot;, &quot;A*AKB48*&quot;, &quot;*AKB48*A&quot;, &quot;*AKB48*B&quot;, &quot;*AKB48*C&quot;, &quot;*AKB48*D&quot;, &quot;*AKB48*E&quot;, &quot;*AKB48*F&quot;, &quot;*AKB48*G&quot;, &quot;*AKB48*H&quot;, &quot;*AKB48*I&quot;, &quot;*AKB48*J&quot;, &quot;*AKB48*K&quot;, &quot;*AKB48*L&quot;, &quot;*AKB48*M&quot;, &quot;*AKB48*N&quot;, &quot;*AKB48*O&quot;, &quot;*AKB48*P&quot;, &quot;*AKB48*Q&quot;, &quot;*AKB48*R&quot;, &quot;*AKB48*S&quot;, &quot;*AKB48*T&quot;, &quot;*AKB48*U&quot;, &quot;*AKB48*V&quot;, &quot;*AKB48*W&quot;, &quot;*AKB48*X&quot;, &quot;*AKB48*Y&quot;, &quot;*AKB48*Z&quot;, &quot;B*AKB48*&quot;, &quot;C*AKB48*&quot;, &quot;D*AKB48*&quot;, &quot;E*AKB48*&quot;, &quot;F*AKB48*&quot;, &quot;G*AKB48*&quot;, &quot;H*AKB48*&quot;, &quot;I*AKB48*&quot;, &quot;J*AKB48*&quot;, &quot;K*AKB48*&quot;, &quot;L*AKB48*&quot;, &quot;M*AKB48*&quot;, &quot;N*AKB48*&quot;, &quot;O*AKB48*&quot;, &quot;P*AKB48*&quot;, &quot;Q*AKB48*&quot;, &quot;R*AKB48*&quot;, &quot;S*AKB48*&quot;, &quot;T*AKB48*&quot;, &quot;U*AKB48*&quot;, &quot;V*AKB48*&quot;, &quot;W*AKB48*&quot;]</span>
+</code></pre></div>
+
+
+<p>Ruby1.9で試すなら、<code>gem install enumerable-lazy</code>して、<code>require "enumerable/lazy"</code>する必要があるよ。</p>
+
+<p>ここで<code>lazy</code>はEnumeratorのサブクラスであるLazyクラスのオブジェクトを返すよ。LazyクラスにはEnumeratorでラップしたselectやmapメソッドが定義してあって、それらが代わりに呼ばれるようになるんだ。lazyしないとselectは直ちにrangeオブジェクトに対する評価を始めるから答えが帰ってこないという事態になるけど、lazyで定義されたselectが呼ばれた場合には、それはEnumeratorでラップされていてその評価を先送りにできるんだよ。</p>
+
+<p>サンプルにあった例も置いておくね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;prime&#39;</span>
+
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span> <span class="p">}</span>
+          <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">prime?</span> <span class="p">}</span>
+          <span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+          
+<span class="c1"># =&gt; [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601, 2917, 3137, 4357, 5477, 7057, 8101, 8837, 12101, 13457, 14401, 15377, 15877, 16901, 17957, 21317, 22501, 24337, 25601, 28901, 30977, 32401, 33857, 41617, 42437, 44101, 50177, 52901, 55697, 57601, 62501, 65537, 67601, 69697, 72901, 78401, 80657, 90001, 93637, 98597, 106277, 115601, 122501, 147457, 148997, 156817, 160001, 164837, 176401, 184901, 190097, 193601, 197137, 215297, 217157, 220901, 224677, 240101, 246017, 287297, 295937, 309137, 324901, 331777, 341057, 352837, 401957, 404497, 414737, 417317, 427717, 454277, 462401, 470597, 476101, 484417, 490001, 495617, 509797, 512657, 547601, 562501, 577601, 583697, 608401, 614657, 665857, 682277, 739601]</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;date&#39;</span>
+
+<span class="n">date_range</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2011</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">9999</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">date_range</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">13</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">friday?</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>  
+<span class="c1"># &gt;&gt; 2011-05-13</span>
+<span class="c1"># &gt;&gt; 2012-01-13</span>
+<span class="c1"># &gt;&gt; 2012-04-13</span>
+<span class="c1"># &gt;&gt; 2012-07-13</span>
+<span class="c1"># &gt;&gt; 2013-09-13</span>
+<span class="c1"># &gt;&gt; 2013-12-13</span>
+<span class="c1"># &gt;&gt; 2014-06-13</span>
+<span class="c1"># &gt;&gt; 2015-02-13</span>
+<span class="c1"># &gt;&gt; 2015-03-13</span>
+<span class="c1"># &gt;&gt; 2015-11-13</span>
+</code></pre></div>
+
+
+<p>最初に細かいこと考えなくていいから、君のような<strong>怠惰で短気で傲慢な人</strong>にとっては、最高のツールだろ？</p>
+
+<h2>Enumerable#memo</h2>
+
+<p>で、これを参考にして簡易版のlazyというか、お手軽に遅延評価するためのメソッド<code>Enumerable#memo</code>を考えてみたんだよ！まあ、どこかにもうありそうだけどね...</p>
+
+<p>実装は次のとおりだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+  <span class="k">def</span> <span class="nf">memo</span>
+    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="k">yield</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p><code>memo</code>はブロックを取るんだけど、ブロックの処理の結果をその第１引数に畳み込むイメージで使うんだ。<code>memo</code>を使うと、先の例は次のように書けるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">all_magazine</span> <span class="o">=</span> <span class="s1">&#39;ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ&#39;</span>
+
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.all_magazine</span><span class="p">)</span><span class="o">.</span><span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">match</span> <span class="s1">&#39;AKB&#39;</span> <span class="p">}</span>
+                   <span class="o">.</span><span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;AKB&#39;</span><span class="p">,</span> <span class="s1">&#39;*\048*&#39;</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+                   
+<span class="c1"># =&gt; [&quot;*AKB48*&quot;, &quot;A*AKB48*&quot;, &quot;*AKB48*A&quot;, &quot;*AKB48*B&quot;, &quot;*AKB48*C&quot;, &quot;*AKB48*D&quot;, &quot;*AKB48*E&quot;, &quot;*AKB48*F&quot;, &quot;*AKB48*G&quot;, &quot;*AKB48*H&quot;, &quot;*AKB48*I&quot;, &quot;*AKB48*J&quot;, &quot;*AKB48*K&quot;, &quot;*AKB48*L&quot;, &quot;*AKB48*M&quot;, &quot;*AKB48*N&quot;, &quot;*AKB48*O&quot;, &quot;*AKB48*P&quot;, &quot;*AKB48*Q&quot;, &quot;*AKB48*R&quot;, &quot;*AKB48*S&quot;, &quot;*AKB48*T&quot;, &quot;*AKB48*U&quot;, &quot;*AKB48*V&quot;, &quot;*AKB48*W&quot;, &quot;*AKB48*X&quot;, &quot;*AKB48*Y&quot;, &quot;*AKB48*Z&quot;, &quot;B*AKB48*&quot;, &quot;C*AKB48*&quot;, &quot;D*AKB48*&quot;, &quot;E*AKB48*&quot;, &quot;F*AKB48*&quot;, &quot;G*AKB48*&quot;, &quot;H*AKB48*&quot;, &quot;I*AKB48*&quot;, &quot;J*AKB48*&quot;, &quot;K*AKB48*&quot;, &quot;L*AKB48*&quot;, &quot;M*AKB48*&quot;, &quot;N*AKB48*&quot;, &quot;O*AKB48*&quot;, &quot;P*AKB48*&quot;, &quot;Q*AKB48*&quot;, &quot;R*AKB48*&quot;, &quot;S*AKB48*&quot;, &quot;T*AKB48*&quot;, &quot;U*AKB48*&quot;, &quot;V*AKB48*&quot;, &quot;W*AKB48*&quot;]</span>
+</code></pre></div>
+
+
+<p>つまり、ブロックの中でifを使えばselectになって、unlessを使えばrejectになって、条件分岐がなければmapになる、ってことだね。だからmemoを使ってselect, reject, mapを定義するなら次のようになるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+  <span class="k">def</span> <span class="nf">sel</span>
+    <span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="k">if</span> <span class="k">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">rej</span>
+    <span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="k">unless</span> <span class="k">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">mp</span>
+    <span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="k">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">memo</span>
+    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="k">yield</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>残りの２つの例でmemoを使ったものも示すよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;prime&#39;</span>
+
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">memo</span> <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span> <span class="p">}</span>
+          <span class="o">.</span><span class="n">memo</span> <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">prime?</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+          
+<span class="c1"># =&gt; [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601, 2917, 3137, 4357, 5477, 7057, 8101, 8837, 12101, 13457, 14401, 15377, 15877, 16901, 17957, 21317, 22501, 24337, 25601, 28901, 30977, 32401, 33857, 41617, 42437, 44101, 50177, 52901, 55697, 57601, 62501, 65537, 67601, 69697, 72901, 78401, 80657, 90001, 93637, 98597, 106277, 115601, 122501, 147457, 148997, 156817, 160001, 164837, 176401, 184901, 190097, 193601, 197137, 215297, 217157, 220901, 224677, 240101, 246017, 287297, 295937, 309137, 324901, 331777, 341057, 352837, 401957, 404497, 414737, 417317, 427717, 454277, 462401, 470597, 476101, 484417, 490001, 495617, 509797, 512657, 547601, 562501, 577601, 583697, 608401, 614657, 665857, 682277, 739601]</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;date&#39;</span>
+
+<span class="n">date_range</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2011</span><span class="p">)</span><span class="o">.</span><span class="n">.</span><span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">9999</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">date_range</span><span class="o">.</span><span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">d</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">13</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">friday?</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># &gt;&gt; 2011-05-13</span>
+<span class="c1"># &gt;&gt; 2012-01-13</span>
+<span class="c1"># &gt;&gt; 2012-04-13</span>
+<span class="c1"># &gt;&gt; 2012-07-13</span>
+<span class="c1"># &gt;&gt; 2013-09-13</span>
+<span class="c1"># &gt;&gt; 2013-12-13</span>
+<span class="c1"># &gt;&gt; 2014-06-13</span>
+<span class="c1"># &gt;&gt; 2015-02-13</span>
+<span class="c1"># &gt;&gt; 2015-03-13</span>
+<span class="c1"># &gt;&gt; 2015-11-13</span>
+</code></pre></div>
+
+
+<p>ちょっと手軽に遅延評価できる感じで、いいよね？</p>
+
+<hr />
+
+<p>(追記：2012-07-25) yharaさんの<a href="https://github.com/yhara/enumerable-lazy/" title="yhara/enumerable-lazy · GitHub">yhara/enumerable-lazy · GitHub</a>をよく見たら、Enumerable::Lazy.newには既に上に書いたmemoの仕組みが用意してあって、しかも2.0.0-devを試してみたら、Enumerable#lazyが既にブロックを渡せるようになっていました。従って、何の苦もなく次のようにできるのでした。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.all_magazine</span><span class="p">)</span><span class="o">.</span><span class="n">lazy</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">match</span> <span class="s1">&#39;AKB&#39;</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>すばらしい！</p>
+
+<hr />
+
+<p>参考資料：</p>
+
+<p><a href="http://route477.net/d/?date=20110718#p02" title="Route 477 - 「Enumerable#lazy」＠松江RubyKaigi03 ">Route 477 - 「Enumerable#lazy」＠松江RubyKaigi03 </a></p>
+
+<p><a href="http://d.hatena.ne.jp/ku-ma-me/20091111/p2" title="enumerabler.rb: Enumerable の遅延評価版メソッドライブラリ - まめめも">enumerabler.rb: Enumerable の遅延評価版メソッドライブラリ - まめめも</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/怠惰を手に入れる方法-ウェンディ・ワッサースタイン/dp/4806713864?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4806713864"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51h1Refyo-L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/怠惰を手に入れる方法-ウェンディ・ワッサースタイン/dp/4806713864?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4806713864">怠惰を手に入れる方法</a> by ウェンディ・ワッサースタイン</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/06/enumerable-memo/" class="hatena-bookmark-button" data-hatena-bookmark-title="怠惰で短気で傲慢な君に贈るRubyの遅延評価" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/06/enumerable-memo/" data-text="怠惰で短気で傲慢な君に贈るRubyの遅延評価" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/06/enumerable-memo/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/06/enumerable-memo/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/07/03/feature-request-enumerable-with" title="はじめてのふぃちゃありくえすと〜Ruby編">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/07/12/object-repeat-take-care-of-sequence" title="RubyにおけるシーケンスはObject#repeatに任せなさい！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/06/enumerable-memo/" class="hatena-bookmark-button" data-hatena-bookmark-title="怠惰で短気で傲慢な君に贈るRubyの遅延評価" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/06/enumerable-memo/" data-text="怠惰で短気で傲慢な君に贈るRubyの遅延評価" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/06/enumerable-memo/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/06/enumerable-memo/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

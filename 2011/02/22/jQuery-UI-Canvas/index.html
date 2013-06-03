@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>jQuery UIでCanvasアニメーションを操作しようよ</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>22 February 2011</span></div>
+  <h1 class='page-title'><a href="/2011/02/22/jQuery-UI-Canvas">jQuery UIでCanvasアニメーションを操作しようよ</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>HTML5 Canvasがマイブームです。でも慣れないJavaScriptに悪戦苦闘しています。なかなかキレイにコードが書けません...</p>
+
+<p><a href="http://crayovas.heroku.com/">crayovas</a>、<a href="http://aclock.heroku.com/">aclock</a>に続き、デモを作ったので公開します。jQuery UIのスライダーを使って、ボールの速度や色の属性を調整できます。</p>
+
+<p>まあ、それだけです..</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110222/20110222190656.png" alt="image" /></p>
+
+<p><a href="http://eqball.heroku.com/">eqball</a></p>
+
+<p>以下では前回のデモと異なる部分を中心に説明します。その他の箇所は前回の記事を読んでください。</p>
+
+<h2>ファイル構成</h2>
+
+<p>ファイル構成は次のようになります。</p>
+
+<div class="highlight"><pre><code class="bash"> .
+ ├── Gemfile
+ ├── Gemfile.lock
+ ├── config.ru
+ ├── eqball.rb
+ ├── public
+ │ ├── css
+ │ │ └── ui-lightness
+ │ │     ├── images
+ │ │     │ ├── ui-bg_diagonals.. png
+ │ │     │ ├── ui-bg_diagonals.. png
+ │ │     │ ├──            :
+ │ │     │ └── ui-icons_ffffff_256x240.png
+ │ │     └── jquery-ui-1.8.9.custom.css
+ │ └── javascripts
+ │     └── eqball.js
+ └── views
+     ├── index.haml
+     ├── layout.haml
+     └── style.scss
+</code></pre></div>
+
+
+<p>デモではjQuery UIのslider widget<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>を使っています。public/css/以下のファイル群はsliderのテーマファイルです。以下から取得してpublic以下に配置します。</p>
+
+<p><a href="http://jqueryui.com/download">jQueryUI</a></p>
+
+<h2>layout.haml</h2>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">!!!</span> <span class="mi">5</span>
+<span class="o">%</span><span class="n">html</span>
+  <span class="o">%</span><span class="n">head</span>
+    <span class="o">%</span><span class="n">meta</span><span class="p">{</span><span class="ss">:&#39;http-equiv&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="ss">:content</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">}</span>
+    <span class="o">%</span><span class="n">title</span><span class="o">=</span> <span class="no">APP_TITLE</span>
+    <span class="o">%</span><span class="n">link</span><span class="p">{</span><span class="ss">:rel</span> <span class="o">=&gt;</span> <span class="s1">&#39;stylesheet&#39;</span><span class="p">,</span> <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s1">&#39;/style.css&#39;</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/css&#39;</span><span class="p">}</span>
+    <span class="o">%</span><span class="n">link</span><span class="p">{</span><span class="ss">:rel</span> <span class="o">=&gt;</span> <span class="s2">&quot;stylesheet&quot;</span><span class="p">,</span> <span class="ss">:href</span> <span class="o">=&gt;</span> <span class="s2">&quot;/css/ui-lightness/jquery-ui-1.8.9.custom.css&quot;</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/css&quot;</span><span class="p">}</span>
+    <span class="o">%</span><span class="n">script</span><span class="p">{</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span> <span class="ss">:src</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js&quot;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">}</span>
+    <span class="o">%</span><span class="n">script</span><span class="p">{</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span> <span class="ss">:src</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js&quot;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">}</span>
+    <span class="o">%</span><span class="n">script</span><span class="p">{</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span> <span class="ss">:src</span> <span class="o">=&gt;</span> <span class="s2">&quot;/javascripts/eqball.js&quot;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">}</span>
+  <span class="o">%</span><span class="n">body</span>
+    <span class="o">=</span> <span class="k">yield</span>
+</code></pre></div>
+
+
+<p>スライダーのcssファイルにリンクを張ります。jQueryとjQuery UI本体はGoogleが提供するものを使います。</p>
+
+<h2>index.haml</h2>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">%</span><span class="n">header</span>
+<span class="c1">#main</span>
+  <span class="o">%</span><span class="n">h2</span> <span class="no">HTML5</span> <span class="no">Canvas</span> <span class="o">&amp;</span> <span class="n">jQuery</span> <span class="no">UI</span> <span class="no">Demo</span>
+  <span class="o">%</span><span class="n">canvas</span><span class="c1">#eqball{:width =&gt; &#39;1000px&#39;, :height =&gt; &#39;500px&#39;}Only for html5 adapted browsers</span>
+  <span class="o">-</span><span class="sx">%w(size spx spy trail red green blue alpha)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+    <span class="o">.</span><span class="n">box</span>
+      <span class="o">%</span><span class="n">label</span><span class="p">{</span><span class="ss">:for</span> <span class="o">=&gt;</span> <span class="nb">id</span><span class="p">}</span><span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">:&quot;</span>
+      <span class="o">%</span><span class="n">input</span><span class="p">{</span><span class="ss">:id</span> <span class="o">=&gt;</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="ss">:style</span> <span class="o">=&gt;</span> <span class="s2">&quot;color:#F6931F;font-weight:bold&quot;</span><span class="p">}</span>
+      <span class="o">%</span><span class="n">span</span><span class="o">.</span><span class="n">slider</span><span class="p">{</span><span class="ss">:id</span> <span class="o">=&gt;</span> <span class="nb">id</span><span class="p">}</span>
+<span class="o">%</span><span class="n">footer</span>
+  <span class="o">%</span><span class="n">a</span><span class="p">{</span><span class="ss">:href</span> <span class="o">=&gt;</span> <span class="no">CREDIT</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">=</span><span class="no">CREDIT</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>ボールのサイズ、速度、軌跡、色を調整するために８個のスライダーと対応するラベルを用意します。</p>
+
+<h2>eqball.js(1)</h2>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="kd">var</span> <span class="nx">ball</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">radius</span> <span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
+  <span class="nx">x</span> <span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+  <span class="nx">y</span> <span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+  <span class="nx">spx</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nx">spy</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nx">color</span> <span class="o">:</span> <span class="s1">&#39;rgba(30,30,30,1)&#39;</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">_360</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span>
+<span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">radius</span><span class="p">,</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">radius</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">bg_alpha</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+  
+  <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="nx">bounce</span><span class="p">(</span><span class="nx">ball</span><span class="p">)</span> <span class="p">},</span> <span class="mi">40</span><span class="p">);</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.slider&quot;</span><span class="p">).</span><span class="nx">slider</span><span class="p">({</span> <span class="nx">orientation</span><span class="o">:</span> <span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="nx">range</span><span class="o">:</span> <span class="s1">&#39;min&#39;</span> <span class="p">});</span>
+  
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.slider#size&quot;</span><span class="p">).</span><span class="nx">slider</span><span class="p">({</span> <span class="nx">min</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">max</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">radius</span><span class="p">,</span>
+    <span class="nx">slide</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">ui</span><span class="p">){</span>
+      <span class="nx">ball</span><span class="p">.</span><span class="nx">radius</span> <span class="o">=</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+      <span class="nx">label</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">ui</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+<p>ballオブジェクトを生成しsetInterval()でbounce関数に一定周期で渡します。スライダーの初期設定と操作されたときのイベントを$(".slider").sliderの引数として記述します。slideイベントでスライダーの値ui.valueをボールの各属性にセットします。</p>
+
+<p>後述のlabel関数でラベルの表示も変更します。ここでは、サイズを変更するスライダーのコードのみを示していますが、他のスライダーについても同じように記述します。</p>
+
+<h2>eqball.js(2)</h2>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">label</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">ui</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;input#&quot;</span><span class="o">+</span><span class="nx">id</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">ui</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">bounce</span> <span class="p">(</span><span class="nx">ball</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">rad</span> <span class="o">=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">radius</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">ball</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="nx">rad</span> <span class="o">||</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">+</span><span class="nx">rad</span><span class="p">)</span> <span class="p">{</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">spx</span> <span class="o">=</span> <span class="o">-</span><span class="nx">ball</span><span class="p">.</span><span class="nx">spx</span> <span class="p">};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">ball</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="nx">rad</span> <span class="o">||</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">+</span><span class="nx">rad</span><span class="p">)</span> <span class="p">{</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">spy</span> <span class="o">=</span> <span class="o">-</span><span class="nx">ball</span><span class="p">.</span><span class="nx">spy</span> <span class="p">};</span>
+  <span class="nx">ball</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">spx</span><span class="p">;</span>
+  <span class="nx">ball</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">spy</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">ctx</span>
+  <span class="nx">fadeToClear</span><span class="p">(</span><span class="nx">bg_alpha</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">arc</span><span class="p">(</span><span class="nx">ball</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">rad</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">_360</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">ball</span><span class="p">.</span><span class="nx">color</span><span class="p">;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">fadeToClear</span> <span class="p">(</span><span class="nx">alpha</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">ctx</span><span class="p">;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">rgba</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">240</span><span class="p">,</span><span class="nx">alpha</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>label関数でスライダーのラベルの表示を変更します。bounce関数でボールを描画します。キャンバスの境界でボールが反転するように、if条件でspx spyの向きを変えます。この反転条件は手抜きでボールが壁に沈んでしまいますがここではよしとします。</p>
+
+<p>fadeToClear関数でキャンバスをクリアしたのち、ctx.arc ~ ctx.fillでボールを描きます。fadeToClear関数はボールの軌跡を残せるようにclearRectせずに、alpha値を調整したキャンバスの色を再描画します。</p>
+
+<p>視覚に訴えるプログラミングも楽しいですね！</p>
+
+<p>Enjoy Your Canvas Life!</p>
+
+<p>ソースコードは以下にあります</p>
+
+<p><a href="https://github.com/melborne/EQBall">EQBall</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>http://jqueryui.com/demos/slider/ <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" class="hatena-bookmark-button" data-hatena-bookmark-title="jQuery UIでCanvasアニメーションを操作しようよ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" data-text="jQuery UIでCanvasアニメーションを操作しようよ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/02/18/Canvas-Heroku" title="CanvasアニメーションをHerokuで公開しようよ！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/05/10/ABC" title="ABCでもマリオを奏でたいよ！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#sinatra-ref">sinatra <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#canvas-ref">canvas <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#jquery-ref">jquery <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" class="hatena-bookmark-button" data-hatena-bookmark-title="jQuery UIでCanvasアニメーションを操作しようよ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" data-text="jQuery UIでCanvasアニメーションを操作しようよ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/02/22/jQuery-UI-Canvas/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

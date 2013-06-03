@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>SchemeとRubyで写像の入れ子を学ぼう</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>08 February 2009</span></div>
+  <h1 class='page-title'><a href="/2009/02/08/Scheme-Ruby">SchemeとRubyで写像の入れ子を学ぼう</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
+SchemeとRubyで写像の入れ子を見ていきます
+なおSchemeのコードは本書からの抜粋で
+説明は自分の要約です</p>
+
+<h2>整数の和の素数列</h2>
+
+<p>1からnの範囲において j &lt; i なる2つの整数 i, j の和が
+素数になるものを見つける例を通して写像の入れ子を学ぼう</p>
+
+<p>nが6の場合のペアは以下のようになる</p>
+
+<blockquote><p>i      2  3  4  4  5  6  6
+j      1  2  1  3  2  1  5
+i+j    3  5  5  7  7  7  11</p></blockquote>
+
+<p>戦略としてはn以下の正の整数のすべてのペア(i, j)を生成し
+その合計が素数であるものを選択し
+選択されたペアからそれに合計を加えたセット(i, j, i+j)を作る</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span>
+    <span class="o">`</span><span class="p">()</span>
+    <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">j</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="nv">i</span> <span class="nv">j</span><span class="p">))</span>
+            <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">))))</span>
+          <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="nv">n</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p>enumerate_interval 1 nで1からnの各整数iを生成し
+これを次の段のmap手続きに渡すmap手続きに作用させる
+次段のmapでは受け取った整数iに対し
+enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
+リストi jを生成する
+これをaccumulate手続きに渡したappendで
+順次並べていけば目的の対のセットができ上がる</p>
+
+<p>次にその和が素数であるものを見つける手続きprime_sum?と
+結果のセットを作る手続きmake_pair_sumを書く</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">prime_sum?</span> <span class="nv">pair</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">prime?</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">))))</span>
+ 
+    
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_pair_sum</span> <span class="nv">pair</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>これらを繋いで目的の手続きprime_sum_pairsが得られる</p>
+
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">prime_sum_pairs</span> <span class="nv">n</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">map </span><span class="nv">make_pair_sum</span>
+       <span class="p">(</span><span class="nf">filter</span> <span class="nv">prime_sum?</span>
+          <span class="p">(</span><span class="nf">flatmap</span>
+             <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">j</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="nv">i</span> <span class="nv">j</span><span class="p">))</span>
+                   <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">))))</span>
+             <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="nv">n</span><span class="p">)))))</span>
+ 
+ <span class="p">(</span><span class="nf">prime_sum_pairs</span> <span class="mi">6</span><span class="p">)</span>
+ <span class="p">((</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">2</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">11</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p>なおここではmapとappendによるaccumulateの手続きを
+flatmap手続きとして抽象化している</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">flatmap</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span> <span class="o">`</span><span class="p">()</span> <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">seq</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<h2>Ruby版素数列</h2>
+
+<p>同じことをRubyでもやってみる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">flatmap</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+   <span class="n">accumulate</span><span class="p">(</span><span class="ss">:append</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">))</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+   <span class="n">prime?</span><span class="p">(</span><span class="n">car</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="o">+</span> <span class="n">car</span><span class="p">(</span><span class="n">cdr</span><span class="p">(</span><span class="n">pair</span><span class="p">)))</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">make_pair_sum</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">car</span><span class="p">(</span><span class="n">pair</span><span class="p">),</span> <span class="n">car</span><span class="p">(</span><span class="n">cdr</span><span class="p">(</span><span class="n">pair</span><span class="p">))</span>
+   <span class="n">list</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">prime_sum_pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="n">mapping</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">map</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span> <span class="n">list</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">},</span> <span class="n">enumerate_interval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">}</span>
+   <span class="n">seq</span> <span class="o">=</span> <span class="n">enumerate_interval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+   <span class="n">list</span> <span class="o">=</span> <span class="n">filter</span><span class="p">(</span><span class="nb">method</span><span class="p">(</span><span class="ss">:prime_sum?</span><span class="p">),</span> <span class="n">flatmap</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">seq</span><span class="p">))</span>
+   <span class="n">map</span><span class="p">(</span><span class="nb">method</span><span class="p">(</span><span class="ss">:make_pair_sum</span><span class="p">),</span> <span class="n">list</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">_p</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="n">x</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">chop</span>
+ <span class="k">end</span>
+ 
+ <span class="n">_p</span> <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; &quot;2 1 3  3 2 5  4 1 5  4 3 7  5 2 7  6 1 7  6 5 11 &quot;</span>
+</code></pre></div>
+
+
+<h2>Arrayクラス版素数列</h2>
+
+<p>Arrayクラスの各種メソッドを使えば
+もう少しRubyらしくなる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+ <span class="k">end</span>
+ <span class="n">pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1], [3, 1], [3, 2], [4, 1], [4, 2], [4, 3], [5, 1], [5, 2], [5, 3], [5, 4], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5]]</span>
+ 
+ <span class="k">def</span> <span class="nf">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+   <span class="n">prime?</span> <span class="n">pair</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">make_list</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+   <span class="n">pair</span> <span class="o">&lt;&lt;</span> <span class="n">pair</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">prime_sum_pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">pair</span><span class="o">|</span> <span class="n">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">?</span> <span class="n">arr</span> <span class="o">&lt;&lt;</span> <span class="n">make_list</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">:</span> <span class="n">arr</span><span class="p">}</span>
+ <span class="k">end</span>
+ 
+ <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1, 3], [3, 2, 5], [4, 1, 5], [4, 3, 7], [5, 2, 7], [6, 1, 7], [6, 5, 11]]</span>
+</code></pre></div>
+
+
+<h2>集合Sの順列</h2>
+
+<p>Schemeに戻って
+先のflatmap手続きを使って
+集合Sのすべての順列を求めてみよう</p>
+
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">permutations</span> <span class="nv">s</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">s</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="p">())</span>
+       <span class="p">(</span><span class="nf">flatmap</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">p</span><span class="p">)</span> <span class="p">(</span><span class="nb">cons </span><span class="nv">x</span> <span class="nv">p</span><span class="p">))</span>
+                    <span class="p">(</span><span class="nf">permutations</span> <span class="p">(</span><span class="nf">remove</span> <span class="nv">x</span> <span class="nv">s</span><span class="p">))))</span>
+              <span class="nv">s</span><span class="p">)))</span>
+ 
+ <span class="p">(</span><span class="nf">permutations</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+ <span class="p">((</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p>内側のmap手続きで
+外側のflatmapから渡された要素xを除く集合に対し
+すべての組の順列を求めることを再帰的に繰り返す</p>
+
+<p>要素xを除く手続きは以下のようになる</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">remove</span> <span class="nv">item</span> <span class="nv">seq</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">filter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">not </span><span class="p">(</span><span class="nb">= </span><span class="nv">x</span> <span class="nv">item</span><span class="p">)))</span>
+       <span class="nv">seq</span><span class="p">))</span>
+</code></pre></div>
+
+
+<h2>Ruby版順列</h2>
+
+<p>Rubyでもpermutationsを書いてみる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+   <span class="n">mapping</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">map</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="n">cons</span> <span class="n">x</span><span class="p">,</span> <span class="nb">p</span> <span class="p">},</span> <span class="n">permutations</span><span class="p">(</span><span class="n">remove</span> <span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="p">}</span>
+   <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">nil?</span>
+     <span class="n">list</span> <span class="kp">nil</span>
+   <span class="k">else</span>
+     <span class="n">flatmap</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+   <span class="n">filter</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">item</span> <span class="p">},</span> <span class="n">seq</span><span class="p">)</span>
+ <span class="k">end</span>
+ 
+ <span class="n">_p</span> <span class="n">permutations</span><span class="p">(</span><span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1 2 3  1 3 2  2 1 3  2 3 1  3 1 2  3 2 1 &quot;</span>
+</code></pre></div>
+
+
+<p>RubyのArrayクラスにはpermutationというメソッドが既にある</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">permutation</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]</span>
+</code></pre></div>
+
+
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
+
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
+
+<p>ジェラルド・ジェイ サスマン, ジュリー サスマン, and ハロルド エイブルソン</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/02/08/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyで写像の入れ子を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/02/08/Scheme-Ruby/" data-text="SchemeとRubyで写像の入れ子を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/02/08/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/02/08/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/02/06/Scheme-Ruby" title="SchemeとRubyで接続インタフェースを学ぼう">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/02/15/Scheme-Ruby" title="SchemeとRubyで図形言語を学ぼう">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#scheme-ref">scheme <span>8</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/02/08/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyで写像の入れ子を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/02/08/Scheme-Ruby/" data-text="SchemeとRubyで写像の入れ子を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/02/08/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/02/08/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

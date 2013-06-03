@@ -1,0 +1,1122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>エラーメッセージから学ぶRack - Middlewareの魔法</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>06 August 2012</span></div>
+  <h1 class='page-title'><a href="/2012/08/06/use-rack-middleware">エラーメッセージから学ぶRack - Middlewareの魔法</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>前回の記事「<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack最初の一歩">エラーメッセージから学ぶRack - 最初の一歩</a>」の続きです。</p>
+
+<hr />
+
+<p>噂によるとRackにはMiddlewareなる魔法があるそうです。そしてRack古文書にはMiddlewareについて次のようにあります。</p>
+
+<blockquote><p><code>use</code>の呪文を唱えよ。さすれば扉は開かれん</p></blockquote>
+
+<h2>準備</h2>
+
+<p>前回作った、なんちゃってWebフレームワーク「draque」を継続して使います。<code>config.ru</code>が少し長くなったので、Webアプリの本体を別ファイル<code>draque.rb</code>に移します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#draque.rb</span>
+<span class="k">module</span> <span class="nn">Draque</span>
+  <span class="vc">@@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">get</span><span class="p">:{}</span> <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">]</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="o">=</span> <span class="vc">@@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span>
+      <span class="n">res</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="o">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="vc">@@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span> <span class="o">=</span> <span class="n">blk</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">Draque</span><span class="p">)</span>
+
+<span class="n">get</span> <span class="s1">&#39;/draque&#39;</span> <span class="k">do</span>
+  <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
+  <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">headers</span>
+  <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+  <span class="o">[</span><span class="s2">&quot;&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;&quot;</span><span class="o">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">draque_body</span>
+  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;http://www.dqx.jp/storage/img/top/main_visual.png&#39;&gt;&quot;</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">not_found</span>
+  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p><code>config.ru</code>は次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h2>useの呪文</h2>
+
+<p>さて早速、<code>use</code>の呪文を試してみます。<code>config.ru</code>にuseを追加します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="n">use</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><code>rackup</code>します。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+~/.rbenv/.../rack/builder.rb:77:in <span class="sb">`</span>use<span class="s1">&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
+<span class="s1">        from config.ru:4:in `block in &lt;main&gt;&#39;</span>
+</code></pre></div>
+
+
+<p>引数が足りないと言われました。おそらくmiddlewareを渡すものと思われます。しかしmiddlewareが何なのかわからないので、例によってまずは<code>1</code>を渡してrackupしてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="n">use</span> <span class="mi">1</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>block in use<span class="s1">&#39;: undefined method `new&#39;</span> <span class="k">for </span>1:Fixnum <span class="o">(</span>NoMethodError<span class="o">)</span>
+</code></pre></div>
+
+
+<p>1にはnewメソッドが無いと言われました。これでクラスが期待されている、つまり<strong>middlewareはクラスである</strong>ということが分かりました<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。それでは、差し当たりUpDownというクラスを作って渡してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>initialize<span class="err">&#39;</span>: wrong number of arguments<span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span> <span class="o">(</span>ArgumentError<span class="o">)</span>
+</code></pre></div>
+
+
+<p>今度はinitializeの引数が足りないと言われました。では１引数のinitializeを定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</code></pre></div>
+
+
+<p>ポート9292でThin Webサーバが立ち上がりました。</p>
+
+<p>Browserでhttp://localhost:9292 にアクセスしてみます。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for</span> <span class="c">#&lt;UpDown:0x00000101053fc8&gt;</span>
+</code></pre></div>
+
+
+<p>UpDownオブジェクトに<code>call</code>メソッドがないと言われました。では、UpDown#callを定義してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span>
+    
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>今度はどうでしょう。</p>
+
+<div class="highlight"><pre><code class="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
+        config.ru:10:in <span class="sb">`</span>call<span class="err">&#39;</span>
+</code></pre></div>
+
+
+<p>引数がないと言われました。ん？</p>
+
+<p>では引数を付けてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer
+</code></pre></div>
+
+
+<p>Statusは100以上の数でなければならないとのRack::Lint::LintErrorが吐かれました。これって...</p>
+
+<p>いつかきた道..ですよね？</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="mi">200</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
+127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:03:10<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010
+</code></pre></div>
+
+
+<p>ほら！</p>
+
+<p>第３返り値に#eachできるボディでしたね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">},</span> <span class="s2">&quot;Hello, from UpDown&quot;</span><span class="o">.</span><span class="n">chars</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img src="/assets/images/draque6.png" alt="draque6" /></p>
+
+<p>いいですね！</p>
+
+<p>  ・ ・ ・</p>
+
+<p>って、良くないです。runした<code>draque</code>がレンダリングされないじゃないですか...</p>
+
+<h2>draqueを探す</h2>
+
+<p>さて、どうしますか。</p>
+
+<p>そう言えばinitializeに渡した引数、あれは何でしょうね。<code>p</code>してみましょうか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="nb">p</span> <span class="n">arg</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">},</span> <span class="s2">&quot;Hello, from UpDown&quot;</span><span class="o">.</span><span class="n">chars</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+<span class="c">#&lt;Method: Rack::Builder(Draque)#draque&gt;</span>
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:14:13<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0012
+127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:14:14<span class="o">]</span> <span class="s2">&quot;GET /favicon.ico HTTP/1.1&quot;</span> 200 - 0.0009
+</code></pre></div>
+
+
+<p>なんとinitializeには<code>draque</code>が渡っていました。驚愕の事実。</p>
+
+<p>そうすると、UpDown#callの中でdraqueをcallすれば、draqueがレンダリングされますか？やってみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<p><img src="/assets/images/draque7.png" alt="draque7" /></p>
+
+<p>うまくいきました。</p>
+
+<h2>middlewareを書く</h2>
+
+<p>現状middleware <code>UpDown</code>は、何もしないダメウェアですが、callのところでゴニョゴニョすれば何かできると想像できます。やってみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="o">.</span><span class="n">reverse</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<p><img src="/assets/images/draque8.png" alt="draque8" /></p>
+
+<p>天地反転の呪文が適用されました。</p>
+
+<p>以上のことをまとめます。</p>
+
+<blockquote><ol>
+<li>middlewareは#callメソッドを持ったクラスである。</li>
+<li>middleware#initializeにはrunに渡したWebアプリオブジェクトが渡される。</li>
+<li>middlewareの#callでWebアプリの#callを呼んで、ゴニョゴニョする。</li>
+</ol>
+</blockquote>
+
+<p>従って、リクエストーレスポンスの流れは次のようになります。</p>
+
+<blockquote><ol>
+<li>Rack(Webサーバ)はBrowserからリクエストが来ると、useされたmiddleware(UpDwon)の#callを呼ぶ。</li>
+<li>middlewareの#callはWebアプリ(draque)の#callを呼ぶ。</li>
+<li>Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。</li>
+<li>middlewareは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
+<li>Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</li>
+</ol>
+</blockquote>
+
+<h2>２つ目のmiddlewareを書く</h2>
+
+<p>さて、もう一つmiddlewareを書いてみます。名前をFireとします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="o">.</span><span class="n">reverse</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;&lt;div style=&#39;background-color:red&#39;&gt;&quot;</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="o">]</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>#callの中でゴニョゴニョしてるの分かりますか？</p>
+
+<p>レスポンスを見てみます。</p>
+
+<p><img src="/assets/images/draque9.png" alt="draque9" /></p>
+
+<p>天地反転の呪文と炎の呪文が適用されました。</p>
+
+<p>さて、ここで気になることが一つあります。Fireに渡されたappはWebアプリなのでしょうか、それとも...。<code>p</code>で見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="nb">p</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">app</span><span class="si">}</span><span class="s2"> in UpDown&quot;</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="o">.</span><span class="n">reverse</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="nb">p</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">app</span><span class="si">}</span><span class="s2"> in Fire&quot;</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;&lt;div style=&#39;background-color:red&#39;&gt;&quot;</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="o">]</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+<span class="s2">&quot;#&lt;Method: Rack::Builder(Draque)#draque&gt; in UpDown&quot;</span>
+<span class="s2">&quot;#&lt;UpDown:0x000001008ee738&gt; in Fire&quot;</span>
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</code></pre></div>
+
+
+<p>UpDownにdraqueが渡されていることが分かります。そして、果たしてFireにはUpDownが渡されていました。</p>
+
+<p>つまりこういうことです。</p>
+
+<blockquote><ol>
+<li>最初にuseされたmiddleware(Fire)のinitializeには、次にuseされたmiddleware(UpDown)のオブジェクトが渡される。つまりUpDownオブジェクトはFireオブジェクトでラップされる。</li>
+<li>最後にuseされたmiddleware(UpDown)には、Webアプリオブジェクト(draque)が渡される。つまりdraqueオブジェクトはUpDownオブジェクトでラップされる。</li>
+<li>つまりRackというのは、棚ではなくて、マトリョーシカである。</li>
+</ol>
+</blockquote>
+
+<p>従って、リクエストーレスポンスの流れは次のようになります。</p>
+
+<blockquote><ol>
+<li>Rack(Webサーバ)はBrowserからリクエストが来ると、最初にuseされたFireの#callを呼ぶ。</li>
+<li>Fireの#callは次にuseされたUpDownの#callを呼ぶ。</li>
+<li>UpDownの#callはWebアプリ(draque)の#callを呼ぶ。</li>
+<li>Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。</li>
+<li>UpDownは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
+<li>Fireは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
+<li>Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</li>
+</ol>
+</blockquote>
+
+<h2>Fireを改良する</h2>
+
+<p>さてFireの呪文は強力過ぎます。これを一部の文字列にだけ適用するよう改良します。</p>
+
+<p>対象文字列を指定する方法が必要になります。ところがFireオブジェクトはRackが生成するので、そのチャンスは一見なさそうです。仕方がないので、試しにuseに渡して、initializeで受けるようにしてみます。<code>p</code>で出力を見ます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="nb">p</span> <span class="n">pattern</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;&lt;div style=&#39;background-color:red&#39;&gt;&quot;</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="o">]</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。</p>
+
+<div class="highlight"><pre><code class="bash">% rackup
+<span class="s2">&quot;hello&quot;</span>
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</code></pre></div>
+
+
+<p>受け渡しができているようです。ついでにブロックもイケるか見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="nb">p</span> <span class="n">pattern</span>
+    <span class="k">yield</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;&lt;div style=&#39;background-color:red&#39;&gt;&quot;</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="o">]</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span> <span class="k">do</span>
+  <span class="nb">p</span> <span class="s2">&quot;hello from a block!&quot;</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="bash">% rackup
+<span class="s2">&quot;hello&quot;</span>
+<span class="s2">&quot;hello from a block!&quot;</span>
+&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</code></pre></div>
+
+
+<p>ブロックも受けてくれるようです。</p>
+
+<p>では、新しいFireを実装します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
+
+<span class="k">class</span> <span class="nc">UpDown</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="o">.</span><span class="n">reverse</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Fire</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="vi">@pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+    <span class="n">replace</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">pat</span><span class="p">{</span> <span class="s2">&quot;&lt;em style=&#39;background-color:red&#39;&gt;</span><span class="si">#{</span><span class="n">pat</span><span class="si">}</span><span class="s2">&lt;/em&gt;&quot;</span> <span class="p">}</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">part</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">part</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="vi">@pattern</span><span class="p">)</span> <span class="p">{</span> <span class="n">replace</span><span class="o">[</span><span class="vg">$&amp;</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+    
+    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">use</span> <span class="no">Fire</span><span class="p">,</span> <span class="sr">/rack|draque/i</span>
+
+<span class="n">use</span> <span class="no">UpDown</span>
+
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>出力を見てみます。</p>
+
+<p><img src="/assets/images/draque10.png" alt="draque10" /></p>
+
+<p>いいですね！</p>
+
+<p>Rack、次の一歩は踏み出せたでしょうか。</p>
+
+<p>今回の結論：</p>
+
+<blockquote><p>Rackは実はマトリョーシカだった！</p></blockquote>
+
+<p><a href="https://gist.github.com/3243357" title="Joke Rack Web framework `Draque` — Gist">Joke Rack Web framework <code>Draque</code> — Gist</a></p>
+
+<hr />
+
+<p>(追記：2012-08-08) 続きを書きました。</p>
+
+<p><a href="http://melborne.github.com/2012/08/08/learn-rack-with-lack/" title="Rackをminifyした僅か100行のLackで学ぶRackの中身">Rackをminifyした僅か100行のLackで学ぶRackの中身</a></p>
+
+<hr />
+
+<p><img src="/assets/images/2012/rack_cover.png" alt="Rack Ebook" /></p>
+
+<p><a href="http://gum.co/ZqRt" class="gumroad-button">電子書籍「エラーメッセージから学ぶRack」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<p>詳細は以下を参照して下さい。</p>
+
+<blockquote><p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p></blockquote>
+
+<p>購入ご検討のほどよろしくお願いしますm(__)m</p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B002R8TFUO"><img class="amazon" src="http://ecx.images-amazon.com/images/I/516I4QARmtL._SL160_.jpg" /></a></p>
+
+<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B002R8TFUO">いちごマトリョーシカ　5人姉妹　レッド×ピンク　【マトリョーシカ】</a></p>
+
+<hr />
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>#newが定義されていれば、もしかしたらクラスでなくてもいいのかもしれません <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/06/use-rack-middleware/" class="hatena-bookmark-button" data-hatena-bookmark-title="エラーメッセージから学ぶRack - Middlewareの魔法" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/06/use-rack-middleware/" data-text="エラーメッセージから学ぶRack - Middlewareの魔法" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/06/use-rack-middleware/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/06/use-rack-middleware/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/08/02/build-your-own-web-framework-with-rack" title="エラーメッセージから学ぶRack - 最初の一歩">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/08/08/learn-rack-with-lack" title="Rackをminifyした僅か100行のLackで学ぶRackの中身">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#rack-ref">rack <span>4</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/06/use-rack-middleware/" class="hatena-bookmark-button" data-hatena-bookmark-title="エラーメッセージから学ぶRack - Middlewareの魔法" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/06/use-rack-middleware/" data-text="エラーメッセージから学ぶRack - Middlewareの魔法" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/06/use-rack-middleware/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/06/use-rack-middleware/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,826 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>irbから学ぶRubyの並列処理 ~ forkからWebSocketまで</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>29 September 2011</span></div>
+  <h1 class='page-title'><a href="/2011/09/29/irb-Ruby-fork-WebSocket">irbから学ぶRubyの並列処理 ~ forkからWebSocketまで</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>(追記：2012-12-13)
+本記事を電子書籍化しました。「<a href="https://gumroad.com/" title="Gumroad">Gumroad</a>」を通して100円にて販売しています。内容についての追加・変更はありませんが、文体の変更、誤記の修正およびメディア向けの調整を行っています。</p>
+
+<p><img src="/assets/images/2012/ruby_parallel_cover.png" alt="Ruby Parallel Ebook" /></p>
+
+<p><a href="http://gum.co/PjVk" class="gumroad-button">電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<p>購入ご検討のほどよろしくお願いしますm(__)m</p>
+
+<p>関連記事： <a href="/2012/12/13/ruby-parallel-on-ebook/" title="電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！">電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！</a></p>
+
+<hr />
+
+<p>世の中は並列化花ざかりだよ。人間はシングルタスクのままなのに、プログラミングするときはマルチタスクが要求されるなんて、世知辛い世の中になったものだね。</p>
+
+<p>でも、情報革命は始まったばかりだから、愚痴ってばかりもいられないよ。自分がその波にうまく乗れないとしても、うまく乗ってる人の様を間近で見てみたいと思うんだ。</p>
+
+<p>そんなわけで..</p>
+
+<p>Rubyのfork、Thread、Reactor、EventMachine、WebSocketなどの並列化について少し学んだので、自分の理解をここにまとめておくよ。</p>
+
+<h2>REPL</h2>
+
+<p>irbはRubyにおける対話型の実行環境だよ。これは一般にはREPLと呼ばれてるんだ。REPLはユーザの入力を読み取り(Read)、評価し(Eval)、出力する(Print) 処理を、繰り返すよ(Loop)。</p>
+
+<p>irbのコードは5000行にものぼるらしいけど、その核心は次のように1行で書けるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="kp">loop</span><span class="p">{</span> <span class="nb">puts</span> <span class="nb">eval</span> <span class="nb">gets</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>getsでユーザ入力を読み取り、evalで評価し、putsで出力する処理を、loopで繰り返す。これじゃGEPLだけどね:)</p>
+
+<p>このコードを保存して(gepl.rb)、実行してみよう。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ruby gepl.rb
+%w<span class="o">(</span>ruby lisp haskell<span class="o">)</span>.map<span class="o">(</span>&amp;:upcase<span class="o">)</span>
+RUBY
+LISP
+HASKELL       
+<span class="s2">&quot;hello, repl!&quot;</span>.gsub<span class="o">(</span><span class="s1">&#39;r&#39;</span>,<span class="s1">&#39;g&#39;</span><span class="o">)</span>
+hello, gepl!  
+</code></pre></div>
+
+
+<p>ちゃんと動いてるね。Ctrl+Cで終了するよ。</p>
+
+<p>通常loopは無限ループを生成するけど、先のコードではgetsのところで処理が止まり、ユーザからの入力を待ち受ける。ここがポイントだよ。</p>
+
+<p>ちなみにこのコードは、その入出力を明示的にして次のようにも書けるね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">input</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="o">.</span><span class="n">gets</span>
+  <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="n">output</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>デフォルトでグローバル変数$stdinと$stdoutには、標準入力、標準出力がセットされてるから、キーボードからの入力が読み取られ、ディスプレイに出力がなされるんだ。</p>
+
+<h2>マルチユーザーREPL</h2>
+
+<p>REPLは１ユーザに対する対話環境だよ。でも複数ユーザで使えたらもっとうれしいよね。どうすればいい？</p>
+
+<p>そうだよ。入出力と評価(eval)を切り離せばいいんだよ。いわゆるクライアント・サーバー方式だね。クライアントからの入力をサーバーに渡して評価し、結果をクライアントに出力する。</p>
+
+<p>じゃあ早速REPLサーバーを書いてみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#repl_server.rb</span>
+<span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>   <span class="c1"># clientからの接続を待つ</span>
+  
+  <span class="k">begin</span>
+    <span class="kp">loop</span> <span class="p">{</span> <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span> <span class="p">}</span>
+  <span class="k">rescue</span>
+  <span class="k">ensure</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Rubyならこんなに簡単に書けちゃうんだ。TCPServer.newでサーバーインスタンスを生成し、acceptメソッドでクライアントからの接続を待ち受けるよ。クライアントが接続したら、getsでユーザからの入力を評価し結果をユーザに返す。接続したクライアント(これをソケットと呼ぶよ)からgetsし、ソケットにputsしてるところがポイントだよ。</p>
+
+<p>$stdin $stdoutの参照先をクライアントのソケットに切り替えるやり方にすると、最初のコードとの違いがはっきりするかもね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#repl_server.rb</span>
+<span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="k">begin</span>
+    <span class="vg">$stdin</span><span class="p">,</span> <span class="vg">$stdout</span> <span class="o">=</span> <span class="n">client</span><span class="p">,</span> <span class="n">client</span>
+    <span class="kp">loop</span> <span class="p">{</span> <span class="nb">puts</span> <span class="nb">eval</span> <span class="nb">gets</span> <span class="p">}</span>
+  <span class="k">rescue</span>
+  <span class="k">ensure</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+    <span class="vg">$stdin</span> <span class="o">=</span> <span class="no">STDIN</span>
+    <span class="vg">$stdout</span> <span class="o">=</span> <span class="no">STDOUT</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ensure節ではこれらの後処理をしているよ。</p>
+
+<p>サーバーを立ち上げてクライアントから接続してみようよ。telnetを使うね。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>telnet localhost 60000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+3.times.map <span class="o">{</span> <span class="s2">&quot;Hello, friend&quot;</span> <span class="o">}</span>
+Hello, friend
+Hello, friend
+Hello, friend
+</code></pre></div>
+
+
+<p>いい感じだね。Ctrl+]に続きquitでtelnetの接続を切るよ。</p>
+
+<h2>並列化REPL</h2>
+
+<p>でも先のサーバーには大きな問題があるよ。誰か一人が接続していると他の人が接続できない、つまり複数の人が同時に使えないんだよ。先のコードで１つの接続がacceptされると、loop内のgetsはその接続先ユーザからの入力を待ち続けることになる。で、そのユーザの接続が切れてはじめて、処理はループされacceptで別の接続を待ち受けられるようになるんだ。これは大問題だね。複数のターミナルから接続して試してみればわかるよ。</p>
+
+<p>さあ、ここで並列化の出番だよ。</p>
+
+<p>Rubyで並列化を実現するにはいくつかの方法があるよ。ちょっとどんなやり方があるか考えてみてくれる？</p>
+
+<h2>個別接続による並列化</h2>
+
+<p>もっとも単純な方法は処理が終わるたびに、ユーザからの接続を毎回切る方法だよ。前のユーザの接続が切れれば、サーバーは別の接続を待てるからね。まあ、これを並列化と呼ぶのはどうかとも思うけど..</p>
+
+<p>コードは次のような感じになるかな。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>evalしたものをクライアントに返したら、そのソケットを閉じる。これによってそのクライアントの接続は切れるから、別のクライアントからの接続を待ち受けられるようになる。</p>
+
+<p>構成がシンプルでいいんだけど、ユーザにとってはちょっと面倒だよね。使うたびに接続し直さなきゃならないからね。なんかWebサーバーみたいだよね..</p>
+
+<h2>forkによる並列化</h2>
+
+<p>２つ目は複数のプロセスを起動する方法だよ。Rubyでプロセスを並列化するにはKernel#forkを使うよ。</p>
+
+<p>forkのブロックで囲まれたコードは別プロセスで起動されるから、loop{}のところをforkのブロックに投げればよさそうだね。やってみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="nb">fork</span> <span class="k">do</span>    <span class="c1"># 別プロセスで起動</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span> <span class="p">}</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>acceptでクライアントが接続するとforkで別プロセスが起動されて、その中でgetsの待ち受けがされるけど、メインプロセスは外側のループで先頭に戻り、これでacceptで別のクライアントの接続を待てるね。</p>
+
+<p>じゃあ複数のtelnetから接続して試してみよう。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>telnet localhost 60000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+1 + 2
+3
+---------------------------------------
+<span class="nv">$ </span>telnet localhost 60000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+<span class="o">[</span>2011,10,1<span class="o">]</span>.join <span class="s1">&#39;-&#39;</span>
+2011-10-1
+</code></pre></div>
+
+
+<p>うまくいったね。</p>
+
+<p>念のためこの状況で複数のプロセスが立ってるか確認してみるよ。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ps aux | grep repl_server
+keyes     1335   0.3  0.1  2448356   1176 s001  R+    3:01PM   0:00.90 ruby repl_server.rb
+keyes     1303   0.3  0.0  2448356   1040 s001  S+    2:59PM   0:01.30 ruby repl_server.rb
+keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl_server.rb
+</code></pre></div>
+
+
+<p>３つのプロセスが立ってるのがわかるね。</p>
+
+<p>ただ、プロセスは個々に独立したメモリ空間を専有するから、接続ユーザ数が多くなるとちょっと心配だよね。またチャットサーバーのようにユーザ間での情報のやり取りが必要な場合、プロセス間で通信させなきゃならないから、そんなときはちょっと厄介そうだよね。</p>
+
+<h2>Threadによる並列化</h2>
+
+<p>３つ目はスレッドを使う方法だよ。スレッドは１つのプロセス内で処理を並走させる仕組みだよ。並走する処理は同じプロセス内にあるから、その間でのデータ共有が容易という利点があるんだ。</p>
+
+<p>じゃあThreadクラスを使ったサーバーを書いてみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  
+  <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">cl</span><span class="o">|</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">cl</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">cl</span><span class="o">.</span><span class="n">gets</span> <span class="p">}</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">cl</span><span class="o">.</span><span class="n">close</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>forkをThread.newに変えればいいだけだから簡単だね。ただスレッドは同じプロセス内で並走するから、acceptしたclientをブロック引数を通して、ちゃんと渡さないと問題が生じるよ。</p>
+
+<p>同じように複数のtelnetから接続してみるよ。</p>
+
+<div class="highlight"><pre><code class="sh">Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+<span class="o">[</span>*1..10<span class="o">]</span>.select<span class="o">{</span>|i| i.even? <span class="o">}</span>
+2
+4
+6
+8
+10
+-------------------------------
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+Array.ancestors
+Array
+Enumerable
+Object
+Kernel
+BasicObject
+-------------------------------
+<span class="nv">$ </span>ps aux |grep repl_server
+keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl_server.rb
+</code></pre></div>
+
+
+<p>プロセスは１つのままだってこと確認できるよね。</p>
+
+<p>前でスレッドがマルチプロセスよりもデータ共有が容易って書いたから、そのサンプルも書いてみるよ。サーバーからの出力を接続しているすべてのクライアントに出力する例だよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="n">clients</span> <span class="o">=</span> <span class="o">[]</span>   <span class="c1"># 接続クライアントの管理用配列</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="n">clients</span> <span class="o">&lt;&lt;</span> <span class="n">client</span>  <span class="c1"># 接続クライアントを登録</span>
+  
+  <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">cl</span><span class="o">|</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="k">do</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span> <span class="n">cl</span><span class="o">.</span><span class="n">gets</span>
+        <span class="n">clients</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">puts</span> <span class="n">output</span> <span class="p">}</span>  <span class="c1"># 結果を全クライアントに配信</span>
+      <span class="k">end</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">cl</span><span class="o">.</span><span class="n">close</span>
+      <span class="n">clients</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="c1"># 切断したクライアントを管理対象外に</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>接続クライアント管理用の配列を用意して結果を全員にブロードキャストすればいいね。簡単だね。</p>
+
+<p>ただ、スレッドモデルはスレッド間で共有するデータを書き換えるような場合の取り扱いがちょっと厄介だよ。それと、やっぱり各スレッドごとにいつ来るかわからないデータを待っている、というのが無駄といえば無駄だよね。</p>
+
+<h2>Reactorパターンによる並列化</h2>
+
+<p>４つ目はReactorパターンを使って並列化する方法だよ。Reactorパターンというのは簡単に言うと、一箇所でいろいろなイベントを待ち受けて、イベントが来たらこれに反応(リアクト)して、その種類に応じた処理を実行するモデルのことだよ。RubyでReactorパターンを実現するには、IO.selectメソッド(またはKernel#select)を使うよ。</p>
+
+<p>早速Reactor版REPLサーバーを書いてみるよ。REPLサーバーにおけるイベントにはサーバーに対するものつまりクライアントの接続と、クライアントに対するものつまりソケットへのデータ入力があるよ。これらをsocketsという配列で管理しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="n">sockets</span> <span class="o">=</span> <span class="o">[</span><span class="n">server</span><span class="o">]</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">r_sockets</span> <span class="o">=</span> <span class="no">IO</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sockets</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="c1"># すべてのイベントを待ち受ける</span>
+  <span class="n">r_sockets</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">socket</span><span class="o">|</span>
+    <span class="k">case</span> <span class="n">socket</span>
+    <span class="k">when</span> <span class="no">TCPServer</span>     <span class="c1"># サーバーに対するクライアントの接続があったとき</span>
+      <span class="n">client</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">accept</span>
+      <span class="n">sockets</span> <span class="o">&lt;&lt;</span> <span class="n">client</span>
+    <span class="k">when</span> <span class="no">TCPSocket</span>     <span class="c1"># クライアントに対するデータ入力があったとき</span>
+      <span class="k">unless</span> <span class="n">socket</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">socket</span><span class="o">.</span><span class="n">gets</span>
+      <span class="k">else</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">close</span>
+        <span class="n">sockets</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">socket</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>IO.selectは登録したソケットに対する入力／出力／例外のイベントを待ち受け、そのイベントが発生したソケットを返すけど、返り値はイベント別のソケットの配列になっているよ。ここでは入力イベントだけに関心があるから、配列の第一要素のみ取り出してるよ。</p>
+
+<p>そしてcase式でイベントのあったソケットの種類に応じて処理を切り分けてるよ。つまりサーバーがクライアントからの接続を受けたときは、TCPServerの節に入ってsockets配列に接続のあったクライアントが登録され、ループでselectに戻って次のイベントを待つよ。最初のクライアントの接続時には、sockets配列にはserverしか登録されていないから、処理は必ずここに来ることになるよ。</p>
+
+<p>一方、クライアントにデータの入力があったときは、TCPSocketの節に入って入力データの処理をするよ。入力データがあるときはそれを評価し結果を返し、無いときはソケットを閉じてその接続を解放するよ。そしてループでまたselectに戻って次のイベントを待つよ。</p>
+
+<p>Reactorパターンでは、すべてのクライアントの接続は維持されたままなのに、処理が並走しないつまり単一プロセス単一スレッドで、複数クライアントからの要求に応じることができる、という点がユニークだよ。このモデルなら処理が並走することはないので、共有データを書き換えるようなことも簡単にできるよね。</p>
+
+<h2>EventMachineによる並列化</h2>
+
+<p>ただ、when式でのソケットの切り分け処理が面倒といえば面倒だよね。でも安心していいよ。EventMachineというライブラリを使えば、これが驚異的に簡単にできちゃうんだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;eventmachine&quot;</span>
+<span class="no">EM</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span>
+  <span class="no">EM</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">60000</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+    <span class="k">def</span> <span class="nc">c</span><span class="o">.</span><span class="nf">receive_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+      <span class="n">send_data</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>EventMachineはRreactorパターンによる、イベント駆動型のI/Oインタフェースを提供するライブラリだよ。JavaScriptのNode.jsみたいなものなんだろうね。</p>
+
+<p>もうコードを見れば分かると思うけど、EM.runでイベントループが開始されて、クライアントからのデータ入力があると、receive_dataメソッドが呼び出されるので、ここでsend_dataを呼んでevalした入力を返せばいいんだ。</p>
+
+<p>EventMachineを使えば、チャットサーバーだって簡単に書けちゃうんだ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;eventmachine&quot;</span>
+<span class="k">module</span> <span class="nn">Chat</span>
+  <span class="vc">@@channel</span> <span class="o">=</span> <span class="ss">EM</span><span class="p">:</span><span class="ss">:Channel</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">def</span> <span class="nf">post_init</span>
+    <span class="nb">puts</span> <span class="s2">&quot;-- someone connected&quot;</span>
+    <span class="vi">@sid</span> <span class="o">=</span> <span class="vc">@@channel</span><span class="o">.</span><span class="n">subscribe</span> <span class="p">{</span> <span class="o">|</span><span class="n">data</span><span class="o">|</span> <span class="n">send_data</span> <span class="s2">&quot;&gt;&gt; </span><span class="si">#{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">receive_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="vc">@@channel</span><span class="o">.</span><span class="n">push</span> <span class="n">data</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">unbind</span>
+    <span class="nb">puts</span> <span class="s2">&quot;-- someone disconnected from the server&quot;</span>
+    <span class="vc">@@channel</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="vi">@sid</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">EM</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span>
+  <span class="no">EM</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">60000</span><span class="p">,</span> <span class="no">Chat</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>EMサーバーはクライアントの接続があるたびにその引数でセットしたChatモジュールをインスタンス化して、その監視対象として登録するよ。<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup> 各インスタンスのpost_initメソッドはその接続時に、unbindメソッドはその切断時に呼び出され、receive_dataは先の例と同様にデータ受信時に呼び出されるよ。</p>
+
+<p>データをブロードキャストするにはEM::Channelを使うよ。subscribeでそのクライアントに対する処理を登録して、pushで呼び出せばいいんだ。</p>
+
+<p>gem install eventmachineして、telnetから試してみてね。</p>
+
+<h2>WebSocket</h2>
+
+<p>ここまでくるとWebサーバー上でもこの並列化技術を使いたい、と考えるのが人情だよね。そう、これこそがWebSocketなんだよ。</p>
+
+<p>そしてうれしいことに、EventMachineにはそのためのプラグインem-websocketがあるんだ。gem install em-websocketして使うよ。サーバー側のコードは次のような感じだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;em-websocket&#39;</span>
+<span class="no">EM</span><span class="o">.</span><span class="n">run</span> <span class="p">{</span>
+  <span class="vi">@channel</span> <span class="o">=</span> <span class="ss">EM</span><span class="p">:</span><span class="ss">:Channel</span><span class="o">.</span><span class="n">new</span>
+  <span class="ss">EM</span><span class="p">:</span><span class="ss">:WebSocket</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="mi">60000</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ws</span><span class="o">|</span>
+    <span class="n">sid</span> <span class="o">=</span> <span class="kp">nil</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">onopen</span> <span class="p">{</span> <span class="n">sid</span> <span class="o">=</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">subscribe</span> <span class="p">{</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span> <span class="n">ws</span><span class="o">.</span><span class="n">send</span> <span class="n">msg</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">onmessage</span> <span class="p">{</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">push</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sid</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">onclose</span> <span class="p">{</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>EM::WebSocket.startでサーバーインスタンスを立ち上げて、クライアントからの接続を待ち受けるよ。クライアントからの接続があるとonopenが呼ばれるから、ここでchannelにメッセージをブロードキャストする処理を登録するよ。クライアントがテキストを送信するとonmessageが呼ばれるから、それをchannelにpushして登録した処理を呼ぶよ。</p>
+
+<p>次にクライアントサイドのコードだよ。</p>
+
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&#39;http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js&#39;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script&gt;</span>
+      <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">function</span> <span class="nx">debug</span> <span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#debug&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;&lt;p&gt;&quot;</span><span class="o">+</span><span class="nx">str</span><span class="o">+</span><span class="s2">&quot;&lt;/p&gt;&quot;</span><span class="p">)</span> <span class="p">};</span>
+        
+        <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s2">&quot;ws://localhost:60000/&quot;</span><span class="p">);</span>
+        <span class="nx">ws</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">debug</span><span class="p">(</span><span class="s2">&quot;Welcome to Chattata!&quot;</span><span class="p">)</span> <span class="p">};</span>
+        <span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#msglist&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;&lt;p&gt;&quot;</span><span class="o">+</span><span class="nx">evt</span><span class="p">.</span><span class="nx">data</span><span class="o">+</span><span class="s2">&quot;&lt;/p&gt;&quot;</span><span class="p">)</span> <span class="p">};</span>
+        <span class="nx">ws</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">debug</span><span class="p">(</span><span class="s2">&quot;socket closed&quot;</span><span class="p">)</span> <span class="p">};</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;form&quot;</span><span class="p">).</span><span class="nx">submit</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+          <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;input#msg&quot;</span><span class="p">);</span>
+          <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">val</span><span class="p">());</span>
+          <span class="nx">msg</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;debug&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;form&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;msg&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span><span class="nt">&gt;&lt;/input&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;msglist&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+
+
+<p>クライアント側では、サーバーに接続するソケットをインスタンス化するよ。ユーザがテキストを送信すると$("form").submitが呼ばれ、その内容はws.sendでソケットに送り出されるよ。これによってサーバー側のchannelに登録された処理が呼ばれ、接続されているクライアントにテキストがブロードキャストされるよ。クライアント側ではこれをonmessageで受けて、テキストをwindow上に表示するよ。</p>
+
+<p>じゃあ試してみるよ。</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110929/20110929223805.png" alt="image" /></p>
+
+<p>良い感じだね！</p>
+
+<p>WebSocketはHTML5の新しい規格だから対応ブラウザか確認してね。</p>
+
+<p>ちょっと長い投稿になっちゃったけど、最後まで付き合ってくれてありがとう。</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>モジュールをインスタンス化って変だよね.. <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" class="hatena-bookmark-button" data-hatena-bookmark-title="irbから学ぶRubyの並列処理 ~ forkからWebSocketまで" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" data-text="irbから学ぶRubyの並列処理 ~ forkからWebSocketまで" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/09/14/HateDa-Bookmarks" title="僕はブログを書く ~ HateDa::Bookmarks の紹介">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/10/09/Ruby-FizzBuzz" title="RubyでFizzBuzz問題を解いて上司に対抗しよう!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" class="hatena-bookmark-button" data-hatena-bookmark-title="irbから学ぶRubyの並列処理 ~ forkからWebSocketまで" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" data-text="irbから学ぶRubyの並列処理 ~ forkからWebSocketまで" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/09/29/irb-Ruby-fork-WebSocket/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

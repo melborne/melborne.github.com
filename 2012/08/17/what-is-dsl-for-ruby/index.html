@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>ねえRuby、どこまでが君でどこからが内部DSLなの？</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>17 August 2012</span></div>
+  <h1 class='page-title'><a href="/2012/08/17/what-is-dsl-for-ruby">ねえRuby、どこまでが君でどこからが内部DSLなの？</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Rubyは<code>内部DSL</code>(Domain Specific Language)に向いている言語と言われます。<a href="https://rubygems.org/gems/rake" title="rake | RubyGems.org | your community gem host">Rake</a>, <a href="https://rubygems.org/gems/rspec" title="rspec | RubyGems.org | your community gem host">RSpec</a>, <a href="http://rack.github.com/" title="Rack: a Ruby Webserver Interface">Rack</a>, <a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>などは内部DSL on Rubyの代表的なサンプルです。Rubyの構文のユルさとメタプログラミングが内部DSLを容易にするんですね。</p>
+
+<p>しかし正直僕は、何が内部DSLで、何が内部DSLでないのかがわかっていません。人が何をさして「これは内部DSLである」と言っているのかがよくわかりません。</p>
+
+<p>そんなわけで...</p>
+
+<p>以下では、Userクラスの設計を通して内部DSLらしきものを作ってみます。このイテレーションに対して「ここからが内部DSLだよ」「これは内部DSLとは呼ばないよ」と、誰か僕に優しく教えてくれませんか？</p>
+
+<h2>Userクラスの作成</h2>
+
+<p>Userクラスはユーザ情報を管理するクラスです。ファイル名はuser.rbとします。</p>
+
+<p>まずはユーザの登録機能を作ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># user.rb</span>
+<span class="k">class</span> <span class="nc">User</span>
+  <span class="vc">@@users</span><span class="p">,</span> <span class="vc">@@id</span> <span class="o">=</span> <span class="o">[]</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span>
+  <span class="kp">attr_reader</span> <span class="ss">:id</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+    <span class="vc">@@id</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="vi">@id</span><span class="p">,</span> <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">,</span> <span class="vi">@job</span> <span class="o">=</span> <span class="vc">@@id</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">job</span>
+    <span class="vc">@@users</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">to_s</span>
+    <span class="s2">&quot;%d:%s(%d/%s)&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="nb">id</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">job</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span> <span class="c1"># =&gt; 1:Charlie(12/programmer)</span>
+<span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Ben&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span> <span class="c1"># =&gt; 2:Ben(17/teacher)</span>
+</code></pre></div>
+
+
+<p>生成されたUserオブジェクトは@@usersクラス変数で管理します。</p>
+
+<p>次に、検索機能を付けます。id, name, age, jobの各属性で検索ができるようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">all</span>
+      <span class="vc">@@users</span>
+    <span class="k">end</span>
+
+    <span class="o">[</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;find_by_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">arg</span><span class="o">|</span>
+        <span class="n">blk</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">usr</span> <span class="p">{</span> <span class="n">usr</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">arg</span> <span class="p">}</span>
+        <span class="n">meth</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span><span class="o">].</span><span class="n">include?</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="p">?</span> <span class="ss">:detect</span> <span class="p">:</span> <span class="ss">:select</span>
+        <span class="vc">@@users</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">meth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>idとnameはユニークなものとしてdetectを、age, jobは複数の結果を返すものとしてselectを使った<code>find_by</code>メソッドをそれぞれ定義します。</p>
+
+<p>ユーザを複数登録して、検索してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">userlist</span> <span class="o">=</span> <span class="o">[</span>
+  <span class="o">[</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>   <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">[</span> <span class="s1">&#39;Ben&#39;</span><span class="p">,</span>       <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">[</span> <span class="s1">&#39;Dick&#39;</span><span class="p">,</span>      <span class="mi">33</span><span class="p">,</span> <span class="ss">:lawyer</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">[</span> <span class="s1">&#39;Elizabeth&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="ss">:doctor</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">[</span> <span class="s1">&#39;Fernand&#39;</span><span class="p">,</span>   <span class="mi">27</span><span class="p">,</span> <span class="ss">:teacher</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">[</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span> <span class="o">]</span><span class="p">,</span>
+  <span class="o">]</span>
+
+<span class="n">userlist</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">attrs</span><span class="o">|</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">)</span> <span class="p">}</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_id</span> <span class="mi">4</span> <span class="c1"># =&gt; 4:Elizabeth(23/doctor)</span>
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Alice&#39;</span> <span class="c1"># =&gt; nil</span>
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Charlie&#39;</span> <span class="c1"># =&gt; 1:Charlie(12/programmer)</span>
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_age</span> <span class="mi">33</span> <span class="c1"># =&gt; [3:Dick(33/lawyer), 6:George(33/programmer)]</span>
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_job</span> <span class="ss">:programmer</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 6:George(33/programmer)]</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<h2>改良１（registerの導入）</h2>
+
+<p>さて、これでUserクラスができたので、大量にユーザを登録していきたいと思います。上のようにuserlistを作って、eachすればいいですね！</p>
+
+<p>って、ちょっと躊躇しますよね。多重配列の括弧とカンマを打つのが面倒です。</p>
+
+<p>もう少しマシなインタフェースを用意します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">register</span>
+      <span class="k">yield</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">alias</span> <span class="ss">:add</span> <span class="ss">:new</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>クラスメソッドregisterとaddを用意しました。</p>
+
+<p>これらを使ったユーザ登録は、次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">User</span><span class="o">.</span><span class="n">register</span> <span class="k">do</span> <span class="o">|</span><span class="n">u</span><span class="o">|</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>   <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;Ben&#39;</span><span class="p">,</span>       <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;Dick&#39;</span><span class="p">,</span>      <span class="mi">33</span><span class="p">,</span> <span class="ss">:lawyer</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;Elizabeth&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="ss">:doctor</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;Fernand&#39;</span><span class="p">,</span>   <span class="mi">27</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
+<span class="k">end</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
+</code></pre></div>
+
+
+<p>大分、入力が簡単になりました。</p>
+
+<h2>改良２（instance_evalの利用）</h2>
+
+<p>でもここまで来ると、ブロック引数でUserクラスを引き渡すのが面倒と言えば面倒です。</p>
+
+<p>改善します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="nb">instance_eval</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">alias</span> <span class="ss">:add</span> <span class="ss">:new</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>instance_evalを使って、registerのブロック内をUserクラスのコンテキストとして評価させます。</p>
+
+<p>registerの使い方は次のように変わります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">User</span><span class="o">.</span><span class="n">register</span> <span class="k">do</span>
+  <span class="n">add</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>   <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span>
+  <span class="n">add</span> <span class="s1">&#39;Ben&#39;</span><span class="p">,</span>       <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">add</span> <span class="s1">&#39;Dick&#39;</span><span class="p">,</span>      <span class="mi">33</span><span class="p">,</span> <span class="ss">:lawyer</span>
+  <span class="n">add</span> <span class="s1">&#39;Elizabeth&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="ss">:doctor</span>
+  <span class="n">add</span> <span class="s1">&#39;Fernand&#39;</span><span class="p">,</span>   <span class="mi">27</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
+<span class="k">end</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
+</code></pre></div>
+
+
+<p>更に入力が楽になりました。</p>
+
+<h2>改良３（userupコマンドの導入）</h2>
+
+<p>ここまで来たらUserクラスとユーザの登録コマンドを別ファイルにしたほうがよさそうです。
+user.rbから'User.register do' 以下を削除し、次のような<code>userup</code>ファイルを用意します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="n">require_relative</span> <span class="s2">&quot;user&quot;</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">register</span> <span class="k">do</span>
+  <span class="n">add</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>   <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span>
+  <span class="n">add</span> <span class="s1">&#39;Ben&#39;</span><span class="p">,</span>       <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">add</span> <span class="s1">&#39;Dick&#39;</span><span class="p">,</span>      <span class="mi">33</span><span class="p">,</span> <span class="ss">:lawyer</span>
+  <span class="n">add</span> <span class="s1">&#39;Elizabeth&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="ss">:doctor</span>
+  <span class="n">add</span> <span class="s1">&#39;Fernand&#39;</span><span class="p">,</span>   <span class="mi">27</span><span class="p">,</span> <span class="ss">:teacher</span>
+  <span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span>
+</code></pre></div>
+
+
+<p>userupに実行権限を付与して実行します。</p>
+
+<div class="highlight"><pre><code class="bash">% chmod +x userup 
+% ./userup
+
+1:Charlie<span class="o">(</span>12/programmer<span class="o">)</span>
+2:Ben<span class="o">(</span>17/teacher<span class="o">)</span>
+3:Dick<span class="o">(</span>33/lawyer<span class="o">)</span>
+4:Elizabeth<span class="o">(</span>23/doctor<span class="o">)</span>
+5:Fernand<span class="o">(</span>27/teacher<span class="o">)</span>
+6:George<span class="o">(</span>33/programmer<span class="o">)</span>
+</code></pre></div>
+
+
+<p>ユーザは、userup内registerでユーザを登録して、userupコマンドを実行すれば良くなりました。</p>
+
+<h2>改良４（configファイルの導入）</h2>
+
+<p>しかしながら、実行コマンド内にユーザ登録をするというのもなんか変です。</p>
+
+<p>ユーザ登録は別ファイルに分離して、それを読み込むようにするのがよさそうです。user.rbのregisterメソッドを改良します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">cfg</span><span class="o">=</span><span class="s1">&#39;userdata&#39;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="k">case</span>
+      <span class="k">when</span> <span class="n">blk</span> <span class="k">then</span> <span class="nb">instance_eval</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="k">when</span> <span class="n">cfg</span> <span class="k">then</span> <span class="nb">instance_eval</span> <span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+      <span class="k">else</span> <span class="k">raise</span> <span class="no">ArgumentError</span>
+      <span class="k">end</span>
+    <span class="k">rescue</span> <span class="ss">Errno</span><span class="p">:</span><span class="ss">:ENOENT</span>
+      <span class="nb">abort</span> <span class="s2">&quot;userdata file `</span><span class="si">#{</span><span class="n">cfg</span><span class="si">}</span><span class="s2">` not found&quot;</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>registerにブロックが渡された場合はそれを評価しますが、ブロックが無い場合はcfgファイルを読み込んで評価するようにします。cfgファイルはデフォルトで'userdata'とします。</p>
+
+<p>userupコマンドは次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="n">require_relative</span> <span class="s2">&quot;user&quot;</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">register</span>
+
+<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span>
+</code></pre></div>
+
+
+<p>そして、'userdata'ファイルを用意して、ここでaddコマンドでユーザ情報を登録していきます。</p>
+
+<div class="highlight"><pre><code class="bash"><span class="c"># userdata</span>
+add <span class="s1">&#39;Charlie&#39;</span>,   12, :programmer
+add <span class="s1">&#39;Ben&#39;</span>,       17, :teacher
+add <span class="s1">&#39;Dick&#39;</span>,      33, :lawyer
+add <span class="s1">&#39;Elizabeth&#39;</span>, 23, :doctor
+add <span class="s1">&#39;Fernand&#39;</span>,   27, :teacher
+add <span class="s1">&#39;George&#39;</span>,    33, :programmer
+</code></pre></div>
+
+
+<p>準備ができたので、<code>userup</code>してみます。</p>
+
+<div class="highlight"><pre><code class="bash">% ./userup
+
+1:Charlie<span class="o">(</span>12/programmer<span class="o">)</span>
+2:Ben<span class="o">(</span>17/teacher<span class="o">)</span>
+3:Dick<span class="o">(</span>33/lawyer<span class="o">)</span>
+4:Elizabeth<span class="o">(</span>23/doctor<span class="o">)</span>
+5:Fernand<span class="o">(</span>27/teacher<span class="o">)</span>
+6:George<span class="o">(</span>33/programmer<span class="o">)</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<h2>改良５（IRBの利用）</h2>
+
+<p>最後に仕上げとして、userupコマンドをirbを使ったインタラクティブなものにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="n">require_relative</span> <span class="s2">&quot;user&quot;</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">register</span>
+
+<span class="nb">require</span> <span class="s2">&quot;irb&quot;</span>
+<span class="no">IRB</span><span class="o">.</span><span class="n">start</span>
+</code></pre></div>
+
+
+<p>'userup'してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% ./userup</span>
+<span class="sx">IRB </span><span class="n">on</span> <span class="no">Ruby1</span><span class="o">.</span><span class="mi">9</span><span class="o">.</span><span class="mi">3</span>
+<span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1">#=&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
+<span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Fernand&#39;</span> <span class="c1">#=&gt; 5:Fernand(27/teacher)</span>
+<span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_age</span> <span class="mi">33</span> <span class="c1">#=&gt; [3:Dick(33/lawyer), 6:George(33/programmer)]</span>
+<span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_job</span> <span class="ss">:programmer</span> <span class="c1">#=&gt; [1:Charlie(12/programmer), 6:George(33/programmer)]</span>
+<span class="o">&gt;&gt;</span> <span class="nb">exit</span> 
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p>で、最初の質問に戻ります。</p>
+
+<p><strong>どれが内部DSLなのか僕に教えてください！</strong></p>
+
+<p><a href="https://gist.github.com/3384729" title="Inner DSL on Ruby sample? — Gist">Inner DSL on Ruby sample? — Gist</a></p>
+
+<hr />
+
+<p>関連記事：</p>
+
+<p><a href="http://melborne.github.com/2011/06/03/Sinatra-DSL-Ruby/" title="SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！">SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4864010471"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51myqqcxi0L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4864010471">ドメイン特化言語 パターンで学ぶDSLのベストプラクティス46項目</a> by マーチン ファウラー and Martin Fowler</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="ねえRuby、どこまでが君でどこからが内部DSLなの？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" data-text="ねえRuby、どこまでが君でどこからが内部DSLなの？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/08/10/build-a-matryoshka-with-ruby" title="マトリョーシカはRackだけのものじゃない、あなたのRubyにもマトリョーシカを！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/09/03/learn-ruby-from-one" title="１から始めるRuby (スライド版)">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#dsl-ref">dsl <span>3</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="ねえRuby、どこまでが君でどこからが内部DSLなの？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" data-text="ねえRuby、どこまでが君でどこからが内部DSLなの？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/08/17/what-is-dsl-for-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

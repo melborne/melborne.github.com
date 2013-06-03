@@ -1,0 +1,902 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>09 September 2012</span></div>
+  <h1 class='page-title'><a href="/2012/09/09/understand-js-oop-with-ruby-brain">Ruby脳が理解するJavaScriptのオブジェクト指向</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>(追記：2012-12-15)
+本記事およびこれに続くその２，その３をまとめて電子書籍化しました。「<a href="https://gumroad.com/" title="Gumroad">Gumroad</a>」を通して100円にて販売しています。内容についての追加・変更はありませんが、誤記の修正およびメディア向けの調整を行っています。</p>
+
+<p><img src="/assets/images/2012/js_oop_cover.png" alt="JS OOP Ebook" /></p>
+
+<p><a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<p>購入ご検討のほどよろしくお願いしますm(__)m</p>
+
+<p>関連記事： <a href="http://localhost:4000/2012/12/15/javascript-oop-on-ebook/" title="電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版をGumroadから出版しました！">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版をGumroadから出版しました！</a></p>
+
+<hr />
+
+<p>「世の中がRubyで埋まればいいのに」と思う僕の気持ちとは裏腹に、世界は一層多様で複雑なものに向かっています。エントロピーは日々増大しています。</p>
+
+<p>人々は、その競争原理を指して<strong>「多様性は善である」</strong>といいます。しかし他者の意見が理解できたとき、その多様性は失われるのです。つまり多様性とは他者に対する不理解が継続する状態を言うのです。他者を理解したときに歩み寄りのプロセスは開始され、それは統合に向かって動き出します。</p>
+
+<p>僕たちはハリウッド映画を見ても、韓国ドラマを見ても、それが日本人が演じるドラマを見たときの如くに、胸を詰まらせ同じ色の涙を流すのです。そこに流れるのは人々の感情を揺さぶる共通の体系であり思想です。多様なものは何もありません。</p>
+
+<p>僕の脳は完全にRuby脳です。他言語の知識は無いと言っていいです。その結果、プログラム言語の世界が極めて多様に見えています。これは極めて不健全で、争いの種を生み出す危険な状態です。あまり時間はありませんが、何とかして僕はここから抜けださなければなりません。世界平和のためにも。</p>
+
+<p>大げさですか？ええ、人を呼び込むためのプロローグとは大体そんなものなのです :)</p>
+
+<p>そんなわけで...</p>
+
+<p>Ruby脳の僕がJavaScriptのオブジェクト指向をここ数日学んだので、今の理解を書いておきます。当然に不理解に基づく間違いが含まれています。ご指摘助かります。なお、以下のコードの実行結果はnode v0.6.14のREPLにおける出力に基づいています。</p>
+
+<h2>オブジェクトの生成</h2>
+
+<p>JavaScriptでのオブジェクトの生成は、Rubyのハッシュのような構文で行います。オブジェクトは一または複数のプロパティを持てます。プロパティとは、そのオブジェクトに紐付いたデータ（オブジェクトを含む）で、ラベルで参照できるものです。今、<code>name</code>と<code>age</code>というラベルで参照できるデータを持った２つのオブジェクトcharlie, earlを生成します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">12</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Earl&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">14</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+</code></pre></div>
+
+
+<p>各オブジェクトのプロパティに対するアクセスは、上述のようにRubyのメソッド呼び出しのような方法で、<code>.(ピリオド)</code>を使って行うことができます。</p>
+
+<p>また、オブジェクトに対するプロパティの追加や変更は、変数に値を代入するが如くに極めて簡単に行えます<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。各オブジェクトに、生まれた日からの日数を計算する<code>ageInDays</code>プロパティを追加してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>Rubyと異なりJavaScriptにおいて関数（定義）はオブジェクトであり、このようにプロパティにセットできます<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。プロパティ名を介して参照される関数は、<code>()</code>(括弧)を付することで実行されます。従ってRubyと異なり<code>()</code>は必須です。以下ではプロパティにセットされた関数を<code>メソッド</code>と呼ぶことがあります。</p>
+
+<p>未定義のプロパティの参照に対しては<code>undefined</code>が返されます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">job</span><span class="p">;</span> <span class="c1">// undefined</span>
+</code></pre></div>
+
+
+<h2>プロパティ探索</h2>
+
+<p>しかし一方で、未定義ながら特定のプロパティに対しては所定の値が返されます。<code>constructor</code>プロパティを呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span> <span class="c1">// [Function: Object]</span>
+</code></pre></div>
+
+
+<p>charlieオブジェクトのコンストラクタはObject関数であるという結果が返ってきました。</p>
+
+<p>未定義のプロパティが呼べたという事実をどう解釈すればいいでしょうか。可能性の一つはオブジェクトの生成時にJavaScriptが自動でそのようなプロパティをセットしたということです。</p>
+
+<p>確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="c1">// true</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;constructor&#39;</span><span class="p">);</span> <span class="c1">// false</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;hasOwnProperty&#39;</span><span class="p">);</span> <span class="c1">// false</span>
+</code></pre></div>
+
+
+<p><code>hasOwnProperty</code>メソッドに対して、上で定義した<code>name</code>はtrueを返しましたが、<code>constructor</code>およびこの呼び出しメソッド自体もfalseを返しました。つまりこれらのプロパティはcharlieオブジェクトには存在しないのです。</p>
+
+<p>つまりcharlieオブジェクトにはそのプロパティ探索に関して、別のオブジェクトがリンクされているのです。この別のオブジェクトは<code>__proto__</code>プロパティで参照できます<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">;</span> <span class="c1">// {}</span>
+</code></pre></div>
+
+
+<p><code>{}</code>、つまり空のオブジェクトがcharlieオブジェクトにリンクしていることが分かりました。このオブジェクトをJavaScriptではプロトタイプオブジェクトといいます。Rubyにおけるサブクラスに対するスーパークラスの呼び方のようなものですね。では、このオブジェクトが先のプロパティを持っているかを確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;constructor&#39;</span><span class="p">)</span> <span class="c1">// true</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;hasOwnProperty&#39;</span><span class="p">)</span> <span class="c1">// true</span>
+</code></pre></div>
+
+
+<p>trueが返ってきました。ビンゴです。</p>
+
+<p>以上により、オブジェクトのプロパティが呼ばれたとき、そのオブジェクトに対象プロパティがあればそれを返すが、無い場合は__proto__プロパティにセットされたオブジェクトのプロパティを探索する。そして対象プロパティがそこにあればそれを返すということが分かりました。</p>
+
+<p>ここで仮に、プロトタイプオブジェクトにも対象プロパティが見つからなかった場合はどうなるのでしょうか。これは想像が付きますよね。プロトタイプオブジェクトもcharlieオブジェクトと同種のオブジェクトですから、__proto__プロパティを持ってるはずです。よって、ここから更にその先のオブジェクトを辿るのでしょう。charlieの先の先、つまりそのプロトタイプオブジェクトの__proto__にセットされたオブジェクトを見てみましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// null</span>
+</code></pre></div>
+
+
+<p>__proto__プロパティは存在したものの、期待に反して<code>null</code>が返ってきました。つまりこの場合、プロパティ探索の旅（プロトタイプチェーン）はここで終了ということですね。</p>
+
+<h2>プロトタイプチェーンを使う</h2>
+
+<p>さて、この辺で最初のコードに戻ります。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">12</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Earl&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">14</span>
+<span class="p">};</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>このコードを見て、ムズムズしない人はいないでしょう。そう<code>ageInDays</code>メソッドがDRY原則に反しています。その結果どういった問題が生じるでしょう。</p>
+
+<p>仮に、銀河の歪みによって地球の公転周期が今の３倍、つまり１年が365*3=1095日になったらどうなりますか？その場合、あなたはすべての人オブジェクトのageInDaysメソッドを１つづつ修正しなければなりません<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>。</p>
+
+<p>先ほどのプロパティ探索の機構を利用してこの問題を解決します。つまり人の原型となる<code>person</code>オブジェクトを定義してプロトタイプチェーンに組み込むのです。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;unknown&#39;</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+</code></pre></div>
+
+
+<p>personオブジェクトが生成できました。これをcharlie, earlの各オブジェクトのプロトタイプとなるよう、それらの<code>__proto__</code>プロパティにセットして、ageInDaysを呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span><span class="p">;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span><span class="p">;</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>結果に変化がありません。残念ながら失敗しています。原因はなんでしょう。</p>
+
+<p>そうでした、charlie,earlの各オブジェクトに直接定義したageInDaysメソッドがまだ生きていたのでした。これらを削除してもう一度呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="k">delete</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">;</span> <span class="c1">// true</span>
+<span class="k">delete</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">;</span> <span class="c1">// true</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+</code></pre></div>
+
+
+<p>数値に変化がありましたが、なんか計算がおかしいですね。原因は何でしょう。</p>
+
+<p>もう一度personオブジェクトを見てみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>もう分かりました。ageInDaysでperson.ageを呼んでいたのが原因でした。ここは呼び出し元、つまりcharlieまたはearlのageが呼ばれなければいけません。</p>
+
+<p>こういうときのためにJavaScriptには<code>this</code>という便利なキーワードがあります。<code>this</code>は呼び出し元のオブジェクトを差します。Rubyにおける<code>self</code>のようなものですね。</p>
+
+<p>早速、<code>this</code>を使ってperson.ageInDaysを書き換えます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">person</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 13140</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 15330</span>
+</code></pre></div>
+
+
+<p>今度こそうまくいきました。</p>
+
+<p>プロトタイプチェーンがどう変化したか確認してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// { name: &#39;unknown&#39;,</span>
+                  <span class="c1">//   age: 1,</span>
+                  <span class="c1">//   ageInDays: [Function] }</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// {}</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// null</span>
+</code></pre></div>
+
+
+<p>見事にpersonオブジェクトが間に差し込まれています。</p>
+
+<h2>オブジェクトコンストラクタ</h2>
+
+<p>さて、引き続きpersonを型とする別のオブジェクトを生成してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Zena&#39;</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Rio&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jackie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>クラスベースのオブジェクト指向に慣れたRuby脳の僕にとって、このオブジェクト生成プロセスは面倒に感じられます。もっと簡便にオブジェクトを生成する方法はないでしょうか。</p>
+
+<p>JavaScriptの関数が使えそうです。そう関数でオブジェクトのコンストラクタを作るのです。nameとageを引数にとって、これらをプロパティとしたオブジェクトを返す、そんな関数です。コンストラクタらしく、大文字から始まるPersonコンストラクタを定義します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>ここでの重要なポイントは、ageInDaysプロパティを持ったプロトタイプオブジェクト（proto）を生成し、返されるオブジェクトの__proto__にこれをセットすることです。これで先のコードとほぼ同様<sup id='fnref:5'><a href='#fn:5' rel='footnote'>5</a></sup>のオブジェクトをコンストラクタを使って生成できそうです。</p>
+
+<p>やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">);</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p>...</p>
+
+<p>と言いたいところですが、先のコンストラクタには問題があります。</p>
+
+<p>今、地球に小惑星が衝突してその公転周期が更に２倍、つまり１年が365*3*2=2190日になったとします。結果PersonコンストラクタのageInDaysを再定義する必要が生じました。さてどうやってageInDaysを再定義しましょうか。ageInDaysを持ったオブジェクトはPersonコンストラクタ内のローカル変数で保持されているので、直接アクセスできません。でも、生成した特定のオブジェクト（例えばzena）の__proto__からアクセスできそうですね。やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>正しく再定義されたか確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 2190</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>確かにzenaの結果は倍になりましたが、他のオブジェクトの結果に変化はありません。何が問題でしょうか。もう一度Personコンストラクタの定義を見てみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>あー、ダメな理由がわかりました。</p>
+
+<p>これではPersonが実行される度にプロトタイプオブジェクトprotoが作成されてしまいます。つまりPersonで生成される各オブジェクトの__proto__にはそれぞれ別のプロトタイプオブジェクトがセットされてしまうのです。</p>
+
+<p>確認してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+</code></pre></div>
+
+
+<p>やはり別のオブジェクトでした。</p>
+
+<p>ではどうすればいいでしょうか。</p>
+
+<p>そう、各オブジェクトのプロトタイプオブジェクトをPersonに紐付ければいいのです。つまりプロトタイプオブジェクトをPersonの任意のプロパティにセットし、これを参照させればいいのです。やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span> <span class="p">};</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>ageInDaysメソッドを持ったオブジェクトをPerson.protoプロパティにセットし、このプロパティを各オブジェクトの__proto__にセットします。一応、Person.protoがセットされている場合はif文で無駄な処理が繰り返されないようにします。</p>
+
+<p>さあもう一度オブジェクトを生成して試してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">);</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>プロトタイプオブジェクトのageInDaysメソッドを書き換えて、再度各オブジェクトから呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 2190</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 39420</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 45990</span>
+</code></pre></div>
+
+
+<p>今度はうまくいきました。</p>
+
+<p>念のため各オブジェクトが共通のプロトタイプを参照しているか確認します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<h2>new 演算子</h2>
+
+<p>ここまで来れば僕が何を言いたいのかが分かると思います。</p>
+
+<p>「それ、<code>new</code>演算子でできるよ！」ってことですね。</p>
+
+<p>new演算子には関数コンストラクタを渡しますが、通常の関数の書き方でない特殊な構文の関数を構築して渡します。つまりクラスベースのオブジェクト指向におけるクラスをイミテートした構文の関数を使います。先のPerson関数と等価の関数コンストラクタは次のようになります。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">,</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>確かにクラスっぽい。</p>
+
+<p>関数コンストラクタ（これも当然オブジェクトです）には、それ専用の<code>prototype</code>という名のプロパティが用意されています。既定でここには空のオブジェクトがセットされています。関数をnewすることにより、そこから生成される各オブジェクトの__proto__プロパティにはコンストラクタのprototypeプロパティがセットされます。また、コンストラクタ内の<code>this</code>ですが、これは生成される各オブジェクトを指すようになるのです。それが<code>new</code>の機能です。</p>
+
+<p>さあPersonコンストラクタをnewしてオブジェクトを生成してみましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Earl&#39;</span><span class="p">,</span> <span class="mi">14</span><span class="p">);</span>
+ 
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 13140</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 15330</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+
+<p>関数コンストラクタの注意点は、これはあくまで関数であり、newが無くても呼べてしまうということです。この場合、上記newの機能は働きません。つまり関数内部の<code>this</code>はオブジェクトを指すのではなく（オブジェクトが生成されないので当然です）、その呼び出し環境すなわち<code>グローバルオブジェクト</code>を指すことになるのです。そのリスクから<strong>「newは良くない部品」</strong>と言う意見もあるようです。</p>
+
+<p>「継承」「Object.create」などについての説明が欠落していますが、JavaScriptのオブジェクト指向に対する僕の理解は今のところここまでです。最後までありがとうございますm(__)m</p>
+
+<hr />
+
+<p><img src="/assets/images/2012/js_oop_cover.png" alt="JS OOP Ebook" /></p>
+
+<p><a href="http://gum.co/wNxf" class="gumroad-button">電子書籍「Ruby脳が理解するJavaScriptのオブジェクト指向」EPUB版 </a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script></p>
+
+<p>このリンクはGumroadにおける商品購入リンクになっています。クリックすると、オーバーレイ・ウインドウが立ち上がって、この場でクレジットカード決済による購入が可能です。購入にはクレジット情報およびメールアドレスの入力が必要になります。購入すると、入力したメールアドレスにコンテンツのDLリンクが送られてきます。</p>
+
+<hr />
+
+<p>(追記：2012-09-11) 関連記事書きました。</p>
+
+<p><a href="http://melborne.github.com/2012/09/11/understand-ruby-oop-with-js-brain/" title="JavaScript脳で理解するRubyのオブジェクト指向">JavaScript脳で理解するRubyのオブジェクト指向</a></p>
+
+<p>(追記：2012-09-15) 続きを書きました。</p>
+
+<p><a href="http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/" title="Ruby脳が理解するJavaScriptのオブジェクト指向（その２）">Ruby脳が理解するJavaScriptのオブジェクト指向（その２）</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/JavaScript-第6版-David-Flanagan/dp/4873115736?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873115736"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51f46ZHorvL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/JavaScript-第6版-David-Flanagan/dp/4873115736?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873115736">JavaScript 第6版</a> by David Flanagan</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>変数はグローバルオブジェクトのプロパティです。 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>もちろんRubyにはProcやMethodオブジェクトがあるので同じことができます。 <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>__proto__は非標準プロパティです <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>ここでの日数計算は過去に遡って適用されるものとします。 <a href='#fnref:4' rev='footnote'>↩</a></li><li id='fn:5'>personコンストラクタではname, ageのデフォルトを提供していません。 <a href='#fnref:5' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby脳が理解するJavaScriptのオブジェクト指向" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" data-text="Ruby脳が理解するJavaScriptのオブジェクト指向" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/09/03/learn-ruby-from-one" title="１から始めるRuby (スライド版)">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/09/11/understand-ruby-oop-with-js-brain" title="JavaScript脳で理解するRubyのオブジェクト指向">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#javascript-ref">javascript <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#oop-ref">oop <span>5</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby脳が理解するJavaScriptのオブジェクト指向" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" data-text="Ruby脳が理解するJavaScriptのオブジェクト指向" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/09/09/understand-js-oop-with-ruby-brain/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>SchemeとRubyで記号微分を学ぼう</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>13 March 2009</span></div>
+  <h1 class='page-title'><a href="/2009/03/13/Scheme-Ruby">SchemeとRubyで記号微分を学ぼう</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って、今度はSchemeとRubyでの記号データの扱い方を見ていこうと思います。なおSchemeのコードは本書からの抜粋で、説明は自分の要約です。</p>
+
+<p>Schemeではクオート(｀)を使ってデータオブジェクトを記号として表現できる。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">a</span> <span class="o">`</span><span class="nv">b</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">a</span> <span class="nv">b</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>クオートを使えばa, bは値を指す変数ではなく、記号として解釈される。</p>
+
+<p>この能力を使って、代数式の記号微分を実行する手続きを作る。この手続きは引数として記号を含んだ代数式と変数を取り、代数式のこの変数に関する微分を返す。例えば <code>ax^2 + bx + c</code> と <code>x</code> なら <code>2ax + b</code> が返る</p>
+
+<p>ここでは2つの引数を持った加算と乗算と累乗からなる式を扱う。この微分の規則は次の通りである。</p>
+
+<p><img src="/assets/images/2009-03-13-Scheme-Ruby.png" alt="Alt differenciation" /></p>
+
+<p>この規則をSchemeで表現すれば以下の通りである。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">deriv</span> <span class="nv">exp</span> <span class="nv">var</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">number? </span><span class="nv">exp</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+         <span class="p">((</span><span class="nf">variable?</span> <span class="nv">exp</span><span class="p">)</span>
+          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">same_variable?</span> <span class="nv">exp</span> <span class="nv">var</span><span class="p">)</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">))</span>
+         <span class="p">((</span><span class="nf">sum?</span> <span class="nv">exp</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">make_sum</span> <span class="p">(</span><span class="nf">deriv</span> <span class="p">(</span><span class="nf">addend</span> <span class="nv">exp</span><span class="p">)</span> <span class="nv">var</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nf">deriv</span> <span class="p">(</span><span class="nf">augend</span> <span class="nv">exp</span><span class="p">)</span> <span class="nv">var</span><span class="p">)))</span>
+         <span class="p">((</span><span class="nf">product?</span> <span class="nv">exp</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">make_sum</span>
+             <span class="p">(</span><span class="nf">make_product</span> <span class="p">(</span><span class="nf">multiplier</span> <span class="nv">exp</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">deriv</span> <span class="p">(</span><span class="nf">multiplicand</span> <span class="nv">exp</span><span class="p">)</span> <span class="nv">var</span><span class="p">))</span>
+             <span class="p">(</span><span class="nf">make_product</span> <span class="p">(</span><span class="nf">deriv</span> <span class="p">(</span><span class="nf">multiplier</span> <span class="nv">exp</span><span class="p">)</span> <span class="nv">var</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">multiplicand</span> <span class="nv">exp</span><span class="p">))))</span>
+         <span class="p">((</span><span class="nf">exponentiation?</span> <span class="nv">exp</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">make_product</span>
+             <span class="p">(</span><span class="nf">make_product</span> <span class="p">(</span><span class="nf">exponent</span> <span class="nv">exp</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">make_exponentiation</span> <span class="p">(</span><span class="nf">base</span> <span class="nv">exp</span><span class="p">)</span>
+                                        <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nf">exponent</span> <span class="nv">exp</span><span class="p">)</span> <span class="mi">1</span><span class="p">)))</span>
+             <span class="p">(</span><span class="nf">deriv</span> <span class="p">(</span><span class="nf">base</span> <span class="nv">exp</span><span class="p">)</span> <span class="nv">var</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nf">else</span>
+          <span class="p">(</span><span class="nf">error</span> <span class="s">&quot;unknown expression type -- DERIV&quot;</span> <span class="nv">exp</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>このコードはまだ未定義の以下のサブ手続きを含んでいる。</p>
+
+<blockquote><p>(variable? e)  ｅは変数か
+(same_variable? v1 v2)  v1, v2は同じ変数か
+(sum? e)  eは和か
+(addend e)  eの加数
+(augend e)  eの被加数
+(make_sum a1 a2)  a1, a2の和を構成
+(product? e)  eは積か
+(multiplier e)  eの乗数
+(multiplicand e)  eの被乗数
+(make_product m1 m2)  m1, m2の積を構成
+(exponentiation? e)  eは累乗か
+(base e)  eの基数
+(exponent e)  eの指数
+(make_exponentiation e1 e2)  e1, e2の累乗を構成</p></blockquote>
+
+<p>次にこれらの手続きを実装しよう。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">variable?</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">symbol? </span><span class="nv">x</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">same_variable?</span> <span class="nv">v1</span> <span class="nv">v2</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nf">variable?</span> <span class="nv">v1</span><span class="p">)</span> <span class="p">(</span><span class="nf">variable?</span> <span class="nv">v2</span><span class="p">)</span> <span class="p">(</span><span class="nb">eq? </span><span class="nv">v1</span> <span class="nv">v2</span><span class="p">)))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_sum</span> <span class="nv">a1</span> <span class="nv">a2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">+</span> <span class="nv">a1</span> <span class="nv">a2</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">=number?</span> <span class="nv">exp</span> <span class="nv">num</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">number? </span><span class="nv">exp</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="nv">exp</span> <span class="nv">num</span><span class="p">)))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_product</span> <span class="nv">m1</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">*</span> <span class="nv">m1</span> <span class="nv">m2</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum?</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">eq? </span><span class="p">(</span><span class="nb">car </span><span class="nv">x</span><span class="p">)</span> <span class="o">`</span><span class="nv">+</span><span class="p">)))</span>
+    
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">addend</span> <span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">s</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">augend</span> <span class="nv">s</span><span class="p">)</span> <span class="p">(</span><span class="nb">caddr </span><span class="nv">s</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">product?</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">eq? </span><span class="p">(</span><span class="nb">car </span><span class="nv">x</span><span class="p">)</span> <span class="o">`</span><span class="nv">*</span><span class="p">)))</span>
+    
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">multiplier</span> <span class="nv">p</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">p</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">multiplicand</span> <span class="nv">p</span><span class="p">)</span> <span class="p">(</span><span class="nb">caddr </span><span class="nv">p</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">exponentiation?</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">eq? </span><span class="p">(</span><span class="nb">car </span><span class="nv">x</span><span class="p">)</span> <span class="o">`</span><span class="nv">**</span><span class="p">)))</span>
+    
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">base</span> <span class="nv">e</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">e</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">exponent</span> <span class="nv">e</span><span class="p">)</span> <span class="p">(</span><span class="nb">caddr </span><span class="nv">e</span><span class="p">))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_exponentiation</span> <span class="nv">e1</span> <span class="nv">e2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">**</span> <span class="nv">e1</span> <span class="nv">e2</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p>実装が済んだら早速試してみよう。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">)</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">))</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">a</span> <span class="p">(</span><span class="nf">**</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">b</span> <span class="nv">x</span><span class="p">))</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ 
+ <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>
+ <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mi">1</span> <span class="nv">y</span><span class="p">))</span>
+ <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="mi">0</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mi">1</span> <span class="nv">y</span><span class="p">))</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">)))</span>
+ <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">a</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="p">(</span><span class="nf">**</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mi">0</span> <span class="p">(</span><span class="nf">**</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)))</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">b</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mi">0</span> <span class="nv">x</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p>正しい答えが出た。でも簡約されていない。</p>
+
+<p>基のderiv手続きに変更を加えることなく、make_sum, make_product, make_exponentiationを変更することで簡約を実現しよう。</p>
+
+<p>make_sumには両方のオペランドが数値ならそれらを足し、一方が0なら他方のオペランドを返す条件を加える。</p>
+
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_sum</span> <span class="nv">a1</span> <span class="nv">a2</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nf">=number?</span> <span class="nv">a1</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">a2</span><span class="p">)</span>
+         <span class="p">((</span><span class="nf">=number?</span> <span class="nv">a2</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">a1</span><span class="p">)</span>
+         <span class="p">((</span><span class="k">and </span><span class="p">(</span><span class="nb">number? </span><span class="nv">a1</span><span class="p">)</span> <span class="p">(</span><span class="nb">number? </span><span class="nv">a2</span><span class="p">))</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">a1</span> <span class="nv">a2</span><span class="p">))</span>
+          <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">+</span> <span class="nv">a1</span> <span class="nv">a2</span><span class="p">))))</span>
+ 
+ <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">=number?</span> <span class="nv">exp</span> <span class="nv">num</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">number? </span><span class="nv">exp</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="nv">exp</span> <span class="nv">num</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p>サブ手続き<code>=number?</code>は数が等しいか見る。</p>
+
+<p>make_productでは両方のオペランドが数値ならそれらを掛け、一方が0なら0を、1なら他のオペランドを返す条件を加える。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_product</span> <span class="nv">m1</span> <span class="nv">m2</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="k">or </span><span class="p">(</span><span class="nf">=number?</span> <span class="nv">m1</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nf">=number?</span> <span class="nv">m2</span> <span class="mi">0</span><span class="p">))</span> <span class="mi">0</span><span class="p">)</span>
+         <span class="p">((</span><span class="nf">=number?</span> <span class="nv">m1</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">m2</span><span class="p">)</span>
+         <span class="p">((</span><span class="nf">=number?</span> <span class="nv">m2</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">m1</span><span class="p">)</span>
+         <span class="p">((</span><span class="k">and </span><span class="p">(</span><span class="nb">number? </span><span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="nb">number? </span><span class="nv">m2</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">m1</span> <span class="nv">m2</span><span class="p">))</span>
+         <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">*</span> <span class="nv">m1</span> <span class="nv">m2</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>make_exponentiationでは、指数が0なら1を1なら基数を返す条件を加える。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_exponentiation</span> <span class="nv">e1</span> <span class="nv">e2</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nf">=number?</span> <span class="nv">e2</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+         <span class="p">((</span><span class="nf">=number?</span> <span class="nv">e2</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">e1</span><span class="p">)</span>
+         <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">list </span><span class="o">`</span><span class="nv">**</span> <span class="nv">e1</span> <span class="nv">e2</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p>これらの変更により簡約された結果が得られる。</p>
+
+<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">)</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">))</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ <span class="p">(</span><span class="nf">deriv</span> <span class="o">`</span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">a</span> <span class="p">(</span><span class="nf">**</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">b</span> <span class="nv">x</span><span class="p">))</span> <span class="o">`</span><span class="nv">x</span><span class="p">)</span>
+ 
+ <span class="mi">1</span>
+ <span class="nv">y</span>
+ <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">y</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">3</span><span class="p">)))</span>
+ <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">a</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">x</span><span class="p">))</span> <span class="nv">b</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h2>Rubyによる記号微分</h2>
+
+<p>同じことをRubyでも挑戦してみよう。Rubyでは記号を表現するためにシンボル(Symbol)と文字列(String)が使えそうだ。</p>
+
+<p>まずはderivメソッドを書く。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">deriv</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+   <span class="k">case</span> <span class="n">exp</span>
+   <span class="k">when</span> <span class="no">Numeric</span>
+     <span class="mi">0</span>
+   <span class="k">when</span> <span class="no">Symbol</span><span class="p">,</span> <span class="nb">String</span>
+     <span class="n">same_variable?</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span>
+   <span class="k">when</span> <span class="no">Sum</span>
+     <span class="n">make_sum</span> <span class="n">deriv</span><span class="p">(</span><span class="n">addend</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">var</span><span class="p">),</span> <span class="n">deriv</span><span class="p">(</span><span class="n">augend</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+   <span class="k">when</span> <span class="no">Product</span>
+     <span class="n">m1</span> <span class="o">=</span> <span class="n">make_product</span> <span class="n">multiplier</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">deriv</span><span class="p">(</span><span class="n">multiplicand</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+     <span class="n">m2</span> <span class="o">=</span> <span class="n">make_product</span> <span class="n">deriv</span><span class="p">(</span><span class="n">multiplier</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">var</span><span class="p">),</span> <span class="n">multiplicand</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+     <span class="n">make_sum</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">)</span>
+   <span class="k">when</span> <span class="no">Exponentiation</span>
+     <span class="n">e1</span> <span class="o">=</span> <span class="n">make_product</span><span class="p">(</span><span class="n">exponent</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">make_exponentiation</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">exponent</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+     <span class="n">e2</span> <span class="o">=</span> <span class="n">deriv</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+     <span class="n">make_product</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+   <span class="k">else</span>
+     <span class="k">raise</span> <span class="s2">&quot;unknown expression type -- DERIV </span><span class="si">#{</span><span class="n">exp</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>記号をシンボルまたは文字列で表現したので、引数expが和であるか積であるか累乗であるかを判断するために、それぞれに別のクラスSum、Product、Exponentiationを定義するのがよさそうだ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Sum</span>
+   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+     <span class="n">pair?</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">car</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">equal?</span> <span class="ss">:+</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Product</span>
+   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+     <span class="n">pair?</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">car</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">equal?</span> <span class="ss">:*</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Exponentiation</span>
+   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+     <span class="n">pair?</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">car</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">equal?</span> <span class="ss">:**</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>case文での判断は===メソッドでなされるので、それぞれに専用メソッドを定義する。</p>
+
+<p>他のメソッドはSchemeと同様に定義すればいい。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">same_variable?</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+   <span class="n">exp</span> <span class="o">==</span> <span class="n">var</span> <span class="p">?</span> <span class="kp">true</span> <span class="p">:</span> <span class="kp">false</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">make_sum</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">eql_number?</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+     <span class="n">a2</span>
+   <span class="k">elsif</span> <span class="n">eql_number?</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+     <span class="n">a1</span>
+   <span class="k">elsif</span> <span class="no">Numeric</span> <span class="o">===</span> <span class="n">a1</span> <span class="ow">and</span> <span class="no">Numeric</span> <span class="o">===</span> <span class="n">a2</span>
+     <span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span>
+   <span class="k">else</span>
+     <span class="n">list</span> <span class="ss">:+</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">eql_number?</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+   <span class="no">Numeric</span> <span class="o">===</span> <span class="n">exp</span> <span class="ow">and</span> <span class="n">exp</span> <span class="o">==</span> <span class="n">num</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">make_product</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">eql_number?</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">eql_number?</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+     <span class="mi">0</span>
+   <span class="k">elsif</span> <span class="n">m1</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">m2</span>
+   <span class="k">elsif</span> <span class="n">m2</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">m1</span>
+   <span class="k">elsif</span> <span class="no">Numeric</span> <span class="o">===</span> <span class="n">m1</span> <span class="ow">and</span> <span class="no">Numeric</span> <span class="o">===</span> <span class="n">m2</span>
+     <span class="n">m1</span> <span class="o">*</span> <span class="n">m2</span>
+   <span class="k">else</span>
+     <span class="n">list</span> <span class="ss">:*</span><span class="p">,</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">addend</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+   <span class="n">cadr</span> <span class="n">s</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">augend</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+   <span class="n">caddr</span> <span class="n">s</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">multiplier</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span>
+   <span class="n">cadr</span> <span class="nb">p</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">multiplicand</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span>
+   <span class="n">caddr</span> <span class="nb">p</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+   <span class="n">cadr</span> <span class="n">e</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">exponent</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+   <span class="n">caddr</span> <span class="n">e</span>
+ <span class="k">end</span>
+ 
+ <span class="k">def</span> <span class="nf">make_exponentiation</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">e2</span> <span class="o">==</span> <span class="mi">0</span>
+     <span class="mi">1</span>
+   <span class="k">elsif</span> <span class="n">e2</span> <span class="o">==</span> <span class="mi">1</span>
+     <span class="n">e1</span>
+   <span class="k">else</span>
+     <span class="n">list</span> <span class="ss">:**</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>リストは以前実装したlistメソッドを使って作る。このリストはSchemeのリスト同様consの入れ子になっている。リストをキレイに出力するlist_pメソッドも定義した。
+準備が整ったので実行してみよう</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">list_p</span> <span class="n">deriv</span> <span class="n">list</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="ss">:x</span>
+ <span class="n">list_p</span> <span class="n">deriv</span> <span class="n">list</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span><span class="p">),</span> <span class="ss">:x</span>
+ <span class="n">list_p</span> <span class="n">deriv</span> <span class="n">list</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span><span class="p">),</span> <span class="n">list</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="ss">:x</span>
+ <span class="n">list_p</span> <span class="n">deriv</span> <span class="n">list</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="ss">:a</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="ss">:**</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">list</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:x</span><span class="p">)),</span> <span class="ss">:x</span>
+ 
+ <span class="c1"># &gt;&gt; 1</span>
+ <span class="c1"># &gt;&gt; y</span>
+ <span class="c1"># &gt;&gt; (+ (* x y) (* y (+ x 3)))</span>
+ <span class="c1"># &gt;&gt; (+ (* a (* 2 x)) b)</span>
+</code></pre></div>
+
+
+<p>コードを以下に置きました。
+http://gist.github.com/64646</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/03/13/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyで記号微分を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/03/13/Scheme-Ruby/" data-text="SchemeとRubyで記号微分を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/03/13/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/03/13/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/02/23/notitle" title="ストールマンは謳う ～正しさと、困難さと、心強さと">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/03/15/notitle" title="文化と変化と情報化">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#scheme-ref">scheme <span>8</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/03/13/Scheme-Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="SchemeとRubyで記号微分を学ぼう" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/03/13/Scheme-Ruby/" data-text="SchemeとRubyで記号微分を学ぼう" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/03/13/Scheme-Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/03/13/Scheme-Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

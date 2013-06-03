@@ -1,0 +1,1631 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>18 December 2011</span></div>
+  <h1 class='page-title'><a href="/2011/12/18/Rspec">RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>今までコードを書くとき、正直あまりまじめにテストをしてこなかったよ。でも、いつまでもそういう訳にはいかないだろうから、以下の記事を参考にしてRSpecをやってみたんだ。</p>
+
+<p><a href="http://d.hatena.ne.jp/t-wada/20100228/p1">RSpec の入門とその一歩先へ - t-wadaの日記</a></p>
+
+<p><a href="http://jp.rubyist.net/magazine/?0021-Rspec">Rubyist Magazine - スはスペックのス 【第 1 回】 RSpec の概要と、RSpec on Rails (モデル編)</a></p>
+
+<p>そうしたら次のようなことが分かったんだよ。</p>
+
+<ol>
+<li>RSpecは設計図</li>
+<li>RSpecはなんかたのしい</li>
+</ol>
+
+
+<p>で、この感覚をみんなと共有できればと思ったので、RSpec入門者の僕がRSpecを使ってここで何か作ってみるよ。</p>
+
+<p>さて、何を作ろうか..</p>
+
+<p>何か実用的で楽しいものがいいよね。そうだ折角だからなかなか手に入らないものがいいね。なかなか手に入らないものといったら..</p>
+
+<p>もちろん輸入禁制品だよね!</p>
+
+<p>そんなわけで..</p>
+
+<p>RubyのRSpecを使ってけん銃を作るよ。で、最高にイカしてるけん銃と言ったらリボルバーだから、リボルバーを作ることにするよ。銃が完成したら君とロシアンルーレットを楽しみたいと思うんだ。</p>
+
+<p>最初に断っておくと、このポストは君がエディタとターミナルを開いて僕と同じことをすることを期待したもの、つまりチュートリアルの形式になっているよ。だから、相当長いポストになることを覚悟してほしいよ。</p>
+
+<p>結果だけみたい人は以下にコードを張ったから、それにざっと目を通してそれから「ロシアンルーレットで遊ぶ」の項に飛んでくれるとうれしいよ。</p>
+
+<p><a href="https://gist.github.com/1490370">Revolver for Russian Roulette ― Gist</a></p>
+
+<h2>リボルバーの作り方</h2>
+
+<p>うれしいことにRubyにはロシアンルーレットのための部品が既に用意されてるよ。Array#rotate!, #shuffle, #cycleはまさにその目的のために作られたんだよ。これらのメソッドがあれば作業がかなり捗るよね。</p>
+
+<p>さて、簡単な方針だけ決めてRSpecを書いていくよ。けん銃にもいろいろあるから、ここではいきなりRevolverクラスを作るんじゃなくて、ベースとなるGunクラスを作ってRevolverクラスはそれを継承するようにしよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="c1">#gun_spec.rb</span>
+ <span class="nb">require</span> <span class="s2">&quot;rspec&quot;</span>
+ <span class="n">require_relative</span> <span class="s2">&quot;gun&quot;</span>
+ 
+ <span class="n">describe</span> <span class="no">Gun</span> <span class="k">do</span>
+   
+ <span class="k">end</span>
+ 
+ <span class="n">describe</span> <span class="no">Revolver</span> <span class="k">do</span>
+   
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<h2>Gunクラス</h2>
+
+<p>けん銃は少なくとも弾を込めて発砲できなくちゃいけないから、これをGunクラスの機能として持たせるよ。薬室(弾を込める場所)、装弾、発砲をそれぞれchamber, set_cartridge, triggerとするよ。弾はカートリッジ(cartridge)と言うよ。</p>
+
+<p>ちなみに銃に詳しくない人はここに目を通すといいよ。</p>
+
+<p><a href="http://s-c-c.info/tec/revo.html">SCC-Gun</a></p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">describe</span> <span class="no">Gun</span> <span class="k">do</span>
+   <span class="n">context</span> <span class="s2">&quot;chamber&quot;</span> <span class="k">do</span>
+     
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+     
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+     
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここで一度rspecを走らせてみるよ。</p>
+
+<div class="highlight"><pre><code class="bash"> % rspec -fs -c gun_spec.rb
+ % gun_spec.rb:4:in <span class="sb">`</span>&lt;top <span class="o">(</span>required<span class="o">)</span>&gt;<span class="err">&#39;</span>: uninitialized constant Object::Gun <span class="o">(</span>NameError<span class="o">)</span>
+</code></pre></div>
+
+
+<p>Gunクラスがないって文句を言われたからこれを作ろう。Revolverもね。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="c1">#gun.rb</span>
+ <span class="k">class</span> <span class="nc">Gun</span>
+   
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Revolver</span> <span class="o">&lt;</span> <span class="no">Gun</span>
+   
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあもう一度テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span>
+ <span class="no">No</span> <span class="n">examples</span> <span class="n">found</span><span class="o">.</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00005</span> <span class="n">seconds</span>
+ <span class="mi">0</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>で、chamberは最初は空でset_cartridgeすると、弾がそこに入って撃てるようになる、そういう設計に沿ってexampleを書くよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;rspec&quot;</span>
+ <span class="n">require_relative</span> <span class="s2">&quot;gun&quot;</span>
+ 
+ <span class="n">describe</span> <span class="no">Gun</span> <span class="k">do</span>
+   <span class="n">before</span> <span class="k">do</span>
+     <span class="vi">@gun</span> <span class="o">=</span> <span class="no">Gun</span><span class="o">.</span><span class="n">new</span>
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;chamber&quot;</span> <span class="k">do</span>
+     <span class="n">it</span> <span class="s2">&quot;should be empty at default&quot;</span> <span class="k">do</span>
+       <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+     <span class="k">end</span>
+     
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+     <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the chamber&quot;</span> <span class="k">do</span>
+       <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span>
+       <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+     
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">describe</span> <span class="no">Revolver</span> <span class="k">do</span>
+   
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>そしてテストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">chamber</span> <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+      <span class="ss">NoMethodError</span><span class="p">:</span>
+        <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`chamber&#39; for #&lt;Gun:0x00000100a1e248&gt;</span>
+<span class="sb">      # ./gun_spec.rb:11:in `</span><span class="n">block</span> <span class="p">(</span><span class="mi">3</span> <span class="n">levels</span><span class="p">)</span> <span class="k">in</span> <span class="o">&lt;</span><span class="n">top</span> <span class="p">(</span><span class="n">required</span><span class="p">)</span><span class="o">&gt;</span><span class="s1">&#39;</span>
+<span class="s1"> </span>
+<span class="s1">   2) Gun set_cartridge should set a cartridge to the chamber</span>
+<span class="s1">      Failure/Error: @gun.set_cartridge</span>
+<span class="s1">      NoMethodError:</span>
+<span class="s1">        undefined method `set_cartridge&#39;</span> <span class="k">for</span> <span class="c1">#&lt;Gun:0x00000100a1cda8&gt;</span>
+      <span class="c1"># ./gun_spec.rb:18:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">000</span><span class="mi">92</span> <span class="n">seconds</span>
+ <span class="mi">2</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">2</span> <span class="n">failures</span>
+ <span class="no">Failed</span> <span class="ss">examples</span><span class="p">:</span>
+ 
+ <span class="n">rspec</span> <span class="o">.</span><span class="n">/gun_spec</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">10</span> <span class="c1"># Gun chamber should be empty at default</span>
+ <span class="n">rspec</span> <span class="o">.</span><span class="n">/gun_spec</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">17</span> <span class="c1"># Gun set_cartridge should set a cartridge to the chamber</span>
+</code></pre></div>
+
+
+<p>chamberメソッドもset_cartridgeメソッドも無いって言われたから作るよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Gun</span>
+   <span class="kp">attr_reader</span> <span class="ss">:chamber</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@chamber</span> <span class="o">=</span> <span class="o">[]</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">set_cartridge</span>
+     <span class="vi">@chamber</span> <span class="o">&lt;&lt;</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>もう一度テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">set_cartridge</span> <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="ss">NameError</span><span class="p">:</span>
+        <span class="n">uninitialized</span> <span class="n">constant</span> <span class="ss">Gun</span><span class="p">:</span><span class="ss">:Cartridge</span>
+      <span class="c1"># ./gun.rb:8:in `set_cartridge&#39;</span>
+      <span class="c1"># ./gun_spec.rb:18:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0032</span><span class="mi">8</span> <span class="n">seconds</span>
+ <span class="mi">2</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>1つ目はパスしたけど、2つ目はまだ弾を作ってなかったからフェイルしたよ。弾を作るよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Cartridge</span>
+   
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストね</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">set_cartridge</span> <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="o">[</span><span class="c1">#&lt;Cartridge:0x00000100a992b8&gt;]</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="o">[</span><span class="c1">#&lt;Cartridge:0x00000100a99420&gt;] (using ==)</span>
+        <span class="ss">Diff</span><span class="p">:</span>
+        <span class="err">@@</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span> <span class="err">@@</span>
+        <span class="o">-[</span><span class="c1">#&lt;Cartridge:0x00000100a992b8&gt;]</span>
+        <span class="o">+[</span><span class="c1">#&lt;Cartridge:0x00000100a99420&gt;]</span>
+      <span class="c1"># ./gun_spec.rb:19:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00145</span> <span class="n">seconds</span>
+ <span class="mi">2</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>今度は弾が違うって言われたよ。弾の同値性をオブジェクトで判断するからだね。じゃあ同値性をクラスで判断して弾の個性を消すよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Cartridge</span>
+   <span class="kp">include</span> <span class="no">Comparable</span>
+   <span class="k">def</span> <span class="nf">&lt;=&gt;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="nb">self</span><span class="o">.</span><span class="n">class</span> <span class="o">&lt;=&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">class</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあもう一度。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">000</span><span class="mi">88</span> <span class="n">seconds</span>
+ <span class="mi">2</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>うまくいったよ!</p>
+
+<p>さて、次にchamberに弾が入ってたらもう詰められないから、そのときはエラーがでるようにしないと。exampleを書くよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the chamber&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be error when the chamber has a cartridge&quot;</span> <span class="k">do</span>
+      <span class="o">-&gt;</span><span class="p">{</span> <span class="mi">2</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span> <span class="p">}</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>raise_errorを捕捉するにはset_cartridgeのリターンをProcオブジェクト化しないといけないよ。ちょっとイケてないけどねー。</p>
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">set_cartridge</span> <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="mi">2</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span> <span class="p">}</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span>
+        <span class="n">expected</span> <span class="no">Exception</span> <span class="n">but</span> <span class="n">nothing</span> <span class="n">was</span> <span class="n">raised</span>
+      <span class="c1"># ./gun_spec.rb:23:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00122</span> <span class="n">seconds</span>
+ <span class="mi">3</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>エラーを期待したのに、エラーにならないって言われたので対応するよ。ErrorクラスはChamberErrorにしようか。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Gun</span>
+   <span class="k">class</span> <span class="nc">ChamberError</span> <span class="o">&lt;</span> <span class="no">StandardError</span><span class="p">;</span> <span class="k">end</span>
+   
+   <span class="kp">attr_reader</span> <span class="ss">:chamber</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@chamber</span> <span class="o">=</span> <span class="o">[]</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">set_cartridge</span>
+     <span class="k">raise</span> <span class="no">ChamberError</span><span class="p">,</span> <span class="s1">&#39;The chamber is full&#39;</span> <span class="k">unless</span> <span class="vi">@chamber</span><span class="o">.</span><span class="n">empty?</span>
+     <span class="vi">@chamber</span> <span class="o">&lt;&lt;</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00137</span> <span class="n">seconds</span>
+ <span class="mi">3</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>パスしたよ。</p>
+
+<p>さて次はtrigger周りを作ろう。もちろん発砲したら'Bang!'ってならなきゃ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should return &#39;Bang!&#39;&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>実装もしちゃうよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Gun</span>
+ 
+   <span class="k">def</span> <span class="nf">trigger</span>
+     <span class="s1">&#39;Bang!&#39;</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0014</span><span class="mi">8</span> <span class="n">seconds</span>
+ <span class="mi">4</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>いいね!</p>
+
+<p>さて、今度は弾がないときの対応も取らないと。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should return &#39;Bang!&#39;&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be nil when the chamber is empty&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="n">be_nil</span> 
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">trigger</span> <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="n">be_nil</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="kp">nil</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="s2">&quot;Bang!&quot;</span>
+      <span class="c1"># ./gun_spec.rb:34:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00234</span> <span class="n">seconds</span>
+ <span class="mi">5</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>弾がなくても発砲しちゃうって..対応するよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">trigger</span>
+    <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="vi">@chamber</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="s1">&#39;Bang!&#39;</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">trigger</span> <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="s2">&quot;Bang!&quot;</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="kp">nil</span> <span class="p">(</span><span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+      <span class="c1"># ./gun_spec.rb:29:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0021</span><span class="mi">8</span> <span class="n">seconds</span>
+ <span class="mi">5</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>今度はさっきパスしたexampleがフェイルしてる。そうだよ弾をセットしてないからね。テストが間違ってたんだ。テストを直してもう一度。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should return &#39;Bang!&#39;&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be nil when the chamber is empty&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="n">be_nil</span> 
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストする。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0023</span> <span class="n">seconds</span>
+ <span class="mi">5</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>いいね!</p>
+
+<p>さてそれから弾を撃ったらchamberは空にならなきゃいけないね。追加しよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;chamber&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should be empty at default&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be empty after triggering&quot;</span> <span class="k">do</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">trigger</span>
+      <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">after</span> <span class="n">triggering</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Gun</span> <span class="n">chamber</span> <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">after</span> <span class="n">triggering</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@gun</span><span class="o">.</span><span class="n">chamber</span><span class="o">.</span><span class="n">should</span> <span class="n">be_empty</span>
+        <span class="n">expected</span> <span class="n">empty?</span> <span class="n">to</span> <span class="k">return</span> <span class="kp">true</span><span class="p">,</span> <span class="n">got</span> <span class="kp">false</span>
+      <span class="c1"># ./gun_spec.rb:17:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00227</span> <span class="n">seconds</span>
+ <span class="mi">6</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>フェイルするから実装するよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">trigger</span>
+    <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="vi">@chamber</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="vi">@chamber</span><span class="o">.</span><span class="n">clear</span>
+    <span class="s1">&#39;Bang!&#39;</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>もう一度テスト。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">after</span> <span class="n">triggering</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00215</span> <span class="n">seconds</span>
+ <span class="mi">6</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>いいね!</p>
+
+<p>さてGunクラスは一応これで完成として、今度はRevolverクラスを作っていくよ。</p>
+
+<h2>Revolverクラス</h2>
+
+<p>リボルバーは6弾程の弾を保持する回転式シリンダーという独特の機構を持っていて、一発撃つ毎にシリンダーが一つ回転して、次の弾がチャンバーにアラインされて発砲の準備が整うよ。</p>
+
+<p>早速Revolverクラスを設計しよう。Gunクラスでは弾を直接chamberにセットしたけど、Revolverではcylinderにセットすることになるよね。だからset_cartridgeとchamberの再設計が必要だよ。ここではcylinderの0位置に弾がセットされたら、chamberにも弾があることにするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">describe</span> <span class="no">Revolver</span> <span class="k">do</span>
+   <span class="n">before</span> <span class="k">do</span>
+     <span class="vi">@rev</span> <span class="o">=</span> <span class="no">Revolver</span><span class="o">.</span><span class="n">new</span>
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+     <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the cylinder pos 0&quot;</span> <span class="k">do</span>
+       <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+       <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストしてみるよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">set_cartridge</span> <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+      <span class="ss">NoMethodError</span><span class="p">:</span>
+       <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`cylinder&#39; for #&lt;Revolver:0x00000100a5af90&gt;</span>
+<span class="sb">      # ./gun_spec.rb:53:in `</span><span class="n">block</span> <span class="p">(</span><span class="mi">3</span> <span class="n">levels</span><span class="p">)</span> <span class="k">in</span> <span class="o">&lt;</span><span class="n">top</span> <span class="p">(</span><span class="n">required</span><span class="p">)</span><span class="o">&gt;</span><span class="err">&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">002</span><span class="mi">96</span> <span class="n">seconds</span>
+ <span class="mi">7</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>cylinderがないって言われたので作るよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Revolver</span> <span class="o">&lt;</span> <span class="no">Gun</span>
+   <span class="no">CYLINDER_SIZE</span> <span class="o">=</span> <span class="mi">6</span>
+   <span class="kp">attr_reader</span> <span class="ss">:cylinder</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@cylinder</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">CYLINDER_SIZE</span><span class="p">)</span>
+     <span class="k">super</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>再テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">set_cartridge</span> <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="c1">#&lt;Cartridge:0x00000100a6a3a0&gt;</span>
+        <span class="ss">got</span><span class="p">:</span> <span class="kp">nil</span> <span class="p">(</span><span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+      <span class="c1"># ./gun_spec.rb:53:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">002</span><span class="mi">81</span> <span class="n">seconds</span>
+ <span class="mi">7</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>今度は設計と違う結果(nil)が返ってきたよ。Revolver用のset_cartridgeを実装しないとね。最初は0ポジション空いてなければ隣に装弾する方式にしよう。先を急ぐから例外処理もここに書いちゃうよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Revolver</span> <span class="o">&lt;</span> <span class="no">Gun</span>
+   <span class="k">class</span> <span class="nc">CylinderError</span> <span class="o">&lt;</span> <span class="no">StandardError</span><span class="p">;</span> <span class="k">end</span>
+   
+   <span class="no">CYLINDER_SIZE</span> <span class="o">=</span> <span class="mi">6</span>
+   <span class="kp">attr_reader</span> <span class="ss">:cylinder</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@cylinder</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">CYLINDER_SIZE</span><span class="p">)</span>
+     <span class="k">super</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">set_cartridge</span>
+     <span class="n">pos</span> <span class="o">=</span> <span class="vi">@cylinder</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kp">nil</span><span class="p">)</span>
+     <span class="k">raise</span> <span class="no">CylinderError</span><span class="p">,</span> <span class="s1">&#39;Cylinder is full&#39;</span> <span class="k">unless</span> <span class="n">pos</span>
+     <span class="vi">@cylinder</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span> <span class="o">=</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>もう2つほどexampleを追加してからテストしてみよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the cylinder pos 0&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should set 3 cartridges to the cylinder pos 0-3&quot;</span> <span class="k">do</span>
+      <span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be error when it called more than the cylinder rooms&quot;</span> <span class="k">do</span>
+      <span class="ss">Revolver</span><span class="p">:</span><span class="ss">:CYLINDER_SIZE</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span>
+      <span class="o">-&gt;</span><span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span><span class="p">(</span><span class="ss">Revolver</span><span class="p">:</span><span class="ss">:CylinderError</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00315</span> <span class="n">seconds</span>
+ <span class="mi">9</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>OKだね!ほんとうはcylinderの自由な位置にカートリッジを装填できるべきだけど、ここでは割愛するよ。</p>
+
+<p>さてtriggerにいこう。まずはちゃんとBangするように。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should return &#39;Bang!&#39;&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">trigger</span> <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="s2">&quot;Bang!&quot;</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="kp">nil</span> <span class="p">(</span><span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+      <span class="c1"># ./gun_spec.rb:70:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0046</span><span class="mi">9</span> <span class="n">seconds</span>
+ <span class="mi">10</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>フェイルしちゃったよ。あーchamberに弾が無いからね。cylinder[0]に弾があればchamberにも弾があるって設計だったよね。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">chamber</span>
+    <span class="o">[</span> <span class="vi">@cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">].</span><span class="n">compact</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="ss">Failures</span><span class="p">:</span>
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">trigger</span> <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="s2">&quot;Bang!&quot;</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="kp">nil</span> <span class="p">(</span><span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+      <span class="c1"># ./gun_spec.rb:70:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0033</span><span class="mi">8</span> <span class="n">seconds</span>
+ <span class="mi">10</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>まだフェイルする..そうかこれはGun#triggerで直接@chamberを参照してるから起きてるんだ。ここを直そう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Gun</span>
+ 
+    <span class="k">def</span> <span class="nf">trigger</span>
+ <span class="o">-</span>    <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="vi">@chamber</span><span class="o">.</span><span class="n">empty?</span>
+ <span class="o">+</span>    <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="n">chamber</span><span class="o">.</span><span class="n">empty?</span>
+ <span class="o">-</span>    <span class="vi">@chamber</span><span class="o">.</span><span class="n">clear</span>
+ <span class="o">+</span>    <span class="n">reset_chamber</span>
+     <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+ 
+ <span class="o">+</span>  <span class="kp">private</span>
+ <span class="o">+</span>  <span class="k">def</span> <span class="nf">reset_chamber</span>
+ <span class="o">+</span>    <span class="vi">@chamber</span><span class="o">.</span><span class="n">clear</span>
+ <span class="o">+</span>  <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ 
+ <span class="k">class</span> <span class="nc">Revolver</span>
+ 
+ <span class="o">+</span> <span class="k">def</span> <span class="nf">reset_chamber</span>
+ <span class="o">+</span>   <span class="vi">@cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+ <span class="o">+</span> <span class="k">end</span>
+ <span class="o">+</span> <span class="kp">private</span> <span class="ss">:reset_chamber</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">after</span> <span class="n">triggering</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>  <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00373</span> <span class="n">seconds</span>
+ <span class="mi">10</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>OKだね。</p>
+
+<p>考えてみたらロシアンルーレットってみんな、毎回ハンマー(撃鉄)を手で起こしてるよね。このタイプのリボルバーはシングルアクションというそうだよ。是非ともこの機構(cocking)を実装したいよ。cockingしないと発砲できないようにしよう。それから発砲した後はhammerが戻るようにしよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should return &#39;Bang!&#39;&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+    <span class="k">end</span>
+    <span class="n">it</span> <span class="s2">&quot;should be nil without cocking&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="n">be_nil</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">context</span> <span class="s2">&quot;hammer&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should be false after triggering&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">hammer</span><span class="o">.</span><span class="n">should</span> <span class="n">be_false</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>当然hammerやcockingが無いって怒られるから、それを確認した上で実装しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Revolver</span> <span class="o">&lt;</span> <span class="no">Gun</span>
+   <span class="kp">attr_reader</span> <span class="ss">:cylinder</span><span class="p">,</span> <span class="ss">:hammer</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@cylinder</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">CYLINDER_SIZE</span><span class="p">)</span>
+     <span class="vi">@hammer</span> <span class="o">=</span> <span class="kp">false</span>
+     <span class="k">super</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">cocking</span>
+     <span class="vi">@hammer</span> <span class="o">=</span> <span class="kp">true</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">trigger</span>
+     <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="vi">@hammer</span>
+     <span class="vi">@hammer</span> <span class="o">=</span> <span class="kp">false</span>
+     <span class="k">super</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0042</span> <span class="n">seconds</span>
+ <span class="mi">12</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>いいみたいだね。</p>
+
+<p>あ、それとcockingしたらcylinderが一つ回転するようにしないといけなかったよ。回転しないと連続発砲ができないからね。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;cylinder&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should rotate for next when cocking&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">cylinder</span>
+     <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">cylinder</span> <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="c1">#&lt;Cartridge:0x000001009cc1c8&gt;, nil, nil, nil, nil]</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="o">[</span><span class="c1">#&lt;Cartridge:0x000001009cc330&gt;, nil, nil, nil, nil, nil] (using ==)</span>
+        <span class="ss">Diff</span><span class="p">:</span>
+        <span class="err">@@</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span> <span class="err">@@</span>
+        <span class="o">-[</span><span class="kp">nil</span><span class="p">,</span> <span class="c1">#&lt;Cartridge:0x000001009cc1c8&gt;, nil, nil, nil, nil]</span>
+        <span class="o">+[</span><span class="c1">#&lt;Cartridge:0x000001009cc330&gt;, nil, nil, nil, nil, nil]</span>
+      <span class="c1"># ./gun_spec.rb:71:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0054</span><span class="mi">9</span> <span class="n">seconds</span>
+ <span class="mi">13</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>フェイルするから直すよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">cocking</span>
+    <span class="vi">@cylinder</span><span class="o">.</span><span class="n">rotate!</span>
+    <span class="vi">@hammer</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">cylinder</span>
+     <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+ 
+ <span class="ss">Failures</span><span class="p">:</span>
+ 
+   <span class="mi">1</span><span class="p">)</span> <span class="no">Revolver</span> <span class="n">trigger</span> <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+      <span class="no">Failure</span><span class="o">/</span><span class="ss">Error</span><span class="p">:</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s1">&#39;Bang!&#39;</span>
+        <span class="ss">expected</span><span class="p">:</span> <span class="s2">&quot;Bang!&quot;</span>
+             <span class="ss">got</span><span class="p">:</span> <span class="kp">nil</span> <span class="p">(</span><span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+      <span class="c1"># ./gun_spec.rb:79:in `block (3 levels) in &lt;top (required)&gt;&#39;</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00466</span> <span class="n">seconds</span>
+ <span class="mi">13</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+</code></pre></div>
+
+
+<p>今度はtriggerのexampleでエラーが出たよ。cockingで弾がpos 0にいなくなったからだね。じゃあset_cartridgeでpos 0じゃなくpos 1に弾をセットするように変えて対応するよ。</p>
+
+<div class="highlight"><pre><code class="ruby">   <span class="n">context</span> <span class="s2">&quot;set_cartridge&quot;</span> <span class="k">do</span>
+ <span class="o">-</span>    <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the cylinder pos 0&quot;</span> <span class="k">do</span>
+ <span class="o">+</span>    <span class="n">it</span> <span class="s2">&quot;should set a cartridge to the cylinder pos 1&quot;</span> <span class="k">do</span>
+       <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+ <span class="o">-</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+ <span class="o">+</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+     <span class="k">end</span>
+ 
+ <span class="o">-</span>    <span class="n">it</span> <span class="s2">&quot;should set 3 cartridges to the cylinder pos 0-3&quot;</span> <span class="k">do</span>
+ <span class="o">+</span>    <span class="n">it</span> <span class="s2">&quot;should set 3 cartridges to the cylinder pos 1-4&quot;</span> <span class="k">do</span>
+       <span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span>
+ <span class="o">-</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+ <span class="o">+</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+     <span class="k">end</span>
+ 
+     <span class="n">it</span> <span class="s2">&quot;should be error when it called more than the cylinder rooms&quot;</span> <span class="k">do</span>
+       <span class="ss">Revolver</span><span class="p">:</span><span class="ss">:CYLINDER_SIZE</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span>
+       <span class="o">-&gt;</span><span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span><span class="p">(</span><span class="ss">Revolver</span><span class="p">:</span><span class="ss">:CylinderError</span><span class="p">)</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+ 
+   <span class="n">context</span> <span class="s2">&quot;cylinder&quot;</span> <span class="k">do</span>
+     <span class="n">it</span> <span class="s2">&quot;should rotate for next when cocking&quot;</span> <span class="k">do</span>
+       <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+       <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span>
+ <span class="o">-</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+ <span class="o">+</span>      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+     <span class="k">end</span>
+   <span class="k">end</span>  
+</code></pre></div>
+
+
+<p>フェイルするから実装するよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">set_cartridge</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="vi">@cylinder</span><span class="o">.</span><span class="n">rotate</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kp">nil</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">CylinderError</span><span class="p">,</span> <span class="s1">&#39;Cylinder is full&#39;</span> <span class="k">unless</span> <span class="n">pos</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="no">CYLINDER_SIZE</span>
+    <span class="vi">@cylinder</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span> <span class="o">=</span> <span class="no">Cartridge</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">cylinder</span>
+     <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00461</span> <span class="n">seconds</span>
+ <span class="mi">13</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>うまくいったよ。</p>
+
+<p>じゃあ連続発砲ができるか試すよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;trigger&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should work sequentially&quot;</span> <span class="k">do</span>
+      <span class="mi">6</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span> <span class="p">}</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span>
+      <span class="mi">8</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">tap</span><span class="p">{</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">cocking</span> <span class="p">}</span> <span class="p">}</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="o">[</span><span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="s2">&quot;Bang!&quot;</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>テストするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">cylinder</span>    <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+     <span class="n">should</span> <span class="n">work</span> <span class="n">sequentially</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00705</span> <span class="n">seconds</span>
+ <span class="mi">14</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>うまくいってるようだね。</p>
+
+<p>さて最後に、ロシアンルーレットに必須の機能とも言うべきspin_cylinderを実装しよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">context</span> <span class="s2">&quot;spin_cylinder&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should rotate the cylinder line randomly(fail sometimes)&quot;</span> <span class="k">do</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+      <span class="n">before_spin</span> <span class="o">=</span> <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">dup</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">spin_cylinder</span>
+      <span class="vi">@rev</span><span class="o">.</span><span class="n">cylinder</span><span class="o">.</span><span class="n">should_not</span> <span class="o">==</span> <span class="n">before_spin</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>あまり良いテストじゃないよね..こういうランダムな結果をテストするのはどうすればいいんだろうね。わからないから今回はこれでよしとして先に進むよ。</p>
+
+<p>さてもちろんテストに通らないので、spin_cylinderを実装するよ。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">spin_cylinder</span>
+    <span class="vi">@cylinder</span><span class="o">.</span><span class="n">rotate!</span><span class="p">(</span><span class="nb">rand</span> <span class="no">CYLINDER_SIZE</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあテストだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% rspec </span><span class="o">-</span><span class="n">fs</span> <span class="o">-</span><span class="n">c</span> <span class="n">gun_spec</span><span class="o">.</span><span class="n">rb</span> 
+ 
+ <span class="no">Gun</span>
+   <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">at</span> <span class="n">default</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">empty</span> <span class="n">after</span> <span class="n">triggering</span>
+  <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">chamber</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartridge</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="k">when</span> <span class="n">the</span> <span class="n">chamber</span> <span class="n">is</span> <span class="n">empty</span>
+ <span class="no">Revolver</span>
+   <span class="n">set_cartridge</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="n">a</span> <span class="n">cartridge</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span>
+     <span class="n">should</span> <span class="n">set</span> <span class="mi">3</span> <span class="n">cartridges</span> <span class="n">to</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">pos</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="n">error</span> <span class="k">when</span> <span class="n">it</span> <span class="n">called</span> <span class="n">more</span> <span class="n">than</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">rooms</span>
+   <span class="n">cylinder</span>
+     <span class="n">should</span> <span class="n">rotate</span> <span class="k">for</span> <span class="k">next</span> <span class="k">when</span> <span class="n">cocking</span>
+   <span class="n">trigger</span>
+     <span class="n">should</span> <span class="k">return</span> <span class="s1">&#39;Bang!&#39;</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">nil</span> <span class="n">without</span> <span class="n">cocking</span>
+     <span class="n">should</span> <span class="n">work</span> <span class="n">sequentially</span>
+   <span class="n">hammer</span>
+     <span class="n">should</span> <span class="n">be</span> <span class="kp">false</span> <span class="n">after</span> <span class="n">triggering</span>
+   <span class="n">spin_cylinder</span>
+     <span class="n">should</span> <span class="n">rotate</span> <span class="n">the</span> <span class="n">cylinder</span> <span class="n">line</span> <span class="n">randomly</span><span class="p">(</span><span class="nb">fail</span> <span class="n">sometimes</span><span class="p">)</span>
+ 
+ <span class="no">Finished</span> <span class="k">in</span> <span class="mi">0</span><span class="o">.</span><span class="mo">00705</span> <span class="n">seconds</span>
+ <span class="mi">15</span> <span class="n">examples</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span>
+</code></pre></div>
+
+
+<p>いいね!</p>
+
+<p>さあこれでようやくRevolverが完成したよ!</p>
+
+<h2>ロシアンルーレットで遊ぶ</h2>
+
+<p>さあ銃が用意できたから、早速ロシアンルーレットできるか試してみるよ。まずは舞台(russian_roulette.rb)を作ろう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;term/ansicolor&quot;</span>
+ <span class="n">require_relative</span> <span class="s2">&quot;gun&quot;</span>
+ 
+ <span class="nb">String</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="ss">Term</span><span class="p">:</span><span class="ss">:ANSIColor</span><span class="p">)</span>
+ 
+ <span class="k">def</span> <span class="nf">russian_roulette</span><span class="p">(</span><span class="n">fighters</span><span class="p">)</span>
+   <span class="nb">print</span> <span class="s2">&quot;--- Welcome to Russian Roulette ---</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">green</span>
+   <span class="nb">print</span> <span class="s2">&quot;Today&#39;s fighters are: &quot;</span>
+   <span class="nb">print</span> <span class="n">fighters</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">magenta</span><span class="o">.</span><span class="n">underline</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+   <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Let&#39;s go!</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+ 
+   <span class="n">rev</span> <span class="o">=</span> <span class="no">Revolver</span><span class="o">.</span><span class="n">new</span>
+   <span class="n">rev</span><span class="o">.</span><span class="n">set_cartridge</span>
+   <span class="nb">sleep</span> <span class="mi">2</span>
+ 
+   <span class="n">fighters</span><span class="o">.</span><span class="n">shuffle</span><span class="o">.</span><span class="n">cycle</span> <span class="k">do</span> <span class="o">|</span><span class="n">fighter</span><span class="o">|</span>
+     <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">fighter</span><span class="si">}</span><span class="s2">&#39;s turn:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">cyan</span>
+     <span class="n">rev</span><span class="o">.</span><span class="n">cocking</span>
+     <span class="n">rev</span><span class="o">.</span><span class="n">spin_cylinder</span>
+     <span class="nb">sleep</span> <span class="mi">2</span>
+     <span class="k">unless</span> <span class="n">result</span> <span class="o">=</span> <span class="n">rev</span><span class="o">.</span><span class="n">trigger</span>
+       <span class="nb">print</span> <span class="s2">&quot;  Nothing happened..</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">yellow</span>
+       <span class="nb">sleep</span> <span class="mi">1</span>
+     <span class="k">else</span>
+       <span class="nb">print</span> <span class="s2">&quot;  </span><span class="si">#{</span><span class="n">result</span><span class="si">}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">yellow</span><span class="o">.</span><span class="n">on_red</span><span class="o">.</span><span class="n">blink</span>
+       <span class="nb">print</span> <span class="s2">&quot;  </span><span class="si">#{</span><span class="n">fighter</span><span class="si">}</span><span class="s2"> is dead.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">blue</span>
+       <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Game is over ---</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">green</span>
+       <span class="nb">exit</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">russian_roulette</span><span class="p">(</span><span class="no">ARGV</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>term-ansicolorで色を付けたからgem install term-ansicolorしてね。</p>
+
+<p>さあ試してみるよ..</p>
+
+<div class="highlight"><pre><code class="bash"> % ruby russian_roulette.rb Charlie Fox Henry
+ --- Welcome to Russian Roulette ---
+ Today<span class="s1">&#39;s fighters are: Charlie, Fox, Henry</span>
+<span class="s1"> Let&#39;</span>s go!
+ 
+ Fox<span class="s1">&#39;s turn:</span>
+<span class="s1">   Nothing happened..</span>
+<span class="s1"> </span>
+<span class="s1"> Charlie&#39;</span>s turn:
+   Nothing happened..
+ 
+ Henry<span class="s1">&#39;s turn:</span>
+<span class="s1">   Nothing happened..</span>
+<span class="s1"> </span>
+<span class="s1"> Fox&#39;</span>s turn:
+   Nothing happened..
+ 
+ Charlie<span class="err">&#39;</span>s turn:
+   Bang!    Charlie is dead.
+ 
+ --- Game is over ---
+ 
+</code></pre></div>
+
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20111217/20111217233410.png" alt="image" /></p>
+
+<p>あー、チャーリーが死んじゃった..</p>
+
+<p>じゃあ今度は君と僕とで勝負しようよ!</p>
+
+<p>まずは僕から。</p>
+
+<div class="highlight"><pre><code class="bash"> % ruby russian_roulette.rb me you
+ --- Welcome to Russian Roulette ---
+ Today<span class="s1">&#39;s fighters are: you, me</span>
+<span class="s1"> Let&#39;</span>s go!
+ 
+ me<span class="err">&#39;</span>s turn:
+   Nothing happened..
+</code></pre></div>
+
+
+<p>ふー、セーフだったよ!</p>
+
+<p>じゃあ今度は君</p>
+
+<div class="highlight"><pre><code class="bash"> you<span class="err">&#39;</span>s turn:
+   Nothing happened..
+</code></pre></div>
+
+
+<p>おー、よかったね!</p>
+
+<p>次は僕の番</p>
+
+<div class="highlight"><pre><code class="bash"> me<span class="err">&#39;</span>s turn:
+   Bang!    me is dead.
+ 
+ --- Game is over ---
+</code></pre></div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/12/18/Rspec/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/12/18/Rspec/" data-text="RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/12/18/Rspec/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/12/18/Rspec/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/12/15/Ruby-tap" title="Rubyのtapはメソッドチェーンだけのものじゃない!">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/12/18/Wordle" title="Wordleでビジネスカードを作ろう!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#rspec-ref">rspec <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#test-ref">test <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/12/18/Rspec/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/12/18/Rspec/" data-text="RubyのRSpecでリボルバーを作ってロシアンルーレットしようよ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/12/18/Rspec/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/12/18/Rspec/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

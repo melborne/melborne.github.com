@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>26 August 2009</span></div>
+  <h1 class='page-title'><a href="/2009/08/26/Ruby">Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="http://d.hatena.ne.jp/yuki_rinrin/20090825/1251210051">Ruby クロージャ - ソースコード備忘録</a>を読んで、自分のRubyにおけるブロックと変数の理解が怪しいことがわかった。で、ちょっと普通とは違うアプローチからの整理を試みて、理解できた気がするので書いてみます。誤りを教えてくれればうれしいです。</p>
+
+<h2>ローカル変数</h2>
+
+<p>プログラムコードはプログラマの意思をインタプリタに伝えるものだ。Rubyではオブジェクトに処理を依頼する形でプログラムを組成するけど、そのとき変数はプログラマが対象のオブジェクトを指し示すためのラベルとして用いられる。すなわち変数はオブジェクト参照ラベルだ。</p>
+
+<p>複数の手続きブロックで構造化される現代のプログラミングにおいては、1つの変数の適用範囲はそれが定義されている手続きブロックに限定されるのが普通だ。</p>
+
+<p>Rubyにおいてメソッド定義はこの手続きブロックを新たに作る。だから以下の例でcounterメソッド内の変数nは未定義となる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="k">def</span> <span class="nf">counter</span>
+   <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+ <span class="k">end</span>
+ 
+ <span class="n">counter</span> <span class="c1"># =&gt; </span>
+ <span class="c1"># ~&gt; -:3:in `counter&#39;: undefined method `+&#39; for nil:NilClass (NoMethodError)</span>
+ <span class="c1"># ~&gt;   from -:6</span>
+</code></pre></div>
+
+
+<p>つまりトップレベルとcounterメソッドとは別の手続きブロックであり、トップレベルで定義した変数nはcounterメソッド内で参照できない。</p>
+
+<p>このようにその適用範囲がそれが定義されている手続きブロックに限定される変数は、<code>ローカル変数</code>と呼ばれる。</p>
+
+<p>メソッドの壁を越えてローカル変数を参照できるようにするには、変数をメソッドの引数として渡す必要がある。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="k">def</span> <span class="nf">counter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+ <span class="k">end</span>
+ <span class="n">n</span> <span class="o">=</span> <span class="n">counter</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">n</span> <span class="o">=</span> <span class="n">counter</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">n</span> <span class="o">=</span> <span class="n">counter</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<h2>インスタンス変数</h2>
+
+<p>一方Rubyには、インスタンス変数という適用範囲がより広い変数がある。<code>インスタンス変数</code>は手続きブロックを超えて、それが定義されるオブジェクトの範囲で有効となる変数だ。つまりRubyインタプリタはインスタンス変数の有効範囲に関し、オブジェクトを一つの手続きブロックとみなす。</p>
+
+<p>だから上のコードのローカル変数nをインスタンス変数@nに変えれば、counterメソッドから変数@nが見える。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="vi">@n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="k">def</span> <span class="nf">counter</span>
+   <span class="vi">@n</span> <span class="o">+=</span> <span class="mi">1</span>
+ <span class="k">end</span>
+ 
+ <span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="nb">instance_variable_get</span> <span class="ss">:@n</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>ここでRubyのトップレベルはObjectクラスのインスタンスであるmainオブジェクトのコンテキストを持っているので、上のコードはインスタンス変数nに関し以下と等価だ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Object</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@n</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">counter</span>
+     <span class="vi">@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="n">main</span><span class="o">.</span><span class="n">instance_variable_get</span> <span class="ss">:@n</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>上のコードにより1つのメソッド内で定義されたインスタンス変数@nが、オブジェクト全体で有効であることがよりはっきり分かる。</p>
+
+<p>前に書いたように、インスタンス変数は変数の有効範囲をオブジェクトにまで拡張する。しかしその一方でそのクラスまでは拡張しない。つまり同一のクラスから生成される複数のオブジェクト間で、インスタンス変数が共有されることはないんだ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Object</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@n</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">counter</span>
+     <span class="vi">@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">instance_variable_get</span> <span class="ss">:@n</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="n">main2</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">instance_variable_get</span> <span class="ss">:@n</span> <span class="c1"># =&gt; 2</span>
+</code></pre></div>
+
+
+<p>ここでObjectクラスのmainオブジェクトとmain2オブジェクトは、それぞれがインスタンス変数@nを持つけれども、それらの有効範囲はそれぞれのオブジェクト内に限られていることがわかる。</p>
+
+<h2>クラス変数</h2>
+
+<p>Rubyにはさらに有効範囲の広い変数がある。@@ではじまるクラス変数だ。<code>クラス変数</code>はその有効範囲をクラスにまで拡張する。つまりRubyインタプリタはクラス変数の有効範囲に関し、クラスを一つの手続きブロックとみなす。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Object</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vc">@@n</span> <span class="o">||=</span> <span class="mi">0</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">counter</span>
+     <span class="vc">@@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="n">main2</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 4</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 5</span>
+</code></pre></div>
+
+
+<p>この例からObjectクラスの複数のインスタンスmain,main2間で1つのクラス変数@@nが共有されていることがわかる。</p>
+
+<p>変数の有効範囲が広がるとプログラマが予期しない問題が起こることがある。Rubyではクラス変数の有効範囲がサブクラスのインスタンスにも拡張する点留意が必要だ。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Object</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vc">@@n</span> <span class="o">||=</span> <span class="mi">0</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">counter</span>
+     <span class="vc">@@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="n">main2</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 4</span>
+ <span class="n">main2</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 5</span>
+ 
+ <span class="s1">&#39;string&#39;</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 6</span>
+ <span class="o">[].</span><span class="n">counter</span> <span class="c1"># =&gt; 7</span>
+ <span class="k">class</span> <span class="nc">MyClass</span><span class="p">;</span> <span class="k">end</span>
+ <span class="no">MyClass</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 8</span>
+</code></pre></div>
+
+
+<p>この例ではObjectクラスにクラス変数が定義され、それがメモリ上のすべてのクラスのインスタンスで参照・変更できることが示されている。この場合クラス変数はグローバル変数とほぼ等価になる。だからRubyのトップレベルでクラス変数を定義するときは、グローバル変数を定義していると理解したほうがいい。</p>
+
+<p>変数の有効範囲をインスタンスやサブクラスに広げずにそれが定義されたクラスオブジェクトに限定したい場合、クラスオブジェクトの文脈でインスタンス変数が使える。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Super</span>
+   <span class="vi">@n</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">counter</span>
+     <span class="vi">@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="k">class</span> <span class="nc">Sub</span> <span class="o">&lt;</span> <span class="no">Super</span><span class="p">;</span> <span class="k">end</span>
+ <span class="no">Super</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="no">Super</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="no">Super</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ <span class="no">Sub</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; # !&gt; instance variable @n not initialized</span>
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Super</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; undefined method</span>
+</code></pre></div>
+
+
+<h2>クロージャ</h2>
+
+<p>Rubyには{}またはdo endで挟むことによって手続きのまとまりを表現するブロックという、メソッド類似の構文がある。ブロックはそれ単独ではメモリ上に存在できない。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span> <span class="c1"># =&gt; Error</span>
+</code></pre></div>
+
+
+<p>だけれどもメソッドに伴われるかたちなら存在できるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="mi">1</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+ <span class="mi">1</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+ <span class="n">n</span> <span class="c1"># =&gt; 2</span>
+</code></pre></div>
+
+
+<p>Rubyのブロックはメソッドによる手続きブロックとは異なって、ブロックの外側で定義されたローカル変数をブロック内で参照・変更できるという性質を有する<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<p>さらにRubyのブロックはそれ自身をオブジェクト化することができ、そうすることによってメモリ上に独立して存在できるようになる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span> <span class="c1"># =&gt; #&lt;Proc:0x0001f57c@-:27&gt;</span>
+</code></pre></div>
+
+
+<p>ブロックをオブジェクト化したものはProcクラスのインスタンスであり、callメソッドを呼ぶことによってブロック内の手続きを呼び出すことができる。そしてこの場合でもブロックがその外側で定義されたローカル変数を参照できるという性質は保たれる。このようなブロックの性質は<code>クロージャ</code>と呼ばれる</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="n">main</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>これは先に示したインスタンス変数の例と良く似ている。callメソッドを別名定義すれば類似性がよりはっきりする。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="n">main</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">}</span>
+ <span class="k">def</span> <span class="nc">main</span><span class="o">.</span><span class="nf">counter</span>
+   <span class="nb">self</span><span class="o">.</span><span class="n">call</span>
+ <span class="k">end</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+ 
+ <span class="c1">#インスタンス変数の例</span>
+ <span class="k">class</span> <span class="nc">Object</span>
+   <span class="k">def</span> <span class="nf">initialize</span>
+     <span class="vi">@n</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="k">end</span>
+   <span class="k">def</span> <span class="nf">counter</span>
+     <span class="vi">@n</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">main</span> <span class="o">=</span> <span class="no">Object</span><span class="o">.</span><span class="n">new</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 1</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 2</span>
+ <span class="n">main</span><span class="o">.</span><span class="n">counter</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+<p>ここでローカル変数nはインスタンス変数@nのように機能し、オブジェクトmainの状態を保持している。つまりブロックによってローカル変数がインスタンス変数のように働いている。</p>
+
+<p>そう、つまりブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックなんだ!</p>
+
+<p>(追記:2009/8/27) ブロックにおける変数の有効範囲の説明を訂正しました。
+(追記:2009/8/27) クラスオブジェクトでインスタンス変数を使う説明を追加しました。</p>
+
+<p>(comment)
+トラックバックありがとうございます。<br>>しかしメソッドによる手続きブロックとは異なって<br>>Rubyのブロックは変数の新たな有効範囲を作らない<br>>つまり上の例のようにブロックの外側で定義された<br>>ローカル変数nをブロック内で参照・変更できる<br>ブロックでも変数の新たなスコープはできますよ。<br>参考URL http://www.ruby-lang.org/ja/man/html/FAQ_CAD1BFF4A1A2C4EABFF4A1A2B0FABFF4.html<br>ただ、その時にクロージャがあることによってブロックを定義した環境のローカル変数を使えるようになるのではないでしょうか。<br>>m = 1<br>>func1 = lambda {<br>>        n = 3<br>>        p n, m<br>>    }<br>>func1.call<br>>p m<br>>p n<br>の場合、最後の行はエラーになるとおもいます。<br>ブロックが変数のスコープを作らないのなら、<br>エラーがでないことにならないでしょうか。<br>rubyは勉強中の身なので間違っているかもしれませんが、<br>参考になれば幸です。</p>
+
+<blockquote><p>yuki rinrinさん<br>そうですね、ブロックが変数の新たなスコープを作らないというのは言いすぎでした。ただ、個人的にはそれが外側のローカル変数を参照できる限り、新たなスコープを作るとは言いづらいんですよね。いずれにしても、明らかな間違いなので本文訂正しました。ご指摘ありがとうございます。</p></blockquote>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>ただブロック内で定義された変数はその外側で参照できない <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/08/26/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/08/26/Ruby/" data-text="Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/08/26/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/08/26/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/05/18/100-iPod-touch" title="100円ショップでiPod touchスタンドを見つける秘訣">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/09/01/Ruby-Proc" title="RubyのProcオブジェクトはキューティーハニーだ!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/08/26/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/08/26/Ruby/" data-text="Rubyのブロック(クロージャ)はローカル変数をインスタンス変数に変えるマジックだ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/08/26/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/08/26/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

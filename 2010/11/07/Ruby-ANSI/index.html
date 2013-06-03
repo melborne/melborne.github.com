@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyでANSIカラーシーケンスを学ぼう！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>07 November 2010</span></div>
+  <h1 class='page-title'><a href="/2010/11/07/Ruby-ANSI">RubyでANSIカラーシーケンスを学ぼう！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>CUIの世界は地味な世界です。真っ黒なターミナル画面に単一色の文字列。それが却って落ち着くという向きもありますが、今となってはその地味さは際立っています。</p>
+
+<p>ターミナルで色を使う方法を学ぶことで、新しい世界が開けるかも知れません。</p>
+
+<p>ようこそANSIカラーの世界へ!</p>
+
+<h2>エスケープシーケンス</h2>
+
+<p>ターミナルで色を使うためにはエスケープシーケンスというものを利用します。エスケープシーケンスはターミナル上で色を含む特定の制御を実現するための特殊な文字列です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[31mhello</span><span class="se">\e</span><span class="s2">[0m&quot;</span>
+</code></pre></div>
+
+
+<p>これによりターミナル上に赤文字で「hello」と出力されます。この"\e[31m" "\e[0m"の部分がエスケープシーケンスです。"\e[31m"はそれ以降を赤文字で出力する制御命令、"\e[0m"はそれ以降を初期状態へリセットする制御命令です。</p>
+
+<p>シーケンス中の数字において、30~37は文字色、40~47は背景色、0~9は文字装飾に割り振られています。</p>
+
+<pre><code>Text attributes
+0   All attributes off
+1   Bold on
+4   Underscore (on monochrome display adapter only)
+5   Blink on
+7   Reverse video on
+8   Concealed on
+Foreground colors
+30  Black
+31  Red
+32  Green
+33  Yellow
+34  Blue
+35  Magenta
+36  Cyan
+37  White
+Background colors
+40  Black
+41  Red
+42  Green
+43  Yellow
+44  Blue
+45  Magenta
+46  Cyan
+47  White 
+</code></pre>
+
+<p><a href="http://ascii-table.com/ansi-escape-sequences.php">ASCII Table - ANSI Escape sequences</a></p>
+
+<p>１つの文字列に複数のシーケンスを適用することもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[31m</span><span class="se">\e</span><span class="s2">[43m</span><span class="se">\e</span><span class="s2">[5mhello</span><span class="se">\e</span><span class="s2">[0m&quot;</span>
+</code></pre></div>
+
+
+<p>これで黄色の背景色上で赤いhelloが点滅します。セミコロンで区切って、複数のシーケンスコードを適用することもできます。これは上のシーケンスと等価です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[31;43;5mhello</span><span class="se">\e</span><span class="s2">[0m&quot;</span>
+</code></pre></div>
+
+
+<p>エスケープシーケンスは端末依存で、端末によって使えないものもあります。</p>
+
+<h2>ターミナルカラー・ライブラリ</h2>
+
+<p>Rubyでカラーシーケンスを使う場合、そのままでは扱いづらいので定数などへのマッピングが必要になるでしょう。また文字列終端での復帰にも対応しなければいけません。自作する手もありますが、Rubyには既に便利なライブラリがいくつかあります。</p>
+
+<h2>HighLine</h2>
+
+<p><a href="https://github.com/JEG2/highline">HighLine</a>はターミナルの入出力を支援するツール群です。その中にカラーシーケンスを扱うHighLine#colorがあります。<code>gem install highline</code>でインストールして、以下のように使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;highline&#39;</span>
+<span class="n">h</span> <span class="o">=</span> <span class="no">HighLine</span><span class="o">.</span><span class="n">new</span>
+<span class="nb">puts</span> <span class="n">h</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="ss">:green</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>色属性として複数の引数を取ることもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">h</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s2">&quot;Ruby World&quot;</span><span class="p">,</span> <span class="ss">:red</span><span class="p">,</span> <span class="ss">:on_cyan</span><span class="p">,</span> <span class="ss">:underline</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h2>TermColor</h2>
+
+<p><a href="https://github.com/jugyo/termcolor">TermColor</a>は文字列中のカラータグをエスケープシーケンスに変換するライブラリです。<code>gem install termcolor</code>でインストールして、以下のように使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;termcolor&#39;</span>
+<span class="nb">puts</span> <span class="no">TermColor</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&lt;green&gt;hello&lt;/green&gt;&quot;</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="no">TermColor</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&lt;red&gt;&lt;on_white&gt;&lt;blink&gt;ruby is fun!&lt;/blink&gt;&lt;/on_white&gt;&lt;/red&gt;&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>色指定は１つしかできませんが以下のように使うこともできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="no">TermColor</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="ss">:green</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>またString#termcolorが用意されているので、以下のようにもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="s2">&quot;&lt;red&gt;&lt;bold&gt;Ruby is red!&lt;/bold&gt;&lt;/red&gt;&quot;</span><span class="o">.</span><span class="n">termcolor</span>
+</code></pre></div>
+
+
+<p>TermColorは<a href="http://termtter.org/">Termtter</a>のjugyoさん作で、Termtterでのカラー表示に使われています。</p>
+
+<h2>Rainbow</h2>
+
+<p><a href="https://github.com/sickill/rainbow">Rainbow</a>はStringクラスにcolor(foreground), background,bright, blink, inverseなどのエスケープシーケンスに対応したメソッドを追加します。<code>gem install rainbow</code>でインストールして、以下のように使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;rainbow&#39;</span>
+<span class="nb">puts</span> <span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="ss">:red</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="ss">:red</span><span class="p">)</span><span class="o">.</span><span class="n">background</span><span class="p">(</span><span class="ss">:green</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">bright</span><span class="o">.</span><span class="n">background</span><span class="p">(</span><span class="ss">:blue</span><span class="p">)</span><span class="o">.</span><span class="n">blink</span>
+</code></pre></div>
+
+
+<h2>Term-ANSIColor</h2>
+
+<p><a href="https://github.com/flori/term-ansicolor">Term-ANSIColor</a>は多様な使い方ができるライブラリで、エスケープシーケンスをモジュール関数化したり、Stringクラスのインスタンスメソッドにしたりできます。<code>gem install term-ansicolor</code>でインストールして、以下のように使います。</p>
+
+<p>まずはクラスメソッドとして。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;term/ansicolor&#39;</span>
+<span class="k">class</span> <span class="nc">Color</span>
+  <span class="kp">extend</span> <span class="ss">Term</span><span class="p">:</span><span class="ss">:ANSIColor</span>
+<span class="k">end</span>
+<span class="nb">print</span> <span class="no">Color</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="no">Color</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="s2">&quot;No Namespace cluttering:&quot;</span><span class="p">,</span> <span class="no">Color</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="no">Color</span><span class="o">.</span><span class="n">green</span> <span class="o">+</span> <span class="s2">&quot;green&quot;</span> <span class="o">+</span> <span class="no">Color</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="no">Color</span><span class="o">.</span><span class="n">on_red</span><span class="p">(</span><span class="no">Color</span><span class="o">.</span><span class="n">green</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="no">Color</span><span class="o">.</span><span class="n">yellow</span> <span class="p">{</span> <span class="no">Color</span><span class="o">.</span><span class="n">on_black</span> <span class="p">{</span> <span class="s2">&quot;yellow on_black&quot;</span> <span class="p">}</span> <span class="p">},</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+
+<p>次にTerm::ANSIColorのインスタンスメソッドとして。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">c</span> <span class="o">=</span> <span class="ss">Term</span><span class="p">:</span><span class="ss">:ANSIColor</span>
+<span class="nb">print</span> <span class="n">c</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="s2">&quot;No Namespace cluttering (alternative):&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="n">c</span><span class="o">.</span><span class="n">green</span> <span class="o">+</span> <span class="s2">&quot;green&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="n">c</span><span class="o">.</span><span class="n">on_red</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">green</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="n">c</span><span class="o">.</span><span class="n">yellow</span> <span class="p">{</span> <span class="n">c</span><span class="o">.</span><span class="n">on_black</span> <span class="p">{</span> <span class="s2">&quot;yellow on_black&quot;</span> <span class="p">}</span> <span class="p">},</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+
+<p>関数的に。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="kp">include</span> <span class="ss">Term</span><span class="p">:</span><span class="ss">:ANSIColor</span>
+<span class="nb">print</span> <span class="n">red</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="s2">&quot;Usage as constants:&quot;</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="n">red</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">),</span>  <span class="n">on_red</span><span class="p">(</span><span class="s2">&quot;on_red&quot;</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="n">red</span> <span class="p">{</span> <span class="n">bold</span> <span class="p">{</span> <span class="s2">&quot;Usage as block forms:&quot;</span> <span class="p">}</span> <span class="p">},</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+
+<p>Stringのメソッドとして。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="kp">include</span> <span class="ss">Term</span><span class="p">:</span><span class="ss">:ANSIColor</span>
+<span class="k">end</span>
+<span class="nb">print</span> <span class="s2">&quot;Usage as String Mixins:&quot;</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="s2">&quot;Hello, World</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">blue</span><span class="o">.</span><span class="n">on_yellow</span><span class="o">.</span><span class="n">blink</span>
+</code></pre></div>
+
+
+<h2>Wirble</h2>
+
+<p><a href="https://github.com/blackwinter/wirble">Wirble</a>はirb(Interactive Ruby)の支援ツールで、Rubyのシンタックスに合わせたカラーリングすなわち、Syntax Highlightingを実現します。ライブラリとして使う場合は以下のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;wirble&quot;</span>
+<span class="n">w</span> <span class="o">=</span> <span class="ss">Wirble</span><span class="p">:</span><span class="ss">:Colorize</span>
+<span class="nb">puts</span> <span class="n">w</span><span class="o">.</span><span class="n">colorize_string</span><span class="p">(</span><span class="s2">&quot;Hello, Ruby&quot;</span><span class="p">,</span> <span class="ss">:light_cyan</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">w</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;hello, :hello, [1, 2, 3], {:a =&gt; 1, :b =&gt; 2}&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083741.png" alt="image" /></p>
+
+<p>colorizeメソッドでRubyのオブジェクトに応じたカラーリングが実現できているのが分かります。</p>
+
+<p>なおirbで使う場合は.irbrcで以下のように指定します。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="nb">require</span> <span class="s1">&#39;wirble&#39;</span>
+  <span class="no">Wirble</span><span class="o">.</span><span class="n">init</span>
+  <span class="no">Wirble</span><span class="o">.</span><span class="n">colorize</span>
+</code></pre></div>
+
+
+<h2>Coderay</h2>
+
+<p><a href="http://coderay.rubychan.de/">CodeRay</a>は複数の言語に対応したSyntax Highlightingライブラリです。Rubyのコードをターミナルでカラーリングする場合は、以下のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;coderay&quot;</span>
+<span class="nb">puts</span> <span class="no">CodeRay</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="s2">&quot;5.times do</span><span class="se">\n</span><span class="s2"> puts &#39;hello, ruby&#39;</span><span class="se">\n</span><span class="s2">end&quot;</span><span class="p">,</span> <span class="ss">:ruby</span><span class="p">)</span><span class="o">.</span><span class="n">term</span>
+</code></pre></div>
+
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083742.png" alt="image" /></p>
+
+<p>ファイルから読込んでHTML出力するようなこともできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="no">CodeRay</span><span class="o">.</span><span class="n">scan_file</span><span class="p">(</span><span class="s2">&quot;code.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="ss">:line_numbers</span> <span class="o">=&gt;</span> <span class="ss">:table</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101112/20101112083743.png" alt="image" /></p>
+
+<p>素晴らしいですね！</p>
+
+<h2>Paint</h2>
+
+<p>Paintはライブラリでの使い勝手と拡張性を売りにした、非常にユニークな使い方ができるライブラリです。<code>gem install paint</code>でインストールして、以下のように使います。</p>
+
+<p>まずはPaint.[]クラスメソッドを使う例です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s1">&#39;paint&#39;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:red</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[31mRuby\e[0m&quot;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:red</span><span class="p">,</span> <span class="ss">:bright</span><span class="p">,</span> <span class="ss">:underline</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[31;1;4mRuby\e[0m&quot;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:red</span><span class="p">,</span> <span class="ss">:blue</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[31;44mRuby\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p>第3引数以降に現れるカラーは背景色用です。</p>
+
+<p>色の指定は多様な方法でできます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="o">]]</span> <span class="c1">#=&gt; &quot;\e[38;5;118mRuby\e[0m&quot;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="s2">&quot;gold&quot;</span><span class="p">,</span> <span class="s2">&quot;snow&quot;</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[38;5;226;48;5;231mRuby\e[0m&quot;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="s2">&quot;#123456&quot;</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[38;5;24mRuby\e[0m&quot;</span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="s2">&quot;fff&quot;</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[38;5;231mRuby\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p>第2引数以下を省略すると色指定がランダムになり、:inverseをしていすると前景色と背景色を入れ替えます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[37mRuby\e[0m&quot; </span>
+ <span class="no">Paint</span><span class="o">[</span><span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:inverse</span><span class="o">]</span> <span class="c1">#=&gt; &quot;\e[7mRuby\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110721/20110721203131.png" alt="image" /></p>
+
+<p>PaintがユニークなのはPaint::SHORTCUTSを使ったユーザカラー定義です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="ss">Paint</span><span class="p">:</span><span class="ss">:SHORTCUTS</span><span class="o">[</span><span class="ss">:mycolor</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="ss">:white</span> <span class="o">=&gt;</span> <span class="no">Paint</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="ss">:black</span><span class="p">),</span>
+     <span class="ss">:red</span>   <span class="o">=&gt;</span> <span class="no">Paint</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="ss">:red</span><span class="p">,</span> <span class="ss">:bright</span><span class="p">),</span>
+     <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="no">Paint</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="ss">:underline</span><span class="p">)</span>
+   <span class="p">}</span> <span class="c1">#=&gt; {:white=&gt;&quot;\e[30m&quot;, :red=&gt;&quot;\e[31;1m&quot;, :title=&gt;&quot;\e[4m&quot;}</span>
+</code></pre></div>
+
+
+<p>上のように登録することでPaint::Mycolorの名前空間で、white red titleの各クラスメソッドが有効になります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span><span class="o">.</span><span class="n">red</span> <span class="s2">&quot;Ruby&quot;</span> <span class="c1">#=&gt; &quot;\e[31;1mRuby\e[0m&quot;</span>
+ <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span><span class="o">.</span><span class="n">white</span> <span class="c1">#=&gt; &quot;\e[30m&quot;</span>
+ <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span><span class="o">.</span><span class="n">title</span> <span class="s2">&quot;Ruby&quot;</span> <span class="c1">#=&gt; &quot;\e[4mRuby\e[0m&quot;</span>
+ <span class="kp">include</span> <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span> <span class="c1">#=&gt; Object</span>
+ <span class="n">red</span> <span class="s2">&quot;Ruby&quot;</span> <span class="c1">#=&gt; &quot;\e[31;1mRuby\e[0m&quot;</span>
+ <span class="n">white</span> <span class="s2">&quot;Ruby&quot;</span> <span class="c1">#=&gt; &quot;\e[30mRuby\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p>それだけでなく、Paint::Mycolor::Stringモジュールをincludeすることにより、あらゆるオブジェクトをユーザ定義に従い、色つき文字列化することもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="kp">include</span> <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span><span class="o">::</span><span class="nb">String</span> <span class="c1">#=&gt; Object</span>
+ <span class="s2">&quot;Ruby&quot;</span><span class="o">.</span><span class="n">red</span> <span class="c1">#=&gt; &quot;\e[1;31mRuby\e[0m&quot;</span>
+ <span class="s2">&quot;Ruby&quot;</span><span class="o">.</span><span class="n">title</span> <span class="c1">#=&gt; &quot;\e[4mRuby\e[0m&quot;</span>
+ <span class="mi">5</span><span class="o">.</span><span class="n">red</span> <span class="c1">#=&gt; &quot;\e[31;1m5\e[0m&quot;</span>
+ <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">].</span><span class="n">red</span> <span class="c1">#=&gt; &quot;\e[31;1m[1, 2]\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p>ちょっとやり過ぎな気もしますが..</p>
+
+<p>グローバルな名前空間が汚染されることを避けたいなら、プレフィクスとして任意のメソッド名を指定することもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="kp">include</span> <span class="ss">Paint</span><span class="p">:</span><span class="ss">:Mycolor</span><span class="o">::</span><span class="ss">Prefix</span><span class="p">:</span><span class="ss">:C</span> <span class="c1">#=&gt; Object</span>
+ <span class="s2">&quot;Ruby&quot;</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="ss">:red</span><span class="p">)</span> <span class="c1">#=&gt; &quot;\e[31;1mRuby\e[0m&quot;</span>
+ <span class="s2">&quot;Ruby&quot;</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="c1">#=&gt; &quot;\e[4mRuby\e[0m&quot;</span>
+ <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">].</span><span class="n">c</span><span class="p">(</span><span class="ss">:red</span><span class="p">)</span> <span class="c1">#=&gt; &quot;\e[31;1m[1, 2]\e[0m&quot;</span>
+</code></pre></div>
+
+
+<p>なんかスゴイですね！</p>
+
+<p>ご想像のとおりPaintモジュールの内部はメタプログラミングばりばりです:)</p>
+
+<h2>IRC(Interactive Colors)</h2>
+
+<p>最後に上のライブラリを使って、ターミナル上でインタラクティブにカラーチェックができるirc.rbという簡単なツールを作りました。Term-ANSIColorライブラリを使っています。</p>
+
+<p><code>ruby irc.rb</code>で立上げると、welcomeメッセージに続きirbのようにpromptモードになります。red on_greenなどの色属性をタイプすると、その属性に制御された文字列が表示されます。</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101107/20101107152015.png" alt="image" /></p>
+
+<p>文字列をリセットしたい場合は、'='に続いて文字列をタイプします。入力できる属性はhelp(h, colors, attrs)で確認できます。終了はexit(q, quit, bye)です。</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101107/20101107152016.png" alt="image" /></p>
+
+<p>使ってくれる人がいたらうれしいです。</p>
+
+<p>(追記：2010-11-8) rainbow commandを追加しました。GNU Readlineに対応しました。</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101108/20101108075820.png" alt="image" /></p>
+
+<p>(追記：2010-11-12) WirbleとCodeRayライブラリの記載を追加しました。
+(追記：2011-7-20) Paintライブラリの記載を追加しました。</p>
+
+<p><a href="https://github.com/melborne/irc">melborne/irc - GitHub</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/11/07/Ruby-ANSI/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでANSIカラーシーケンスを学ぼう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/11/07/Ruby-ANSI/" data-text="RubyでANSIカラーシーケンスを学ぼう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/11/07/Ruby-ANSI/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/11/07/Ruby-ANSI/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2010/11/05/Ruby" title="Rubyのモジュール関数を理解しよう！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2010/11/10/Ruby-Lisp" title="((Rubyで) 書く (Lisp) インタプリタ)">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#gem-ref">gem <span>13</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/11/07/Ruby-ANSI/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでANSIカラーシーケンスを学ぼう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/11/07/Ruby-ANSI/" data-text="RubyでANSIカラーシーケンスを学ぼう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/11/07/Ruby-ANSI/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/11/07/Ruby-ANSI/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

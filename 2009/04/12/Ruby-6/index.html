@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>12 April 2009</span></div>
+  <h1 class='page-title'><a href="/2009/04/12/Ruby-6">Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>さてこれまでに得た知識を基礎として、目的のRubyスクリプトを作ります。最初にベースとなるコードを提示して、これを少しずつ改良していきながらRubyを学びます。</p>
+
+<p>まずは手元にRubyで処理できる英文小説のテキストファイルを用意します。以下のサイトがよさそうです。</p>
+
+<p><a href="http://www.gutenberg.org/wiki/Main_Page">Project Gutenberg</a></p>
+
+<p>ここから気に入った小説をplain text形式で2、3ダウンロードします。</p>
+
+<p>もしrubyインタプリタが手元にないか、ヴァージョンが古いのなら、<a href="http://www.ruby-lang.org/ja/">Ruby公式サイト</a>にアクセスして入手します。4.8.10があればいいですが1.8.7でも1.9.1でも足ります。ターミナルを開いて ruby -v と打てばインストールされているrubyのヴァージョンが分かります。</p>
+
+<p>さて準備が整ったら、まずは入力と出力をイメージしましょう。このRubyスクリプトの名前をtopwords.rbとします。もちろんtop10.rbでもtopoftheworld.rbでもかまいません。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="n">novel1</span><span class="o">.</span><span class="n">txt</span> <span class="n">novel2</span><span class="o">.</span><span class="n">txt</span> <span class="n">novel3</span><span class="o">.</span><span class="n">txt</span>
+ <span class="p">{</span><span class="s1">&#39;this&#39;</span> <span class="o">=&gt;</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span> <span class="o">=&gt;</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="mi">65</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>rubyインタプリタにスクリプト名と上で入手したファイルを渡します。その実行結果として、最頻出単語とその出現数のリストが得られる、そんなイメージがよさそうです。</p>
+
+<p>次にRubyスクリプトの大ざっぱなプランを描きます。</p>
+
+<p>例えば次のように、</p>
+
+<ol>
+<li>コマンド引数として渡したファイルをスクリプトに取り込むためにARGFというオブジェクトを使う</li>
+<li>ARGFから順次ファイルの行を読み出す</li>
+<li>読み出した行から単語を切り出す</li>
+<li>ハッシュオブジェクトを用意して単語とその出現数の対を格納する</li>
+<li>ハッシュオブジェクトの内容をその出現数の順位で並べ替える</li>
+<li>その上位30を取り出す</li>
+</ol>
+
+
+<h2>Version01</h2>
+
+<p>突然ですが、この方針による最初のスクリプトは次のようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">dic</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+ <span class="k">while</span> <span class="n">line</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">gets</span>
+   <span class="n">line</span><span class="o">.</span><span class="n">downcase!</span>
+   <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+     <span class="n">word</span> <span class="o">=</span> <span class="vg">$&amp;</span>
+     <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="nb">p</span> <span class="n">dic</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>最初に単語と出現数のリストを格納するハッシュオブジェクトを用意します。ハッシュは通常 dic = {}で簡単に生成できますが、ここでは対応するキーがない場合のデフォルト値0を設定するために、newメソッドを呼んでいます。これにより6行目の増分が可能になります。</p>
+
+<p>Rubyはスクリプトに指定した引数をファイル名とみなして、その内容を持ったARGFというオブジェクトを作り出します。ARGFオブジェクトは、その内容にアクセスするためのメソッド群を持っており、ここではその１つであるgetsメソッドを使って、ファイルの各行を文字列オブジェクトとして得ています。</p>
+
+<p>ARGFといわれてもピンと来ませんが、何かの略です。たぶんAiR GolFかARGument Filesです。</p>
+
+<p>いえ、わかりました。ARt GarFunkelの略です。そのうちPRSMというのも出てくると思います。</p>
+
+<p>以下のサイトで「ARGF」を検索しリンクを辿れば、ARGFが持っているメソッドを調べられます。</p>
+
+<p><a href="http://rbref.heroku.com/">Ruby 1.9.2 Methods List</a></p>
+
+<p>whileループで順次ファイルの行を変数lineに読み込みます。getsメソッドはファイルの終わりに来るとnilを返しますから、ここでループが終わります。読み込まれた行はdowncase!メソッドで小文字に変換され、次にsub!メソッドでそこから単語を切り出します。</p>
+
+<p>sub!メソッドは第1引数の正規表現の条件にマッチしたものを、第2引数に(ここでは空文字)置き換えます。sub!メソッドは元のline文字列オブジェクト自体を変更します。つまりlineはマッチするたびに短くなっていき、最後にはマッチするものが無くなってnilが返りループが終わります。マッチした単語はその都度変数$&amp;でアクセスできます。</p>
+
+<p>取得したwordでハッシュdicのキーにアクセスし、対応するバリューを増分します。dicに対応wordが無い場合、デフォルト値0で項目が作成され1増分されます。</p>
+
+<p>次にハッシュオブジェクトであるdicをソートします。sortメソッドはハッシュの[key, value]を要素とする配列の配列を作り、ブロックの条件でこれをソートした結果を返します。ここではvalue値の大小でソートします。降順ソートとするためa,bを逆に書きます。</p>
+
+<p>最後に[ ]メソッドに0...30の範囲オブジェクトを渡して、対象の配列オブジェクトのみを取り出します。ドットが3つであることに注意してください。この場合は30つまり31番目の要素は範囲外になります。</p>
+
+<p>では、実際に入手したファイルでこのスクリプトを実行してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="mi">11</span><span class="o">.</span><span class="n">txt</span> <span class="mi">1342</span><span class="o">.</span><span class="n">txt</span> <span class="mi">18503</span><span class="o">.</span><span class="n">txt</span> 
+ <span class="o">[[</span><span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="mi">16077</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;of&quot;</span><span class="p">,</span> <span class="mi">9823</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="mi">7482</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="mi">7098</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="mi">4456</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">3841</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="mi">3161</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="mi">3040</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;it&quot;</span><span class="p">,</span> <span class="mi">2919</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="mi">2881</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;her&quot;</span><span class="p">,</span> <span class="mi">2550</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;she&quot;</span><span class="p">,</span> <span class="mi">2313</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;as&quot;</span><span class="p">,</span> <span class="mi">2134</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;you&quot;</span><span class="p">,</span> <span class="mi">2071</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="mi">2057</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;be&quot;</span><span class="p">,</span> <span class="mi">2044</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="mi">2033</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;his&quot;</span><span class="p">,</span> <span class="mi">2009</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;he&quot;</span><span class="p">,</span> <span class="mi">1940</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;for&quot;</span><span class="p">,</span> <span class="mi">1927</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;with&quot;</span><span class="p">,</span> <span class="mi">1875</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;on&quot;</span><span class="p">,</span> <span class="mi">1638</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;had&quot;</span><span class="p">,</span> <span class="mi">1567</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;but&quot;</span><span class="p">,</span> <span class="mi">1519</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">1495</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="mi">1363</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;at&quot;</span><span class="p">,</span> <span class="mi">1344</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;by&quot;</span><span class="p">,</span> <span class="mi">1308</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;this&quot;</span><span class="p">,</span> <span class="mi">1249</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;have&quot;</span><span class="p">,</span> <span class="mi">1201</span><span class="o">]]</span>
+</code></pre></div>
+
+
+<p>うまくいきました。'the'が英文小説における最頻出ワードであることが分かりました。上の正規表現は「'」にうまく対応していないので完全ではありませんが、一応これで仕事が片づきました。上司に報告が必要な人は、この結果をプリントアウトしてください。</p>
+
+<p>(<a href="/2009/04/13/Ruby-7/">次回に続く</a>)</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/04/12/Ruby-6/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/04/12/Ruby-6/" data-text="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/04/12/Ruby-6/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/04/12/Ruby-6/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/04/11/Ruby-5" title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その5)">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/04/13/Ruby-7" title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その7)">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/04/12/Ruby-6/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/04/12/Ruby-6/" data-text="Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!(その6)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/04/12/Ruby-6/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/04/12/Ruby-6/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

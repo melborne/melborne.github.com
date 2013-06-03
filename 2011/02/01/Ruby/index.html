@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>01 February 2011</span></div>
+  <h1 class='page-title'><a href="/2011/02/01/Ruby">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="http://melborne.github.com/2011/01/29/Ruby/" title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)">引き続き</a>「なぜ関数プログラミングは重要か」を、Rubyを使って解釈し自分の理解に基づいて解説してみます。誤解が有るかも知れません。いやきっとあります。ご指摘いただければ助かります。</p>
+
+<h2>プログラムの貼り合せ(遅延評価)</h2>
+
+<p>次に関数プログラミングの２つ目の強力な糊、つまりプログラムを貼り合せる糊について説明する。</p>
+
+<p>いま２つのプログラムｆとｇがあって、入力inputをこれらに適用する場合を考える。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">g</span> <span class="p">(</span><span class="n">f</span> <span class="n">input</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>プログラムｆは入力inputを受け取ってその出力を計算し、その出力はプログラムｇの入力として使われる。</p>
+
+<p>一般的なプログラム言語ではｆからの出力を一時的にメモリーに蓄えることでその実装を可能とするが、ケースによってはメモリー占有量が膨大になり得る。</p>
+
+<p>関数プログラミングではプログラムｆとｇは厳密な同期の上で走る。つまりプログラムｆはプログラムｇが必要とする分だけ実行されて残りは破棄される。このことからプログラムｆは無限に出力を生成し続けるものであってもよい。これによってプログラムの停止条件はループ本体と切り離すことができ、強力なモジュール化が可能になる。</p>
+
+<p>このようなプログラムの評価方式は「遅延評価」と呼ばれる。</p>
+
+<h2>ニュートンーラプソン法による平方根</h2>
+
+<p>遅延評価の力を使って、ニュートンーラプソン法による平方根のアルゴリズムを求めてみよう。この方法でnの平方根を求めるとき任意の近似値xを選び、xとn/xの平均を取っていくことでより良い近似値xを得る。これを繰り返し十分に良い近似値が得られたら処理を終える。良い近似値かの判断は隣接する近似値の差が許容誤差eps以下であるかにより判断する。</p>
+
+<p>Rubyにおける一般的な実装は以下のようになるだろう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">EPS</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>    <span class="c1"># 許容誤差</span>
+ <span class="no">A0</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="c1"># 初期近似値</span>
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="no">EPS</span><span class="p">)</span>
+   <span class="kp">loop</span> <span class="k">do</span>
+     <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span>           <span class="c1"># 次の近似値</span>
+     <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;</span> <span class="n">eps</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>この実装ではループの停止条件は、ループに組み込まれてしまって分離できない。遅延評価を使うことによって実装のモジュール化を行い、その部品が他の場面でも使えることを示そう。</p>
+
+<p>基本的にRubyの関数(メソッド)は正格評価であり遅延評価されない。しかし関数をProcやEnumeratorオブジェクトとすることによって、その評価のタイミングを遅らせる。つまり遅延評価させることができる。</p>
+
+<p>まず次の近似値を計算するnext_valを定義しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">next_val</span>
+   <span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">{</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>next_val<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>は、求める平方根の数値nと近似値xを取って次の近似値を返すが、これをcurry化されたProcオブジェクトを返すように実装する。これによって、２つの引数を渡すタイミングをコントロールできるようになる。つまり数値nだけを先に渡すことによってnext_valは、１つの引数xを受ける関数に変わる。</p>
+
+<p>例を示そう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">next_for_five</span> <span class="o">=</span> <span class="n">next_val</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span> <span class="c1"># =&gt; 3.0</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.3333333333333335</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.238095238095238</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.2360688956433634</span>
+</code></pre></div>
+
+
+<p>次に初期値に任意の関数を繰り返し適用して、その結果のリストを返す汎用関数repeatを定義しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+   <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>repeat関数は１つの引数を取って１つの結果を返す関数ｆと、ｆの初期値となるxを取りEnumeratorオブジェクトを返す。Enumeratorのブロックの中ではloopによってxを関数ｆに適用した結果が、繰り返しｙつまりEnumerator::Yielderオブジェクトに渡されるが、これはEnumeratorオブジェクトが呼び出されるまで実行されず、そのため無限ループにはならない。</p>
+
+<p>このrepeat関数に先のnext_val関数を渡すことによって、平方根nの近似値のリストが得られる。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">approxs</span> <span class="o">=</span> <span class="n">repeat</span> <span class="n">next_val</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x0a4aec&gt;:each&gt;</span>
+ <span class="n">ls</span> <span class="o">=</span> <span class="o">[]</span>
+ <span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">ls</span> <span class="o">&lt;&lt;</span> <span class="n">approxs</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+ <span class="n">ls</span> <span class="c1"># =&gt; [1.0, 3.0, 2.3333333333333335, 2.238095238095238, 2.2360688956433634]</span>
+</code></pre></div>
+
+
+<p>Enumeratorオブジェクトはその呼び出し<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>の度にループを１つ回して結果を１つ返す。repeatはその出力を利用する関数と同期して、それが必要とされる分だけ評価される。つまりrepeatそれ自体は繰り返し回数の制限を持たない。</p>
+
+<p>次に関数with_inを定義しよう。with_inは許容誤差と近似値のリスト<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>を引数に取り、許容誤差よりも小さい２つの連続する近似値を探す。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span>
+   <span class="n">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>最初の行でEnumeratorオブジェクトの返す最初の２つの値をnextとpeekでa, bに取る。Enumerator#peekはカーソルを進めないで先頭要素を取る。２行目の終了条件が満たされない限り、処理は再帰的に繰り返えされる。</p>
+
+<p>最後にこれらの部品を使って平方根を求める関数sqrtを定義しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">EPS</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>    <span class="c1"># 許容誤差</span>
+ <span class="no">A0</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="c1"># 初期近似値</span>
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="no">EPS</span><span class="p">)</span>
+   <span class="n">with_in</span> <span class="n">eps</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">next_val</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">a0</span><span class="p">)</span>
+ <span class="k">end</span>
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">3</span> <span class="c1"># =&gt; 1.7320508100147274</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>sqrt関数はこのようにしてモジュール化された３つの汎用部品next_val repeat with_inを貼り合せて作ることができた。</p>
+
+<p>sqrt関数はモジュールを合成して構成されているので、プログラムの基本的な構造を変えることなく変更が容易に行える。</p>
+
+<p>今度は、２つの連続する近似値の差がゼロに近づくという条件の代わりに、２つの近似値の比が１に近づくという条件に変えてみよう。これは非常に小さいまたは非常に大きい数に対してはより適切な結果を出す。</p>
+
+<p>この目的を達成するには、関数with_inに代わる関数relativeを定義するだけでよい。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">abs</span>
+   <span class="n">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+ <span class="k">end</span>
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="no">EPS</span><span class="p">)</span>
+   <span class="n">relative</span> <span class="n">eps</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">next_approx</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">a0</span><span class="p">)</span>
+ <span class="k">end</span>
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">3</span> <span class="c1"># =&gt; 1.7320508100147274</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>他の部品を変えることなく新しいsqrt関数ができた。</p>
+
+<p>(続く？)</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>nextはRubyの予約語なので使えない <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>ここではnext <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>正確にはリストではなくEnumeratorオブジェクト <a href='#fnref:3' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/02/01/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/02/01/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/02/01/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/02/01/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/01/31/fun" title="fun of Processing!">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/02/04/Processing" title="Processingアプレットをはてダに貼り付けよう！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/02/01/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/02/01/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/02/01/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/02/01/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

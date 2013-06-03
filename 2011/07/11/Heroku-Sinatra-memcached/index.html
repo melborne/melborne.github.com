@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>HerokuでSinatraでmemcachedしようよ!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>11 July 2011</span></div>
+  <h1 class='page-title'><a href="/2011/07/11/Heroku-Sinatra-memcached">HerokuでSinatraでmemcachedしようよ!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「NoSQL データベースファーストガイド」(著：佐々木達也)という本を読んでるよ。各種NoSQLのひと通りの説明とそれぞれにRubyを使ったサンプルがあって、僕のようなNoSQL知識ゼロ(NoKnowledge)の人にとってはとてもためになるよ。特にサンプルは各NoSQLの利用状況を想定して作られているから、実用的でうれしいよね。</p>
+
+<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4798029599"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41eQ1UKh7JL._SL160_.jpg" /></a></p>
+
+<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4798029599">NoSQLデータベースファーストガイド</a> by 佐々木 達也</p>
+
+<p>その中に音楽視聴ランキングサイトの楽しいサンプルがあるんだよ。それはGyaoの音楽ランキングに基づいて、YouTubeから対応動画を取ってきてリスト表示するというものだよ。一度アクセスしたデータはmemcachedを使ってサイト側で保持することで、サイトのレスポンスを良くすると共に、他サイトへの負荷を下げるという例だよ。</p>
+
+<p>早速僕も同じようなサイトを作ってmemcachedの使い方を学ぶよ。本の例はRailsをベースにしてるんだけど、僕はRailsをよく知らないのでここではSinatraを使うよ。そして折角だからHerokuにpushもしてみるね。</p>
+
+<h2>memcached</h2>
+
+<p>環境はOSX Snow Leopardだよ。ローカルでmemcachedを使うには、<code>brew install memcached</code>すればいいよ。very verboseモードでの起動はこうだよ。</p>
+
+<div class="highlight"><pre><code class="bash"> <span class="nv">$ </span>memcached -vv
+</code></pre></div>
+
+
+<p>Herokuでmemcachedを使う場合はadd-onするだけでいいみたいなんだ<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<div class="highlight"><pre><code class="bash"> <span class="nv">$ </span>heroku addons:add memcache
+</code></pre></div>
+
+
+<p>5MBまでは無料だけど<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>add-onを利用するには、クレジットカード情報などによる登録が必要だよ。登録しないで上のコマンドを実行すると、登録サイトを教えてくれるからそれに従ってね。</p>
+
+<p>最初にmemcachedは何かということなんだけれども、僕はこれをリクエスト間の共有メモリ空間と理解したんだ。普通Webサーバはステートレスつまり、ユーザからの各リクエストは別々のメモリ空間で処理されるんだけど、memcachedを使うと多数のリクエストが一つの共有メモリ空間を利用できるようになる。つまりmemcachedはWebサーバをステートフルにする、こう理解したんだけどあってるかな？</p>
+
+<h2>GyaoRankサイト</h2>
+
+<p>さて最終的にでき上がったものは以下にあるよ。</p>
+
+<p><a href="http://gyaorank.heroku.com/">http://gyaorank.heroku.com/</a></p>
+
+<p>まあ見た目がちゃちいけど、サンプルだから許してね..調べたらGyaoでは音楽以外のランキングデータも配信していたので<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>、ここではそれらにも対応してみたよ。ヒット率がかなり悪いけど..</p>
+
+<p>ファイル構成をまず示すよ。</p>
+
+<div class="highlight"><pre><code class="bash">├── Gemfile
+├── Gemfile.lock
+├── app.rb
+├── config.ru
+├── system_extensions.rb
+└── views
+    ├── index.haml
+    ├── layout.haml
+    └── style.scss
+</code></pre></div>
+
+
+<p>Gemfileの中身は以下のとおりだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">source</span> <span class="ss">:rubygems</span>
+<span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;haml&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;sass&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;dalli&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;nokogiri&#39;</span>
+</code></pre></div>
+
+
+<p>本の例ではmemcachedのRubyインタフェースにmemcache-clientというのを使ってるんだけど、HerokuではSASL<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>というセキュリティ上の認証ができるgemしか使えないようなんだ。だからSASLに対応したDalliという変わった名前のgemを使っているよ。余談だけどdalliとnokogiriを並べて書くと、僕にはdankogaiに見えてしょうがないんだよ!</p>
+
+<p>SinatraでDalliを使うときは例えば以下のようにするよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">set</span> <span class="ss">:cache</span><span class="p">,</span> <span class="ss">Dalli</span><span class="p">:</span><span class="ss">:Client</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_SERVERS&#39;</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:username</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_USERNAME&#39;</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_PASSWORD&#39;</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:expires_in</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>つまりDalli::Clientオブジェクトをcacheという変数にセットして、getでkeyに対応するデータの取得をし、setでkeyにdataを保存する。データの保持期間はオブジェクト生成時のoptionで指定できる。optionを指定しないならmemcache serverの指定を含めて引数は不要だよ。</p>
+
+<p>次にapp.rbだけど、ちょっと長いので分けて要点だけ説明するよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">&#39;/:term/:category&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="o">|</span>
+  <span class="vi">@term</span><span class="p">,</span> <span class="vi">@category</span><span class="p">,</span> <span class="vi">@date</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span>
+  <span class="vi">@videos</span> <span class="o">=</span> <span class="n">videos</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="vi">@date</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
+  <span class="vi">@urls</span> <span class="o">=</span> <span class="sx">%w(daily weekly newly)</span><span class="o">.</span><span class="n">product</span> <span class="sx">%w(music movie drama anime owarai variety all)</span>
+  <span class="n">haml</span> <span class="ss">:index</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Gyaoではmusic movie drama anime owarai variety allの各カテゴリデータにつき、daily weekly newlyという期間データを用意しているんだ。だからgetではそれらをパラメータとして取って、これに応じたビデオのリストをvideosメソッドで取得するようにしている。また@urlsはプルダウンメニューで使っているよ。</p>
+
+<p>videosメソッドを見るよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">term_category_date</span> <span class="o">*</span> <span class="s1">&#39;/&#39;</span>
+    <span class="k">if</span> <span class="n">vdata</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+      <span class="n">vdata</span>
+    <span class="k">else</span>
+      <span class="n">vdata</span> <span class="o">=</span> <span class="n">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
+      <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">vdata</span><span class="p">)</span>
+      <span class="n">vdata</span>
+    <span class="k">end</span>
+  <span class="k">rescue</span>
+    <span class="n">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここではmemcachedにアクセスするためのkeyとして渡された引数term, category, dateを / で連結したものを使っているよ。最初にmemcachedに同じキーのデータがあるか見てなければget_videosメソッドでGyaoとYouTubeにアクセスして、データを取得しmemcachedにセットする。rescueでmemcachedが死んでる場合にも一応対応したよ。</p>
+
+<p>次にget_videosメソッドを見るよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
+    <span class="n">ranking</span> <span class="o">=</span> <span class="n">rank_data</span><span class="p">(</span><span class="n">term_category_date</span><span class="o">.</span><span class="n">first</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">video_data</span><span class="p">(</span><span class="n">ranking</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここではrank_dataメソッドでGyaoにアクセスし、内容を解析してランキングデータを取得し、video_dataメソッドでそのデータに対応する動画をYouTubeから取得しているよ。</p>
+
+<p>で、具体的なこれらの処理の内容は次のとおりだよ。Gyaoのデータはrssライブラリを使って、YouTubeのデータはnokogiriライブラリを使って解析しているよ。やっていることは本の例と基本的には同じだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">rank_data</span><span class="p">(</span><span class="o">*</span><span class="n">term_category</span><span class="p">)</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span> <span class="no">URL</span><span class="p">(</span><span class="ss">:rank</span><span class="p">)</span> <span class="o">+</span> <span class="n">term_category</span><span class="o">*</span><span class="s1">&#39;/&#39;</span> <span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="ss">RSS</span><span class="p">:</span><span class="ss">:Parser</span><span class="o">.</span><span class="n">parse</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+    <span class="n">rss</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">item</span><span class="o">|</span> <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="n">item</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[^「」]+/</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">video_data</span><span class="p">(</span><span class="n">ranking</span><span class="p">)</span>
+    <span class="n">ranking</span><span class="o">.</span><span class="n">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">|</span>
+      <span class="n">opts</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;vq=&quot;</span> <span class="o">+</span> <span class="no">URI</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;%s %s&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">]</span><span class="p">),</span> <span class="s2">&quot;format=5&quot;</span><span class="o">]*</span><span class="s1">&#39;&amp;&#39;</span>
+      <span class="n">entry</span> <span class="o">=</span> <span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:XML</span><span class="p">(</span><span class="nb">open</span> <span class="o">[</span><span class="no">URL</span><span class="p">(</span><span class="ss">:video</span><span class="p">),</span> <span class="n">opts</span><span class="o">]*</span><span class="s1">&#39;?&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;entry&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">artist</span><span class="p">:</span> <span class="n">artist</span><span class="p">,</span> <span class="ss">title</span><span class="p">:</span>  <span class="n">title</span> <span class="p">}</span>
+      <span class="k">if</span> <span class="n">entry</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">url</span><span class="p">:</span>    <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;media:group/media:content&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span><span class="p">,</span>
+              <span class="ss">type</span><span class="p">:</span>   <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;media:group/media:content&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;type&#39;</span><span class="o">]</span><span class="p">,</span>
+              <span class="ss">count</span><span class="p">:</span>  <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;yt:statistics&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;viewCount&#39;</span><span class="o">]</span> <span class="p">}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">update</span> <span class="n">q</span>
+      <span class="k">end</span>
+      <span class="n">data</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">URL</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="p">{</span> <span class="ss">video</span><span class="p">:</span> <span class="s1">&#39;http://gdata.youtube.com/feeds/api/videos&#39;</span><span class="p">,</span>
+      <span class="ss">rank</span><span class="p">:</span>  <span class="s1">&#39;http://gyao.yahoo.co.jp/rss/ranking/c/&#39;</span> <span class="p">}</span><span class="o">[</span><span class="n">code</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ただここではビデオの取得にスレッドを使っているよ。折角だからここでは<a href="/2011/06/29/notitle/">この間作った</a> Enumerable#thread_withを使ってみたよ。これはsystem_extensions.rbというファイルに置いてあるよ。</p>
+
+<p>system_extensions.rbの中身はこうだよ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="k">module</span> <span class="nn">Enumerable</span>
+  <span class="k">def</span> <span class="nf">thread_with</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
+    <span class="n">mem</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">map</span><span class="o">.</span><span class="n">with_index</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
+        <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="k">yield</span><span class="p">(</span><span class="o">*</span><span class="n">_item</span><span class="p">)</span><span class="o">]</span>
+      <span class="k">end</span>
+    <span class="k">end</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">order</span> <span class="p">?</span> <span class="n">mem</span><span class="o">.</span><span class="n">sort</span> <span class="p">:</span> <span class="n">mem</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">Fixnum</span>
+  <span class="k">def</span> <span class="nf">day</span>
+    <span class="nb">self</span><span class="c1">##60*24</span>
+  <span class="k">end</span>
+  <span class="k">alias</span> <span class="n">days</span> <span class="n">day</span>
+<span class="k">end</span>
+<span class="k">module</span> <span class="nn">Kernel</span>
+  <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="o">*</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">features</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Fixnum#dayとKernel#requiresは
+app.rbでつかってるんだけどまあおまけだよ。</p>
+
+<p>layout.hamlとindex.hamlには特に面白いところはないので説明は省くね。</p>
+
+<p>NoSQLってなんかもっと難しいものをイメージしてたけど、全然そんなこと無いんだね。</p>
+
+<p>(追記：2011-7-11)Dalli::Client.newの引数を修正しました。<sup id='fnref:5'><a href='#fn:5' rel='footnote'>5</a></sup></p>
+
+<script src="https://gist.github.com/1075425.js"> </script>
+
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>http://devcenter.heroku.com/articles/memcache <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>http://addons.heroku.com/memcache <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>http://www.redcruise.com/search.php?srcstr=GyaO <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>Simple Authentication and Security Layer <a href='#fnref:4' rev='footnote'>↩</a></li><li id='fn:5'>https://github.com/mperham/dalli/wiki/Heroku-Configuration <a href='#fnref:5' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" class="hatena-bookmark-button" data-hatena-bookmark-title="HerokuでSinatraでmemcachedしようよ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" data-text="HerokuでSinatraでmemcachedしようよ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/07/07/Ruby-Haskell" title="RubyでHaskellの数列リストを真似てみよう！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/07/19/Ruby1-9-END-HELL" title="Ruby1.9でもEND HELLを解消したい！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#webapp-ref">webapp <span>14</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" class="hatena-bookmark-button" data-hatena-bookmark-title="HerokuでSinatraでmemcachedしようよ!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" data-text="HerokuでSinatraでmemcachedしようよ!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/11/Heroku-Sinatra-memcached/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

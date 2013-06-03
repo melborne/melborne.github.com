@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyで文字列検索アルゴリズムを表現しよう!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>17 October 2010</span></div>
+  <h1 class='page-title'><a href="/2010/10/17/Ruby">Rubyで文字列検索アルゴリズムを表現しよう!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>文字列中のパターンを探し出すメソッドとして、RubyにはString#indexが用意されています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.&quot;</span>
+<span class="n">text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 285</span>
+</code></pre></div>
+
+
+<p>またRubyの標準ライブラリにはStringScannerクラスがあるので、これを使って以下のようにインデックスを求めることもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;strscan&quot;</span>
+<span class="n">text</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="n">text</span><span class="o">.</span><span class="n">skip_until</span><span class="p">(</span><span class="sr">/.?(?=</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span><span class="si">}</span><span class="sr">)/</span><span class="p">)</span> <span class="c1"># =&gt; 285</span>
+</code></pre></div>
+
+
+<p>ですから今更、文字列検索のアルゴリズムを実装する価値はありません。しかしアルゴリズムを理解してそれを実装する能力は、プログラムする上での基礎力として必須と言われているので<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>、ここで勉強しておきたいと思います。</p>
+
+<p>以下では、文字列検索として代表的なアルゴリズムである、力まかせ検索、ボイヤー-ムーア(ＢＭ)検索、クヌース-モリス-プラット(ＫＭＰ)検索、N-gramインデックス検索、ラビン-カープ(RK)検索の各検索アルゴリズムをRubyで実装します。なお、各アルゴリズムはWikipediaその他のネット上の情報を参考に、独自解釈して構成したものです。間違いがあるかも知れません。いやきっとあるでしょう。</p>
+
+<h2>力まかせ検索</h2>
+
+<p>力まかせ検索はテキストの先頭から、検索パターンを１文字ずつずらして照合を行う検索アルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>テキストの先頭文字から検索パターンの各文字を照合。</li>
+<li>一致しない場合照合位置を１つずらす。</li>
+<li>1-2を一致するまで繰り返す。</li>
+</ol>
+
+
+<p>これをRubyのStringクラスに実装してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">power_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">match</span> <span class="o">=</span> <span class="n">compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span>
+      <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="n">pattern</span><span class="o">.</span><span class="n">each_char</span><span class="o">.</span><span class="n">with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">chr</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">chr</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="n">pos</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>compareメソッドではパターンとテキストの対応箇所を、先頭から一文字ずつ比較してそのすべてが一致した場合に先頭のインデックスを返します。</p>
+
+<p>StringScannerクラスを使ったcompareメソッドの例も示しておきます。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">compare_with_scanner</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="n">str</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="n">str</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
+    <span class="n">pattern</span><span class="o">.</span><span class="n">each_char</span> <span class="k">do</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">str</span><span class="o">.</span><span class="n">scan</span> <span class="sr">/</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span><span class="si">}</span><span class="sr">/</span>
+    <span class="k">end</span>
+    <span class="n">pos</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>StringScanner#scanメソッドはマッチする場合には、自動でポインタを進めるので繰り返しのための記述が簡潔になります。</p>
+
+<h2>ボイヤー-ムーア(ＢＭ)検索</h2>
+
+<p>ＢＭ検索は検索パターンとの照合をパターン末尾から行い、パターン内文字と不一致文字との照合を行うことによって、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>テキストの先頭文字から検索パターンの各文字を後方から照合。</li>
+<li>一致しない場合その不一致文字がパターン前方にあるか調べる。</li>
+<li>ある場合照合位置をその位置までずらす。</li>
+<li>ない場合照合位置を不一致文字の後ろにずらす。</li>
+<li>1-4を一致するまで繰り返す。</li>
+</ol>
+
+
+<p>ＢＭ検索では次の照合位置を、後方から調べた不一致位置までずらすことができるので、効率が大変いいです。</p>
+
+<p>Rubyで実装してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">bm_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">match</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">bm_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">bm_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">downto</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">i</span><span class="o">].</span><span class="n">bm_shift</span><span class="p">(</span><span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span><span class="p">)</span> <span class="o">||</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">shift</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">pos</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">bm_shift</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+    <span class="n">length</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">pos</span><span class="o">|</span> <span class="k">return</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[-</span><span class="mi">1</span><span class="o">-</span><span class="n">pos</span><span class="o">]</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span>
+    <span class="kp">nil</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>bm_compareではFixnum#downtoメソッドでインデックスを降順にして、比較をパターン後方から行うようにしています。また力まかせ検索ではパターンのずらし量は１に固定されていましたが、ここではbm_shiftメソッドの結果でその量を決定しています。</p>
+
+<h2>クヌース-モリス-プラット(ＫＭＰ)検索</h2>
+
+<p>ＫＭＰ検索は検索パターン内に存在する文字パターンを利用して、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います.</p>
+
+<ol>
+<li>テキストの先頭文字から検索パターンの各文字を照合。</li>
+<li>先頭文字で不一致が生じた場合、パターンを１つずらす。</li>
+<li>２文字目以降で不一致が生じた場合、不一致箇所以前の部分においてその先頭文字列の繰り返し文字列の有無を調べる。</li>
+<li>繰り返し文字列がなければ、不一致箇所にパターンをずらす。</li>
+<li>繰り返し文字列がある場合は、その位置にパターンをずらすと共に照合開始位置を繰り返し文字列の次にセットする。</li>
+<li>2-5を一致するまで繰り返す。</li>
+</ol>
+
+
+<p>上記よりＫＭＰ検索では検索パターンが繰り返し文字列を含んでおらず、照合の不一致がパターンの後方で多く発生する場合に効果が大きくなることが分かります。ですから通常の文字列検索ではあまり効率がよくありません。</p>
+
+<p>Rubyで実装してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">kmp_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">pos</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">match</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="n">kmp_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">from</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">kmp_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">from</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">from</span><span class="o">.</span><span class="n">.</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+        <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">shift</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">i</span><span class="o">].</span><span class="n">count_sequence</span>
+        <span class="k">if</span> <span class="n">shift</span>
+          <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">from</span>
+        <span class="k">else</span>
+          <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">pos</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">count_sequence</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">until</span> <span class="n">shift</span> <span class="o">&gt;=</span> <span class="n">length</span>
+      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">shift</span><span class="o">]</span> 
+        <span class="n">match</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">until</span> <span class="n">shift</span><span class="o">+</span><span class="n">match</span> <span class="o">&gt;=</span> <span class="n">length</span>
+          <span class="nb">self</span><span class="o">[</span><span class="n">match</span><span class="o">]</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">shift</span><span class="o">+</span><span class="n">match</span><span class="o">]</span> <span class="p">?</span> <span class="n">match</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">:</span> <span class="k">break</span>
+        <span class="k">end</span>
+        <span class="k">return</span> <span class="n">length</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">match</span>
+      <span class="k">end</span>
+      <span class="n">shift</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードではcount_sequenceメソッドにおいて繰り返し文字列の有無を調べています。そして繰り返し文字列の長さに応じて、次の照合の再開位置(from)を決定します。場合分けが多く若干コードが複雑になっていますが、その割に検索の効率が上がらないのが残念です。</p>
+
+<h2>N-gramインデックス検索</h2>
+
+<p>N-gramインデックス検索はテキスト内文字のインデックスを使って、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>テキストのすべての文字の出現位置を記録した索引を作る</li>
+<li>索引を参照して検索パターンの先頭文字と同じ文字の出現位置を調べる</li>
+<li>照合位置を出現位置に移動して照合を行う</li>
+<li>2-3を一致するまで繰り返す</li>
+</ol>
+
+
+<p>N-gramインデックス検索では照合箇所をパターンの先頭文字の出現位置だけに限定できるので、照合回数を激減させることができます。一方で、インデックスの作成のためのコストが大きくかかる問題があります。</p>
+
+<p>Rubyで実装してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">ngi_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">index_table</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">[</span><span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">n</span><span class="o">]]</span>
+    <span class="k">until</span> <span class="n">indices</span><span class="o">.</span><span class="n">empty?</span>
+      <span class="n">match</span> <span class="o">=</span> <span class="n">ngi_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shift</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">index_table</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span> <span class="p">}</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span><span class="o">.</span><span class="n">each_cons</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">q</span><span class="o">[</span><span class="n">chr</span><span class="o">.</span><span class="n">join</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="p">}</span>
+    <span class="n">q</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">ngi_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="n">pos</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>インデックスの作成はindex_tableで行い、結果はHashに格納しています。デフォルトでインデックスは１文字ですが、複数文字(n)を指定することもできます。パターンのずらし回数はindicesの要素数で決まります。</p>
+
+<h2>ラビン-カープ検索(RK)検索</h2>
+
+<p>ＲＫ検索は検索パターンとの照合を個々の文字列で行うのではなく、それらのハッシュ値で行うことによって照合に掛かる時間を効率化する検索アルゴリズムです。パターンのずらし量は１文字ずつで力まかせ検索と同じです。具体的には以下の手順を行います。</p>
+
+<ol>
+<li>検索パターンとその対応箇所のハッシュ値を求め照合する</li>
+<li>一致しない場合テキストの次の照合箇所のハッシュ値を求める</li>
+<li>照合位置を１つずらす</li>
+<li>2-3を一致するまで繰り返す</li>
+</ol>
+
+
+<p>なお次のハッシュ値の生成はその生成効率を上げるため、前のハッシュ値を利用したローリングハッシュ値の演算を用います。またハッシュ値が一致しても生文字列が一致しない場合があるのでその確認もします。</p>
+
+<p>Rubyで実装してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">rk_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">h_self</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="o">].</span><span class="n">rhash</span>
+    <span class="n">h_pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">rhash</span>
+    <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">match</span><span class="p">,</span> <span class="n">h_self</span> <span class="o">=</span> <span class="n">hash_compare</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">h_pattern</span><span class="p">,</span> <span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">pos</span><span class="o">+</span><span class="n">pattern</span><span class="o">.</span><span class="n">length</span><span class="o">]</span> <span class="o">==</span> <span class="n">pattern</span>
+      <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">rhash</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">length</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">mem</span> <span class="o">+</span> <span class="nb">self</span><span class="o">[</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="o">].</span><span class="n">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">hash_compare</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">h_pattern</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="n">h_self</span> <span class="o">==</span> <span class="n">h_pattern</span> <span class="p">?</span> <span class="n">pos</span> <span class="p">:</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="n">next_hash</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">next_hash</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">]</span>
+    <span class="p">(</span><span class="n">h_self</span> <span class="o">-</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">].</span><span class="n">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">].</span><span class="n">ord</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ハッシュ値の計算はrhashメソッドで行うようにし、ここでは素数であるbaseを基数とした各文字の文字コードを足し合わせたものを用います。hash_compareメソッドでハッシュ値が一致しない場合に、next_hashメソッドで次のハッシュ値を求めています。ここでは前のハッシュ値h_selfから先頭文字のハッシュ値を引き、基数を一つずらしてから次の文字のハッシュ値を足しています。</p>
+
+<h2>テスト</h2>
+
+<p>これらのアルゴリズムをテストしてみます。各メソッドにクラス変数を挟んで照合回数を計算し、同時に各実行時間も求めます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="vc">@@time</span> <span class="o">=</span> <span class="o">[]</span>
+<span class="k">class</span> <span class="nc">TestSearchs</span> <span class="o">&lt;</span> <span class="ss">Test</span><span class="p">:</span><span class="ss">:Unit</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="k">def</span> <span class="nf">setup</span>
+    <span class="vi">@text</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ABC ABCDAB ABCDABCDABDE susususususumsu abcdefgabcdefghijabcdefghijk axacacdae sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&amp;&quot;</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="vi">@words</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;Lorem&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;fugiat&quot;</span><span class="p">,</span> <span class="s2">&quot;ut aliquip&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;t, c&quot;</span><span class="p">,</span> <span class="s2">&quot; m&quot;</span><span class="p">,</span> <span class="s2">&quot;o &quot;</span><span class="p">,</span> <span class="s2">&quot;ABCDABD&quot;</span><span class="p">,</span> <span class="s2">&quot;acac&quot;</span><span class="o">]</span>
+    <span class="vi">@nowords</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;ipsumd&quot;</span><span class="p">,</span> <span class="s2">&quot;Velit&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;.&quot;</span><span class="p">,</span> <span class="s2">&quot;t D&quot;</span><span class="p">,</span> <span class="s2">&quot;veniam,,&quot;</span><span class="p">,</span> <span class="s2">&quot;abcdefghijkabcdefghijk&quot;</span><span class="o">]</span>
+    <span class="vi">@st</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">teardown</span>
+    <span class="vc">@@time</span> <span class="o">&lt;&lt;</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="vi">@st</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">test_power_search</span>
+    <span class="vi">@words</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">wd</span><span class="p">),</span> <span class="vi">@text</span><span class="o">.</span><span class="n">power_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="vi">@nowords</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_nil</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">power_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_bm_search</span>
+    <span class="vi">@words</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">wd</span><span class="p">),</span> <span class="vi">@text</span><span class="o">.</span><span class="n">bm_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="vi">@nowords</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_nil</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">bm_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_kmp_search</span>
+    <span class="vi">@words</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">wd</span><span class="p">),</span> <span class="vi">@text</span><span class="o">.</span><span class="n">kmp_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="vi">@nowords</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_nil</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">kmp_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">test_ngi_search</span>
+    <span class="vi">@words</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">wd</span><span class="p">),</span> <span class="vi">@text</span><span class="o">.</span><span class="n">ngi_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="vi">@nowords</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_nil</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">ngi_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">test_rk_search</span>
+    <span class="vi">@words</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_equal</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">wd</span><span class="p">),</span> <span class="vi">@text</span><span class="o">.</span><span class="n">rk_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="vi">@nowords</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">wd</span><span class="o">|</span>
+      <span class="n">assert_nil</span><span class="p">(</span><span class="vi">@text</span><span class="o">.</span><span class="n">rk_search</span><span class="p">(</span><span class="n">wd</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">method_added</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="n">class_variable_set</span><span class="p">(</span><span class="s2">&quot;@@</span><span class="si">#{</span><span class="vg">$`</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="nb">name</span> <span class="o">=~</span> <span class="sr">/_search$/</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">counter</span>
+    <span class="nb">class_variables</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">inject</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">cv</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">cv</span><span class="o">[</span><span class="sr">/\w+/</span><span class="o">]]</span> <span class="o">=</span> <span class="n">class_variable_get</span><span class="p">(</span><span class="n">cv</span><span class="p">);</span> <span class="n">h</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">END</span><span class="p">{</span><span class="k">END</span><span class="p">{</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">counter</span>
+  <span class="n">res</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> 
+    <span class="nb">print</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%8d times(%.4f) %.4f sec</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">res</span><span class="o">[</span><span class="s2">&quot;power&quot;</span><span class="o">]</span><span class="p">,</span> <span class="vc">@@time</span><span class="o">.</span><span class="n">shift</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="p">}}</span>
+</code></pre></div>
+
+
+<p>結果は以下の通りです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Loaded</span> <span class="n">suite</span> <span class="sr">/Users/</span><span class="n">keyes</span><span class="o">/</span><span class="no">Dropbox</span><span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">searchs</span>
+<span class="no">Started</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span> 
+<span class="no">Finished</span> <span class="k">in</span> <span class="mi">16</span><span class="o">.</span><span class="mi">116971</span> <span class="n">seconds</span><span class="o">.</span>
+<span class="mi">5</span> <span class="n">tests</span><span class="p">,</span> <span class="mi">85</span> <span class="n">assertions</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">0</span> <span class="n">errors</span><span class="p">,</span> <span class="mi">0</span> <span class="n">skips</span>
+<span class="n">bm</span>         <span class="mi">96236</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2480</span><span class="p">)</span> <span class="mi">1</span><span class="o">.</span><span class="mi">3565</span> <span class="n">sec</span>
+<span class="n">kmp</span>       <span class="mi">382275</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">9850</span><span class="p">)</span> <span class="mi">2</span><span class="o">.</span><span class="mi">4872</span> <span class="n">sec</span>
+<span class="n">ngi</span>        <span class="mi">29977</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mo">0772</span><span class="p">)</span> <span class="mi">5</span><span class="o">.</span><span class="mi">3435</span> <span class="n">sec</span>
+<span class="n">power</span>     <span class="mi">388089</span> <span class="n">times</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mo">0000</span><span class="p">)</span> <span class="mi">2</span><span class="o">.</span><span class="mi">6198</span> <span class="n">sec</span>
+<span class="n">rk</span>        <span class="mi">370185</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">9539</span><span class="p">)</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2976</span> <span class="n">sec</span>
+</code></pre></div>
+
+
+<p>このテストではN-gramインデックス検索(ngi)の照合回数が際立って少ないことが分かります。しかしインデックス作成のために実行時間は最も遅いです。ハッシュ値で比較するラビン-カープ(RK)検索では思ったほど比較回数が少なくならず、その結果ハッシュ値生成のためのコストが響いています。</p>
+
+<p>ボイヤー-ムーア(ＢＭ)検索が照合回数も少なく最速で、力まかせ(power)検索の倍の速度が出ています。一方で力まかせ検索の結果もそれほど悪くないという印象です。</p>
+
+<div><script src='https://gist.github.com/630347.js?file=searchs.rb'></script>
+<noscript><pre><code>#!/opt/local/bin/ruby1.9
+#-*-encoding: utf-8-*-
+require &quot;test/unit&quot;
+require &quot;strscan&quot;
+
+class String
+  def self.method_added(name)
+    class_variable_set(&quot;@@#{$`}&quot;, 0) if name =~ /_compare$/
+  end
+
+  def self.counter
+    class_variables.sort.inject({}) { |h, cv| h[cv[/\w+/]] = class_variable_get(cv); h }
+  end
+
+  def search(pattern, algorithm, n=1)
+    case algorithm
+    when :ngi then ngi_search(pattern, n)
+    when :rk  then rk_search(pattern)
+    else
+      pos, from = 0, 0
+      until pos &gt; length-pattern.length
+        match, pos, from = send(&quot;#{algorithm}_compare&quot;, self, pattern, pos, from)
+        return match if match
+      end
+    end
+  end
+
+  private
+  def power_compare(text, pattern, pos, from)
+    pattern.each_char.with_index do |chr, i|
+      @@power += 1
+      return nil, pos+1, 0 unless chr == text[pos+i]
+    end
+    pos
+  end
+  
+  def bm_compare(text, pattern, pos, from)
+    (pattern.length-1).downto(0) do |i|
+      @@bm += 1
+      if text[pos+i] != pattern[i]
+        shift = bm_shift(text[pos+i], pattern[0...i]) || i + 1
+        return nil, pos + shift, 0
+      end
+    end
+    pos
+  end
+
+  def bm_shift(chr, pat)
+    pat.length.times { |pos| return pos + 1 if pat[-1-pos] == chr }
+    nil
+  end
+
+  def kmp_compare(text, pattern, pos, from)
+    (from..(pattern.length-1)).each do |i|
+      @@kmp += 1
+      if text[pos+i] != pattern[i]
+        return nil, pos+1, 0 if i == 0
+        shift, from = count_sequence(pattern[0...i])
+        if shift
+          return nil, pos+i-shift, from
+        else
+          return nil, pos+i, 0
+        end
+      end
+    end
+    pos
+  end
+
+  def count_sequence(text)
+    shift = 1
+    until shift &gt;= text.length
+      if text[0] == text[shift] 
+        match = 1
+        until shift+match &gt;= text.length
+          text[match] == text[shift+match] ? match += 1 : break
+        end
+        return text.length-shift, match
+      end
+      shift += 1
+    end
+  end
+
+  def ngi_search(pattern, n)
+    indices = index_table(n)[pattern[0...n]]
+    until indices.empty?
+      match = ngi_compare(self, pattern, indices.shift)
+      return match if match
+    end
+  end
+
+  def ngi_compare(text, pattern, pos)
+    pattern.length.times do |i|
+      @@ngi += 1
+      return nil if text[pos+i] != pattern[i]
+    end
+    pos
+  end
+
+  def index_table(n)
+    q = Hash.new{ |h, k| h[k] = [] }
+    self.split(//).each_cons(n).with_index { |chr, i| q[chr.join] &lt;&lt; i }
+    q
+  end
+
+  def rk_search(pattern)
+    h_self, h_pattern = [self[0...pattern.length], pattern].map { |s| rhash s }
+    pos, from = 0, 0
+    until pos &gt; length-pattern.length
+      match, pos, h_self = rk_compare(h_self, h_pattern, self, pattern, pos)
+      return match if match
+    end
+  end
+
+  def rk_compare(h_self, h_pattern, text, pattern, pos)
+    @@rk += 1
+    unless h_self == h_pattern &amp;&amp; text[pos...pos+pattern.length] == pattern
+      return nil, pos+1, next_hash(text, h_self, pattern.length, pos)
+    end
+    pos
+  end
+
+  def rhash(str, base=101)
+    (0...str.length).inject(0) { |mem, i| mem + str[str.length-1-i].ord*base**(i) }
+  end
+
+  def next_hash(text, h_self, len, pos, base=101)
+    return nil unless text[pos+len]
+    (h_self - text[pos].ord*base**(len-1))*base + text[pos+len].ord
+  end
+end
+
+@@time = []
+class TestSearchs &lt; Test::Unit::TestCase
+  def setup
+    @text = &quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ABC ABCDAB ABCDABCDABDE susususususumsu abcdefgabcdefghijabcdefghijk axacacdae sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&amp;&quot; * 10
+    @words = [&quot;Lorem&quot;, &quot;sum&quot;, &quot;fugiat&quot;, &quot;ut aliquip&quot;, &quot;&amp;&quot;, &quot;t, c&quot;, &quot; m&quot;, &quot;o &quot;, &quot;ABCDABD&quot;, &quot;acac&quot;]
+    @nowords = [&quot;hello&quot;, &quot;ipsumd&quot;, &quot;Velit&quot;, &quot;&amp;.&quot;, &quot;t D&quot;, &quot;veniam,,&quot;, &quot;abcdefghijkabcdefghijk&quot;]
+    @st = Time.now
+  end
+
+  def teardown
+    @@time &lt;&lt; Time.now - @st
+  end
+
+  def test_power_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.search(wd, :power))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.search(wd, :power))
+    end
+  end
+  
+  def test_bm_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.search(wd, :bm))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.search(wd, :bm))
+    end
+  end
+  
+  def test_kmp_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.search(wd, :kmp))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.search(wd, :kmp))
+    end
+  end
+  
+  def test_ngi_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.search(wd, :ngi))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.search(wd, :ngi))
+    end
+  end
+
+  def test_rk_search
+    @words.each do |wd|
+      assert_equal(@text.index(wd), @text.search(wd, :rk))
+    end
+    @nowords.each do |wd|
+      assert_nil(@text.search(wd, :rk))
+    end
+  end
+end
+
+END{END{
+  res = String.counter
+  res.each do |k, v| 
+    print &quot;%s\t%8d times(%.4f) %.4f sec\n&quot; % [k, v, v*1.0/res[&quot;power&quot;], @@time.shift]
+  end
+}}</code></pre></noscript></div>
+
+
+<p>参考：</p>
+
+<ol>
+<li><a href="http://ja.wikipedia.org/wiki/%E6%96%87%E5%AD%97%E5%88%97%E6%8E%A2%E7%B4%A2">文字列探索 - Wikipedia</a></li>
+<li><a href="http://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%93%E3%83%B3-%E3%82%AB%E3%83%BC%E3%83%97%E6%96%87%E5%AD%97%E5%88%97%E6%A4%9C%E7%B4%A2%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0">ラビン-カープ文字列検索アルゴリズム - Wikipedia</a></li>
+</ol>
+
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>http://itpro.nikkeibp.co.jp/article/Watcher/20070924/282781/ <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/10/17/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで文字列検索アルゴリズムを表現しよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/10/17/Ruby/" data-text="Rubyで文字列検索アルゴリズムを表現しよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/10/17/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/10/17/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2010/10/12/Ruby" title="Rubyでソート・アルゴリズムを表現しよう!">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2010/11/05/Ruby" title="Rubyのモジュール関数を理解しよう！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#algorithm-ref">algorithm <span>4</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/10/17/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで文字列検索アルゴリズムを表現しよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/10/17/Ruby/" data-text="Rubyで文字列検索アルゴリズムを表現しよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/10/17/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/10/17/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

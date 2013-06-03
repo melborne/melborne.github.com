@@ -1,0 +1,620 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>01 May 2009</span></div>
+  <h1 class='page-title'><a href="/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development">Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>mycal.rbに戻ってもう少し機能を増やします。日表示のための以下のコードを追加します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">get</span> <span class="s1">&#39;/:year/:mon/:day&#39;</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span>
+   <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">)</span>
+   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">&#39;Webカレンダー完成予定日&#39;</span>
+   <span class="n">erb</span> <span class="ss">:day</span>
+ <span class="k">end</span>
+ 
+ <span class="cp">__END__</span>
+<span class="cp"> </span>
+<span class="cp"> @@day</span>
+<span class="cp"> &lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日</span>
+<span class="cp"> &lt;%= @message %&gt;</span>
+<span class="cp"> &lt;%= @dcal %&gt;</span>
+</code></pre></div>
+
+
+<p>Webサーバを起動します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">mycal</span><span class="o">%</span> <span class="n">ruby</span> <span class="n">mycal</span><span class="o">.</span><span class="n">rb</span>
+</code></pre></div>
+
+
+<p>http://localhost:4567/1993/2/24にアクセスして、1993年2月24日の頁が表示されるか確認します。</p>
+
+<p>頁のカレンダーにおいて、対象の日の色付けを行うためタグを挿入します。メッセージもグレードアップします。先のコードを以下のように修正します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">get</span> <span class="s1">&#39;/:year/:mon/:day&#39;</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span>
+   <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="vi">@day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;target&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>
+   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">&#39;Webカレンダー完成予定日&#39;</span>
+   <span class="vi">@message</span> <span class="o">+=</span> <span class="s1">&#39;&lt;br/&gt;って、期限過ぎてるじゃん！&#39;</span> <span class="k">if</span> <span class="no">Time</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="o">*</span><span class="n">ymd</span><span class="p">)</span> <span class="o">-</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">&lt;</span> <span class="mi">0</span>
+   <span class="n">erb</span> <span class="ss">:day</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>subを使って日にマッチさせタグを挿入しています。</p>
+
+<p>http://localhost:4567/1998/5/14にアクセスします。メッセージを確認します。頁のソースを表示して14日にタグが挿入されているか確認します。</p>
+
+<p>表示形式が頁によって異なっているので、divで要素を識別できるようにテンプレートを修正します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="cp">__END__</span>
+<span class="cp"> @@layout</span>
+<span class="cp"> &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>
+<span class="cp">   &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;</span>
+<span class="cp"> &lt;html&gt;</span>
+<span class="cp">   &lt;head&gt;</span>
+<span class="cp">     &lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span>
+<span class="cp">     &lt;title&gt;mycal&lt;/title&gt;</span>
+<span class="cp">     </span>
+<span class="cp">   &lt;/head&gt;</span>
+<span class="cp">   &lt;body id=&quot;mycal&quot;&gt;</span>
+<span class="cp">     &lt;div id=&quot;banner&quot;&gt;</span>
+<span class="cp">       &lt;h1&gt;&lt;a id=&#39;title&#39; href=&#39;/&#39;&gt;Web Calendar&lt;/a&gt;&lt;/h1&gt;</span>
+<span class="cp">       &lt;div id=&quot;year_pred&quot;&gt;&lt;a href=&quot;/&lt;%= @year-1 %&gt;&quot;&gt;Previous Year&lt;/a&gt;&lt;/div&gt;</span>
+<span class="cp">       &lt;div id=&quot;year_next&quot;&gt;&lt;a href=&quot;/&lt;%= @year+1 %&gt;&quot;&gt;Next Year&lt;/a&gt;&lt;/div&gt;</span>
+<span class="cp">     &lt;/div&gt;</span>
+<span class="cp">     &lt;div id=&quot;main&quot;&gt;</span>
+<span class="cp">       &lt;%= yield %&gt;</span>
+<span class="cp">     &lt;/div&gt;</span>
+<span class="cp">   &lt;/body&gt;</span>
+<span class="cp"> &lt;/html&gt;</span>
+<span class="cp"> </span>
+<span class="cp"> @@index</span>
+<span class="cp"> &lt;div id=&quot;index&quot;&gt;</span>
+<span class="cp">   &lt;pre class=&quot;ycal&quot;&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;</span>
+<span class="cp"> &lt;/div&gt;</span>
+<span class="cp"> </span>
+<span class="cp"> @@year</span>
+<span class="cp"> &lt;div id=&quot;year&quot;&gt;</span>
+<span class="cp">   &lt;pre class=&quot;ycal&quot;&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;</span>
+<span class="cp"> &lt;/div&gt;</span>
+<span class="cp"> </span>
+<span class="cp"> @@mon</span>
+<span class="cp"> &lt;div id=&quot;mon&quot;&gt;</span>
+<span class="cp">   &lt;pre class=&quot;mcal&quot;&gt;&lt;%= @mcal %&gt;&lt;/pre&gt;</span>
+<span class="cp"> &lt;/div&gt;</span>
+<span class="cp"> </span>
+<span class="cp"> @@day</span>
+<span class="cp"> &lt;div id=&quot;day&quot;&gt;</span>
+<span class="cp">   &lt;h3 id=&quot;date&quot;&gt;&lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日&lt;/h3&gt;</span>
+<span class="cp">   &lt;p id=&quot;message&quot;&gt;&lt;%= @message %&gt;&lt;/p&gt;</span>
+<span class="cp">   &lt;pre class=&quot;dcal&quot;&gt;&lt;%= @dcal %&gt;&lt;/pre&gt;</span>
+<span class="cp"> &lt;/div&gt;</span>
+</code></pre></div>
+
+
+<p>yield回りの＜pre＞を削除し、各実体頁側で対応するようにします。</p>
+
+<p>年のカレンダーにおいて月単位でのデータ処理を実現するため、各月のカレンダーを生成し個別のdivで管理するようにします。helpersを以下のように修正します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">helpers</span> <span class="k">do</span>
+   <span class="k">def</span> <span class="nf">cal</span><span class="p">(</span><span class="o">*</span><span class="n">date</span><span class="p">)</span>
+     <span class="n">year</span><span class="p">,</span> <span class="n">mon</span> <span class="o">=</span> <span class="n">date</span>
+     <span class="n">cal</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mon</span>
+       <span class="n">calendar</span><span class="p">(</span><span class="n">mon</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
+     <span class="k">else</span>
+       <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+         <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal&#39; id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+         <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
+       <span class="k">end</span>
+     <span class="k">end</span>
+     <span class="n">cal</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/((</span><span class="si">#{</span><span class="no">MONTHS</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span><span class="si">}</span><span class="sr">)\w*)/</span><span class="p">)</span> <span class="k">do</span>
+       <span class="sx">%Q{&lt;a href=&quot;/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="no">MONTHS</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="sx">&quot;&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+   
+   <span class="k">def</span> <span class="nf">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+     <span class="sb">`cal </span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="sb"> </span><span class="si">#{</span><span class="n">y</span><span class="si">}</span><span class="sb">`</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>calコマンドはcalendarメソッドとして別にします。この時点でhttp://localhost:4567/にアクセスすると、表示は崩れていますが表示がなされていれば先に進みます。</p>
+
+<p>今日の日付にタグを付けます。calメソッドのelse節を次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+   <span class="c1">#make today tag</span>
+   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">mon</span> <span class="ow">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
+     <span class="n">monthly_cal</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;today&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>          
+   <span class="k">end</span>
+   <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>更に各日付に該当頁のリンクタグを挿入します。else節に追加します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+   <span class="c1">#make days link</span>
+   <span class="n">monthly_cal</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/(\s([1-3]?[0-9](?=\D)))/</span><span class="p">)</span> <span class="k">do</span>
+     <span class="sx">%Q{&lt;a class=&quot;days_link&quot; href=&quot;/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="vg">$2</span><span class="si">}</span><span class="sx">&quot;&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
+   <span class="k">end</span>
+   <span class="c1">#make today tag</span>
+   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">mon</span> <span class="ow">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
+     <span class="n">monthly_cal</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;today&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>          
+   <span class="k">end</span>
+   <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>最後にテンプレートに以下のスタイルを挿入して完成です。</p>
+
+<div class="highlight"><pre><code class="css"> <span class="nt">__END__</span>
+ <span class="o">@</span><span class="k">@layout</span>
+ <span class="o">&lt;!</span><span class="nt">DOCTYPE</span> <span class="nt">html</span> <span class="nt">PUBLIC</span> <span class="s2">&quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>
+   <span class="s2">&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;</span><span class="o">&gt;</span>
+ <span class="o">&lt;</span><span class="nt">html</span><span class="o">&gt;</span>
+   <span class="o">&lt;</span><span class="nt">head</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">meta</span> <span class="nt">http-equiv</span><span class="o">=</span><span class="s2">&quot;Content-type&quot;</span> <span class="nt">content</span><span class="o">=</span><span class="s2">&quot;text/html; charset=utf-8&quot;</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">title</span><span class="o">&gt;</span><span class="nt">mycal</span><span class="o">&lt;/</span><span class="nt">title</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">style</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span> <span class="nt">media</span><span class="o">=</span><span class="s2">&quot;screen&quot;</span><span class="o">&gt;</span>
+       <span class="o">*</span> <span class="p">{</span> <span class="nt">margin</span><span class="o">:</span> <span class="nt">0</span><span class="o">;</span> <span class="nt">padding</span><span class="o">:</span> <span class="nt">0</span><span class="o">;</span><span class="p">}</span>
+       <span class="nt">body</span> <span class="p">{</span><span class="k">background</span><span class="o">:</span><span class="m">#eed</span><span class="p">;}</span>
+       <span class="nf">#banner</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">20px</span><span class="p">;</span> <span class="k">margin-left</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">margin-right</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span><span class="m">700px</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#906</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#title</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">250px</span><span class="p">;}</span>
+       <span class="nf">#year_pred</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#year_next</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
+ 
+       <span class="nf">#main</span> <span class="p">{</span> <span class="k">position</span><span class="o">:</span><span class="k">absolute</span><span class="p">;</span> <span class="k">left</span><span class="o">:</span><span class="m">50</span><span class="o">%</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">0</span> <span class="m">-360px</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span><span class="m">60</span><span class="o">%</span><span class="p">;}</span>
+       <span class="nc">.ycal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#514</span><span class="p">;</span> <span class="k">font-weight</span><span class="o">:</span><span class="k">bold</span><span class="p">;}</span>
+       <span class="nc">.mon_cal</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">5px</span> <span class="m">10px</span> <span class="m">5px</span> <span class="m">10px</span><span class="p">;}</span>
+       <span class="nf">#mon_5</span><span class="o">,</span> <span class="nf">#mon_9</span> <span class="p">{</span><span class="k">clear</span><span class="o">:</span><span class="k">left</span><span class="p">;}</span>
+       <span class="nf">#mon</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">100px</span><span class="p">;}</span>
+       <span class="nc">.mcal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;</span> <span class="k">font-size</span><span class="o">:</span><span class="m">32pt</span><span class="p">;</span> <span class="k">margin-top</span><span class="o">:</span><span class="m">10px</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#day</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">250px</span><span class="p">;}</span>
+       <span class="nc">.dcal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;</span> <span class="k">font-size</span><span class="o">:</span><span class="m">16pt</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nt">h3</span><span class="nf">#date</span> <span class="p">{</span> <span class="k">font-size</span><span class="o">:</span><span class="m">24pt</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#c06</span><span class="p">;}</span>
+       <span class="nf">#message</span> <span class="p">{</span> <span class="k">font-size</span><span class="o">:</span><span class="m">14pt</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#360</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">30px</span> <span class="m">0</span><span class="p">;}</span>
+       <span class="nf">#target</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#c06</span><span class="p">;}</span>
+       <span class="nt">a</span> <span class="p">{</span><span class="k">text-decoration</span><span class="o">:</span><span class="k">none</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#514</span><span class="p">;}</span>
+       <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:link</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:visited</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;}</span>
+       <span class="nt">a</span><span class="nd">:hover</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:hover</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#383</span><span class="p">;}</span>
+       <span class="nf">#today</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#060</span><span class="p">;}</span>
+     <span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+   <span class="o">&lt;/</span><span class="nt">head</span><span class="o">&gt;</span>
+   <span class="o">&lt;</span><span class="nt">body</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;mycal&quot;</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;banner&quot;</span><span class="o">&gt;</span>
+       <span class="o">&lt;</span><span class="nt">h1</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">id</span><span class="o">=</span><span class="s1">&#39;title&#39;</span> <span class="nt">href</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">&gt;</span><span class="nt">Web</span> <span class="nt">Calendar</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">h1</span><span class="o">&gt;</span>
+       <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;year_pred&quot;</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">href</span><span class="o">=</span><span class="s2">&quot;/&lt;%= @year-1 %&gt;&quot;</span><span class="o">&gt;</span><span class="nt">Previous</span> <span class="nt">Year</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+       <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;year_next&quot;</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">href</span><span class="o">=</span><span class="s2">&quot;/&lt;%= @year+1 %&gt;&quot;</span><span class="o">&gt;</span><span class="nt">Next</span> <span class="nt">Year</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="o">&gt;</span>
+       <span class="o">&lt;%=</span> <span class="nt">yield</span> <span class="o">%&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+   <span class="o">&lt;/</span><span class="nt">body</span><span class="o">&gt;</span>
+ <span class="o">&lt;/</span><span class="nt">html</span><span class="o">&gt;</span>
+</code></pre></div>
+
+
+<p>http://localhost:4567/にアクセスします。Previous Yearを5回クリックしてAugustをクリックします。2004年8月のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックして、Octoberの15日をクリックします。2007年10月15日のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックしてMayの3日をクリックします。2010年5月3日のカレンダーが表示されているのを確認します。</p>
+
+<p>カレンダーが完成したのでcommitしてHerokuにpushします。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;second commit&quot;</span>
+ <span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">push</span> <span class="n">heroku</span>
+ <span class="n">mycal</span><span class="o">%</span> <span class="n">heroku</span> <span class="nb">open</span>
+</code></pre></div>
+
+
+<p>以下のようなカレンダーがブラウザに表示されたら成功です。</p>
+
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090501/20090501093355.png" alt="image" /></p>
+
+<p>こちらで作成したサイトには以下からアクセスできます。</p>
+
+<p><a href="http://mycal.heroku.com/">mycal</a></p>
+
+<p>コードは以下にあります。</p>
+
+<p><a href="http://gist.github.com/104362">gist: 104362 - GitHub</a></p>
+
+<p><a href="/2009/04/25/notitle/">前回</a>と<a href="/2009/04/07/notitle/">前々回</a>のチュートリアルで作成した。アプリケーションのURLも貼っておきます。</p>
+
+<p><a href="http://scananimation.heroku.com/">ScanAnimation</a></p>
+
+<p><a href="http://words-in-books.heroku.com/">WORDS in Books</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" data-text="Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/04/30/Ruby-Sinatra-Git-Heroku-Happy-Web-Development" title="Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2009/05/18/100-iPod-touch" title="100円ショップでiPod touchスタンドを見つける秘訣">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#sinatra-ref">sinatra <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#webapp-ref">webapp <span>14</span></a></li>
+     
+    	<li><a href="/tags.html#heroku-ref">heroku <span>6</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" data-text="Ruby.Sinatra.Git.Heroku #=> "Happy Web Development!"　(後編)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/05/01/Ruby-Sinatra-Git-Heroku-Happy-Web-Development/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

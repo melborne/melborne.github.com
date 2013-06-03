@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>02 February 2013</span></div>
+  <h1 class='page-title'><a href="/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table">RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>─　問題　─</h2>
+
+<p>ASCII文字群を格納した配列Ａと、各ASCII文字に対応した上下反転文字群を格納した配列Ｂがある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="n">A</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;‾&quot;</span><span class="p">,</span> <span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">,</span> <span class="s2">&quot;∴&quot;</span><span class="p">,</span> <span class="s2">&quot;∵&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="o">]</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;ᗄ&quot;</span><span class="p">,</span> <span class="s2">&quot;ᗺ&quot;</span><span class="p">,</span> <span class="s2">&quot;Ɔ&quot;</span><span class="p">,</span> <span class="s2">&quot;ᗡ&quot;</span><span class="p">,</span> <span class="s2">&quot;Ǝ&quot;</span><span class="p">,</span> <span class="s2">&quot;Ⅎ&quot;</span><span class="p">,</span> <span class="s2">&quot;⅁&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;ᒋ&quot;</span><span class="p">,</span> <span class="s2">&quot;丬&quot;</span><span class="p">,</span> <span class="s2">&quot;⅂&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;Ԁ&quot;</span><span class="p">,</span> <span class="s2">&quot;Ό&quot;</span><span class="p">,</span> <span class="s2">&quot;ᴚ&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;⊥&quot;</span><span class="p">,</span> <span class="s2">&quot;Ո&quot;</span><span class="p">,</span> <span class="s2">&quot;Λ&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;⅄&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;ɐ&quot;</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;ɔ&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;ə&quot;</span><span class="p">,</span> <span class="s2">&quot;ɟ&quot;</span><span class="p">,</span> <span class="s2">&quot;ɓ&quot;</span><span class="p">,</span> <span class="s2">&quot;ɥ&quot;</span><span class="p">,</span> <span class="s2">&quot;ᴉ&quot;</span><span class="p">,</span> <span class="s2">&quot;ɾ&quot;</span><span class="p">,</span> <span class="s2">&quot;ʞ&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;ɯ&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;ɹ&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;ʇ&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;ʌ&quot;</span><span class="p">,</span> <span class="s2">&quot;ʍ&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;ʎ&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;⇂&quot;</span><span class="p">,</span> <span class="s2">&quot;Ƨ&quot;</span><span class="p">,</span> <span class="s2">&quot;ε&quot;</span><span class="p">,</span> <span class="s2">&quot;ᔭ&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;˙&quot;</span><span class="p">,</span> <span class="s2">&quot;‘&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;؛&quot;</span><span class="p">,</span> <span class="s2">&quot;¡&quot;</span><span class="p">,</span> <span class="s2">&quot;¿&quot;</span><span class="p">,</span> <span class="s2">&quot;⅋&quot;</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;‾&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">,</span> <span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="s2">&quot;∵&quot;</span><span class="p">,</span> <span class="s2">&quot;∴&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>ＡおよびＢを使って、ASCII文字を対応する上下反転文字に変換するメソッド<code>flip</code>、およびその上下反転文字を元のASCII文字に戻すメソッド<code>unflip</code>を定義せよ。</p>
+
+<br />
+
+
+<h2>─　僕のやり方１　─</h2>
+
+<p><code>Array#index</code>でＡにおける文字の位置を求め、<code>Array#at</code>でＢにおける対応位置の文字を取る。</p>
+
+<h4>flip.rb</h4>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">B</span><span class="o">.</span><span class="n">at</span> <span class="n">A</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">A</span><span class="o">.</span><span class="n">at</span> <span class="n">B</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">_B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span>
+<span class="n">_A</span> <span class="o">=</span> <span class="n">_B</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span>
+
+<span class="n">B</span> <span class="o">==</span> <span class="n">_B</span> <span class="c1"># =&gt; true</span>
+<span class="n">A</span> <span class="o">==</span> <span class="n">_A</span> <span class="c1"># =&gt; true</span>
+
+<span class="n">flipped</span> <span class="o">=</span> <span class="s2">&quot;Ruby is fun!&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;¡unɟ sᴉ ʎqnᴚ&quot;</span>
+<span class="n">flipped</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;Ruby is fun!&quot;</span>
+</code></pre></div>
+
+
+
+
+<br />
+
+
+<h2>─　僕のやり方２　─</h2>
+
+<p><code>Array#zip</code>で対応文字のペアを作り、<code>Array#assoc</code>で検索する。unflipでは<code>Array#rassoc</code>を使う。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="c1"># =&gt; [[&quot;A&quot;, &quot;ᗄ&quot;], [&quot;B&quot;, &quot;ᗺ&quot;], [&quot;C&quot;, &quot;Ɔ&quot;], [&quot;D&quot;, &quot;ᗡ&quot;], [&quot;E&quot;, &quot;Ǝ&quot;], [&quot;F&quot;, &quot;Ⅎ&quot;], [&quot;G&quot;, &quot;⅁&quot;], [&quot;H&quot;, &quot;H&quot;], [&quot;I&quot;, &quot;I&quot;], [&quot;J&quot;, &quot;ᒋ&quot;], [&quot;K&quot;, &quot;丬&quot;], [&quot;L&quot;, &quot;⅂&quot;], [&quot;M&quot;, &quot;W&quot;], [&quot;N&quot;, &quot;N&quot;], [&quot;O&quot;, &quot;O&quot;], [&quot;P&quot;, &quot;Ԁ&quot;], [&quot;Q&quot;, &quot;Ό&quot;], [&quot;R&quot;, &quot;ᴚ&quot;], [&quot;S&quot;, &quot;S&quot;], [&quot;T&quot;, &quot;⊥&quot;], [&quot;U&quot;, &quot;Ո&quot;], [&quot;V&quot;, &quot;Λ&quot;], [&quot;W&quot;, &quot;M&quot;], [&quot;X&quot;, &quot;X&quot;], [&quot;Y&quot;, &quot;⅄&quot;], [&quot;Z&quot;, &quot;Z&quot;], [&quot;a&quot;, &quot;ɐ&quot;], [&quot;b&quot;, &quot;q&quot;], [&quot;c&quot;, &quot;ɔ&quot;], [&quot;d&quot;, &quot;p&quot;], [&quot;e&quot;, &quot;ə&quot;], [&quot;f&quot;, &quot;ɟ&quot;], [&quot;g&quot;, &quot;ɓ&quot;], [&quot;h&quot;, &quot;ɥ&quot;], [&quot;i&quot;, &quot;ᴉ&quot;], [&quot;j&quot;, &quot;ɾ&quot;], [&quot;k&quot;, &quot;ʞ&quot;], [&quot;l&quot;, &quot;l&quot;], [&quot;m&quot;, &quot;ɯ&quot;], [&quot;n&quot;, &quot;u&quot;], [&quot;o&quot;, &quot;o&quot;], [&quot;p&quot;, &quot;d&quot;], [&quot;q&quot;, &quot;b&quot;], [&quot;r&quot;, &quot;ɹ&quot;], [&quot;s&quot;, &quot;s&quot;], [&quot;t&quot;, &quot;ʇ&quot;], [&quot;u&quot;, &quot;n&quot;], [&quot;v&quot;, &quot;ʌ&quot;], [&quot;w&quot;, &quot;ʍ&quot;], [&quot;x&quot;, &quot;x&quot;], [&quot;y&quot;, &quot;ʎ&quot;], [&quot;z&quot;, &quot;z&quot;], [&quot;0&quot;, &quot;0&quot;], [&quot;1&quot;, &quot;⇂&quot;], [&quot;2&quot;, &quot;Ƨ&quot;], [&quot;3&quot;, &quot;ε&quot;], [&quot;4&quot;, &quot;ᔭ&quot;], [&quot;5&quot;, &quot;5&quot;], [&quot;6&quot;, &quot;9&quot;], [&quot;7&quot;, &quot;L&quot;], [&quot;8&quot;, &quot;8&quot;], [&quot;9&quot;, &quot;6&quot;], [&quot;.&quot;, &quot;˙&quot;], [&quot;,&quot;, &quot;‘&quot;], [&quot;-&quot;, &quot;-&quot;], [&quot;:&quot;, &quot;:&quot;], [&quot;;&quot;, &quot;؛&quot;], [&quot;!&quot;, &quot;¡&quot;], [&quot;?&quot;, &quot;¿&quot;], [&quot;&amp;&quot;, &quot;⅋&quot;], [&quot;(&quot;, &quot;)&quot;], [&quot;)&quot;, &quot;(&quot;], [&quot;&lt;&quot;, &quot;&gt;&quot;], [&quot;&gt;&quot;, &quot;&lt;&quot;], [&quot;[&quot;, &quot;]&quot;], [&quot;]&quot;, &quot;[&quot;], [&quot;_&quot;, &quot;‾&quot;], [&quot;‾&quot;, &quot;_&quot;], [&quot;{&quot;, &quot;}&quot;], [&quot;}&quot;, &quot;{&quot;], [&quot;∴&quot;, &quot;∵&quot;], [&quot;∵&quot;, &quot;∴&quot;], [&quot; &quot;, &quot; &quot;]]</span>
+
+<span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">assoc</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">rassoc</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">_B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span>
+<span class="n">_A</span> <span class="o">=</span> <span class="n">_B</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span>
+
+<span class="n">B</span> <span class="o">==</span> <span class="n">_B</span> <span class="c1"># =&gt; true</span>
+<span class="n">A</span> <span class="o">==</span> <span class="n">_A</span> <span class="c1"># =&gt; true</span>
+
+<span class="n">flipped</span> <span class="o">=</span> <span class="s2">&quot;Ruby is fun!&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;¡unɟ sᴉ ʎqnᴚ&quot;</span>
+<span class="n">flipped</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;Ruby is fun!&quot;</span>
+</code></pre></div>
+
+
+
+
+<br />
+
+
+<h2>─　僕のやり方３　─</h2>
+
+<p><code>Array#zip</code>で対応文字のペアを作り、<code>Enumerable#find</code>（または#detect）で検索する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">|</span> <span class="n">a</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">|</span> <span class="n">b</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="k">end</span>
+
+
+<span class="n">_B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span>
+<span class="n">_A</span> <span class="o">=</span> <span class="n">_B</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span>
+
+<span class="n">B</span> <span class="o">==</span> <span class="n">_B</span> <span class="c1"># =&gt; true</span>
+<span class="n">A</span> <span class="o">==</span> <span class="n">_A</span> <span class="c1"># =&gt; true</span>
+
+<span class="n">flipped</span> <span class="o">=</span> <span class="s2">&quot;Ruby is fun!&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;¡unɟ sᴉ ʎqnᴚ&quot;</span>
+<span class="n">flipped</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;Ruby is fun!&quot;</span>
+</code></pre></div>
+
+
+
+
+<br />
+
+
+<h2>─　僕のやり方４　─</h2>
+
+<p><code>Hash.[]</code>で対応文字のハッシュを作り、<code>Hash#[]</code>で検索する。unflipは<code>Hash#invert</code>でデータを反転してから検索する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">[</span> <span class="n">T</span> <span class="o">]</span> <span class="c1"># =&gt; {&quot;A&quot;=&gt;&quot;ᗄ&quot;, &quot;B&quot;=&gt;&quot;ᗺ&quot;, &quot;C&quot;=&gt;&quot;Ɔ&quot;, &quot;D&quot;=&gt;&quot;ᗡ&quot;, &quot;E&quot;=&gt;&quot;Ǝ&quot;, &quot;F&quot;=&gt;&quot;Ⅎ&quot;, &quot;G&quot;=&gt;&quot;⅁&quot;, &quot;H&quot;=&gt;&quot;H&quot;, &quot;I&quot;=&gt;&quot;I&quot;, &quot;J&quot;=&gt;&quot;ᒋ&quot;, &quot;K&quot;=&gt;&quot;丬&quot;, &quot;L&quot;=&gt;&quot;⅂&quot;, &quot;M&quot;=&gt;&quot;W&quot;, &quot;N&quot;=&gt;&quot;N&quot;, &quot;O&quot;=&gt;&quot;O&quot;, &quot;P&quot;=&gt;&quot;Ԁ&quot;, &quot;Q&quot;=&gt;&quot;Ό&quot;, &quot;R&quot;=&gt;&quot;ᴚ&quot;, &quot;S&quot;=&gt;&quot;S&quot;, &quot;T&quot;=&gt;&quot;⊥&quot;, &quot;U&quot;=&gt;&quot;Ո&quot;, &quot;V&quot;=&gt;&quot;Λ&quot;, &quot;W&quot;=&gt;&quot;M&quot;, &quot;X&quot;=&gt;&quot;X&quot;, &quot;Y&quot;=&gt;&quot;⅄&quot;, &quot;Z&quot;=&gt;&quot;Z&quot;, &quot;a&quot;=&gt;&quot;ɐ&quot;, &quot;b&quot;=&gt;&quot;q&quot;, &quot;c&quot;=&gt;&quot;ɔ&quot;, &quot;d&quot;=&gt;&quot;p&quot;, &quot;e&quot;=&gt;&quot;ə&quot;, &quot;f&quot;=&gt;&quot;ɟ&quot;, &quot;g&quot;=&gt;&quot;ɓ&quot;, &quot;h&quot;=&gt;&quot;ɥ&quot;, &quot;i&quot;=&gt;&quot;ᴉ&quot;, &quot;j&quot;=&gt;&quot;ɾ&quot;, &quot;k&quot;=&gt;&quot;ʞ&quot;, &quot;l&quot;=&gt;&quot;l&quot;, &quot;m&quot;=&gt;&quot;ɯ&quot;, &quot;n&quot;=&gt;&quot;u&quot;, &quot;o&quot;=&gt;&quot;o&quot;, &quot;p&quot;=&gt;&quot;d&quot;, &quot;q&quot;=&gt;&quot;b&quot;, &quot;r&quot;=&gt;&quot;ɹ&quot;, &quot;s&quot;=&gt;&quot;s&quot;, &quot;t&quot;=&gt;&quot;ʇ&quot;, &quot;u&quot;=&gt;&quot;n&quot;, &quot;v&quot;=&gt;&quot;ʌ&quot;, &quot;w&quot;=&gt;&quot;ʍ&quot;, &quot;x&quot;=&gt;&quot;x&quot;, &quot;y&quot;=&gt;&quot;ʎ&quot;, &quot;z&quot;=&gt;&quot;z&quot;, &quot;0&quot;=&gt;&quot;0&quot;, &quot;1&quot;=&gt;&quot;⇂&quot;, &quot;2&quot;=&gt;&quot;Ƨ&quot;, &quot;3&quot;=&gt;&quot;ε&quot;, &quot;4&quot;=&gt;&quot;ᔭ&quot;, &quot;5&quot;=&gt;&quot;5&quot;, &quot;6&quot;=&gt;&quot;9&quot;, &quot;7&quot;=&gt;&quot;L&quot;, &quot;8&quot;=&gt;&quot;8&quot;, &quot;9&quot;=&gt;&quot;6&quot;, &quot;.&quot;=&gt;&quot;˙&quot;, &quot;,&quot;=&gt;&quot;‘&quot;, &quot;-&quot;=&gt;&quot;-&quot;, &quot;:&quot;=&gt;&quot;:&quot;, &quot;;&quot;=&gt;&quot;؛&quot;, &quot;!&quot;=&gt;&quot;¡&quot;, &quot;?&quot;=&gt;&quot;¿&quot;, &quot;&amp;&quot;=&gt;&quot;⅋&quot;, &quot;(&quot;=&gt;&quot;)&quot;, &quot;)&quot;=&gt;&quot;(&quot;, &quot;&lt;&quot;=&gt;&quot;&gt;&quot;, &quot;&gt;&quot;=&gt;&quot;&lt;&quot;, &quot;[&quot;=&gt;&quot;]&quot;, &quot;]&quot;=&gt;&quot;[&quot;, &quot;_&quot;=&gt;&quot;‾&quot;, &quot;‾&quot;=&gt;&quot;_&quot;, &quot;{&quot;=&gt;&quot;}&quot;, &quot;}&quot;=&gt;&quot;{&quot;, &quot;∴&quot;=&gt;&quot;∵&quot;, &quot;∵&quot;=&gt;&quot;∴&quot;, &quot; &quot;=&gt;&quot; &quot;}</span>
+
+<span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">.</span><span class="n">invert</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="n">_B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span>
+<span class="n">_A</span> <span class="o">=</span> <span class="n">_B</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span>
+
+<span class="n">B</span> <span class="o">==</span> <span class="n">_B</span> <span class="c1"># =&gt; true</span>
+<span class="n">A</span> <span class="o">==</span> <span class="n">_A</span> <span class="c1"># =&gt; true</span>
+
+<span class="n">flipped</span> <span class="o">=</span> <span class="s2">&quot;Ruby is fun!&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;¡unɟ sᴉ ʎqnᴚ&quot;</span>
+<span class="n">flipped</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;Ruby is fun!&quot;</span>
+</code></pre></div>
+
+
+
+
+<br />
+
+
+<h2>─　僕のやり方５　─</h2>
+
+<p><code>Hash.[]</code>で対応文字のハッシュを作り、<code>Hash#[]</code>で検索する。unflipでは<code>Hash#key</code>を使う。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">T</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">[</span> <span class="n">T</span> <span class="o">]</span>
+
+<span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">_B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span>
+<span class="n">_A</span> <span class="o">=</span> <span class="n">_B</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span>
+
+<span class="n">B</span> <span class="o">==</span> <span class="n">_B</span> <span class="c1"># =&gt; true</span>
+<span class="n">A</span> <span class="o">==</span> <span class="n">_A</span> <span class="c1"># =&gt; true</span>
+
+<span class="n">flipped</span> <span class="o">=</span> <span class="s2">&quot;Ruby is fun!&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">flip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;¡unɟ sᴉ ʎqnᴚ&quot;</span>
+<span class="n">flipped</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip</span> <span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">reverse</span> <span class="c1"># =&gt; &quot;Ruby is fun!&quot;</span>
+</code></pre></div>
+
+
+
+
+<br />
+
+
+<h2>どのやり方を選ぶべきか</h2>
+
+<p>さて、ここまでデータにアクセスする５種類の方法を見てきましたが、どの方法を採用したらよいか迷います。あなたはどれですか？</p>
+
+<p>可読性に大差はないので、ここでは速度を比較しその結果で選ぶことにします。</p>
+
+<p>ベンチマークを取ります。</p>
+
+<h4>flip_benchmark.rb</h4>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;benchmark&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;benchmark/ips&quot;</span>
+<span class="n">require_relative</span> <span class="s1">&#39;flip&#39;</span>
+
+
+<span class="no">Lorem</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&quot;</span><span class="o">.</span><span class="n">chars</span>
+
+<span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">chr</span>
+<span class="k">end</span>
+
+<span class="no">Benchmark</span><span class="o">.</span><span class="n">ips</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">){</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip_i</span> <span class="n">flip_i</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;assoc&#39;</span><span class="p">){</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip_a</span> <span class="n">flip_a</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;find&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip_f</span> <span class="n">flip_f</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;hash&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip_h</span> <span class="n">flip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;hash_key&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">unflip_hkey</span> <span class="n">flip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;echo&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="no">Lorem</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span> <span class="n">echo</span> <span class="n">echo</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>  <span class="p">}</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>文字群を反転し元に戻す処理を単位時間当たりの実行回数（ips:iteration per second）で比較します（要<code>gem install benchmark_suite</code>）。各メソッドのコストを見るため、文字をそのまま返すメソッド<code>echo</code>を追加しています。</p>
+
+<p>さあ、結果は如何に。順位を予想してみて下さい。</p>
+
+<p>・・・</p>
+
+<br />
+
+
+<br />
+
+
+
+
+<div class="highlight"><pre><code class="text">% ruby flip_benchmark.rb     
+Calculating -------------------------------------
+               index        17 i/100ms
+               assoc        17 i/100ms
+                find         8 i/100ms
+                hash         3 i/100ms
+            hash_key        26 i/100ms
+                echo       358 i/100ms
+-------------------------------------------------
+               index      178.4 (±2.8%) i/s -        901 in   5.053797s
+               assoc      173.5 (±1.7%) i/s -        867 in   4.999209s
+                find       83.8 (±1.2%) i/s -        424 in   5.058501s
+                hash       35.7 (±2.8%) i/s -        180 in   5.040406s
+            hash_key      265.1 (±1.1%) i/s -       1326 in   5.002699s
+                echo     3615.9 (±0.7%) i/s -      18258 in   5.049681s
+</code></pre></div>
+
+
+<p>結果は、<code>echo &gt;&gt; hash_key &gt; index &gt; assoc &gt; find &gt; hash</code>という順になりました。hash_keyが最速、hashが最遅です。</p>
+
+<p>え？hashが最遅？！まさか。</p>
+
+<p>hashのコードをもう一度見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">flip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">.</span><span class="n">invert</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>やーこれはいかん。</p>
+
+<p>この実装だと#unflipが呼ばれる度にHash#invertが実行されてしまいます。invertの実行がコストになるのは想像がつきます。直します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">H</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">[</span> <span class="n">T</span> <span class="o">]</span>
+<span class="no">Hi</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="k">def</span> <span class="nf">flip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="n">H</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">unflip_h</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
+  <span class="no">Hi</span><span class="o">[</span><span class="n">chr</span><span class="o">]</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあ今度はどうですか。</p>
+
+<div class="highlight"><pre><code class="text">% ruby flip_benchmark.rb     
+Calculating -------------------------------------
+               index        18 i/100ms
+               assoc        17 i/100ms
+                find         8 i/100ms
+                hash       226 i/100ms
+            hash_key        26 i/100ms
+                echo       371 i/100ms
+-------------------------------------------------
+               index      182.0 (±1.6%) i/s -        918 in   5.046047s
+               assoc      178.4 (±0.6%) i/s -        901 in   5.051709s
+                find       84.5 (±1.2%) i/s -        424 in   5.017970s
+                hash     2242.5 (±1.9%) i/s -      11300 in   5.040986s
+            hash_key      266.3 (±1.5%) i/s -       1352 in   5.078433s
+                echo     3725.7 (±2.0%) i/s -      18921 in   5.080765s
+</code></pre></div>
+
+
+<p>hash速っ！</p>
+
+<p>ここでは２つのハッシュの初期生成コストを考慮していませんが、これだけhashが爆速なら「hash最高！即採用！」ということでよろしいのじゃないでしょうか。</p>
+
+<p>まあ実際、この問題の答えとしてはなんでもいいんでしょうけどね...</p>
+
+<p>関連記事：</p>
+
+<p><a href="/2013/01/28/make-ruby-script-encript-with-flippy/" title="RubyのコードをFlipして暗号化する？">RubyのコードをFlipして暗号化する？</a></p>
+
+<hr />
+
+<p>電子書籍でRuby始めてみませんか？</p>
+
+<blockquote><p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p></blockquote>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" data-text="RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/01/28/make-ruby-script-encript-with-flippy" title="RubyのコードをFlipして暗号化する？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2013/02/04/add-kernel-stnd-to-flippy-gem" title="flippy gemにKernel#stndを追加しましたので、お知らせします。">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" data-text="RubyでASCII文字変換表にアクセスするとき、あなたはどうしてますか？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/02/02/which-is-the-best-algorithm-for-accessing-data-table/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

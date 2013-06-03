@@ -1,0 +1,525 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>29 January 2011</span></div>
+  <h1 class='page-title'><a href="/2011/01/29/Ruby">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p><a href="http://melborne.github.com/2011/01/24/Ruby/" title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！">前回</a>に引き続き「なぜ関数プログラミングは重要か」を、Rubyを使って解釈し自分の理解に基づいて解説してみます。</p>
+
+<h2>関数の貼り合せ（ツリー編）</h2>
+
+<p>貼り合せの能力はリスト上の関数にとどまらない。ラベル付き順序ツリーの例でこれを示そう。</p>
+
+<p>Rubyにはリストに都合の良いArrayクラスが組込みであったが、ツリーに都合の良いものはないので自分でクラスを定義しよう。ツリーはラベルを持ったノードを連結したものとして表現できるので、この連結の機能をもったNodeクラスを定義することでツリーを表現しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="kp">attr_reader</span> <span class="ss">:label</span><span class="p">,</span> <span class="ss">:subtrees</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">*</span><span class="n">subtrees</span><span class="p">)</span>
+    <span class="vi">@label</span> <span class="o">=</span> <span class="n">label</span>
+    <span class="vi">@subtrees</span> <span class="o">=</span> <span class="n">subtrees</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">def</span> <span class="nf">node</span>
+  <span class="o">-&gt;</span><span class="n">label</span><span class="p">,</span><span class="o">*</span><span class="n">subtrees</span><span class="p">{</span> <span class="no">Node</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">*</span><span class="n">subtrees</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ノードオブジェクトはlabelとサブノードのリストsubtreesをもつことができる。ここではノードオブジェクトを関数言語風に生成するために、node関数(Objectクラスのメソッド)を用意している。</p>
+
+<p>例えば、</p>
+
+<div class="highlight"><pre><code class="bash">           1 o
+            ／ ＼
+          ／     ＼
+        ／         ＼
+     2 o             o 3
+                     |
+                     |
+                     |
+                     o  4
+</code></pre></div>
+
+
+<p>というツリーはこのNodeクラスを使って以下のように表現できる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> 
+            <span class="n">node</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span>
+            <span class="n">node</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="o">[</span><span class="mi">4</span><span class="o">]]</span>
+            <span class="o">]</span>
+<span class="c1"># &gt;&gt; #&lt;Node:0x0a431c @label=1, @subtrees=[#&lt;Node:0x0a4420 @label=2, @subtrees=[]&gt;, #&lt;Node:0x0a4358 @label=3, @subtrees=[#&lt;Node:0x0a4394 @label=4, @subtrees=[]&gt;]&gt;]&gt;</span>
+</code></pre></div>
+
+
+<p>つまりノード１は２つのノード２，３をサブノードとしてもち、ノード３はノード４をサブノードとしてもっている。nodeの第２引数は省略できこの場合subtreesの値は[ ]になる。</p>
+
+<p>さてここで、リストで用意したreduceメソッドと同じ目的をツリーで果たすred_treeメソッドを定義してみよう。</p>
+
+<p>リストのところの説明でreduceがリストを生成するconsとの比較で、consと[ ]をfとaに置き換えたものとみなせると言った。同じ発想でツリーがリストを含むノードで生成される、つまりnodeとconsと[ ]で生成できることから、red_treeはこれらをfとgとaに置き換えたものとみなせる。</p>
+
+<p>ここでツリーとリストは別のクラスなので、それぞれのクラスの上にred_treeを定義する必要がある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="k">def</span> <span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">[</span><span class="n">label</span><span class="p">,</span> <span class="n">subtrees</span><span class="o">.</span><span class="n">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">g</span><span class="o">[</span><span class="n">head</span><span class="o">.</span><span class="n">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">tail</span><span class="o">.</span><span class="n">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここで最初の引数である関数fはノードオブジェクトの要素に適用され、第２の引数である関数gはリストの要素に適用される。red_treeと他の関数を貼り合せることで興味深い関数がいくつも定義できる。</p>
+
+<p>次の段階に進む前にArrayクラスに定義した有用なメソッド群をNodeクラスにも定義したい。ここではNodeクラスに同じものを用意するのではなく、Arrayクラスのそれらのメソッドをモジュールに抽出してNodeクラスでも使えるようにしよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Functional</span>
+  <span class="k">def</span> <span class="nf">cons</span>
+    <span class="o">-&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">+</span> <span class="n">ls</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">append</span>
+    <span class="o">-&gt;</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span><span class="n">se</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="n">ls</span><span class="o">.</span><span class="n">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="n">se</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">add</span>
+    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">double</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num</span> <span class="p">}</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">f</span><span class="o">[</span><span class="n">g</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="n">y</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">Array</span>
+  <span class="kp">include</span> <span class="no">Functional</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">Node</span>
+  <span class="kp">include</span> <span class="no">Functional</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>準備ができたので、まずツリーのラベルの数値をすべて足すsum_treeを定義しよう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="k">def</span> <span class="nf">sum_tree</span>
+    <span class="n">red_tree</span> <span class="n">add</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">node</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span>
+            <span class="n">node</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="o">[</span><span class="mi">4</span><span class="o">]]</span>
+           <span class="o">]</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">sum_tree</span> <span class="c1"># =&gt; 10</span>
+</code></pre></div>
+
+
+<p>ツリーのlabel全体のリストは以下のように定義できる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="k">def</span> <span class="nf">labels</span>
+    <span class="n">red_tree</span> <span class="n">cons</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">labels</span> <span class="c1"># =&gt; [1, 2, 3, 4]</span>
+</code></pre></div>
+
+
+<p>最後にリストのmapと類似したメソッドつまり関数fをツリーのすべてのラベルに適用するメソッドmap_treeを定義する。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="k">def</span> <span class="nf">map_tree</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">red_tree</span> <span class="n">compose</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="n">cons</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>map_treeを使えば、たとえばラベルの数値を倍にするメソッドを定義できる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">map_tree</span> <span class="n">double</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">double_all</span><span class="o">.</span><span class="n">labels</span> <span class="c1"># =&gt; [2, 4, 6, 8]</span>
+</code></pre></div>
+
+
+<p>以上のように高階関数すなわち関数を引数に取ったり、関数を返したりすることができる関数を使うことにより、プログラムを柔軟に多数の汎用的な部品に分割できるようになる。</p>
+
+<p>(続く？)</p>
+
+<p>(追記：2011-2-1)続きを書きました。</p>
+
+<p><a href="http://melborne.github.com/2011/02/01/Ruby/" title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/01/29/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/01/29/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/01/29/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/01/29/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/01/27/hateda" title="Rubyではてダの記事一覧を取得してまとめ頁を作ろう！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/01/30/fun-of-Processing" title="fun of Processing!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/01/29/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/01/29/Ruby/" data-text="Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その２)" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/01/29/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/01/29/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,514 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyのメソッドに別名があってもいいじゃないか</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>11 November 2010</span></div>
+  <h1 class='page-title'><a href="/2010/11/11/Ruby">Rubyのメソッドに別名があってもいいじゃないか</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Rubyのメソッドに別名を付ける方法を勉強したので、ここにまとめておきます。</p>
+
+<h2>オブジェクトの別名</h2>
+
+<p>Rubyの変数はオブジェクトの参照にすぎないから、オブジェクトに別名を付けるのは簡単だ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a_friend</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
+<span class="n">a_coworker</span> <span class="o">=</span> <span class="n">a_friend</span>
+<span class="n">database</span> <span class="o">=</span> <span class="no">DataBase</span><span class="o">.</span><span class="n">new</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">database</span>
+</code></pre></div>
+
+
+<p>そう、オブジェクトを参照している変数を別の変数に代入すればいい。</p>
+
+<p>でも、Rubyではメソッドはオブジェクトではないから、Pythonのようにメソッドを変数に代入することはできない。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">methodA</span>
+  <span class="ss">:method_is_A</span>
+<span class="k">end</span>
+<span class="n">a_method</span> <span class="o">=</span> <span class="n">methodA</span> <span class="c1"># =&gt; :method_is_A</span>
+</code></pre></div>
+
+
+<p>一見、代入が問題なく行われているように見えるけれども、変数a_methodに代入されているのはmethodAメソッドの実行結果に過ぎない。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a_method</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Symbol</span>
+</code></pre></div>
+
+
+<h2>メソッドの別名</h2>
+
+<p>ではどうすればメソッドに別名を付けられるのか。</p>
+
+<p>いくつかの方法があってその代表的な方法はaliasキーワードを使う方法だ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
+  <span class="p">(</span><span class="o">[</span><span class="s2">&quot;Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, Yes, &quot;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="k">alias</span> <span class="ss">:by_alias</span> <span class="ss">:base</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>      <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>  <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+</code></pre></div>
+
+
+<p>aliasには上のようにシンボルかメソッド名を新旧の順で渡す。引数の間にカンマがないのでこれがメソッドではなくてキーワードだということが分かる。</p>
+
+<p>別名を付けるにはModule#alias_methodを利用する方法もある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Base</span>
+  <span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="ss">:base</span>
+<span class="k">end</span>
+<span class="kp">include</span> <span class="no">Base</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+</code></pre></div>
+
+
+<p>alias_methodはModuleクラスのプライベート・インスタンスメソッドなので、モジュールの文脈で呼ぶ必要がある。aliasと異なり引数に文字列を受け取ることができ、そこに式を置くこともできる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">sunny?</span> <span class="k">then</span> <span class="s1">&#39;base&#39;</span> <span class="k">else</span> <span class="s1">&#39;base2&#39;</span> <span class="k">end</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>またメソッド定義により別名を付ける方法がある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+  <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>  <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+</code></pre></div>
+
+
+<p>受け取った引数をオリジナルのメソッドに委譲する形だ。</p>
+
+<p>またメソッドをオブジェクト化して別名を付ける方法もある。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">by_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span> <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">by_method_obj</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:base</span><span class="p">)</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>     <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span> <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+</code></pre></div>
+
+
+<p>１つはKernel#lambdaを使ってメソッドをProcオブジェクトにして変数に代入する方法。１つはObject#methodを使ってメソッドをMethodオブジェクトにして変数に代入する方法だ。</p>
+
+<p>何れのオブジェクトもcallメソッドを呼ぶことで実行される。各callメソッドには別名としてそれぞれProc#［］、Method#［］が定義されていて、それを使うことで関数呼出しの構文的にその実行ができる。</p>
+
+<p>このように複数の別名定義方法があるけれど、注意しなければいけないことが１つある。それはベースのメソッドが再定義されたときの挙動が異なるという点だ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
+  <span class="p">(</span><span class="o">[</span><span class="s2">&quot;Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, Yes, &quot;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="k">alias</span> <span class="ss">:by_alias</span> <span class="ss">:base</span>
+<span class="k">module</span> <span class="nn">Base</span>
+  <span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="kp">true</span> <span class="k">then</span> <span class="s1">&#39;base&#39;</span> <span class="k">else</span> <span class="s1">&#39;base2&#39;</span> <span class="k">end</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="kp">include</span> <span class="no">Base</span>
+<span class="k">def</span> <span class="nf">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+  <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">by_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span> <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">by_method_obj</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:base</span><span class="p">)</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>            <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>        <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>       <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>       <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>   <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
+  <span class="p">(</span><span class="o">[</span><span class="s2">&quot;Poor </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, No, &quot;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>            <span class="c1"># =&gt; &quot;Poor Charlie!, No, Poor Charlie!&quot;</span>
+<span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>        <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+<span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>       <span class="c1"># =&gt; &quot;Poor Charlie!, No, Poor Charlie!&quot;</span>
+<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>       <span class="c1"># =&gt; &quot;Poor Charlie!, No, Poor Charlie!&quot;</span>
+<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>   <span class="c1"># =&gt; &quot;Great Charlie!, Yes, Great Charlie!&quot;</span>
+</code></pre></div>
+
+
+<p>このコードの結果で分かるように、alias alias_method Methodオブジェクトを使った別名定義では元のメソッドが実行される。つまり、これらの別名定義ではそのコンテキストを共有できない。従って元のメソッドが定義されたコンテキストを共有したい場合は、メソッド再定義かProcオブジェクトによる別名の方法を利用する必要がある。</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/11/11/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのメソッドに別名があってもいいじゃないか" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/11/11/Ruby/" data-text="Rubyのメソッドに別名があってもいいじゃないか" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/11/11/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/11/11/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2010/11/10/Ruby-Lisp" title="((Rubyで) 書く (Lisp) インタプリタ)">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2010/11/16/IRB-Rubyist" title="IRB　それはRubyistの魔法のランプ">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2010/11/11/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのメソッドに別名があってもいいじゃないか" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2010/11/11/Ruby/" data-text="Rubyのメソッドに別名があってもいいじゃないか" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2010/11/11/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2010/11/11/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

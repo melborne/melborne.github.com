@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyのクラスはオブジェクトの母、モジュールはベビーシッター</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>16 August 2008</span></div>
+  <h1 class='page-title'><a href="/2008/08/16/Ruby">Rubyのクラスはオブジェクトの母、モジュールはベビーシッター</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Rubyのクラス、モジュール、オブジェクトの関係を、自分なりにまとめてみた。読みづらいかもしれないけど、だれかの参考になればうれしい。</p>
+
+<h2>オブジェクトの種類</h2>
+
+<p>Rubyはオブジェクト指向言語であり、Ruby空間に存在するオブジェクトをその操作対象とする。Ruby空間には3種類のオブジェクト、すなわちインスタンスオブジェクト、クラスオブジェクト、そしてモジュールオブジェクトが存在している。これらは通常単に、オブジェクト、クラス、モジュールと呼ばれているけど、ここではそれらのオブジェクトとしての側面を強調したいので、あえてその名称を使おう。</p>
+
+<h2>クラスオブジェクト ～クラスとしての側面～</h2>
+
+<p>クラスオブジェクトは通常単にクラスと呼ばれ、主にRuby空間にインスタンスオブジェクトを生み出すために存在する。生み出されるインスタンスオブジェクトのデザインは、クラスオブジェクトに記述されており、しかもユーザがインスタンスオブジェクトにアクセスしてその機能を実現しようとするとき、インスタンスオブジェクトはクラスオブジェクトからその機能を借り出す。</p>
+
+<p>Rubyにはその設計者により予め多数のクラスオブジェクトが用意されている。これらは組み込みクラスと呼ばれる。ユーザは組み込みクラスを自由に使うことができるけれど、class式を使って独自クラスを定義することもできる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>ユーザがclass式を使って既存クラスと同名のクラスオブジェクトを定義した場合、それは既存クラスの書き換えではなく拡張となる。その既存クラスが本来持っている機能は失われず、新たな機能がそこに付加される。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+    <span class="k">def</span> <span class="nf">speak</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+     <span class="nb">puts</span> <span class="n">word</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;Charlie&quot;</span>
+  <span class="n">my_name</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">)</span> <span class="c1"># =&gt; Hello</span>
+  <span class="n">my_name</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; 7</span>
+</code></pre></div>
+
+
+<p>もっとも同名のメソッドを再定義すれば、それは基のメソッドの上書きになるので注意を要する。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+    <span class="k">def</span> <span class="nf">length</span>
+      <span class="s2">&quot;I don&#39;t wanna tell you.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; &quot;I don&#39;t wanna tell you.&quot;</span>
+</code></pre></div>
+
+
+<p>特定のクラスオブジェクトからインスタンスオブジェクトを生成するには、newメソッドを使う。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="c1"># Creatureクラスのnewメソッドでオブジェクトを生成する</span>
+  <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span> 
+</code></pre></div>
+
+
+<p>ただ代表的な組み込みクラスではリテラル表記を使って、簡易にインスタンスオブジェクトを生成できる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="c1"># 文字列オブジェクトの生成</span>
+  <span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;Charlie&quot;</span>
+  <span class="c1"># 整数オブジェクトの生成</span>
+  <span class="n">my_age</span> <span class="o">=</span> <span class="mi">195</span>
+  <span class="c1"># 配列オブジェクトの生成</span>
+  <span class="n">my_pets</span> <span class="o">=</span> <span class="o">[</span> <span class="s1">&#39;Dog&#39;</span><span class="p">,</span> <span class="s1">&#39;Crocodile&#39;</span><span class="p">,</span> <span class="s1">&#39;Hippopotamus&#39;</span> <span class="o">]</span>
+  <span class="c1"># ハッシュオブジェクトの生成</span>
+  <span class="n">my_favorite</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:number</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="ss">:language</span> <span class="o">=&gt;</span> <span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:color</span> <span class="o">=&gt;</span> <span class="s1">&#39;Blue&#39;</span> <span class="p">}</span> 
+  <span class="c1"># 範囲オブジェクトの生成</span>
+  <span class="n">my_range</span> <span class="o">=</span> <span class="mi">9</span><span class="o">.</span><span class="n">.</span><span class="mi">21</span>
+  <span class="c1"># 正規表現オブジェクトの生成</span>
+  <span class="n">my_regexp</span> <span class="o">=</span> <span class="sr">/ruby/</span> 
+</code></pre></div>
+
+
+<p>オブジェクトの特性はそのクラスオブジェクトのメソッド定義でほぼ決まる。メソッドはdef式を使って定義できる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">description</span>
+      <span class="s2">&quot;I&#39;m a Creature Class for making creatures.&quot;</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name</span>
+      <span class="vi">@name</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>クラスオブジェクトには、インスタンスオブジェクトのためのInstanceメソッドと、自身のためのselfメソッドとを定義できる。</p>
+
+<p>selfメソッドはメソッド名の前にselfあるいはクラス名を冠することで、Instanceメソッドと区別される。クラスオブジェクトにおけるselfメソッドは、普通クラスメソッドと呼ばれている。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">Creature</span><span class="o">.</span><span class="n">description</span>
+       <span class="c1"># =&gt;  &quot;I&#39;m a Creature Class for making creatures.&quot;</span>
+</code></pre></div>
+
+
+<p>Instanceメソッドはこのクラスオブジェクトから派生するインスタンスオブジェクトの挙動を決定付ける。つまり、クラスオブジェクトからインスタンスオブジェクトが生成されたとき、Instanceメソッドがあたかも、インスタンスオブジェクト自身が持つメソッドのように振る舞う。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span>
+  <span class="n">my_pet</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Doggie&quot;</span>
+</code></pre></div>
+
+
+<h2>クラスオブジェクト ～オブジェクトとしての側面～</h2>
+
+<p>確かにクラスオブジェクトはインスタンスオブジェクトを生成するための雛形的なものだ。だけれども、同時にクラスオブジェクトは、それ自身もRuby空間に存在するオブジェクトである。</p>
+
+<p>インスタンスオブジェクトにクラスオブジェクトという母があるように、すべてのクラスオブジェクトにもClassクラスオブジェクトという母がある。</p>
+
+<p>つまりすべてのクラスの雛形となっているのはClassクラスオブジェクトであり、クラスオブジェクトはすべてここから生成されている。classメソッドでこの事実を知ることができる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">Object</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="nb">Array</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
+  <span class="no">Binding</span><span class="o">.</span><span class="n">class</span>          <span class="c1"># =&gt; Class</span>
+  <span class="no">Continuation</span><span class="o">.</span><span class="n">class</span>     <span class="c1"># =&gt; Class</span>
+  <span class="no">Data</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+  <span class="no">Exception</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+  <span class="no">Dir</span><span class="o">.</span><span class="n">class</span>              <span class="c1"># =&gt; Class</span>
+  <span class="ss">File</span><span class="p">:</span><span class="ss">:Stat</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
+  <span class="no">Hash</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+  <span class="no">IO</span><span class="o">.</span><span class="n">class</span>               <span class="c1"># =&gt; Class</span>
+  <span class="no">File</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+  <span class="no">MatchData</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+  <span class="no">Method</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">Module</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">Numeric</span><span class="o">.</span><span class="n">class</span>          <span class="c1"># =&gt; Class</span>
+  <span class="no">Proc</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+  <span class="ss">Process</span><span class="p">:</span><span class="ss">:Status</span><span class="o">.</span><span class="n">class</span>  <span class="c1"># =&gt; Class</span>
+  <span class="no">Range</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
+  <span class="no">Regexp</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="nb">String</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">Struct</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">Symbol</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">Thread</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+  <span class="no">ThreadGroup</span><span class="o">.</span><span class="n">class</span>      <span class="c1"># =&gt; Class</span>
+  <span class="no">Time</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+  <span class="no">UnboundMethod</span><span class="o">.</span><span class="n">class</span>    <span class="c1"># =&gt; Class</span>
+  <span class="no">TrueClass</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+  <span class="no">FalseClass</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
+  <span class="no">NilClass</span><span class="o">.</span><span class="n">class</span>         <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>驚くべきことに、Classクラスオブジェクトの母もClassクラスオブジェクト自身である！</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">Class</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>あなたが後から作るクラスオブジェクトも、その母はあなたではなくClassクラスオブジェクトである。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">Creature</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>またある特定のクラスのサブクラスもその母はスーパークラスではなく、Classクラスオブジェクトである。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
+  <span class="k">end</span>
+  <span class="no">Person</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>兎にも角にも、あらゆるクラスオブジェクトは、一つのクラスオブジェクトClassから生成されているのだ！</p>
+
+<p>つまりRuby空間には、最初にClassクラスオブジェクトから生成されたClassクラスオブジェクトがあり、そのClassクラスオブジェクトが次いで他のすべてのクラスオブジェクトを生成し、最後にこの生成された各種のクラスオブジェクトからインスタンスオブジェクトが生成される、という構図が描かれる。</p>
+
+<p>クラスオブジェクトからインスタンスオブジェクトを生成するときはnewメソッドを使うが、クラスオブジェクトの生成にはその必要はない。規定のクラスオブジェクトについてはおそらく初期化時に、ユーザ定義のクラスオブジェクトについてはclass定義式の解析時にRubyが自動で生成する。生成されたクラスオブジェクトにはそのクラス名を冠した定数が付けられ、これによりユーザによるクラスオブジェクトへのアクセスが可能になる。</p>
+
+<p>このことを確認するために、恣意的にClassクラスオブジェクトのnewクラスメソッドを使ってクラスオブジェクトを生成してみよう。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="nb">puts</span> <span class="no">Creature</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Creature</span><span class="p">)</span>
+        <span class="c1"># =&gt;warning: already initialized constant Creature</span>
+        <span class="c1"># =&gt; Creature</span>
+</code></pre></div>
+
+
+<p>これによりCreature定数には既にCreatureクラスオブジェクトがセットされていることが確認できる。なお上記によりCreatureクラスオブジェクトのサブクラスが生成され、それがCreature定数に再設定される。</p>
+
+<p>既に書いたがクラスオブジェクトには自身のためのselfメソッド(クラスメソッド)を定義できる。クラスオブジェクトに対しクラスメソッドを直接呼び出すことによって、クラスオブジェクト自身にアクセスできる。クラスメソッドはそこから派生したインスタンスオブジェクト全体を管理するためなどに使うことができる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+    <span class="vc">@@counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+      <span class="vc">@@counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">count</span>
+      <span class="s2">&quot;You have </span><span class="si">#{</span><span class="vc">@@counter</span><span class="si">}</span><span class="s2"> creatures.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">dog</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+  <span class="n">alligator</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;thanks&#39;</span><span class="p">)</span>
+  <span class="n">hippopotamus</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;idiot&#39;</span><span class="p">)</span>
+  <span class="no">Creature</span><span class="o">.</span><span class="n">count</span>  <span class="c1"># =&gt; &quot;You have 3 creatures.&quot;</span>
+</code></pre></div>
+
+
+<h2>継承(Inheritance)</h2>
+
+<p>継承とはクラスオブジェクト間の相互依存関係のことである。Rubyではあるクラスオブジェクトが定義したメソッドを、あたかも自分に定義されたもののように他のクラスオブジェクトが利用できる。利用される側をスーパークラス、利用する側をサブクラスと呼ぶ。</p>
+
+<p>他のクラスオブジェクトを利用してクラスを定義する場合、自分の名前にスーパークラス名を接ぎ木する。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+      <span class="vi">@age</span> <span class="o">=</span> <span class="n">age</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">age</span>
+     <span class="vi">@age</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="n">me</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+  <span class="n">me</span><span class="o">.</span><span class="n">age</span>      <span class="c1"># =&gt; 8</span>
+</code></pre></div>
+
+
+<p>こうすればサブクラスPersonのインスタンスであるmeオブジェクトでも、自ら定義することなくメソッドnameが使える。つまり、me.nameが実行されたとき、このメッセージは最初Personクラスオブジェクトに送られて、そこで対応するnameメソッドが存在しないことが分かると、次いでそのスーパークラスに渡され実行される(Moduleクラスオブジェクトの話はここでは割愛する)。</p>
+
+<p>一般的に言えば、Rubyはメッセージに対応するメソッドが見つかるまでクラスツリーを遡り、最後にはObjectクラスオブジェクトに至る。</p>
+
+<p>一つのクラスオブジェクトは同時並行的に複数のクラスオブジェクトと継承関係になれない。つまり複数のスーパークラスを同時に持てない。このような制限を、制限のない多重継承に対して単純継承という。</p>
+
+<p>しかし他のクラスオブジェクトのサブクラスをスーパークラスにすることはできる。この数つまり経時直線的な段数に制限はない。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">country</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+      <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">country</span>
+      <span class="vi">@country</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernando&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>    <span class="c1"># &gt;&gt; &quot;Fernando&quot;</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">country</span> <span class="c1"># &gt;&gt; &quot;Spain&quot;</span>
+</code></pre></div>
+
+
+<p>誰がスーパークラスかはsuperclassメソッドで調べられる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">PersonInEarh</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># &gt;&gt; Person</span>
+</code></pre></div>
+
+
+<p>Rubyでは継承関係にない独立したクラスオブジェクトというのは作れない。クラス定義においてスーパークラスを指定しないとき、Rubyは勝手にObjectクラスオブジェクトをそのスーパークラスにセットする。つまりすべてのクラスオブジェクトはObjectクラスオブジェクトのサブクラスである。組み込みクラスも例外ではない。</p>
+
+<p>何も定義しないクラスでmethodsメソッドを呼べば、それが既にObjectクラスオブジェクトのサブクラスになっていることが確認できる(このメソッドを呼べること自体が証拠ですが)。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Nothing</span>
+  
+  <span class="k">end</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="no">Nothing</span><span class="o">.</span><span class="n">new</span>
+  <span class="nb">p</span> <span class="n">n</span><span class="o">.</span><span class="n">methods</span> 
+  <span class="c1"># &gt;&gt; [&quot;inspect&quot;, &quot;tap&quot;, &quot;clone&quot;, &quot;public_methods&quot;, &quot;object_id&quot;,  &quot;__send__&quot;, &quot;instance_variable_defined?&quot;, &quot;equal?&quot;, &quot;freeze&quot;,  &quot;extend&quot;, &quot;send&quot;, &quot;methods&quot;, &quot;hash&quot;, &quot;dup&quot;, &quot;to_enum&quot;,  &quot;instance_variables&quot;, &quot;eql?&quot;, &quot;instance_eval&quot;, &quot;id&quot;,  &quot;singleton_methods&quot;, &quot;taint&quot;, &quot;frozen?&quot;, &quot;instance_variable_get&quot;,  &quot;enum_for&quot;, &quot;instance_of?&quot;, &quot;display&quot;, &quot;to_a&quot;, &quot;method&quot;, &quot;type&quot;,  &quot;instance_exec&quot;, &quot;protected_methods&quot;, &quot;==&quot;, &quot;===&quot;,  &quot;instance_variable_set&quot;, &quot;kind_of?&quot;, &quot;respond_to?&quot;, &quot;to_s&quot;,  &quot;class&quot;, &quot;__id__&quot;, &quot;tainted?&quot;, &quot;=~&quot;, &quot;private_methods&quot;,  &quot;untaint&quot;, &quot;nil?&quot;, &quot;is_a?&quot;]</span>
+</code></pre></div>
+
+
+<p>NothingクラスオブジェクトはObjectクラスオブジェクトが持っているすべてのメソッドを継承する。</p>
+
+<p>継承はクラスオブジェクト間の師弟制度のようなものである。とりわけ、Rubyの継承は一子相伝、一人がそのすべてを引き継ぐという特徴を有する。この特徴のため、継承関係が成熟しクラス階層が限りなきものになったとしても、Rubyは迷うことなくその末端から頂点、つまりObjectクラスオブジェクトまでを遡ることができる。</p>
+
+<p>基本的にサブクラスはスーパークラスの特性をすべて引き継ぐが、サブクラスにおいてその一部を拒否したり再定義することは許される。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+    <span class="k">undef</span> <span class="ss">:age</span>  <span class="c1"># ageメソッドを未定義にする</span>
+    <span class="k">alias</span> <span class="ss">:name_old</span> <span class="ss">:name</span>  <span class="c1">#nameメソッドをname_oldに変える</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">country</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
+      <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">country</span>
+      <span class="vi">@country</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name</span>   <span class="c1"># nameメソッドを再定義する</span>
+      <span class="s2">&quot;my name is </span><span class="si">#{</span><span class="n">name_old</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span><span class="err">　</span><span class="c1"># &gt;&gt; &quot;my name is Fernand.&quot;</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">age</span>
+  <span class="c1"># ~&gt; -:39: undefined method `age&#39; for #&lt;PersonInEarth:0x23550&gt; (NoMethodError)</span>
+</code></pre></div>
+
+
+<h2>モジュールオブジェクト</h2>
+
+<p>単純継承はメソッド探索の複雑さを排除する。一方で継承の本来的意義を低下させうる。仮に異なる系譜の継承クラス群があり、その両方の系譜の特性を持ったクラスオブジェクトを生成したい場合、単純継承ではそれを一方の系譜のサブクラスとし、そこに他方の系譜の特性すべてを一から書き足す必要が生じる。これは継承の目的に反し極めて非生産的だ。</p>
+
+<p>Rubyではモジュールオブジェクトがこの問題を最小化する。モジュールオブジェクトは通常単にモジュールと呼ばれる。</p>
+
+<p>モジュールオブジェクトは、継承関係に立つことができない独立したクラスオブジェクトである。そこからインスタンスオブジェクトを生成することもできない。モジュールオブジェクトはその中に特定の機能のまとまりを持って、クラスオブジェクトにMix-inつまり挿し木される。モジュールオブジェクトをMix-inしたクラスオブジェクトは追加的にその機能を獲得することになる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Behavior</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">description</span>  <span class="c1"># モジュールメソッドの定義</span>
+      <span class="s2">&quot;I&#39;m a Behavior Module.&quot;</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sleep</span>  <span class="c1"># Instanceメソッドの定義</span>
+      <span class="s2">&quot;I&#39;m sleeping.&quot;</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">eat</span>
+      <span class="s2">&quot;I&#39;m eating.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+    <span class="kp">include</span> <span class="no">Behavior</span>  <span class="c1"># Behaviorモジュールを読み込む</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">country</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
+      <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">country</span>
+      <span class="vi">@country</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">eat</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m eating.&quot;</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">sleep</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m sleeping.&quot;</span>
+  <span class="no">Behavior</span><span class="o">.</span><span class="n">description</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m a Behavior Module.&quot;</span>
+</code></pre></div>
+
+
+<p>モジュールの定義はmodule式で行う。クラスオブジェクトと同様モジュールオブジェクトには、インスタンスオブジェクトのためのInstanceメソッドと、自身のためのselfメソッドとを定義できる。モジュールのselfメソッドは一般にモジュールメソッドと称される。</p>
+
+<p>クラスオブジェクトにモジュールオブジェクトをMix-inするにはincludeメソッドを使う。これによりあたかも、モジュールオブジェクトで定義したメソッドがクラスオブジェクトにあるかのように働く。よって、クラスオブジェクトから生成されたインスタンスオブジェクトは、それらのInstanceメソッドを自由に使える。</p>
+
+<p>もっとも、モジュールのselfメソッドがMix-in先クラスのselfメソッドとして働くことはない。つまりモジュールメソッドはクラスメソッドにはならない。この点が継承の場合とは異なっている。</p>
+
+<p>モジュールオブジェクトのMix-inによって継承におけるメソッド探索のルートが変わる。モジュールオブジェクトをMix-inしたクラスオブジェクト内が探索されると、そのスーパークラスに先立ってモジュールオブジェクト内が探索される。多重継承におけるようなあいまいさはない。ancestorsメソッドでその順位を確認できる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">ancestors</span> 
+   <span class="c1">#  &gt;&gt; [PersonInEarth, Behavior, Person, Creature, Object, Kernel, BasicObject]</span>
+</code></pre></div>
+
+
+<p>インスタンスオブジェクトにとって、その母がクラスオブジェクトであるならば、モジュールオブジェクトは、彼のベビーシッターのような存在だ。母に代わって子をヘルプする。ベビーシッターがそうであるように、モジュールオブジェクトは、複数のクラスオブジェクトにおいて掛け持ちされうる。</p>
+
+<p>この点に鑑みればモジュールオブジェクトに、特定のインスタンスオブジェクトの属性情報を保持させる、つまりインスタンス変数を持たせることは危険だということが分かる。</p>
+
+<p>なお、モジュールオブジェクトは継承関係には立てないが、モジュールオブジェクトに他のモジュールオブジェクトをMix-inすることはできる。しかし最終的にモジュールオブジェクトはクラスオブジェクトにMix-inされ、その継承関係に割り込まなければ機能しない(ただモジュールメソッドは直接呼ぶことができる)。</p>
+
+<h2>インスタンスオブジェクト</h2>
+
+<p>インスタンスオブジェクトは普通単にオブジェクトあるいはインスタンスと呼ばれ、先に書いたようにクラスオブジェクトをnewすることでRuby空間に生み出される。</p>
+
+<p>Ruby空間では、各種のクラスオブジェクトから生み出された多数のインスタンスオブジェクトが、順次・分岐・繰り返しの制御構造の中で相互に働き掛けあうことによって、ユーザの所望する意味のある結果が返される。</p>
+
+<p>Rubyではインスタンスオブジェクトが主役である。</p>
+
+<p>ところがその存在の重みとは裏腹に、インスタンスオブジェクトの中身はほとんど空である。基本的にインスタンスオブジェクトは自分の属性情報のみを保持する。他のオブジェクトとの相互作用のためのメソッド群を基本的に保持しない。つまりインスタンスオブジェクトは、自分が何者で誰が親なのかということは知っているけれども、ユーザから送られてくるメッセージの処理方法を知らない。</p>
+
+<p>一方インスタンスオブジェクトへのアクセスはそれにメッセージを送ることで達成される。より正確には、メッセージを送る以外にインスタンスオブジェクトにアクセスする手段はない。</p>
+
+<p>結局、メッセージを受け取ったインスタンスオブジェクトは、それを自分の生成元のクラスオブジェクトに投げ、彼女がインスタンスオブジェクトに代わって答えを用意する。そのクラスオブジェクト自身が対応するメソッドを備えていない場合、先に書いたように、モジュールオブジェクトを含むクラスツリーを辿ってメソッドが探索される。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="c1"># a_friendでラベル付けされたオブジェクトにメッセージnameを送る</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>
+</code></pre></div>
+
+
+<p>この例でa_friendでラベル付けされたインスタンスオブジェクトは、メッセージnameを受け取るとこれをその生成元であるPersonInEarthクラスオブジェクトへ送る(後で述べるSingletonメソッドがある場合はまずそれを探索する)。PersonInEarthでは対応するnameメソッドを呼び出すために、まず自分自身がそれを持っているかが調べられる。次いで、そこにincludeしたBehaviorモジュールオブジェクト内が探索される。PersonInEarthおよびBehaviorモジュールはnameメソッドを持っていないので、メッセージは今度はそのスーパークラスであるPersonに渡される。</p>
+
+<p>ところがPersonクラスオブジェクトもnameメソッドを備えていないので、メッセージは更にそのスーパークラスであるCreatureクラスに渡される。そしてここに定義されたnameメソッドが実行され、その結果が順次逆のルートを辿って、a_friendでラベル付けされたインスタンスオブジェクトからユーザに返される。</p>
+
+<h2>Singletonメソッド(抽象メソッド)</h2>
+
+<p>インスタンスオブジェクトの中身はほとんど空であるということを書いた。しかしインスタンスオブジェクトはクラスオブジェクトやモジュールオブジェクトと同様に、その内部にselfメソッドを持つことができる。インスタンスオブジェクトにおけるselfメソッドは、Singletonメソッドまたは抽象メソッドと呼ばれる。</p>
+
+<p>Singletonメソッドは、そのインスタンスオブジェクト固有のメソッドを定義するために使われる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nc">a_friend</span><span class="o">.</span><span class="nf">name</span>
+    <span class="s2">&quot;My friend, </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span>
+</code></pre></div>
+
+
+<p>メソッド定義におけるメソッド名の前にインスタンスオブジェクトを置くことによって、そのインスタンスオブジェクトのSingletonメソッドが定義される。Singletonメソッドはクラスツリーの最下層に位置し、メソッド探索において最優先の探索先となる。</p>
+
+<p>正確に記せばSingletonメソッドは、そのインスタンスオブジェクト自身に定義されているのではなく、そのインスタンスオブジェクトとそのクラスオブジェクトとの間に生成される、無名のクラスに定義される。だからこの無名クラスにSingletonメソッドを定義しても同様の結果が得られる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
+    <span class="k">def</span> <span class="nf">name</span>
+      <span class="s2">&quot;My friend, </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span>
+</code></pre></div>
+
+
+<p>class名を無名とし、インスタンスオブジェクト名を二重の接ぎ木記号で繋ぐ(感情的には接ぎ木の向きは逆ですが)。複数のSingletonメソッドをまとめて定義する場合、この書式が有用だ。この無名クラスはSingletonクラスとも呼ばれる。</p>
+
+<p>Singletonクラスはクラスメソッドやモジュールメソッドを定義する場合にも使える。</p>
+
+<h2>extend</h2>
+
+<p>なおSingletonクラスはクラスに他ならないので、当然そこにモジュールオブジェクトをMix-inできる。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Business</span>
+    <span class="k">def</span> <span class="nf">job</span>
+      <span class="s2">&quot;Programmer&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
+    <span class="kp">include</span> <span class="no">Business</span>
+  <span class="k">end</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span>
+</code></pre></div>
+
+
+<p>SingletonクラスにMix-inされた
+モジュールBusinessのメソッドjobは、インスタンスオブジェクトa_friendのSingletonメソッドになる。</p>
+
+<p>でもRubyではもっと簡単に、モジュールメソッドをSingletonメソッドとしてMix-inする方法がある。それがextendだ。</p>
+
+<p>SingletonメソッドがSingletonクラスのメソッドを直接インスタンスオブジェクトに追加できるようにするのと同様、extendはモジュールのメソッドを直接インスタンスオブジェクトに追加できるようにする。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">a_friend</span><span class="o">.</span><span class="n">extend</span> <span class="no">Business</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span>
+</code></pre></div>
+
+
+<p>これによりモジュール内メソッドは特定のインスタンスオブジェクトの機能になる。</p>
+
+<h2>まとめ</h2>
+
+<p>最後にクラス、モジュールおよびオブジェクトの特性を整理しておこう。</p>
+
+<ol>
+<li>すべてのクラスオブジェクトは、Classクラスオブジェクトから生成される。</li>
+<li>クラスオブジェクトは、インスタンスオブジェクトの雛形となり、それを生み出す母のような存在である。</li>
+<li>それと共にそれ自身もオブジェクトである。</li>
+<li>クラスオブジェクトは、インスタンスオブジェクトのためのInstanceメソッドと自身のためのクラスメソッドを持てる。</li>
+<li>クラスオブジェクトは、継承によって他のクラスオブジェクトのメソッドを利用できる。</li>
+<li>すべてのクラスオブジェクトは継承に係わっていて、その頂点にはObjectクラスオブジェクトがいる。</li>
+<li>Rubyの継承は、スーパークラスを唯一つしか持たない単純継承である。</li>
+<li>しかし継承の経時直線的な段数には制限はない。</li>
+<li>モジュールオブジェクトは、クラスオブジェクトに代わってインスタンスオブジェクトを支援する、ベビーシッターのような存在である。</li>
+<li>モジュールオブジェクトは継承関係に係われず、インスタンスオブジェクトを生成することもできない。</li>
+<li>モジュールオブジェクト自身もオブジェクトであり、Instanceメソッドの他に自身のためのモジュールメソッドを持てる。</li>
+<li>インスタンスオブジェクトは、クラスオブジェクトから生成される。</li>
+<li>インスタンスオブジェクトがRuby空間における主役である。</li>
+<li>インスタンスオブジェクトには、メッセージ送信以外にアクセス方法がない。</li>
+<li>インスタンスオブジェクトに送られたメッセージは、クラスツリーに従って順次クラスオブジェクトに渡される。</li>
+<li>インスタンスオブジェクト自身も固有のメソッドを持てる。</li>
+</ol>
+
+
+<p>関連記事：</p>
+
+<p><a href="/2008/08/02/Ruby/">Rubyのシンボルは文字列の皮を被った整数だ！</a></p>
+
+<p><a href="/2008/08/09/Ruby-Mix-in/">Rubyのブロックはメソッドに対するメソッドのMix-inだ！</a></p>
+
+<p><a href="/2008/08/12/Ruby-yield-eval/">Rubyのyieldは羊の皮を被ったevalだ！</a></p>
+
+<p>(追記:2008/8/17) メソッド探索の順位について誤りがあったので訂正しました
+(追記:2008/8/27) extendの項目を追加しました</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/08/16/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのクラスはオブジェクトの母、モジュールはベビーシッター" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/08/16/Ruby/" data-text="Rubyのクラスはオブジェクトの母、モジュールはベビーシッター" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/08/16/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/08/16/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2008/08/12/Ruby-yield-eval" title="Rubyのyieldは羊の皮を被ったevalだ！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2008/08/27/Ruby" title="Rubyのクラスはソフトクリームコーン">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2008/08/16/Ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyのクラスはオブジェクトの母、モジュールはベビーシッター" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2008/08/16/Ruby/" data-text="Rubyのクラスはオブジェクトの母、モジュールはベビーシッター" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2008/08/16/Ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2008/08/16/Ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

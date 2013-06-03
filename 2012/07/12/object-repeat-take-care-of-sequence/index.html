@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyにおけるシーケンスはObject#repeatに任せなさい！</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>12 July 2012</span></div>
+  <h1 class='page-title'><a href="/2012/07/12/object-repeat-take-care-of-sequence">RubyにおけるシーケンスはObject#repeatに任せなさい！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Rubyにおいてシーケンス、つまり意味的に連続する要素の並びを簡単に生成する<code>Object#repeat</code>というものを考えましたよ！以前に考えたEnumerable#repeatを単にすべてのオブジェクトに拡張したものですけど。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+  <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kp">true</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">self</span>
+    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+      <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">if</span> <span class="n">init</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>repeatは、そのレシーバオブジェクトを初期値として、渡されたブロックを繰り返し適用します。適用の結果はEnumeratorオブジェクトでラップされているので、遅延評価されます。</p>
+
+<p>以下に、問題に答える形で使い方を見せますね。比較のためrepeatを使わない方法も適宜示します。</p>
+
+<h2>1. 初項1、公差2の等差数列の最初の20項を求めなさい。</h2>
+
+<p>repeatを使うと等差数列は次のように書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39]</span>
+</code></pre></div>
+
+
+<p>ブロックで公差を足していくだけです。</p>
+
+<p>repeatを使わない場合は、Integer#stepを使うんでしょうね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39]</span>
+</code></pre></div>
+
+
+<p>簡潔ですが、Float::MAX.to_iというのがちょっとトリッキーですね。</p>
+
+<h2>2. 初項3、公比2の等比数列の最初の20項を求めなさい。</h2>
+
+<p>次に等比数列です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">3</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [3, 6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144, 12288, 24576, 49152, 98304, 196608, 393216, 786432, 1572864]</span>
+</code></pre></div>
+
+
+<p>極めて自然に書けます。</p>
+
+<p>repeatを使わない場合は、どう書くんですかね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">res</span> <span class="o">=</span> <span class="o">[]</span>
+<span class="k">while</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">20</span>
+  <span class="n">res</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+  <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="n">res</span>  <span class="c1"># =&gt; [3, 6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144, 12288, 24576, 49152, 98304, 196608, 393216, 786432, 1572864]</span>
+</code></pre></div>
+
+
+<p>一応答えは出ますが、Rubyistはこんなことしませんよね。次のほうがもう少しマシでしょうか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">+</span> <span class="mi">19</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [3, 6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144, 12288, 24576, 49152, 98304, 196608, 393216, 786432, 1572864]</span>
+</code></pre></div>
+
+
+<h2>3. １で求めた等差数列がその第１階差数列となるような数列を求めなさい。</h2>
+
+<p>階差数列は、数列の隣合う項の差から生成される数列です。わかりにくいので答えを先に言うと、[1, 2, 5, 10, 17..]が解です。この数列の各項の差が、[1, 3, 5, 7...]となって、１で求めた数列と等しいことが分かると思います。</p>
+
+<p>repeatを使うと一式で階差数列を作ることができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="o">[</span><span class="n">a</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 5, 10, 17, 26, 37, 50, 65, 82, 101, 122, 145, 170, 197, 226, 257, 290, 325, 362]</span>
+</code></pre></div>
+
+
+<p>配列の先頭位置で順次公差２の等差数列を作っていき、配列の２項位置で階差数列を作っていきます。最後に２項だけを取り出せばOKです。</p>
+
+<p>repeatを使わない場合、等差数列を作った上でinjectするんでしょうか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">seq</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39]</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">first</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 5, 10, 17, 26, 37, 50, 65, 82, 101, 122, 145, 170, 197, 226, 257, 290, 325, 362, 401]</span>
+</code></pre></div>
+
+
+<h2>4. フィボナッチ数列の最初の20項を求めなさい。</h2>
+
+<p>みんな大好きフィボナッチです。repeatで書くと次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]</span>
+</code></pre></div>
+
+
+<p>初項0,1を配列として渡すことで、簡潔に書けます。</p>
+
+<p>repeatを使わない場合はどうでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="mi">19</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]</span>
+</code></pre></div>
+
+
+<p>なかなか簡潔ですが、初項の処理が気になるといえば、気になります。</p>
+
+<h2>5. トリボナッチ数列の最初の20項を求めなさい。</h2>
+
+<p>フィボナッチが先行する２項の和を項の値とするのに対して、トリボナッチは先行する３項の和を値とする数列です。repeatを使って。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890]</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p>repeatを使わない例。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+<span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="mi">19</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890]</span>
+</code></pre></div>
+
+
+<h2>6. ニュートン法を使って5の平方根を求めなさい。</h2>
+
+<p>ニュートン法でnの平方根を求めるときは、任意の近似値xを選び、xとn/xの平均を取ってより良い近似値xを得ます。これを繰り返し十分に良い近似値が得られたら処理を終えるようにします。</p>
+
+<p>loopを使った解法は、次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span>
+  <span class="k">break</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;</span> <span class="n">eps</span>
+<span class="k">end</span>
+<span class="n">x</span> <span class="c1"># =&gt; 2.236067977499978</span>
+</code></pre></div>
+
+
+<p>一方で、repeatを使うと次のように書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span>
+   <span class="o">.</span><span class="n">each_cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;</span> <span class="n">eps</span> <span class="p">}</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; 2.236067977499978</span>
+</code></pre></div>
+
+
+<h2>7. Aから始まるExcelの列名ラベルを60個生成しなさい。</h2>
+
+<p>repeatを使わない場合は、次のようになるでしょうか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;@&#39;</span>
+<span class="mi">60</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">succ</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;, &quot;K&quot;, &quot;L&quot;, &quot;M&quot;, &quot;N&quot;, &quot;O&quot;, &quot;P&quot;, &quot;Q&quot;, &quot;R&quot;, &quot;S&quot;, &quot;T&quot;, &quot;U&quot;, &quot;V&quot;, &quot;W&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;, &quot;AA&quot;, &quot;AB&quot;, &quot;AC&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AF&quot;, &quot;AG&quot;, &quot;AH&quot;, &quot;AI&quot;, &quot;AJ&quot;, &quot;AK&quot;, &quot;AL&quot;, &quot;AM&quot;, &quot;AN&quot;, &quot;AO&quot;, &quot;AP&quot;, &quot;AQ&quot;, &quot;AR&quot;, &quot;AS&quot;, &quot;AT&quot;, &quot;AU&quot;, &quot;AV&quot;, &quot;AW&quot;, &quot;AX&quot;, &quot;AY&quot;, &quot;AZ&quot;, &quot;BA&quot;, &quot;BB&quot;, &quot;BC&quot;, &quot;BD&quot;, &quot;BE&quot;, &quot;BF&quot;, &quot;BG&quot;, &quot;BH&quot;]</span>
+</code></pre></div>
+
+
+<p>repeatを使うと、より簡潔に書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">succ</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;, &quot;K&quot;, &quot;L&quot;, &quot;M&quot;, &quot;N&quot;, &quot;O&quot;, &quot;P&quot;, &quot;Q&quot;, &quot;R&quot;, &quot;S&quot;, &quot;T&quot;, &quot;U&quot;, &quot;V&quot;, &quot;W&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;, &quot;AA&quot;, &quot;AB&quot;, &quot;AC&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AF&quot;, &quot;AG&quot;, &quot;AH&quot;, &quot;AI&quot;, &quot;AJ&quot;, &quot;AK&quot;, &quot;AL&quot;, &quot;AM&quot;, &quot;AN&quot;, &quot;AO&quot;, &quot;AP&quot;, &quot;AQ&quot;, &quot;AR&quot;, &quot;AS&quot;, &quot;AT&quot;, &quot;AU&quot;, &quot;AV&quot;, &quot;AW&quot;, &quot;AX&quot;, &quot;AY&quot;, &quot;AZ&quot;, &quot;BA&quot;, &quot;BB&quot;, &quot;BC&quot;, &quot;BD&quot;, &quot;BE&quot;, &quot;BF&quot;, &quot;BG&quot;, &quot;BH&quot;]</span>
+</code></pre></div>
+
+
+<h2>8. 2進数10110011を10進変換しなさい（String#to_iを使ってはいけない）。</h2>
+
+<p>repeatを使わない例。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">b</span> <span class="o">=</span> <span class="mi">10110011</span>
+<span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+  <span class="n">b</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">divmod</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> 
+  <span class="n">sum</span> <span class="o">+=</span> <span class="n">r</span><span class="o">*</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span>
+  <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="n">sum</span> <span class="c1"># =&gt; 179</span>
+</code></pre></div>
+
+
+<p>repeatを使って。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">digit</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span> <span class="p">}</span>
+
+<span class="mi">10110011</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span><span class="o">|</span> <span class="n">m</span><span class="o">.</span><span class="n">divmod</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">*</span><span class="n">digit</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="c1"># =&gt; 179</span>
+</code></pre></div>
+
+
+<p>あまり簡潔じゃないですね^ ^;</p>
+
+<h2>9. ランダムなブール値の並び20項を生成しなさい。但し、trueが連続してはいけない。</h2>
+
+<p>repeatを使わないと、ローカル変数で前の値を保持して、次のように書くのでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">prev</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="mi">20</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span>
+  <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">].</span><span class="n">sample</span>
+<span class="k">end</span>
+<span class="n">seq</span> <span class="c1"># =&gt; [false, true, false, false, true, false, true, false, false, true, false, true, false, true, false, true, false, false, false, false]</span>
+</code></pre></div>
+
+
+<p>repeatを使うと、これは次のように簡潔に書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="kp">true</span><span class="o">.</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">bool</span><span class="o">|</span> <span class="n">bool</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">].</span><span class="n">sample</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, false, true, false]</span>
+</code></pre></div>
+
+
+<h2>10. ランダムなブール値の並び20項を生成しなさい。但し、trueが3つ連続してはいけない。</h2>
+
+<p>repeatを使わない場合、先の例と同様にローカル変数で前の値２つを保持する必要があります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">prev</span> <span class="o">=</span> <span class="n">prev2</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="mi">20</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span>
+  <span class="n">tmp</span> <span class="o">=</span> <span class="n">prev</span>
+  <span class="n">prev</span> <span class="o">=</span> <span class="o">[</span><span class="n">prev</span><span class="p">,</span> <span class="n">prev2</span><span class="o">].</span><span class="n">all?</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">].</span><span class="n">sample</span>
+  <span class="n">prev2</span> <span class="o">=</span> <span class="n">tmp</span>
+  <span class="n">prev</span>
+<span class="k">end</span>
+<span class="n">seq</span> <span class="c1"># =&gt; [false, false, false, false, true, false, false, true, false, true, true, false, false, false, true, true, false, false, false, false]</span>
+</code></pre></div>
+
+
+<p>repeatを使うと、次のように書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="o">[</span> <span class="n">b</span><span class="p">,</span> <span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">].</span><span class="n">all?</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">].</span><span class="n">sample</span> <span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [true, false, true, true, false, false, true, false, false, false, true, false, false, true, false, true, true, false, false, true]</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p><code>Object#repeat</code>を紹介しました。なかなか便利そうですよね？また、調子に乗ってFeatureリクエストしちゃおうかな..</p>
+
+<hr />
+
+<p>(追記：2012-07-14)</p>
+
+<p>大変なことが起こりました..</p>
+
+<p>この記事に対し昨日、Matzがつぶやいたのです。</p>
+
+<p><img src="/assets/images/matz_tweet_repeat.png" alt="matz says" /></p>
+
+<p>このつぶやきを僕は、<strong>「名前さえ良ければRubyに採用してもいいよとMatzが言ってる」</strong>と解釈していいのですか？それとも、<strong>「昨日言ってくれれば良かったんだけどねー（つまり「おととい来やがれ」の婉曲表現）」</strong>と解釈すべきなのですか？</p>
+
+<p>いや、真実はどうであれ、ここはポジティブに前者だと考えるべきでしょう。The Power of Positive Thinking.</p>
+
+<h3>名前重要</h3>
+
+<p>そうすると、名前です、なまえ。<strong>「名前重要」</strong>。もちろん個人的には<code>repeat</code>はなかなかな名前だと思っていたのですが、ここはまず、なぜ<code>repeat</code>がMatzにとって「名前がなあ」なのか考えてみます。</p>
+
+<p><code>repeat</code>という語は複数のプログラミング言語で使われており、それは概ねRubyにおける<code>loop</code>と等価、つまり<strong>「単純繰り返し」</strong>のための機能を提供するもののようです。この点からすると、Object#repeatはその機能を知らないユーザにとっては、次のような機能を提供するものと想像される可能性があります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [1, 1, 1, 1, 1]</span>
+</code></pre></div>
+
+
+<p>つまりrepeatは単にレシーバオブジェクトを繰り返した結果を返すメソッドであると想像するのです。なるほど合理性があります。恐らくMatzもこのようなことを懸念したんだと想像します。</p>
+
+<p>一方で、<code>Object#repeat</code>の本来の機能は「そのレシーバオブジェクトを初期値として、渡されたブロックを繰り返し適用する」ことで、より正確に言うならば、<strong>「レシーバオブジェクトを繰り返すのではなく、ブロック内手続きをレシーバオブジェクトに繰り返し適用する」</strong>メソッドなのです。</p>
+
+<p>再考すると確かに、repeatではその機能を説明しきれていない感がありますね。</p>
+
+<p>そこで、代替案を考えてみましたよ！すなわち、「繰り返し適用」を意味する<code>repeat_apply</code>です。ちょっとメソッド名が長くなる点に不満はありますが、その機能をより的確に表していると言えるんじゃないでしょうか。</p>
+
+<p>ということで、<code>Object#repeat</code>を取り下げ、<code>Object#repeat_apply</code>でどうでしょう？</p>
+
+<p>って、ここで「どうでしょう？」っていっても何も進まないでしょうけど...。結果はどうであれ、機能的には評判が良い感じなので、Featureリクエストの準備します。ちなみに<code>repeat_call</code>という案も第２候補として挙げておきます。</p>
+
+<hr />
+
+<p>(追記：2012-07-20)</p>
+
+<p>本日、<code>Object#sequence</code>でFeatureリクエストを出しました。リクエストにおいては、コメントおよびツイートを通して頂いた名称のアイディアを共に記載しました。ありがとうございます。</p>
+
+<blockquote><p><a href="http://bugs.ruby-lang.org/issues/6758" title="Feature #6758: Object#sequence - ruby-trunk - Ruby Issue Tracking System">Feature #6758: Object#sequence - ruby-trunk - Ruby Issue Tracking System</a></p></blockquote>
+
+<hr />
+
+<p>関連記事：</p>
+
+<p><a href="http://melborne.github.com/2011/07/01/Ruby-repeat/" title="Rubyのrepeat関数でフィボナッチ、トリボナッチ、テトラナッチ！">Rubyのrepeat関数でフィボナッチ、トリボナッチ、テトラナッチ！</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/リピートの法則-上妻-英夫/dp/4837804535?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4837804535"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41D%2BG1ons7L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/リピートの法則-上妻-英夫/dp/4837804535?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4837804535">リピートの法則</a> by 上妻 英夫</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyにおけるシーケンスはObject#repeatに任せなさい！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" data-text="RubyにおけるシーケンスはObject#repeatに任せなさい！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/07/06/enumerable-memo" title="怠惰で短気で傲慢な君に贈るRubyの遅延評価">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/07/16/ruby-methods-analysis" title="Ruby、君のオブジェクトはなんて呼び出せばいいの？">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#repeat-ref">repeat <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyにおけるシーケンスはObject#repeatに任せなさい！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" data-text="RubyにおけるシーケンスはObject#repeatに任せなさい！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/07/12/object-repeat-take-care-of-sequence/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

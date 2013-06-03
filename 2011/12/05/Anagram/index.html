@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyでアナグラムしようよ</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>05 December 2011</span></div>
+  <h1 class='page-title'><a href="/2011/12/05/Anagram">Rubyでアナグラムしようよ</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>アナグラム(anagram)をご存知ですか？アナグラムは単語や文の文字を入れ替えて、別の意味を持った単語や文を作る遊びです。例えば"note"には"tone"、"master"には"stream"というアナグラムがあります。</p>
+
+<p>もちろん日本語アナグラムもあります。"タモリ"は"モリタ"のアナグラムです。"いきるいみなんて"と"みんないきている"は、一見哲学的問答に見えますが、これもアナグラムなんです:)</p>
+
+<p>少しやって頂ければ分かりますが、アナグラムを見つけるのは意外と難しいです。試しに"friend" と"setter"と"resort"のアナグラムをそれぞれちょっと考えてみてください。(答え)<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup></p>
+
+<p>そんなわけで..</p>
+
+<p>Rubyにアナグラムを見つけてもらいましょう。</p>
+
+<h2>RubyでAnagramを作る</h2>
+
+<p>指定の英単語に対する複数のアナグラムを見つけるプログラムを考えます。こんな感じです。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">find_anagrams</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [&#39;mean&#39;, &#39;amen&#39;]</span>
+</code></pre></div>
+
+
+<p>これを実現するには少なくとも次のステップが必要そうです。</p>
+
+<ol>
+<li>英単語リストを用意する。</li>
+<li>指定単語のアナグラムを英単語リストから見つけ出す。</li>
+</ol>
+
+
+<h2>指定単語のアナグラムを英単語リストから見つけ出す</h2>
+
+<p>単語リストはどこかにきっとあるでしょうから、後回しにして..アナグラムを見つける方法を先に考えます。</p>
+
+<p>先に示した"name"と"mean"と"amen"はアナグラムですが、どうやってRubyにそれを判断させればいいでしょうか。</p>
+
+<p>いい方法を思いつきました。単語を文字で区切って配列化し引き算するんです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">w1</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="s1">&#39;amen&#39;</span>
+<span class="n">w4</span> <span class="o">=</span> <span class="s1">&#39;man&#39;</span>
+<span class="n">ws1</span> <span class="o">=</span> <span class="n">w1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;n&quot;, &quot;a&quot;, &quot;m&quot;, &quot;e&quot;]</span>
+<span class="n">ws2</span> <span class="o">=</span> <span class="n">w2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;m&quot;, &quot;e&quot;, &quot;a&quot;, &quot;n&quot;]</span>
+<span class="n">ws3</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;m&quot;, &quot;e&quot;, &quot;n&quot;]</span>
+<span class="n">ws4</span> <span class="o">=</span> <span class="n">w4</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;m&quot;, &quot;a&quot;, &quot;n&quot;]</span>
+<span class="n">ws1</span> <span class="o">-</span> <span class="n">ws2</span> <span class="c1"># =&gt; []</span>
+<span class="n">ws1</span> <span class="o">-</span> <span class="n">ws3</span> <span class="c1"># =&gt; []</span>
+<span class="n">ws1</span> <span class="o">-</span> <span class="n">ws4</span> <span class="c1"># =&gt; [&quot;e&quot;]</span>
+</code></pre></div>
+
+
+<p>空配列になったらアナグラムです!</p>
+
+<p>と、言いたいのですがこれはダメです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">w1</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+<span class="n">w5</span> <span class="o">=</span> <span class="s1">&#39;amenman&#39;</span>
+<span class="n">w1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="o">-</span> <span class="n">w5</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; []</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="s1">&#39;aaabbbccc&#39;</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
+<span class="n">w1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="o">-</span> <span class="n">w2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; []</span>
+</code></pre></div>
+
+
+<p>引く配列要素が多かったり重複要素がある場合は、期待する結果になりません。</p>
+
+<p>実はいい方法があります。各単語のシグネチャーを作ってこれを比較するのです。で、このシグネチャーは何かというと、単語の文字をソートしたものです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">w1</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+<span class="n">w1</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :aemn</span>
+</code></pre></div>
+
+
+<p>アナグラムな単語はこのシグネチャーがおなじになるはずです。</p>
+
+<p>やってみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">w1</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="s1">&#39;amen&#39;</span>
+<span class="n">w4</span> <span class="o">=</span> <span class="s1">&#39;amenman&#39;</span>
+<span class="n">sig1</span> <span class="o">=</span> <span class="n">w1</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :aemn</span>
+<span class="n">sig2</span> <span class="o">=</span> <span class="n">w2</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :aemn</span>
+<span class="n">sig3</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :aemn</span>
+<span class="n">sig4</span> <span class="o">=</span> <span class="n">w4</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :aaemmnn</span>
+<span class="n">sig1</span> <span class="o">==</span> <span class="n">sig2</span> <span class="c1"># =&gt; true</span>
+<span class="n">sig1</span> <span class="o">==</span> <span class="n">sig3</span> <span class="c1"># =&gt; true</span>
+<span class="n">sig1</span> <span class="o">==</span> <span class="n">sig4</span> <span class="c1"># =&gt; false</span>
+</code></pre></div>
+
+
+<p>いいですね!<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup></p>
+
+<p>ではこれをメソッド化しておきましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">signature</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+  <span class="n">word</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">join</span><span class="o">.</span><span class="n">intern</span>
+<span class="k">end</span>
+<span class="sx">%w(name mean amen man)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="n">signature</span> <span class="n">word</span> <span class="p">}</span> <span class="c1"># =&gt; [:aemn, :aemn, :aemn, :amn]</span>
+</code></pre></div>
+
+
+<h2>単語リスト</h2>
+
+<p>さて次に単語リストを用意します。ネットから拾う手もありますが、都合の良いことにMacの<code>/usr/share/dict/</code>には最初から単語リストwordsが入ってるんです。</p>
+
+<p>覗いてみます。</p>
+
+<div class="highlight"><pre><code class="bash">% head /usr/share/dict/words
+A
+a
+aa
+aal
+aalii
+aam
+Aani
+aardvark
+aardwolf
+Aaron
+% tail /usr/share/dict/words 
+zymotoxic
+zymurgy
+Zyrenian
+Zyrian
+Zyryan
+zythem
+Zythia
+zythum
+Zyzomys
+Zyzzogeton
+</code></pre></div>
+
+
+<p>語数を調べましょう。</p>
+
+<div class="highlight"><pre><code class="bash">% wc -l /usr/share/dict/words
+  234936 /usr/share/dict/words
+</code></pre></div>
+
+
+<p>十分ですね。</p>
+
+<h2>アナグラム辞書</h2>
+
+<p>さて先の方針で単語同士を直接比較するのではなくて、そのシグネチャーを比較することとしました。ですから単語リストの各単語をそのシグネチャーで、引ける辞書(アナグラム辞書)を作る必要があります。毎回単語リストのシグネチャーを計算するのは効率的ではありませんからね。</p>
+
+<p>データ構造は次のようなものがよさそうです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">{</span><span class="ss">:aemn</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;amen&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:amn</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;man&#39;</span><span class="o">]</span><span class="p">}</span>
+</code></pre></div>
+
+
+<p>シグネチャーをkeyとして、それを持った単語のリストをvalueとするハッシュです。</p>
+
+<p>それでは単語リストからアナグラム辞書を作るbuild_anagramsメソッドを定義しましょう。入力は単語の配列です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">build_anagrams</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+  <span class="n">words</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="o">[</span><span class="n">signature</span><span class="p">(</span><span class="n">word</span><span class="p">),</span> <span class="n">word</span><span class="o">]</span> <span class="p">}</span>
+       <span class="o">.</span><span class="n">inject</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">sign</span><span class="o">]</span> <span class="o">||=</span> <span class="o">[]</span><span class="p">;</span> <span class="n">h</span><span class="o">[</span><span class="n">sign</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">word</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
+       <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">sign</span><span class="p">,</span> <span class="n">words</span><span class="o">|</span> <span class="n">words</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>まずmapでシグネチャーと単語の組みを作って、injectで共通のシグネチャーの指す配列に単語を追加していきます。injectの使い方では注意点が２つあります。１つは<code>h[sign] ||= []</code>での初期化が必要なこと、１つは各イテレートでハッシュhを返すことです。ちなみに次のような書き方もできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">build_anagrams</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+  <span class="n">mem</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">{</span><span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span><span class="p">}</span>
+  <span class="n">words</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="o">[</span><span class="n">signature</span><span class="p">(</span><span class="n">word</span><span class="p">),</span> <span class="n">word</span><span class="o">]</span> <span class="p">}</span>
+       <span class="o">.</span><span class="n">each_with_object</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">word</span><span class="p">),</span> <span class="n">h</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">sign</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">word</span> <span class="p">}</span>
+       <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">sign</span><span class="p">,</span> <span class="n">words</span><span class="o">|</span> <span class="n">words</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>さてこのメソッドを試してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">word_list</span> <span class="o">=</span> <span class="sx">%w(name mean amen man)</span>
+<span class="no">Anagrams</span> <span class="o">=</span> <span class="n">build_anagrams</span><span class="p">(</span><span class="n">word_list</span><span class="p">)</span> <span class="c1"># =&gt; {:aemn=&gt;[&quot;name&quot;, &quot;mean&quot;, &quot;amen&quot;], :amn=&gt;[&quot;man&quot;]}</span>
+</code></pre></div>
+
+
+<p>いいですね!</p>
+
+<p>これでもう最初に示した。find_anagramsメソッドが書けますね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">find_anagrams</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+  <span class="n">sign</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="no">Anagrams</span><span class="o">[</span><span class="n">sign</span><span class="o">]</span>
+  <span class="n">res</span> <span class="p">?</span> <span class="n">res</span> <span class="o">-</span> <span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="p">:</span> <span class="o">[]</span>
+<span class="k">end</span>
+<span class="n">find_anagrams</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;mean&quot;, &quot;amen&quot;]</span>
+<span class="n">find_anagrams</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">)</span> <span class="c1"># =&gt; []</span>
+</code></pre></div>
+
+
+<h2>単語リストの読み込み</h2>
+
+<p>ここまで来ればあと一歩です。単語リストのファイルをオープンして、メモリー上に読み出し、そこから単語の配列を作ります。最初は小さな単語ファイル(sample)を用意して、試してみるのがいいですね。</p>
+
+<div class="highlight"><pre><code class="bash">name
+mean
+amen
+man
+man
+MAN
+street
+sweet
+Tester
+retest
+word
+world
+tower
+rowet
+WROTE
+X
+a
+monopersulphuric
+b
+</code></pre></div>
+
+
+<p>コードは次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">build_wordlist</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="n">word</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="no">WORDS</span> <span class="o">=</span> <span class="n">build_wordlist</span><span class="p">(</span><span class="s1">&#39;./sample&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;name&quot;, &quot;mean&quot;, &quot;amen&quot;, &quot;man&quot;, &quot;street&quot;, &quot;sweet&quot;, &quot;tester&quot;, &quot;retest&quot;, &quot;word&quot;, &quot;world&quot;, &quot;tower&quot;, &quot;rowet&quot;, &quot;wrote&quot;, &quot;monopersulphuric&quot;]</span>
+</code></pre></div>
+
+
+<p>改行を除去して全て小文字化し、重複と空行と一文字単語を除去します。</p>
+
+<p>さあ完成です!コードをまとめてみましょう。</p>
+
+<div><script src='https://gist.github.com/1429196.js?file=anagram.rb'></script>
+<noscript><pre><code>def signature(word)
+  word.downcase.chars.sort.join.intern
+end
+
+def build_anagrams(words)
+  words.map { |word| [signature(word), word] }
+       .inject({}) { |h, (sign, word)| h[sign] ||= []; h[sign] &lt;&lt; word; h }
+       .select { |sign, words| words.size &gt; 1 }
+end
+
+def find_anagrams(word)
+  sign = signature(word)
+  res = Anagrams[sign]
+  res ? res - [word] : []
+end
+
+def build_wordlist(path)
+  File.open(path) do |f|
+    f.map { |line| line.chomp.downcase }.uniq.reject { |word| word.size &lt; 2 }
+  end
+end
+
+WORDS = build_wordlist(&#39;/usr/share/dict/words&#39;)
+Anagrams = build_anagrams(WORDS)
+
+find_anagrams(&quot;name&quot;) # =&gt; [&quot;amen&quot;, &quot;enam&quot;, &quot;mane&quot;, &quot;mean&quot;, &quot;nema&quot;]
+find_anagrams(&quot;tower&quot;) # =&gt; [&quot;rowet&quot;, &quot;wrote&quot;]
+find_anagrams(&quot;tester&quot;) # =&gt; [&quot;retest&quot;, &quot;setter&quot;, &quot;street&quot;]
+find_anagrams(&quot;sister&quot;) # =&gt; [&quot;resist&quot;, &quot;restis&quot;]
+find_anagrams(&quot;friend&quot;) # =&gt; [&quot;finder&quot;, &quot;redfin&quot;, &quot;refind&quot;]</code></pre></noscript></div>
+
+
+<p>Rubyならアナグラムも簡単ですね!</p>
+
+<h2>Anagramライブラリ</h2>
+
+<p>で、ここまでやったので、Anagramライブラリを書いて見ました。Rspecの練習を兼ねまして..^ ^;</p>
+
+<p><a href="https://github.com/melborne/anagram">melborne/anagram - GitHub</a></p>
+
+<h2>anagramコマンド</h2>
+
+<p>後述するAnagram辞書を作ると、Terminalでanagramコマンドが使えます。</p>
+
+<div class="highlight"><pre><code class="bash">% ./anagram dream team ruby
+<span class="nv">dream</span> <span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;armed&quot;</span>, <span class="s2">&quot;derma&quot;</span>, <span class="s2">&quot;ramed&quot;</span><span class="o">]</span>
+<span class="nv">team</span> <span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;mate&quot;</span>, <span class="s2">&quot;meat&quot;</span>, <span class="s2">&quot;meta&quot;</span>, <span class="s2">&quot;tame&quot;</span>, <span class="s2">&quot;tema&quot;</span><span class="o">]</span>
+<span class="nv">ruby</span> <span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;bury&quot;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>アナグラムを見つけたい１または複数の単語をコマンドの引数として渡します。</p>
+
+<h2>Anagram辞書の作成</h2>
+
+<p>Anagram.buildクラスメソッドでAnagram辞書を作ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% irb</span>
+<span class="sx">&gt;&gt; </span><span class="nb">require</span> <span class="s1">&#39;anagram&#39;</span>
+<span class="o">&gt;&gt;</span> 
+<span class="o">&gt;&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/usr/share/dict/words&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+<span class="o">&gt;&gt;</span>   <span class="no">Angram</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="k">end</span>
+</code></pre></div>
+
+
+<p>辞書はカレントディレクトリにYAMLファイル(anagram.yml)で保存されます。</p>
+
+<h2>Anagram.findクラスメソッド</h2>
+
+<p>Anagram辞書ができればfindクラスメソッドが使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;time&#39;</span> <span class="c1">#=&gt; [&quot;emit&quot;, &quot;item&quot;, &quot;mite&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;beer&#39;</span> <span class="c1">#=&gt; [&quot;bere&quot;, &quot;bree&quot;]</span>
+</code></pre></div>
+
+
+<h2>Anagram.anagrams?クラスメソッド</h2>
+
+<p>このメソッドは引数に渡した単語同士がアナグラムか検査します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">anagrams?</span> <span class="s1">&#39;beer&#39;</span><span class="p">,</span> <span class="s1">&#39;bair&#39;</span> <span class="c1">#=&gt; false</span>
+<span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">anagrams?</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;emit&#39;</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span> <span class="c1">#=&gt; true</span>
+</code></pre></div>
+
+
+<p>anagrams?メソッドは日本語でも文章でも使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">anagrams?</span> <span class="s1">&#39;いきるいみなんて&#39;</span><span class="p">,</span> <span class="s1">&#39;みんないきている&#39;</span> <span class="c1">#=&gt; true</span>
+<span class="o">&gt;&gt;</span> <span class="n">sentence1</span> <span class="o">=</span> <span class="s2">&quot;To be or not to be: that is the question; whether &#39;tis nobler in the mind to suffer the slings and arrows of outrageous fortune...&quot;</span>
+<span class="o">&gt;&gt;</span> <span class="n">sentence2</span> <span class="o">=</span> <span class="s2">&quot;In one of the Bard&#39;s best-thought-of tragedies our insistent hero, Hamlet, queries on two fronts about how life turns rotten.&quot;</span>
+<span class="o">&gt;&gt;</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">anagrams?</span><span class="p">(</span><span class="n">sentence1</span><span class="p">,</span> <span class="n">sentence2</span><span class="p">)</span> <span class="c1">#=&gt; true</span>
+</code></pre></div>
+
+
+<p>こんな長いアナグラムを考える人がいるんですね..</p>
+
+<h2>Anagramオブジェクト</h2>
+
+<p>Anagram.newでAnagramオブジェクトを生成することで、Anagram#find, #longest, #most および#allの各メソッドが使えるようになります。Anagram#findはAnagram.findと同じです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="n">an</span> <span class="o">=</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">new</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;visit&#39;</span> <span class="c1">#=&gt; [&quot;vitis&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;master&#39;</span> <span class="c1">#=&gt; [&quot;martes&quot;, &quot;remast&quot;, &quot;stream&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;version&#39;</span> <span class="c1">#=&gt; []</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;bridge&#39;</span> <span class="c1">#=&gt; [&quot;begird&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;paper&#39;</span> <span class="c1">#=&gt; [&quot;rappe&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;speech&#39;</span> <span class="c1">#=&gt; []</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;take&#39;</span> <span class="c1">#=&gt; [&quot;kate&quot;, &quot;keta&quot;, &quot;teak&quot;]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">find</span> <span class="s1">&#39;language&#39;</span> <span class="c1">#=&gt; [&quot;ganguela&quot;]</span>
+<span class="o">&gt;&gt;</span> 
+</code></pre></div>
+
+
+<p>Anagram#longest は辞書における長い単語のアナグラムを上位から表示します。Anagram#most は最も組数の多いアナグラムを上位から表示します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">longest</span><span class="p">(</span><span class="ss">size</span><span class="p">:</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">l</span><span class="o">|</span> <span class="nb">p</span> <span class="n">l</span><span class="p">}</span>
+<span class="o">[</span><span class="s2">&quot;hydropneumopericardium&quot;</span><span class="p">,</span> <span class="s2">&quot;pneumohydropericardium&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;cholecystoduodenostomy&quot;</span><span class="p">,</span> <span class="s2">&quot;duodenocholecystostomy&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;glossolabiopharyngeal&quot;</span><span class="p">,</span> <span class="s2">&quot;labioglossopharyngeal&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;chromophotolithograph&quot;</span><span class="p">,</span> <span class="s2">&quot;photochromolithograph&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;duodenopancreatectomy&quot;</span><span class="p">,</span> <span class="s2">&quot;pancreatoduodenectomy&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;anatomicopathological&quot;</span><span class="p">,</span> <span class="s2">&quot;pathologicoanatomical&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;encephalomeningocele&quot;</span><span class="p">,</span> <span class="s2">&quot;meningoencephalocele&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;glossolabiolaryngeal&quot;</span><span class="p">,</span> <span class="s2">&quot;labioglossolaryngeal&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;anatomicophysiologic&quot;</span><span class="p">,</span> <span class="s2">&quot;physiologicoanatomic&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;pericardiacophrenic&quot;</span><span class="p">,</span> <span class="s2">&quot;phrenicopericardiac&quot;</span><span class="o">]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">most</span><span class="p">(</span><span class="ss">size</span><span class="p">:</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="nb">p</span> <span class="n">m</span><span class="p">}</span>
+<span class="o">[</span><span class="s2">&quot;angor&quot;</span><span class="p">,</span> <span class="s2">&quot;argon&quot;</span><span class="p">,</span> <span class="s2">&quot;goran&quot;</span><span class="p">,</span> <span class="s2">&quot;grano&quot;</span><span class="p">,</span> <span class="s2">&quot;groan&quot;</span><span class="p">,</span> <span class="s2">&quot;nagor&quot;</span><span class="p">,</span> <span class="s2">&quot;orang&quot;</span><span class="p">,</span> <span class="s2">&quot;organ&quot;</span><span class="p">,</span> <span class="s2">&quot;rogan&quot;</span><span class="p">,</span> <span class="s2">&quot;ronga&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;elaps&quot;</span><span class="p">,</span> <span class="s2">&quot;lapse&quot;</span><span class="p">,</span> <span class="s2">&quot;lepas&quot;</span><span class="p">,</span> <span class="s2">&quot;pales&quot;</span><span class="p">,</span> <span class="s2">&quot;salep&quot;</span><span class="p">,</span> <span class="s2">&quot;saple&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal&quot;</span><span class="p">,</span> <span class="s2">&quot;slape&quot;</span><span class="p">,</span> <span class="s2">&quot;spale&quot;</span><span class="p">,</span> <span class="s2">&quot;speal&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;caret&quot;</span><span class="p">,</span> <span class="s2">&quot;carte&quot;</span><span class="p">,</span> <span class="s2">&quot;cater&quot;</span><span class="p">,</span> <span class="s2">&quot;crate&quot;</span><span class="p">,</span> <span class="s2">&quot;creat&quot;</span><span class="p">,</span> <span class="s2">&quot;creta&quot;</span><span class="p">,</span> <span class="s2">&quot;react&quot;</span><span class="p">,</span> <span class="s2">&quot;recta&quot;</span><span class="p">,</span> <span class="s2">&quot;trace&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;ester&quot;</span><span class="p">,</span> <span class="s2">&quot;estre&quot;</span><span class="p">,</span> <span class="s2">&quot;reest&quot;</span><span class="p">,</span> <span class="s2">&quot;reset&quot;</span><span class="p">,</span> <span class="s2">&quot;steer&quot;</span><span class="p">,</span> <span class="s2">&quot;stere&quot;</span><span class="p">,</span> <span class="s2">&quot;stree&quot;</span><span class="p">,</span> <span class="s2">&quot;terse&quot;</span><span class="p">,</span> <span class="s2">&quot;tsere&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;leapt&quot;</span><span class="p">,</span> <span class="s2">&quot;palet&quot;</span><span class="p">,</span> <span class="s2">&quot;patel&quot;</span><span class="p">,</span> <span class="s2">&quot;pelta&quot;</span><span class="p">,</span> <span class="s2">&quot;petal&quot;</span><span class="p">,</span> <span class="s2">&quot;plate&quot;</span><span class="p">,</span> <span class="s2">&quot;pleat&quot;</span><span class="p">,</span> <span class="s2">&quot;tepal&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;armet&quot;</span><span class="p">,</span> <span class="s2">&quot;mater&quot;</span><span class="p">,</span> <span class="s2">&quot;metra&quot;</span><span class="p">,</span> <span class="s2">&quot;ramet&quot;</span><span class="p">,</span> <span class="s2">&quot;tamer&quot;</span><span class="p">,</span> <span class="s2">&quot;terma&quot;</span><span class="p">,</span> <span class="s2">&quot;trame&quot;</span><span class="p">,</span> <span class="s2">&quot;trema&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;asteer&quot;</span><span class="p">,</span> <span class="s2">&quot;easter&quot;</span><span class="p">,</span> <span class="s2">&quot;eastre&quot;</span><span class="p">,</span> <span class="s2">&quot;reseat&quot;</span><span class="p">,</span> <span class="s2">&quot;saeter&quot;</span><span class="p">,</span> <span class="s2">&quot;seater&quot;</span><span class="p">,</span> <span class="s2">&quot;staree&quot;</span><span class="p">,</span> <span class="s2">&quot;teaser&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;arist&quot;</span><span class="p">,</span> <span class="s2">&quot;astir&quot;</span><span class="p">,</span> <span class="s2">&quot;sitar&quot;</span><span class="p">,</span> <span class="s2">&quot;stair&quot;</span><span class="p">,</span> <span class="s2">&quot;stria&quot;</span><span class="p">,</span> <span class="s2">&quot;tarsi&quot;</span><span class="p">,</span> <span class="s2">&quot;tisar&quot;</span><span class="p">,</span> <span class="s2">&quot;trias&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;laster&quot;</span><span class="p">,</span> <span class="s2">&quot;lastre&quot;</span><span class="p">,</span> <span class="s2">&quot;rastle&quot;</span><span class="p">,</span> <span class="s2">&quot;relast&quot;</span><span class="p">,</span> <span class="s2">&quot;resalt&quot;</span><span class="p">,</span> <span class="s2">&quot;salter&quot;</span><span class="p">,</span> <span class="s2">&quot;slater&quot;</span><span class="p">,</span> <span class="s2">&quot;stelar&quot;</span><span class="o">]</span>
+<span class="o">[</span><span class="s2">&quot;dater&quot;</span><span class="p">,</span> <span class="s2">&quot;derat&quot;</span><span class="p">,</span> <span class="s2">&quot;detar&quot;</span><span class="p">,</span> <span class="s2">&quot;drate&quot;</span><span class="p">,</span> <span class="s2">&quot;rated&quot;</span><span class="p">,</span> <span class="s2">&quot;trade&quot;</span><span class="p">,</span> <span class="s2">&quot;tread&quot;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>Anagram#all は辞書におけるすべてのアナグラムの組みを表示します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">size</span> <span class="c1">#=&gt; 14212</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">take</span> <span class="mi">5</span> <span class="c1">#=&gt; [[&quot;aal&quot;, &quot;ala&quot;], [&quot;aam&quot;, &quot;ama&quot;], [&quot;aaronic&quot;, &quot;nicarao&quot;, &quot;ocarina&quot;], [&quot;aaronite&quot;, &quot;aeration&quot;], [&quot;aaru&quot;, &quot;aura&quot;]]</span>
+<span class="o">&gt;&gt;</span> <span class="n">an</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">set</span><span class="o">|</span> <span class="n">set</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">set</span><span class="o">.</span><span class="n">first</span> <span class="o">=~</span> <span class="sr">/^ru/</span><span class="p">}</span>
+<span class="o">=&gt;</span> <span class="o">[[</span><span class="s2">&quot;ruinate&quot;</span><span class="p">,</span> <span class="s2">&quot;taurine&quot;</span><span class="p">,</span> <span class="s2">&quot;uranite&quot;</span><span class="p">,</span> <span class="s2">&quot;urinate&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;runite&quot;</span><span class="p">,</span> <span class="s2">&quot;triune&quot;</span><span class="p">,</span> <span class="s2">&quot;uniter&quot;</span><span class="p">,</span> <span class="s2">&quot;untire&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rusa&quot;</span><span class="p">,</span> <span class="s2">&quot;saur&quot;</span><span class="p">,</span> <span class="s2">&quot;sura&quot;</span><span class="p">,</span> <span class="s2">&quot;ursa&quot;</span><span class="p">,</span> <span class="s2">&quot;usar&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;ruse&quot;</span><span class="p">,</span> <span class="s2">&quot;suer&quot;</span><span class="p">,</span> <span class="s2">&quot;sure&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="o">]]</span>
+</code></pre></div>
+
+
+<p>なおAnagram.newは単語リストファイルを引数に取ることができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="n">an</span> <span class="o">=</span> <span class="no">Anagram</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">open</span> <span class="s1">&#39;sample_dic&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>こうするとAnagram辞書を作らずに各インスタンスメソッドが使えるようになります。</p>
+
+<p>暇なときに遊んでやってください :-)</p>
+
+<p>(追記:2011-12-07) コードを一部修正しました。</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>https://twitter.com/#!/Chigami/status/96606063931047936 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>ホントのことを言えば、このブログから先のツイートを知ったのでした^ ^; <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>"friend"には["finder", "redfin", "refind"], "setter"には["retest" "street" "tester"], "resort"には["roster", "sorter", "storer"]があります <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>この方法は「珠玉のプログラミング」に載っていました。 <a href='#fnref:4' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/12/05/Anagram/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでアナグラムしようよ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/12/05/Anagram/" data-text="Rubyでアナグラムしようよ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/12/05/Anagram/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/12/05/Anagram/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/11/20/Ruby" title="Rubyで日本の色でお絵かきしようよ!">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/12/05/Ruby" title="Rubyでビックリ階乗を解こう!">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#anagram-ref">anagram <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/12/05/Anagram/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでアナグラムしようよ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/12/05/Anagram/" data-text="Rubyでアナグラムしようよ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/12/05/Anagram/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/12/05/Anagram/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

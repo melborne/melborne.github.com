@@ -1,0 +1,836 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyのメタプログラミングでInterpreterパターンを実装しよう！</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>25 July 2011</span></div>
+  <h1 class='page-title'><a href="/2011/07/25/Ruby-Interpreter">RubyのメタプログラミングでInterpreterパターンを実装しよう！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「Rubyによるデザインパターン」(著：ラス・オルセン)は、GoFの23あるデザインパターンのうちの14個についてRubyによる実装とその解説を試みた書籍です。</p>
+
+<p><a href="http://www.amazon.co.jp/Rubyによるデザインパターン-Russ-Olsen/dp/4894712857?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4894712857"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41PNvUxHtgL._SL160_.jpg" /></a></p>
+
+<p><a href="http://www.amazon.co.jp/Rubyによるデザインパターン-Russ-Olsen/dp/4894712857?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4894712857">Rubyによるデザインパターン</a> by Russ Olsen and ラス・オルセン</p>
+
+<h2>Interpreterパターン</h2>
+
+<p>その中にInterpreterパターンを取り扱った章(15)があります。Interpreterパターンでは言語上に問題解決に特化した専用言語を構築します。専用言語で書かれたプログラムはパーサで抽象構文木(AST)というオブジェクトのツリー構造に変換され、評価(interpret)されます。ASTはオブジェクトノードの集まりですが、これはその言語のプリミティブなノードである終端(terminal)と、終端への参照を含む高階の非終端(nonterminal)で構成されます。</p>
+
+<p>本書ではRubyによるInterpreterパターンの実装例として、ファイル検索用インタープリタが紹介されています。このインタープリタでは最終的に以下のような書き方でファイル検索が行えます。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">&#39;*.mp3&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>説明は不要と思いますが、この記述で1KB以上の書き込み可能ファイルと、mp3ファイルの集合が表現されています。Rubyをよく知っている人なら、このプログラムを構文解析するのにパーサは不要であることに気づくでしょう。</p>
+
+<p>そう、Rubyでは演算子のように使える <code>&amp;</code> や <code>|</code> メソッドを活用することで、パーサ無しで利用者にやさしい専用言語を構築できるのです！つまりこれは内部DSLですね。</p>
+
+<p>そして特定のディレクトリでこの集合を評価することで、該当ディレクトリに含まれるファイルリストが得られます。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">file_exp</span> <span class="o">=</span> <span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">&#39;*.mp3&#39;</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">file_exp</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;~/target_directory&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>この専用言語を構築する具体的な手順は本書を参照してくださいね。もっとも実装コードだけなら、以下のサイトから取得することもできます<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<p><a href="http://designpatternsinruby.com/index.html">Design Patterns In Ruby: Home</a></p>
+
+<h2>InterpreterBuilder</h2>
+
+<p>デザインパターン初学者の自分にとってInterpreterパターンはとても新鮮に感じられました。しかしその一方でそれを構築するにはそれなりの量のコードが必要であることを知りました。例えば上記ファイル検索用インタープリタを実現するのに、著者はおよそ120行のコードを書いています。</p>
+
+<p>でも中を見ると似たようなコードの繰り返しなんですよねー</p>
+
+<p>そんなわけで..</p>
+
+<p>Rubyのメタプログラミングを使ってInterpreterパターンを簡単に実現する、InterpreterBuilderというライブラリを書いてみました:)</p>
+
+<p>早速先のファイル検索用インタープリタをInterpreterBuilderライブラリを使って書き直してみます<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;find&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;interpreter_builder&quot;</span>
+<span class="k">module</span> <span class="nn">FileSelect</span>
+  <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>    <span class="c1"># (1)</span>
+  <span class="k">class</span> <span class="nc">Expression</span>      <span class="c1"># (2)</span>
+    <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
+      <span class="n">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
+      <span class="n">dir</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
+      <span class="no">Find</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">file?</span> <span class="n">f</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">terminals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">all</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
+    <span class="n">file_name</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">pattern</span><span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">fnmatch</span> <span class="n">pattern</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">},</span>
+    <span class="ss">bigger</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">size</span><span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">size</span> <span class="p">},</span>
+    <span class="ss">writable</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">writable?</span> <span class="n">f</span> <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="n">terminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
+    <span class="n">converter</span> <span class="o">=-&gt;</span><span class="n">dir</span><span class="p">{</span> <span class="no">Expression</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>  <span class="c1"># (3)</span>
+  <span class="k">end</span>
+  
+  <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">except</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
+    <span class="ow">or</span><span class="p">:</span> <span class="ss">:|</span><span class="p">,</span>
+    <span class="ow">and</span><span class="p">:</span> <span class="ss">:&amp;</span>
+  <span class="p">}</span>
+  
+  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+    <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>   <span class="c1"># (4)</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+    <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>InterpreterBuilderを使うことで、ファイル検索用インタプリタの実装は僅か50行になりました！</p>
+
+<p>使い方の手順は以下のとおりです。</p>
+
+<ol>
+<li>InterpreterBuilderモジュールをextendする(1)</li>
+<li>ASTノードのベースクラスExpressionを定義する(2)</li>
+<li>define_terminalメソッドを使って終端オブジェクト(Expressionのサブクラス)を定義する(3)</li>
+<li>define_nonterminalメソッドを使って非終端オブジェクト(Expressionのサブクラス)を定義する(4)</li>
+</ol>
+
+
+<p>define_terminalではAll, FileName, Bigger, Writableという名のExpressionサブクラスを作ります。同時に同名の関数的メソッドall, file_name, bigger, writableも生成されます<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。第3引数にはサブクラスでオーバーライドするメソッド名を、第4引数にはその引数を被評価集合に変換するconverterを、更に被評価集合に対する適合条件をブロックで渡します。</p>
+
+<p>define_nonterminalではExcept, Or, Andという名のExpressionサブクラスを作ります。第4引数にはその非終端で参照される非終端オブジェクトに適用する演算子を指定します。</p>
+
+<p>説明が不十分で言ってることがよくわからないと思いますが、先のコードを見て理解して頂けると助かります^ ^;</p>
+
+<p>InterpreterBuilderの内部実装は以下のとおりです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="k">class</span> <span class="nc">String</span>
+  <span class="k">alias</span> <span class="n">_capitalize</span> <span class="n">capitalize</span>
+  <span class="k">def</span> <span class="nf">capitalize</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:_capitalize</span><span class="p">)</span><span class="o">.</span><span class="n">join</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">module</span> <span class="nn">InterpreterBuilder</span>
+  <span class="k">def</span> <span class="nf">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">converter</span><span class="o">=-&gt;</span><span class="nb">p</span><span class="p">{</span><span class="nb">p</span><span class="p">},</span> <span class="n">function</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
+    <span class="n">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">dir</span><span class="o">|</span>
+      <span class="n">converter</span><span class="o">[*</span><span class="n">dir</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="k">yield</span> <span class="n">item</span><span class="p">,</span> <span class="o">*</span><span class="vi">@attrs</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
+    <span class="n">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">dir</span><span class="o">|</span>
+      <span class="n">f1</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span> <span class="o">=</span> <span class="vi">@attrs</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="kp">attr</span><span class="o">|</span> <span class="kp">attr</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target_meth</span><span class="p">,</span> <span class="o">*</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">f1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="n">klass</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">superclass</span><span class="p">)</span> <span class="k">do</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="o">*</span><span class="vi">@attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+      <span class="k">end</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="n">target_meth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="nb">const_set</span><span class="p">(</span><span class="nb">name</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+    <span class="n">define_function</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">function</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">define_function</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">class_eval</span> <span class="p">{</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span>
+        <span class="no">Module</span><span class="o">.</span><span class="n">const_get</span><span class="p">(</span><span class="nb">name</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">)</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<h2>ユーザ検索用インタープリタ</h2>
+
+<p>別の例を示します。今度はInterpreterBuilderを使って、ユーザの属性集合を求めるユーザ検索用のクエリー言語を構築してみます。</p>
+
+<p>今ここにカンマ区切りのユーザ属性情報があります。</p>
+
+<div class="highlight"><pre><code class="bash">Joe, 25, M, US, Programmer
+Armstrong, 28, M, US, Teacher
+Karen, 43, F, US, Programmer
+Ken, 38, M, JP, Doctor
+Yui, 18, F, JP, Student
+Paku, 33, M, KO, RestaurantOwner
+Soh, 51, M, KO, Teacher
+Ralf, 29, M, DE, Programmer
+Naomi, 16, F, FR, Student
+</code></pre></div>
+
+
+<p>ユーザ調査用インタープリタはこのユーザ情報を読み取り、以下のような簡単なクエリー言語を使って対象ユーザの抽出を行えるようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">except</span><span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:JP</span><span class="p">))</span>  <span class="c1"># 日本人以外のユーザ</span>
+ <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>   <span class="c1"># 30歳以上の男性ユーザ</span>
+ <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">&#39;Programmer&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
+ <span class="c1"># 30歳未満の米国またはドイツのプログラマー</span>
+</code></pre></div>
+
+
+<p>最初にInterpreterBuilderを使わずに、このクエリー言語を構築するコードを示します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="k">module</span> <span class="nn">Census</span>
+  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
+  
+  <span class="k">class</span> <span class="nc">Expression</span>
+    <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="n">people</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">module</span> <span class="nn">Interface</span>
+    <span class="k">def</span> <span class="nf">all</span>
+      <span class="no">All</span><span class="o">.</span><span class="n">new</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sex</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
+      <span class="no">Sex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">age</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+      <span class="no">Age</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">nationality</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+      <span class="no">Nationality</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+      <span class="no">Job</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+      <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="kp">include</span> <span class="no">Interface</span>
+  <span class="k">class</span> <span class="nc">All</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Sex</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
+      <span class="vi">@sex</span> <span class="o">=</span> <span class="n">sex</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">sex</span> <span class="o">==</span> <span class="vi">@sex</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Age</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+      <span class="vi">@age</span><span class="p">,</span> <span class="vi">@op</span> <span class="o">=</span> <span class="n">age</span><span class="p">,</span> <span class="n">op</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="vi">@op</span><span class="p">,</span> <span class="vi">@age</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Nationality</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">nationality</span><span class="p">)</span>
+      <span class="vi">@nationality</span> <span class="o">=</span> <span class="n">nationality</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">nationality</span> <span class="o">==</span> <span class="vi">@nationality</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Job</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+      <span class="vi">@job</span> <span class="o">=</span> <span class="n">job</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">job</span> <span class="o">==</span> <span class="vi">@job</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Except</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span><span class="p">)</span>
+      <span class="vi">@expression1</span> <span class="o">=</span> <span class="n">expression1</span>
+      <span class="vi">@expression2</span> <span class="o">=</span> <span class="n">expression2</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">-</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">class</span> <span class="nc">Or</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="p">,</span> <span class="vi">@expression2</span> <span class="o">=</span> <span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">|</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="k">class</span> <span class="nc">And</span> <span class="o">&lt;</span> <span class="no">Expression</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="p">,</span> <span class="vi">@expression2</span> <span class="o">=</span> <span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span>
+    <span class="k">end</span>
+  
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">&amp;</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>およそ120行のコードが必要になります。</p>
+
+<p>次にこれと等価なコードをInterpreterBuilderを使って構築してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="nb">require</span> <span class="s2">&quot;../lib/interpreter_builder&quot;</span>
+<span class="k">module</span> <span class="nn">Census</span>
+  <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>
+    
+  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
+  <span class="k">class</span> <span class="nc">Expression</span>
+    <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="k">end</span>
+    
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="s2">&quot;override this method in the subclass&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">terminals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">all</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
+    <span class="ss">sex</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">sex</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">sex</span> <span class="o">==</span> <span class="n">sex</span> <span class="p">},</span>
+    <span class="ss">age</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">op</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="p">},</span>
+    <span class="ss">nationality</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span> <span class="n">nation</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">nationality</span> <span class="o">==</span> <span class="n">nation</span> <span class="p">},</span>
+    <span class="ss">job</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">job</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">job</span> <span class="o">==</span> <span class="n">job</span> <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="n">terminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
+    <span class="n">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">except</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
+    <span class="ow">or</span><span class="p">:</span> <span class="ss">:|</span><span class="p">,</span>
+    <span class="ow">and</span><span class="p">:</span> <span class="ss">:&amp;</span>
+  <span class="p">}</span>
+  
+  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+    <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+    <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>48行で構築できました。</p>
+
+<p>では先のユーザ情報を読み取ってクエリーを実行してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;./sample/census&quot;</span>
+<span class="kp">include</span> <span class="no">Census</span>
+<span class="n">people</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">sex</span><span class="p">,</span> <span class="n">nationality</span><span class="p">,</span> <span class="n">job</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span>
+  <span class="no">Person</span><span class="o">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="n">sex</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">nationality</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">job</span><span class="o">]</span>
+<span class="k">end</span>
+<span class="n">none_japanese</span> <span class="o">=</span> <span class="n">except</span><span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:JP</span><span class="p">))</span>
+<span class="nb">puts</span> <span class="n">none_japanese</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="n">over30men</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">over30men</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="n">under30_us_or_de_programmer</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">&#39;Programmer&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
+<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="cp">__END__</span>
+<span class="cp">Joe, 25, M, US, Programmer</span>
+<span class="cp">Armstrong, 28, M, US, Teacher</span>
+<span class="cp">Karen, 43, F, US, Programmer</span>
+<span class="cp">Ken, 38, M, JP, Doctor</span>
+<span class="cp">Yui, 18, F, JP, Student</span>
+<span class="cp">Paku, 33, M, KO, RestaurantOwner</span>
+<span class="cp">Soh, 51, M, KO, Teacher</span>
+<span class="cp">Ralf, 29, M, DE, Programmer</span>
+<span class="cp">Naomi, 16, F, FR, Student</span>
+</code></pre></div>
+
+
+<p>ここでは__END__以下のデータを読み取って、各ユーザ毎にPersonオブジェクトを生成してpeople変数に格納し、これを先のクエリー言語で評価しています。結果は以下のとおりです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">none_japanese</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Joe&quot;, age=25, sex=:M, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Armstrong&quot;, age=28, sex=:M, nationality=:US, job=&quot;Teacher&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Karen&quot;, age=43, sex=:F, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Paku&quot;, age=33, sex=:M, nationality=:KO, job=&quot;RestaurantOwner&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Soh&quot;, age=51, sex=:M, nationality=:KO, job=&quot;Teacher&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Ralf&quot;, age=29, sex=:M, nationality=:DE, job=&quot;Programmer&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Naomi&quot;, age=16, sex=:F, nationality=:FR, job=&quot;Student&quot;&gt;</span>
+<span class="nb">puts</span> <span class="n">over30men</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Ken&quot;, age=38, sex=:M, nationality=:JP, job=&quot;Doctor&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Paku&quot;, age=33, sex=:M, nationality=:KO, job=&quot;RestaurantOwner&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Soh&quot;, age=51, sex=:M, nationality=:KO, job=&quot;Teacher&quot;&gt;</span>
+<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Joe&quot;, age=25, sex=:M, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
+<span class="c1">#&lt;struct Census::Person name=&quot;Ralf&quot;, age=29, sex=:M, nationality=:DE, job=&quot;Programmer&quot;&gt;</span>
+</code></pre></div>
+
+
+<p>うまくいっているようですね！</p>
+
+<h2>算術演算インタープリタ</h2>
+
+<p>あまり意味が無いのですがInterpreterBuilderの活用例として以下のような構文を実現する算術演算インタープリタを実装してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">exp</span> <span class="o">=</span> <span class="n">divide</span><span class="p">(</span> <span class="n">plus</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">multiple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span> <span class="mi">3</span> <span class="p">)</span>
+ <span class="n">exp</span><span class="o">.</span><span class="n">to_i</span> <span class="c1"># =&gt; 4</span>
+</code></pre></div>
+
+
+<p>算術演算では終端は数字になるので、selfを返すFixnum#to_iをiterpretメソッドとして使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="n">require_relative</span> <span class="s2">&quot;../lib/interpreter_builder&quot;</span>
+<span class="k">module</span> <span class="nn">Calc</span>
+  <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>
+  
+  <span class="k">class</span> <span class="nc">Expression</span>
+  <span class="k">end</span>
+  
+  <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">plus</span><span class="p">:</span> <span class="ss">:+</span><span class="p">,</span>
+    <span class="ss">minus</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
+    <span class="ss">multiple</span><span class="p">:</span> <span class="ss">:*</span><span class="p">,</span>
+    <span class="ss">divide</span><span class="p">:</span> <span class="ss">:/</span>
+  <span class="p">}</span>
+  
+  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+    <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:to_i</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>非終端である演算子の定義を追加することで他の算術演算も可能になります。</p>
+
+<p>Interpreterパターンに対する根本的な理解が間違っていて、意味不明なことをやっている可能性がありますが、誰かの何かの参考になればうれしいです。</p>
+
+<p>(追記：2011-7-26)算術演算の例を一部修正しました。</p>
+
+<p><a href="https://github.com/melborne/InterpreterBuilder" title="melborne/InterpreterBuilder">melborne/InterpreterBuilder</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>該当ファイルはchap15/ex1_files.rbとex3_operators.rbです <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>一部実装が異なります <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>関数メソッドが不要の場合は第5引数にfalseを渡します <a href='#fnref:3' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/25/Ruby-Interpreter/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのメタプログラミングでInterpreterパターンを実装しよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" data-text="RubyのメタプログラミングでInterpreterパターンを実装しよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2011/07/19/Ruby1-9-END-HELL" title="Ruby1.9でもEND HELLを解消したい！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2011/07/27/1-Ruby" title="1から始めるRuby">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
+     
+    	<li><a href="/tags.html#interpreter-ref">interpreter <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#design_pattern-ref">design_pattern <span>1</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/25/Ruby-Interpreter/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのメタプログラミングでInterpreterパターンを実装しよう！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" data-text="RubyのメタプログラミングでInterpreterパターンを実装しよう！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2011/07/25/Ruby-Interpreter/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyで写真にタイトルを付けてFlickrにアップしよう!</title>
+    
+    
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>01 October 2009</span></div>
+  <h1 class='page-title'><a href="/2009/10/01/Ruby-Flickr">Rubyで写真にタイトルを付けてFlickrにアップしよう!</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>毎回食事の写真を撮ってタイトル付きでFlickrにアップしている
+タイトルは「Lunch Sep 29 2009」のように
+食事の種別と日付にしている
+毎食となると月に100以上も写真をアップすることになるので
+このタイトル付けは結構しんどい
+何の目的もなく食事の写真を撮っているのでやめてもいいんだけど
+こういうことは一旦始めるとやめるのにも覚悟がいる
+そこで覚悟を先送りにしたい自分の結論はこうなる</p>
+
+<p>こういう面倒なことはRubyにやってもらおう!</p>
+
+<h2>Exifデータの取得</h2>
+
+<p>デジカメで撮った写真データにはExifというメタデータが付いている
+Exifには撮影日時のデータが含まれているので
+これを読み出せれば上記のようなタイトルの構築は簡単だ</p>
+
+<p>Rubyにはこの目的にexifrというライブラリがある
+これをインストールして使ってみよう
+(Mac OSX Tigerを前提に書いています)</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">exifr</span>
+</code></pre></div>
+
+
+<p>まずはirbで</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% irb </span><span class="o">-</span><span class="n">rexifr</span>
+ <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span> <span class="o">=</span> <span class="ss">EXIFR</span><span class="p">:</span><span class="ss">:JPEG</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;RIMG0001.JPG&quot;</span>
+ <span class="o">=&gt;</span> <span class="c1">#&lt;EXIFR::JPEG:0x5ef948 @bits=8, @height=2448, @width=3264, @exif=[{:image_desc ription=&gt;&quot;&quot;, :make=&gt;&quot;RICOH&quot;, :model=&gt;&quot;GR Digital&quot;, :orientation=&gt;#&lt;EXIFR::TIFF::O rientation:0x5fcd3c @value=1, @type=:TopLeft&gt;, :x_resolution=&gt;(72/1), :y_resoluti on=&gt;(72/1), :resolution_unit=&gt;2, :date_time=&gt;2009-09-29 19:37:07 +0900, :ycb_cr_positioning=&gt;2, :copyright=&gt;&quot;(C) by GR Digital User&quot;, :exposure_time=&gt;(1/9), :f_number=&gt;(12/5), :exposure_program=&gt;2, :iso_speed_ratings=&gt;154, :date_time_original=&gt;2009-09-29 19:37:07 +0900, :date_time_digitized=&gt;2009-09-29 19:37:07 +0900, :compressed_bits_per_pixel=&gt;(14/5), :aperture_value=&gt;(5/2), :brightness_value=&gt;(858993455/2), :exposure_bias_value=&gt;(0/1), :max_aperture_value=&gt;(12/5), :metering_mode=&gt;5, :light_source=&gt;0, :flash=&gt;16, :focal_length=&gt;(59/10), :color_space=&gt;1, :pixel_x_dimension=&gt;3264, :pixel_y_dimension=&gt;2448, :exposure_mode=&gt;0, :white_balance=&gt;0, :scene_capture_type=&gt;0, :sharpness=&gt;0}, {:compression=&gt;6, :x_resolution=&gt;(72/1), :y_resolution=&gt;(72/1), :resolution_unit=&gt;2, :jpeg_interchange_format=&gt;25361, :jpeg_interchange_format_length=&gt;5397}]&gt; </span>
+ <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span>
+ <span class="o">=&gt;</span> <span class="mi">2009</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">29</span> <span class="mi">19</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mo">07</span> <span class="o">+</span><span class="mi">0900</span>
+ <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span><span class="o">.</span><span class="n">class</span>
+ <span class="o">=&gt;</span> <span class="no">Time</span>
+</code></pre></div>
+
+
+<p>ほうこりゃ簡単だ
+EXIFR::JPEG#date_timeはTimeクラスを返すので
+Time#strftimeが使える</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">004</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%b %d %Y&quot;</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="s2">&quot;Sep 29 2009&quot;</span>
+</code></pre></div>
+
+
+<h2>Flickrへのアップロード</h2>
+
+<p>次にFlickrへのアップロードだ
+FlickrにはFlickr上の写真を操作するためのAPIが用意されている
+APIには写真をFlickrにアップするためのメソッドもある
+このAPIを使うには自分のFlickrアカウントにリンクした
+API Keyを事前に取得しておく必要がある</p>
+
+<p>Flickr Services
+http://www.flickr.com/services/</p>
+
+<p>また写真をアップするためにはそのプログラムを
+対象アカウントに認証させるためのトークンの取得が必要になる</p>
+
+<p>Rubyにはrflickrというライブラリがあり
+認証トークンの取得および写真のアップロードの機能を持っている
+これをインストールして使ってみよう</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">rflickr</span>
+</code></pre></div>
+
+
+<p>更新が止まっていてRuby1.9には対応していない
+添付のGETTING-STARTEDにはトークン取得のためのサンプルコードがある<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">flickr</span> <span class="o">=</span> <span class="no">Flickr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">token_cache_file</span><span class="p">,</span><span class="no">MY_APPLICATION_KEY</span><span class="p">,</span><span class="no">MY_SHARED_SECRET</span><span class="p">)</span>
+  <span class="k">unless</span> <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">token</span>
+    <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">getFrob</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="vi">@flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">login_link</span>
+    <span class="nb">puts</span> <span class="s2">&quot;You must visit </span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> to authorize this application.  Press enter&quot;</span><span class="o">+</span>
+     <span class="s2">&quot; when you have done so. This is the only time you will have to do this.&quot;</span>
+    <span class="nb">gets</span>
+    <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">getToken</span>
+    <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">cache_token</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>このコードを実行してターミナルに表示されたURLにアクセスし
+そこでこのプログラムに対する認証を行えば
+token_cache_fileに認証トークンが保存されるようだ
+二度目からは取得した認証トークンを使って
+プログラムの認証が行われる</p>
+
+<p>以上の知識を使ってFlickrPhotoクラスを書いてみた</p>
+
+<p>使い方は以下のようにする</p>
+
+<p>1.FlickrPhoto.set_tokenでプログラムを認証させる
+2.FlickrPhoto.newで写真のオブジェクトを生成する
+3.タイトルなど必要な属性をセットする
+4.FlickrPhoto#uploadで写真をアップロードする</p>
+
+<script src="http://gist.github.com/197856.js"></script>
+
+
+<p>保証はありませんが同じようなことで
+お困りの方がおられたら使ってください</p>
+
+<p>(参考)
+<a href="http://digitalpardoe.co.uk/blog/show/87">digital:pardoe - Using rFlickr</a></p>
+
+<p><a href="http://www.machu.jp/diary/20081020.html#p01">Ruby を使って Flickr へ写真をアップロード - まちゅダイアリー(2008-10-20)</a></p>
+
+<p>(追記:2009/10/11)撮影日を取得するのにdate_timeではなくdate_time_originalを使うよう修正しました。API KeyをPitを使って管理するようにしました。
+<a href="http://subtech.g.hatena.ne.jp/cho45/20080102/1199257680">アカウント情報を管理するコマンド pit - 冬通りに消え行く制服ガールは、夢物語にリアルを求めない。 - subtech</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>Macでは /opt/local/lib/ruby/gems/1.8/gems/rflickr-2006.02.01/GETTING-STARTED <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/10/01/Ruby-Flickr/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで写真にタイトルを付けてFlickrにアップしよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/10/01/Ruby-Flickr/" data-text="Rubyで写真にタイトルを付けてFlickrにアップしよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/10/01/Ruby-Flickr/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/10/01/Ruby-Flickr/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2009/09/01/Ruby-Proc" title="RubyのProcオブジェクトはキューティーハニーだ!">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2010/01/21/Ruby" title="Rubyで最短経路を探索しよう！">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2009/10/01/Ruby-Flickr/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyで写真にタイトルを付けてFlickrにアップしよう!" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2009/10/01/Ruby-Flickr/" data-text="Rubyで写真にタイトルを付けてFlickrにアップしよう!" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2009/10/01/Ruby-Flickr/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2009/10/01/Ruby-Flickr/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

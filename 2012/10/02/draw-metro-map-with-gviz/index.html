@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>02 October 2012</span></div>
+  <h1 class='page-title'><a href="/2012/10/02/draw-metro-map-with-gviz">東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>全国の駅情報を提供する<a href="http://www.ekidata.jp/index.html" title="『駅データ．ｊｐ』">『駅データ．ｊｐ』</a>という素晴らしいサイトがあります。無料でダウンロードできるCSV形式の駅データには各駅の管理鉄道会社や路線の情報だけでなく、駅の経度・緯度情報までもが含まれています。マコトニスバラシイ。イママデシラナカッタノガハズカシイ。</p>
+
+<p>そんなわけで...</p>
+
+<p>今回は<a href="https://rubygems.org/gems/gviz" title="gviz | RubyGems.org | your community gem host">Gviz</a>を使って、東京の地下鉄、すなわち東京メトロ＋都営（東京都交通局）の路線図に挑戦してみます。</p>
+
+<h2>駅データの取得</h2>
+
+<p>まずは駅データを取得します。先のサイトのダウンロード頁からマスターデータ（m_station.csv）をDLします。サイトの仕様書頁にあるように、各駅情報は次の14フィールドで構成されています。</p>
+
+<h4>データ仕様</h4>
+
+<pre><code> 1. 鉄道概要コード
+ 2. 路線コード
+ 3. 駅コード
+ 4. 路線並び順
+ 5. 駅並び順
+ 6. 駅グループコード
+ 7. 駅タイプ
+ 8. 鉄道概要名
+ 9. 路線名
+10. 駅名
+11. 都道府県コード
+12. 経度
+13. 緯度
+14. 表示フラグ
+</code></pre>
+
+<h2>地下鉄データの抽出</h2>
+
+<p>次にこのデータをRubyで読み出して、東京の地下鉄の駅情報だけを抽出します。ファイル名は<code>metro.rb</code>とします。</p>
+
+<h4>#metro.rb</h4>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+
+<span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;m_station.csv&#39;</span><span class="p">)</span>
+
+<span class="n">metrodata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">7</span><span class="o">].</span><span class="n">match</span><span class="p">(</span><span class="sr">/東京メトロ|東京都交通局/</span><span class="p">)</span> <span class="p">}</span>
+                <span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">8</span><span class="o">]</span> <span class="p">}</span>
+
+<span class="n">metrodata</span> <span class="c1"># =&gt;  {&quot;東京メトロ銀座線&quot;=&gt;[[&quot;28&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;2100201&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;浅草&quot;, &quot;13&quot;, &quot;139.797592&quot;, &quot;35.710733&quot;, &quot;1&quot;], [&quot;28&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;2800102&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;田原町&quot;, &quot;13&quot;, &quot;139.790897&quot;, &quot;35.709897&quot;, &quot;1&quot;], ... 中略 ... &quot;日暮里・舎人ライナー&quot;=&gt;[[&quot;99&quot;, &quot;99342&quot;, &quot;9934201&quot;, &quot;99305&quot;, &quot;9934201&quot;, &quot;1130218&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;日暮里&quot;, &quot;13&quot;, &quot;139.771287&quot;, &quot;35.727908&quot;, &quot;1&quot;], [&quot;99&quot;, &quot;99342&quot;, &quot;9934202&quot;, &quot;99305&quot;, &quot;9934202&quot;, &quot;1130217&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;西日暮里&quot;, &quot;13&quot;, &quot;139.766857&quot;, &quot;35.731954&quot;, &quot;1&quot;] ... ]}</span>
+</code></pre></div>
+
+
+<h2>地下鉄路線一覧</h2>
+
+<p>さて下準備が整ったので、Gvizで路線図を直ぐにでも描きたいところですが、感じをつかむためまずは路線一覧というのを作ってみます。</p>
+
+<p>コードは以下のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
+
+<span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span>
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+    <span class="n">subgraph</span> <span class="k">do</span>
+      <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="n">line</span>
+      <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+        <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+        <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+
+        <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+        <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここではグラフの生成に<code>Graph</code>メソッド（ver.0.0.4で導入）というショートカットを使っています。これは、<code>Gviz.new(:Metro).graph</code>と等価です。</p>
+
+<p>Graphメソッドのブロックでは、<code>metrodata</code>から順次駅情報を読み出し、<code>edge</code>および<code>node</code>メソッドに必要な情報を渡してグラフ情報を生成しています。各路線毎の駅情報は<code>subgraph</code>の中で読み出します。</p>
+
+<p>出力を見てみます。</p>
+
+<p><a href="/assets/images/2012/metro1.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro1.png" alt="metro noshadow" /></a>
+（クリックで拡大します）</p>
+
+<p>簡単なコードでなかなか綺麗な一覧ができました。</p>
+
+<h3>色を付ける</h3>
+
+<p>でもやっぱり地下鉄グラフに色がないのは悲しすぎます。地下鉄のシンボルカラーを次のサイトから取得して、色を付けます。</p>
+
+<blockquote><p><a href="http://www.colordic.org/m/" title="地下鉄のシンボルカラー メトロカラー - Metro Color">地下鉄のシンボルカラー メトロカラー - Metro Color</a></p></blockquote>
+
+<p>足りないものは補って取得した色情報を配列で保持します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">colors</span> <span class="o">=</span> <span class="o">[[</span><span class="s2">&quot;銀座線&quot;</span><span class="p">,</span> <span class="s2">&quot;#f39700&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;丸ノ内線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e60012&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;日比谷線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9caeb7&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;東西線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00a7db&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;千代田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#009944&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;有楽町線&quot;</span><span class="p">,</span> <span class="s2">&quot;#d7c447&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;半蔵門線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9b7cb6&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;南北線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00ada9&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;副都心線&quot;</span><span class="p">,</span> <span class="s2">&quot;#bb641d&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;浅草線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e85298&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;三田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#0079c2&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;新宿線&quot;</span><span class="p">,</span> <span class="s2">&quot;#6cbb5a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;大江戸線&quot;</span><span class="p">,</span> <span class="s2">&quot;#b6007a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;荒川線&quot;</span><span class="p">,</span> <span class="s2">&quot;#7aaa16&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;舎人ライナー&quot;</span><span class="p">,</span> <span class="s2">&quot;#999999&quot;</span><span class="o">]]</span>
+</code></pre></div>
+
+
+<p>そしてグラフをカラー化します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span>
+<span class="o">+</span> <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="ss">penwidth</span><span class="p">:</span><span class="mi">10</span>
+<span class="o">+</span> <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span>
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+    <span class="n">subgraph</span> <span class="k">do</span>
+      <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="n">line</span>
+      <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+        <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+        <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+<span class="o">+</span>       <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">ln</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span> <span class="sr">/</span><span class="si">#{</span><span class="n">ln</span><span class="si">}</span><span class="sr">/</span> <span class="p">})</span> <span class="p">?</span> <span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="s2">&quot;#999999&quot;</span>
+
+<span class="o">+</span>       <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+<span class="o">+</span>       <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>結果を見てみます。</p>
+
+<p><a href="/assets/images/2012/metro2.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro2.png" alt="metro noshadow" /></a></p>
+
+<p>（クリックで拡大します）</p>
+
+<p>キレイです。</p>
+
+<p>さて、実はこの路線情報には一部間違いがあります。そう、丸ノ内線の「中野坂上」で路線は分岐しなければいけません。</p>
+
+<p>これに対応したコードを入れて、地下鉄路線一覧の完成です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span>
+  <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="ss">penwidth</span><span class="p">:</span><span class="mi">10</span>
+  <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span>
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+    <span class="n">subgraph</span> <span class="k">do</span>
+      <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="n">line</span>
+      <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+      <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+        <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+        <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">ln</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span> <span class="sr">/</span><span class="si">#{</span><span class="n">ln</span><span class="si">}</span><span class="sr">/</span> <span class="p">})</span> <span class="p">?</span> <span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="s2">&quot;#999999&quot;</span>
+
+        <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span>
+<span class="o">+</span>       <span class="k">case</span> <span class="n">st_id</span>
+<span class="o">+</span>       <span class="k">when</span> <span class="ss">:&#39;2800220&#39;</span> <span class="c1"># 中野坂上</span>
+<span class="o">+</span>         <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="ss">:&#39;2800226&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="c1"># 中野坂上 =&gt; 中野新橋</span>
+<span class="o">+</span>       <span class="k">when</span> <span class="ss">:&#39;2800225&#39;</span> <span class="c1"># 荻窪</span>
+<span class="o">+</span>         <span class="k">next</span>
+<span class="o">+</span>       <span class="k">end</span>
+
+        <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>結果です。
+<a href="/assets/images/2012/metro3.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro3.png" alt="metro noshadow" /></a></p>
+
+<p>（クリックで拡大します）</p>
+
+<p>いいですね！</p>
+
+<h2>地下鉄路線図</h2>
+
+<p>さあここからが本番です。先のコードを生かしつつ、各駅の経度・緯度情報を使って地下鉄路線図を作ります。</p>
+
+<p>Graphvizの各ノードは<code>pos</code>という属性を使ってその絶対座標を指定することができます。subgraphを外しlayoutを<code>neato</code>とし、最初はダメ元で各駅の経度・緯度情報をそのまま<code>pos</code>に渡してみます。最後の<code>!</code>を忘れずに。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+<span class="o">+</span> <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span>
+  <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="ss">penwidth</span><span class="p">:</span><span class="mi">10</span>
+  <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span>
+
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+<span class="o">-</span>   <span class="n">subgraph</span> <span class="k">do</span>
+    <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">ln</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span> <span class="sr">/</span><span class="si">#{</span><span class="n">ln</span><span class="si">}</span><span class="sr">/</span> <span class="p">})</span> <span class="p">?</span> <span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="s2">&quot;#999999&quot;</span>
+
+<span class="o">+</span>     <span class="n">pos_x</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">11</span><span class="o">]</span>
+<span class="o">+</span>     <span class="n">pos_y</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">12</span><span class="o">]</span>
+
+<span class="o">+</span>     <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span><span class="p">,</span> <span class="ss">pos</span><span class="p">:</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">pos_x</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">pos_y</span><span class="si">}</span><span class="s2">!&quot;</span>
+      <span class="k">case</span> <span class="n">st_id</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800220&#39;</span> <span class="c1"># 中野坂上</span>
+        <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="ss">:&#39;2800226&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="c1"># 中野坂上 =&gt; 中野新橋</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800225&#39;</span> <span class="c1"># 荻窪</span>
+        <span class="k">next</span>
+      <span class="k">end</span>
+
+      <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+    <span class="k">end</span>
+<span class="o">-</span>   <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>結果は如何に！</p>
+
+<p><a href="/assets/images/2012/metro4.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro4.png" alt="metro noshadow" /></a></p>
+
+<p>Onz...</p>
+
+<p>甘くはありませんでした...</p>
+
+<h3>座標の正規化</h3>
+
+<p>つまり駅座標情報を正規化して出力サイズに合わせて調整する必要があります。</p>
+
+<p>Gviz ver0.0.4では正規化のために<code>Numeric#norm</code>というメソッドを用意しました。このメソッドは、任意の範囲内の特定の数値を0.0〜1.0の範囲の対応位置にマッピングします。第１引数にその任意の範囲をRangeオブジェクトで渡します。また、第２引数に所定のRangeオブジェクトを与えると、正規化する範囲を0.0〜1.0以外にすることができます。</p>
+
+<p>早速metrodataから緯度経度の最大最小値を取得してRangeオブジェクトを生成し、試してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">flatdata</span> <span class="o">=</span> <span class="n">metrodata</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lon_minmax</span> <span class="o">=</span> <span class="n">flatdata</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">11</span><span class="o">].</span><span class="n">to_f</span> <span class="p">}</span><span class="o">.</span><span class="n">minmax</span>
+<span class="n">lat_minmax</span> <span class="o">=</span> <span class="n">flatdata</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">12</span><span class="o">].</span><span class="n">to_f</span> <span class="p">}</span><span class="o">.</span><span class="n">minmax</span>
+
+<span class="n">lon_range</span> <span class="o">=</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">lon_minmax</span><span class="p">)</span> <span class="c1"># =&gt; 139.612434..139.958972</span>
+<span class="n">lat_range</span> <span class="o">=</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">lat_minmax</span><span class="p">)</span> <span class="c1"># =&gt; 35.586859..35.814544</span>
+
+<span class="mi">139</span><span class="o">.</span><span class="mi">812935</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">)</span> <span class="c1"># =&gt; 0.5785830125412325</span>
+<span class="mi">139</span><span class="o">.</span><span class="mi">812935</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span> <span class="c1"># =&gt; 620.7247112871092</span>
+<span class="mi">35</span><span class="o">.</span><span class="mi">710702</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">)</span> <span class="c1"># =&gt; 0.5439225245404847</span>
+<span class="mi">35</span><span class="o">.</span><span class="mi">710702</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span> <span class="c1"># =&gt; 589.5302720864363</span>
+</code></pre></div>
+
+
+<p>さてこれを使って各駅の経度・緯度を正規化し、もう一度トライします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span>
+  <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="ss">penwidth</span><span class="p">:</span><span class="mi">10</span>
+  <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span>
+
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+    <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">ln</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span> <span class="sr">/</span><span class="si">#{</span><span class="n">ln</span><span class="si">}</span><span class="sr">/</span> <span class="p">})</span> <span class="p">?</span> <span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="s2">&quot;#999999&quot;</span>
+
+<span class="o">+</span>     <span class="n">pos_x</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">11</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">,</span> <span class="mi">1000</span><span class="o">.</span><span class="n">.</span><span class="mi">5000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span> <span class="c1"># 10..60 for svg</span>
+<span class="o">+</span>     <span class="n">pos_y</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">12</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">,</span> <span class="mi">1000</span><span class="o">.</span><span class="n">.</span><span class="mi">5000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span> <span class="c1"># 10..60 for svg</span>
+
+      <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span><span class="p">,</span> <span class="ss">pos</span><span class="p">:</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">pos_x</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">pos_y</span><span class="si">}</span><span class="s2">!&quot;</span>
+      <span class="k">case</span> <span class="n">st_id</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800220&#39;</span> <span class="c1"># 中野坂上</span>
+        <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="ss">:&#39;2800226&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="c1"># 中野坂上 =&gt; 中野新橋</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800225&#39;</span> <span class="c1"># 荻窪</span>
+        <span class="k">next</span>
+      <span class="k">end</span>
+
+      <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:svg</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>さあどうだ！</p>
+
+<p><a href="/assets/images/2012/metro_svg.html" title="Metro Map"><img src="/assets/images/2012/metro5.png" alt="metro noshadow" /></a>
+（クリックでSVGによる路線図が開きます。手動で拡大してみて下さい）</p>
+
+<p>スバラシイ！</p>
+
+<p>なお上記正規化範囲はトライ＆エラーで獲得します。pngではうまく行かず、範囲を10..60としてSVGでの出力が成功しました。</p>
+
+<p>ノードを透過カラーで表現した別バージョンも用意してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span><span class="p">(</span><span class="ss">:Metro</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;Metro of Tokyo&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span>
+<span class="o">+</span> <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="ss">penwidth</span><span class="p">:</span><span class="mi">2</span>
+<span class="o">+</span> <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="ss">fontcolor</span><span class="p">:</span><span class="s1">&#39;white&#39;</span>
+
+  <span class="n">metrodata</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">stations</span><span class="o">|</span>
+    <span class="n">stlength</span> <span class="o">=</span> <span class="n">stations</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">stations</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">st</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="n">st_id</span><span class="p">,</span> <span class="n">st_name</span><span class="p">,</span> <span class="n">st_seq</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="n">st_id</span> <span class="o">=</span> <span class="n">st_id</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">next_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">st_seq</span><span class="o">.</span><span class="n">to_i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">intern</span>
+      <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">ln</span><span class="p">,</span> <span class="n">c</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span> <span class="sr">/</span><span class="si">#{</span><span class="n">ln</span><span class="si">}</span><span class="sr">/</span> <span class="p">})</span> <span class="p">?</span> <span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="s2">&quot;#999999&quot;</span>
+
+      <span class="n">pos_x</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">11</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">,</span> <span class="mi">1000</span><span class="o">.</span><span class="n">.</span><span class="mi">5000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span> <span class="c1"># 10..60 for svg</span>
+      <span class="n">pos_y</span> <span class="o">=</span> <span class="n">st</span><span class="o">[</span><span class="mi">12</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">,</span> <span class="mi">1000</span><span class="o">.</span><span class="n">.</span><span class="mi">5000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span> <span class="c1"># 10..60 for svg</span>
+
+<span class="o">+</span>     <span class="n">node</span> <span class="n">st_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">st_name</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="n">color</span><span class="o">+</span><span class="s1">&#39;aa&#39;</span><span class="p">,</span> <span class="ss">pos</span><span class="p">:</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">pos_x</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">pos_y</span><span class="si">}</span><span class="s2">!&quot;</span>
+      <span class="k">case</span> <span class="n">st_id</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800220&#39;</span> <span class="c1"># 中野坂上</span>
+        <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="ss">:&#39;2800226&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="ss">color</span><span class="p">:</span><span class="n">color</span> <span class="c1"># 中野坂上 =&gt; 中野新橋</span>
+      <span class="k">when</span> <span class="ss">:&#39;2800225&#39;</span> <span class="c1"># 荻窪</span>
+        <span class="k">next</span>
+      <span class="k">end</span>
+
+      <span class="n">edge</span> <span class="o">[</span><span class="n">st_id</span><span class="p">,</span> <span class="n">next_id</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stlength</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:svg</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>出力です。</p>
+
+<p><a href="/assets/images/2012/metro_svg2.html" title="Metro Map"><img src="/assets/images/2012/metro6.png" alt="metro noshadow" /></a></p>
+
+<p>（クリックでSVGによる路線図が開きます。手動で拡大してみて下さい）</p>
+
+<p>拡大すると駅の重なりがわかると思います。</p>
+
+<p>Enjoy Metro Map with Gviz!</p>
+
+<p><a href="https://gist.github.com/3815566" title="Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist">Gviz sample: Tokyo Metro with m_station data of 駅.jp — Gist</a></p>
+
+<hr />
+
+<p>関連記事：</p>
+
+<p><a href="http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/" title="Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！">Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！</a></p>
+
+<p><a href="http://melborne.github.com/2012/09/27/usstates-map-data-vasualization-with-gviz/" title="Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！">Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！</a></p>
+
+<p><a href="http://melborne.github.com/2012/10/03/draw-metro-logos-with-gviz/" title="東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く">東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B007OVX460"><img class="amazon" src="http://ecx.images-amazon.com/images/I/61v2Un0e17L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B007OVX460">東京メトロだいすき (「鉄おも！」別冊)</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" class="hatena-bookmark-button" data-hatena-bookmark-title="東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" data-text="東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/09/27/usstates-map-data-vasualization-with-gviz" title="Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2012/10/03/draw-metro-logos-with-gviz" title="東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+      <ul class="tag_box inline">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#graphviz-ref">graphviz <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#gem-ref">gem <span>13</span></a></li>
+    
+  
+
+
+
+      </ul>
+      <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" class="hatena-bookmark-button" data-hatena-bookmark-title="東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" data-text="東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2012/10/02/draw-metro-map-with-gviz/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
