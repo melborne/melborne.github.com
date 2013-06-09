@@ -17,17 +17,29 @@ module Jekyll
     end
 
     def item_lookup(asin, try=5)
-      asin = asin.to_s.strip
-      return @result_cache[asin] if @result_cache.has_key?(asin)
-      il = Amazon::AWS::ItemLookup.new('ASIN', {'ItemId' => asin})
-      resp = Amazon::AWS::Search::Request.new.search(il)
-      @result_cache[asin] = resp
-      return resp
-    rescue Amazon::AWS::HTTPError => e
-      p "retry:#{asin}: #{try}:#{e}"
-      try -= 1
-      sleep 0.5
-      retry if try > 0
+      item_lookup_with_retry(asin, try=5) do
+        asin = asin.to_s.strip
+        return @result_cache[asin] if @result_cache.has_key?(asin)
+        il = Amazon::AWS::ItemLookup.new('ASIN', {'ItemId' => asin})
+        resp = Amazon::AWS::Search::Request.new.search(il)
+        @result_cache[asin] = resp
+        return resp
+      end
+    end
+
+    def item_lookup_with_retry(asin, try)
+      begin
+        times = 1
+        yield
+      rescue Amazon::AWS::HTTPError => e
+        if try > 0
+          puts "retry:#{asin}: #{try}:#{e}"
+          sleep 0.5 * times
+          try -= 1
+          times += 1
+          retry
+        end
+      end
     end
 
     private_class_method :new
