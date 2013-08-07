@@ -4,13 +4,77 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-06-03T09:05:12+09:00</updated>
+ <updated>2013-08-07T10:23:29+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>チルダでRubyの式埋め込みをもっと便利に!?</title>
+   <link href="http://melborne.github.io/2013/08/07/yet-another-tilde-tips"/>
+   <updated>2013-08-07T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2013/08/07/yet-another-tilde-tips</id>
+   <content type="html">&lt;p&gt;Rubyでは文字列に式を埋め込めるという便利な機能があるよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Charlie&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;job&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Teacher&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;account&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;22360679&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is a &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;His account is &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;account&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; Charlie is a Teacher.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; His account is 22360679.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でも、こういうときに埋め込み文字をシングルクォートなんかで強調したいってこと良くあるよね？&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;#39; is a &amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;#39;.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;His account is &amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;account&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;#39;.&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; &amp;#39;Charlie&amp;#39; is a &amp;#39;Teacher&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; His account is &amp;#39;22360679&amp;#39;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これって、面倒くさくない？&lt;/p&gt;
+
+&lt;p&gt;そんなわけで...&lt;/p&gt;
+
+&lt;p&gt;こんな小ネタを...&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:~&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;シングルクォートに代えて式の前に&#39;~&#39;(チルダ)を入れて...&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is a &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;His account is &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inspect&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; &amp;#39;Charlie&amp;#39; is a &amp;#39;Teacher&amp;#39;.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; His account is &amp;#39;22360679&amp;#39;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;数値のときにinspectしなきゃとかダサ...&lt;/p&gt;
+
+&lt;p&gt;久しぶりのブログ更新がこれじゃあねぇ...&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;関連記事：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2012/04/27/ruby-heredoc-without-leading-whitespace/&quot; title=&quot;チルダがRubyのヒアドキュメントをもっと良くする&quot;&gt;チルダがRubyのヒアドキュメントをもっと良くする&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2012/06/30/tilde-makes-curry-better/&quot; title=&quot;チルダがRubyカレーをもっと好きにさせる&quot;&gt;チルダがRubyカレーをもっと好きにさせる&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>僕にもできた！フェルトで作るKindleケース</title>
@@ -4012,156 +4076,6 @@ Don&#39;t Repeat Yourself! Yes, I repeat myself!!&lt;/p&gt;
 &lt;a href=&quot;/books/&quot;&gt;
   &lt;img src=&quot;/assets/images/2012/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
 &lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Graphvizで作る国旗の類似度世界地図</title>
-   <link href="http://melborne.github.io/2013/04/23/map-of-national-flags-with-graphviz"/>
-   <updated>2013-04-23T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2013/04/23/map-of-national-flags-with-graphviz</id>
-   <content type="html">&lt;p&gt;antlaboさんが世界の国旗の類似度を可視化した作品を公開しています。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://infanimation.antlabo.jp/kokki/index.html&quot; title=&quot;国旗の類似度を可視化&quot;&gt;国旗の類似度を可視化&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://d.hatena.ne.jp/antlabo/20130421/1366526239&quot; title=&quot;世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）&quot;&gt;世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;これは&lt;a href=&quot;http://www.lire-project.net/&quot; title=&quot;LIRE – Lucene Image Retrieval | The Java visual information retrieval library&quot;&gt;LIRE（Lucene Image Retrieval）&lt;/a&gt;というJAVAの画像類似検索向けライブラリを使って、204の国旗の類似度を計算したデータに基いて作られているそうです。国旗画像下の緑の十字をクリックするとその国旗を中心にした類似国旗が順に辿れるようになっています。やあ、スバラシイ。&lt;/p&gt;
-
-&lt;p&gt;ちなみに画像自体の特徴量（色、形状、テクスチャなど）をベースに類似検索をする方式をCBIR（Content-Based Image Retrieval）というそうですが、LIREはその方式で画像を比較します。&lt;/p&gt;
-
-&lt;p&gt;加えて、antlaboさんはこの国旗の類似度データも公開してくれています。当然、Graphviz-er（Graphviz-ist?）としてはこれを見過ごすことはできません:-)&lt;/p&gt;
-
-&lt;p&gt;そんなわけで...&lt;/p&gt;
-
-&lt;p&gt;ここでは、&lt;a href=&quot;https://rubygems.org/gems/gviz&quot; title=&quot;gviz | RubyGems.org | your community gem host&quot;&gt;Gviz（RubyによるGraphvizのインタフェースライブラリ）&lt;/a&gt;を使った簡単な国旗の類似度可視化をやってみたいと思います。意味ある出力が得られればいいんですが...&lt;/p&gt;
-
-&lt;h2&gt;CSVデータの読み込み&lt;/h2&gt;
-
-&lt;p&gt;提供されているデータは次のフォーマットを持ったCSVデータです（ヘッダー名は加工しています）。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;id,sim,name1,path1,name2,path2
-10736941,99.3,Indonesia,images/Indonesia.jpg,Monaco,images/Monaco.jpg
-10736713,89.0,Honduras,images/Honduras.jpg,Nicaragua,images/Nicaragua.jpg
-10719944,87.1,El_Salvador,images/El_Salvador.jpg,Nicaragua,images/Nicaragua.jpg
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;id, 類似度（sim）に続き、対比する国の国名と画像パスが並びます。&lt;/p&gt;
-
-&lt;p&gt;データを展開したフォルダにおいて&lt;code&gt;graph.ru&lt;/code&gt;のファイル名でデータを読み出します。&lt;/p&gt;
-
-&lt;h4&gt;graph.ru&lt;/h4&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;csv&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CSV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;kokkidata.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [:id, :sim, :name1, :path1, :name2, :path2]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; #&amp;lt;CSV::Row id:10736941 sim:99.3 name1:&amp;quot;Indonesia&amp;quot; path1:&amp;quot;images/Indonesia.jpg&amp;quot; name2:&amp;quot;Monaco&amp;quot; path2:&amp;quot;images/Monaco.jpg&amp;quot;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 99.3&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Indonesia&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Monaco&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2&gt;グラフの描画&lt;/h2&gt;
-
-&lt;p&gt;では、graphviz上に画像を読み込んで表示してみましょう。&lt;/p&gt;
-
-&lt;p&gt;データにおける国旗の類似度は10.0〜99.3まで幅がありますが、まずは何も考えずにすべての対比される国旗をエッジで結んだグラフを書いてみます。グラフのレイアウトには&lt;strong&gt;fdp&lt;/strong&gt;を使ってみます。&lt;/p&gt;
-
-&lt;h4&gt;graph.ru&lt;/h4&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;csv&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CSV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;kokkidata.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fdp&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;bgcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;whitesmoke&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Map of National Flags&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fontsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;36&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;none&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fontcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;#444444&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;edges&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;arrowhead&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;none&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;#AAAAAA&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_id&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:path1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;labelloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:path2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;labelloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:flag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Graphvizではimage属性を使うことでノードに画像を貼ることができます。&lt;/p&gt;
-
-&lt;p&gt;そして&lt;code&gt;gviz&lt;/code&gt;コマンドを実行し、生成された&lt;code&gt;flag.png&lt;/code&gt;を開きます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% gviz
-% open flag.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/04/flag1.png&quot; rel=&quot;lightbox&quot; title=&quot;title&quot;&gt;&lt;img src=&quot;/assets/images/2013/04/flag1.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大します）&lt;/p&gt;
-
-&lt;p&gt;ややっ。&lt;/p&gt;
-
-&lt;p&gt;国旗の画像は貼られましたが、なんか意味不明です。当然といえば当然の結果ですが。&lt;/p&gt;
-
-&lt;h2&gt;グラフの描画２&lt;/h2&gt;
-
-&lt;p&gt;こんどは、エッジで結ぶ国旗を限定してみます。類似度が40.0より高い国旗だけをリンクするようにします。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;csv&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CSV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;kokkidata.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fdp&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;bgcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;whitesmoke&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Map of National Flags&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fontsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;36&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;none&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fontcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;#444444&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;edges&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;arrowhead&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;none&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;#AAAAAA&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_id&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:path1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;labelloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:path2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;labelloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sim&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:flag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;さあ、どうでしょう。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/04/flag2.png&quot; rel=&quot;lightbox&quot; title=&quot;title&quot;&gt;&lt;img src=&quot;/assets/images/2013/04/flag2.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大します）&lt;/p&gt;
-
-&lt;p&gt;おっ。&lt;/p&gt;
-
-&lt;p&gt;なんとなく北米大陸にも似た形のマップが描画されました。日本のポジションがいいじゃないですか。&lt;/p&gt;
-
-&lt;p&gt;グラフをよく見ると、青系の国旗が左上に集合し、赤系は右上、黄色が入ったものがその下に、さらにその下に黒が入った国旗が集合しているのが分かります。類似度に応じたエッジの重み付け（エッジの長さを類似度に応じて調整するなど）をすることなく、単に類似度40.0以下のエッジを外しただけで、画像の集まりに傾向が見られるようになりました&lt;sup id=&#39;fnref:1&#39;&gt;&lt;a href=&#39;#fn:1&#39; rel=&#39;footnote&#39;&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-
-&lt;p&gt;中央に円図形を持ったバングラデシュ（Bangladesh）やパラオ（Palau）と日本の国旗の類似度が低いことなどからみて、LIERでは色の特徴量に対する比重が大きい気がします。&lt;/p&gt;
-
-&lt;p&gt;それにしても、世界には同じような図柄の国旗が沢山あるんですねー。antlaboさんが言うようにその歴史と重ねあわせてみたら面白そうです。&lt;/p&gt;
-
-&lt;p&gt;以上、Graphvizを使った簡単な国旗の類似度におけるビジュアライゼーションでした。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;参考記事： &lt;a href=&quot;http://aidiary.hatenablog.com/entry/20091003/1254574041&quot; title=&quot;類似画像検索システムを作ろう - 人工知能に関する断創録&quot;&gt;類似画像検索システムを作ろう - 人工知能に関する断創録&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;footnotes&quot;&gt;
-    &lt;ol&gt;
-        &lt;li id=&#39;fn:1&#39;&gt;エッジの長さや太さで類似度の重み付けをしてみましたが、面白い結果は得られませんでした。 &lt;a href=&#39;#fnref:1&#39; rev=&#39;footnote&#39;&gt;↩&lt;/a&gt;&lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/div&gt;
-
-
-
 </content>
  </entry>
  
