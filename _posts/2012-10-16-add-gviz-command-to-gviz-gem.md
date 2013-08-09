@@ -9,11 +9,19 @@ published: true
 ---
 {% include JB/setup %}
 
+
+(追記：2013-08-09) Gvizバージョンアップによりgvizコマンドの仕様が変更になりました（version0.2.0）。詳細は以下の記事を参照してください。
+
+> [ピクミンがGraphvizにやって来た！]({{ site.url }}/2013/08/09/now-pikmin-come-to-graphviz/ "ピクミンがGraphvizにやって来た！")
+
+
+---
+
 RubyによるGraphvizラッパー`Gviz`のversion0.0.7を公開しました。
 
 > [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
 
-`Gviz`を使えば簡単に[有向グラフ](http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/)や[米国統計地図](http://melborne.github.com/2012/09/27/usstates-map-data-vasualization-with-gviz/)や[地下鉄路線図](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/)が書けます。
+`Gviz`を使えば簡単に[有向グラフ]({{ site.url }}/2012/09/25/ruby-plus-graphviz-should-eql-gviz/)や[米国統計地図]({{ site.url }}/2012/09/27/usstates-map-data-vasualization-with-gviz/)や[地下鉄路線図]({{ site.url }}/2012/10/02/draw-metro-map-with-gviz/)が書けます。
 
 ## インストール
 Graphvizが必要です。自分のプラットフォームに合ったものを以下から入手して下さい。
