@@ -10,6 +10,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2013-08-16) 本記事のトリビアを含む５５のトリビアを以下の記事にまとめました。
+
+> [知って得する！５５のRubyのトリビアな記法]({{ site.url }}/2013/03/04/ruby-trivias-you-should-know-4/ "知って得する！５５のRubyのトリビアな記法")
+
+---
+
 なぜかトリビア人気が再燃しているよ。
 
 {% hatebu http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/ 知って得する21のRubyのトリビアな記法 %}

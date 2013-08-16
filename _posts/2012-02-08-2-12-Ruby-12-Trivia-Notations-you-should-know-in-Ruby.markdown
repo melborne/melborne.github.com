@@ -8,6 +8,12 @@ categories:
 tags: [ruby, tips]
 ---
 
+(追記：2013-08-16) 本記事のトリビアを含む５５のトリビアを以下の記事にまとめました。
+
+> [知って得する！５５のRubyのトリビアな記法]({{ site.url }}/2013/03/04/ruby-trivias-you-should-know-4/ "知って得する！５５のRubyのトリビアな記法")
+
+---
+
 半年くらい前にちょっとトリビアだけど、知っていると意外と便利なRubyの記法を21個紹介したよ。
 
 [知って得する21のRubyのトリビアな記法 ~ 21 Trivia Notations you should know in Ruby]({{ site.url }}/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
