@@ -13,4 +13,5 @@ gem 'thin'
 gem 'liquid'
 gem 'ruby-aaws'
 gem 'nokogiri'
-
+gem 'ruby-aaws'
+gem 'iconv'
