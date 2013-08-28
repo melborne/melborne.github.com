@@ -86,5 +86,12 @@ irb> Array.ancestors.map{|klass| klass.instance_methods(false)}.inject{|mem,klas
 <span style="color:#6BBF3F">るびお</span>「...」
 
 
+<br />
+
+---
+
+(追記：2013-08-28) 続きを書きました。
+
+[Rubyのメソッドをもう一度、数えましょう♫]({{ site.url }}/2013/08/28/count-methods-of-ruby-2/ "Rubyのメソッドをもう一度、数えましょう♫")
 
 
