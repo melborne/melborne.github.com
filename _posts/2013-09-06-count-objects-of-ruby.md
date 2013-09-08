@@ -88,7 +88,7 @@ Google Inc, NASDAQ, GOOG, Search Engines, www.google.com
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
   def initialize(*args)
     super
-    self.class.stocks << self
++   self.class.stocks << self
   end
   
   def to_s
@@ -102,16 +102,16 @@ Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
     format % values
   end
   
-  def self.stocks
-    @stocks ||= []
-  end
++ def self.stocks
++   @stocks ||= []
++ end
 end
 
 require "csv"
 
 CSV.parse(DATA.read).each { |data| Stock.new *data.map(&:strip) }
 
-puts Stock.stocks
++puts Stock.stocks
 
 __END__
 Tiffany & Co., NYSE, TIF, Jewelry Retailers, www.tiffany.com
@@ -129,21 +129,21 @@ Google Inc, NASDAQ, GOOG, Search Engines, www.google.com
 
 
 {% highlight ruby %}
-module ObjectTrapper
-  def new(*args, &blk)
-    obj = allocate
-    obj.send(:initialize, *args, &blk)
-    objects << obj
-    obj
-  end
-  
-  def objects
-    @objects ||= []
-  end
-end
++ module ObjectTrapper
++   def new(*args, &blk)
++     obj = allocate
++     obj.send(:initialize, *args, &blk)
++     objects << obj
++     obj
++   end
++   
++   def objects
++     @objects ||= []
++   end
++ end
 
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
-  extend ObjectTrapper
++ extend ObjectTrapper
   def initialize(*args)
     super
   end
@@ -189,9 +189,9 @@ p Stock.objects
 
 {% highlight ruby %}
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
-  class << self
-    prepend ObjectTrapper
-  end
++ class << self
++   prepend ObjectTrapper
++ end
 
   def initialize(*args)
     super
@@ -248,13 +248,13 @@ puts Stock.objects
 
 {% highlight ruby %}
 module ObjectTrapper
-  def objects
-    ObjectSpace.each_object(self).to_a
-  end
++ def objects
++   ObjectSpace.each_object(self).to_a
++ end
 end
 
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
-  extend ObjectTrapper
++ extend ObjectTrapper
 
   def initialize(*args)
     super
