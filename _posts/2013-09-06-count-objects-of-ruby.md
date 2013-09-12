@@ -144,9 +144,6 @@ Google Inc, NASDAQ, GOOG, Search Engines, www.google.com
 
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
 + extend ObjectTrapper
-  def initialize(*args)
-    super
-  end
   
   def to_s
     format = <<-EOS
@@ -192,10 +189,6 @@ Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
 + class << self
 +   prepend ObjectTrapper
 + end
-
-  def initialize(*args)
-    super
-  end
   
   def to_s
     format = <<-EOS
@@ -256,10 +249,6 @@ end
 Stock = Struct.new(:name, :market, :ticker, :sector, :website, :desc) do
 + extend ObjectTrapper
 
-  def initialize(*args)
-    super
-  end
-  
   def to_s
     format = <<-EOS
     %s (%s:%s)
@@ -316,6 +305,10 @@ Google Inc, NASDAQ, GOOG, Search Engines, www.google.com
 
 
 <br />
+
+---
+
+(追記：2013-09-12) 一部コードを修正しました(initializeの削除)。
 
 ---
 
