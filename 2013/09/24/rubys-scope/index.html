@@ -1,0 +1,668 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyにおけるスコープのおはなし</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>24 September 2013</span></div>
+  <h1 class='page-title'><a href="/2013/09/24/rubys-scope">Rubyにおけるスコープのおはなし</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>今ここで「首相は誰？」と言ったら、答えは「安倍晋三」になります。ジュネーブの国際会議で「首相は誰？」と言ったら、答えは「不定」になります。しかし世界統一国家なるものが存在しうるなら、そこでの答えは「バラク・オバマ」になります。</p>
+
+<p>つまり「首相」という語は環境依存です。</p>
+
+<p>「首相」における環境依存性を排除する一つの方法は、それに名前空間、つまり対象限定子を付けることです。「<strong>日本の</strong>首相は誰？」「<strong>世界統一国家の</strong>首相は誰？」と言えば、どんな環境にあろうとも「首相」という語が指す対象は一意です<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<h2>Rubyの定数</h2>
+
+<p>Rubyにも名前空間の機能があるので、環境依存性を排除した首相を実装できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">UK</span>
+  <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;David Camelon&#39;</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Germany</span>
+  <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;Angela Merkel&#39;</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">USA</span>
+  <span class="no">President</span> <span class="o">=</span> <span class="s1">&#39;Barack Obama&#39;</span>
+<span class="k">end</span>
+
+<span class="c1"># The United Countries of the World</span>
+<span class="no">PrimeMinister</span> <span class="o">=</span> <span class="ss">USA</span><span class="p">:</span><span class="ss">:President</span>
+
+<span class="ss">Japan</span><span class="p">:</span><span class="ss">:PrimeMinister</span>   <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+<span class="ss">UK</span><span class="p">:</span><span class="ss">:PrimeMinister</span>      <span class="c1"># =&gt; &quot;David Camelon&quot;</span>
+<span class="ss">Germany</span><span class="p">:</span><span class="ss">:PrimeMinister</span> <span class="c1"># =&gt; &quot;Angela Merkel&quot;</span>
+<span class="no">PrimeMinister</span>          <span class="c1"># =&gt; &quot;Barack Obama&quot;</span>
+</code></pre></div>
+
+
+<p>Rubyではスコープ演算子<code>::</code>が自然言語における「の」の役割を担います。</p>
+
+<p>あなたが地球外生命体を信じているなら、こうしたほうが確実です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Earth</span>
+  <span class="k">class</span> <span class="nc">Japan</span>
+    <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">UK</span>
+    <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;David Camelon&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">Germany</span>
+    <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;Angela Merkel&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">USA</span>
+    <span class="no">President</span> <span class="o">=</span> <span class="s1">&#39;Barack Obama&#39;</span>
+  <span class="k">end</span>
+
+  <span class="c1"># The United Countries of the World</span>
+  <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="ss">USA</span><span class="p">:</span><span class="ss">:President</span>
+<span class="k">end</span>
+
+<span class="ss">Earth</span><span class="p">:</span><span class="ss">:Japan</span><span class="o">::</span><span class="no">PrimeMinister</span>   <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+<span class="ss">Earth</span><span class="p">:</span><span class="ss">:UK</span><span class="o">::</span><span class="no">PrimeMinister</span>      <span class="c1"># =&gt; &quot;David Camelon&quot;</span>
+<span class="ss">Earth</span><span class="p">:</span><span class="ss">:Germany</span><span class="o">::</span><span class="no">PrimeMinister</span> <span class="c1"># =&gt; &quot;Angela Merkel&quot;</span>
+<span class="ss">Earth</span><span class="p">:</span><span class="ss">:PrimeMinister</span>          <span class="c1"># =&gt; &quot;Barack Obama&quot;</span>
+</code></pre></div>
+
+
+<p>もちろん、日本国内ではいちいち「日本の」と限定する必要はありません。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="no">PrimeMinister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;消費税上げないで、</span><span class="si">#{</span><span class="no">PrimeMinister</span><span class="si">}</span><span class="s2">さん！&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;消費税上げないで、Shinzo Abeさん！&quot;</span>
+</code></pre></div>
+
+
+<h2>Rubyの変数</h2>
+
+<p>ここで、あなたが経験豊富なRubyistで政治に明るい人なら、先のコードを見て次のようなツッコミを入れるでしょう。</p>
+
+<pre><code>首相は定数じゃなくて、変数だから！特に日本じゃね！
+</code></pre>
+
+<p>では、変数版「首相」を定義して日本の外から呼んでみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="n">prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+<span class="k">end</span>
+
+<span class="ss">Japan</span><span class="p">:</span><span class="ss">:prime_minister</span>   <span class="c1"># =&gt; </span>
+
+<span class="c1"># ~&gt; -:5:in `&lt;main&gt;&#39;: undefined method `prime_minister&#39; for Japan:Class (NoMethodError)</span>
+</code></pre></div>
+
+
+<p>そう、Rubyでは自然言語における名前空間の場合とは異なり、変数<code>prime_minister</code>はJapanオブジェクトの外からは参照できないのです。</p>
+
+<p>では、内側からはどうでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="n">prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;消費税上げないで、</span><span class="si">#{</span><span class="n">prime_minister</span><span class="si">}</span><span class="s2">さん！&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; </span>
+
+<span class="c1"># ~&gt; -:4:in `people_saying&#39;: undefined local variable or method `prime_minister&#39; for Japan:Class (NameError)</span>
+</code></pre></div>
+
+
+<p>同様に、これもダメなのです。</p>
+
+<p>つまりRubyの変数は、オブジェクトの壁やメソッドの壁を超えては参照できず、それが定義された場所でしか通用しない極めてローカルなものなのです。言うなれば変数は「方言」や「ギャル語」と同じです。</p>
+
+<h2>インスタンス変数</h2>
+
+<p>周知のとおり我が国では「ギャル語」を国の公用語にしようとする運動が盛んです。かつてRubyの世界でも同種の運動があり、その結果として、変数の頭に対象拡張子<code>@</code>を付するという条件付きで、その有効範囲を拡張できるような仕組みが導入されました。</p>
+
+<p>任意のオブジェクトの中で<code>@</code>を前置した変数は、そのオブジェクトの中ならどこからでも参照・変更できるようになります。つまり対象拡張子<code>@</code>はオブジェクトを差しているのです。</p>
+
+<p><code>@</code>を使って、Japanオブジェクトにおけるメソッド<code>people_saying</code>の壁を乗り越えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="vi">@prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;消費税上げないで、</span><span class="si">#{</span><span class="vi">@prime_minister</span><span class="si">}</span><span class="s2">さん！&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;消費税上げないで、Shinzo Abeさん！&quot;</span>
+</code></pre></div>
+
+
+<p>とは言え、Japanオブジェクトの外から直接これを参照することまでは原則許容されません。その必要がある場合はゲッターを介した間接参照を使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="vi">@prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">prime_minister</span>
+    <span class="vi">@prime_minister</span>
+  <span class="k">end</span>
+
+  <span class="c1"># または</span>
+  <span class="c1"># class &lt;&lt; self</span>
+  <span class="c1">#   attr_reader :prime_minister</span>
+  <span class="c1"># end</span>
+
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">prime_minister</span> <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+</code></pre></div>
+
+
+<h2>グローバル変数</h2>
+
+<p>実はRubyの世界ではもっと過激な運動がありました。それは言わば、「ギャル語」を世界の共通語にする運動です。そして世界規模のこの運動にRubyの設計者は最終的には抗うことができず、対象拡張子<code>$</code>を付するならグローバルな参照を許す、という妥協案を提示しました。</p>
+
+<p>対象拡張子<code>$</code>を前置した変数は、当然に任意のオブジェクト内におけるメソッドの壁を乗り越えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="vg">$prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;消費税上げないで、</span><span class="si">#{</span><span class="vg">$prime_minister</span><span class="si">}</span><span class="s2">さん！&quot;</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;消費税上げないで、Shinzo Abeさん！&quot;</span>
+</code></pre></div>
+
+
+<p>そしてオブジェクトの壁も乗り越えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span>
+  <span class="vg">$prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;消費税上げないで、</span><span class="si">#{</span><span class="vg">$prime_minister</span><span class="si">}</span><span class="s2">さん！&quot;</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Greece</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">people_saying</span>
+    <span class="s2">&quot;More Jobs! Mr. </span><span class="si">#{</span><span class="vg">$prime_minister</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Greece</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;More Jobs! Mr. Shinzo Abe&quot;</span>
+
+<span class="vg">$prime_minister</span> <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+
+<span class="vg">$prime_minister</span> <span class="o">=</span> <span class="s2">&quot;Antonis Samaras&quot;</span>
+
+<span class="no">Greece</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;More Jobs! Mr. Antonis Samaras&quot;</span>
+<span class="no">Japan</span><span class="o">.</span><span class="n">people_saying</span> <span class="c1"># =&gt; &quot;消費税上げないで、Antonis Samarasさん！&quot;</span>
+</code></pre></div>
+
+
+<p>対象拡張子<code>$</code>はグローバルを差しています。それがどこで定義されようと、どこからでも参照および変更が可能です。つまりグローバル変数は名前空間という社会秩序を破壊します。</p>
+
+<p>もっとも、Rubyにおけるグローバル変数は厳密に言えばグローバルではありません。私のプログラムで<code>$fav = 'programming'</code>としても、あなたのプログラムにおける<code>$fav</code>変数は<code>'money'</code>のままです。更に言えば、私の別のプログラムにおける<code>$fav</code>も<code>'blogging'</code>のままです。つまりプログラムにおけるグローバルとは、その起動プロセスを指しています。誰かがプログラミングにおいて真のグローバルを求めたとき、世界は完全に崩壊します。</p>
+
+<p>ちなみにグローバル変数の記号<code>$</code>はドル（Dollar）であり、これは将来世界共通通貨ドルが生まれることを予言しています。</p>
+
+<h2>クラス変数</h2>
+
+<p>地球人皆友達（グローバル変数）は余りに過激で、ひとり言語（インスタンス変数）は寂しすぎます。「せめて家族だけでも」というのは、携帯家族割が当り前の世にあって傾聴に値する意見です。</p>
+
+<p>任意のクラスの中で対象拡張子<code>@@</code>を前置した変数は、そのクラスおよびそこから生成されるオブジェクト（インスタンス）の中ならどこからでも参照可能です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">JapanPref</span>
+  <span class="vc">@@prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Shinzo Abe&#39;</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">prime_minister</span>
+    <span class="vc">@@prime_minister</span>
+  <span class="k">end</span>
+
+  <span class="kp">attr_reader</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">pm</span>
+    <span class="vc">@@prime_minister</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">pm</span><span class="o">=</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vc">@@prime_minister</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">JapanPref</span><span class="o">.</span><span class="n">prime_minister</span> <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+
+<span class="n">tokyo</span> <span class="o">=</span> <span class="no">JapanPref</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:tokyo</span><span class="p">)</span>
+<span class="n">tokyo</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; :tokyo</span>
+<span class="n">tokyo</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+
+<span class="n">okinawa</span> <span class="o">=</span> <span class="no">JapanPref</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:okinawa</span><span class="p">)</span>
+<span class="n">okinawa</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; :okinawa</span>
+<span class="n">okinawa</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Shinzo Abe&quot;</span>
+</code></pre></div>
+
+
+<p>ここでokinawaオブジェクトにおけるpmに私、'Charlie'をセットしてみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">okinawa</span><span class="o">.</span><span class="n">pm</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
+
+<span class="no">JapanPref</span><span class="o">.</span><span class="n">prime_minister</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+<span class="n">tokyo</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+</code></pre></div>
+
+
+<p>瞬時に日本全国でその意見が共有されました。</p>
+
+<p>更にクラス変数は、そのクラス系譜、つまり継承クラス群およびそのインスタンスでも有効です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">JapanCity</span> <span class="o">&lt;</span> <span class="no">JapanPref</span>
+  <span class="vc">@@prime_minister</span> <span class="o">=</span> <span class="s1">&#39;Charlie II&#39;</span>
+  <span class="kp">attr_reader</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="k">super</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="n">sapporo</span> <span class="o">=</span> <span class="no">JapanCity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:sapporo</span><span class="p">)</span>
+<span class="n">sapporo</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; :sapporo</span>
+<span class="n">sapporo</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Charlie II&quot;</span>
+
+<span class="n">matsue</span> <span class="o">=</span> <span class="no">JapanCity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:matsue</span><span class="p">)</span>
+<span class="n">matsue</span><span class="o">.</span><span class="n">pm</span> <span class="o">=</span> <span class="s1">&#39;Matz&#39;</span>
+
+<span class="n">sapporo</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Matz&quot;</span>
+<span class="no">JapanCity</span><span class="o">.</span><span class="n">prime_minister</span> <span class="c1"># =&gt; &quot;Matz&quot;</span>
+<span class="no">JapanPref</span><span class="o">.</span><span class="n">prime_minister</span> <span class="c1"># =&gt; &quot;Matz&quot;</span>
+<span class="n">okinawa</span><span class="o">.</span><span class="n">pm</span> <span class="c1"># =&gt; &quot;Matz&quot;</span>
+</code></pre></div>
+
+
+<p>松江市の策略でMatzが総理になることに何ら異論はありませんが、クラス変数の有効範囲はちょっと広すぎる感がありますね（'Charlie'を外されてスネてるわけではありません...）。Objectクラスのクラス変数はほぼグローバル変数と等価になります。</p>
+
+<p>Rubyにおけるスコープのおはなしは以上です。さようなら。</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>ここでは時制の問題は議論しません <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/24/rubys-scope/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyにおけるスコープのおはなし" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/24/rubys-scope/" data-text="Rubyにおけるスコープのおはなし" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/24/rubys-scope/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/24/rubys-scope/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/09/06/count-objects-of-ruby" title="Rubyのオブジェクトを数えましょう♫">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/24/rubys-scope/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyにおけるスコープのおはなし" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/24/rubys-scope/" data-text="Rubyにおけるスコープのおはなし" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/24/rubys-scope/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/24/rubys-scope/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
