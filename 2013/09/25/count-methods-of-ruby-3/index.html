@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Rubyでオブジェクトの特徴的なメソッドを知りたい</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>25 September 2013</span></div>
+  <h1 class='page-title'><a href="/2013/09/25/count-methods-of-ruby-3">Rubyでオブジェクトの特徴的なメソッドを知りたい</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>オブジェクトがどんな挙動をするのか、つまりそのオブジェクトの特徴的なメソッド群をさっと知りたいとします。そんなとき自分は<code>Object#methods</code>を呼びます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_a</span><span class="p">,</span> <span class="ss">:to_ary</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:at</span><span class="p">,</span> <span class="ss">:fetch</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:last</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:push</span><span class="p">,</span> <span class="ss">:pop</span><span class="p">,</span> <span class="ss">:shift</span><span class="p">,</span> <span class="ss">:unshift</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:each</span><span class="p">,</span> <span class="ss">:each_index</span><span class="p">,</span> <span class="ss">:reverse_each</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="ss">:find_index</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:join</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:rotate</span><span class="p">,</span> <span class="ss">:rotate!</span><span class="p">,</span> <span class="ss">:sort</span><span class="p">,</span> <span class="ss">:sort!</span><span class="p">,</span> <span class="ss">:sort_by!</span><span class="p">,</span> <span class="ss">:collect</span><span class="p">,</span> <span class="ss">:collect!</span><span class="p">,</span> <span class="ss">:map</span><span class="p">,</span> <span class="ss">:map!</span><span class="p">,</span> <span class="ss">:select</span><span class="p">,</span> <span class="ss">:select!</span><span class="p">,</span> <span class="ss">:keep_if</span><span class="p">,</span> <span class="ss">:values_at</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:delete_at</span><span class="p">,</span> <span class="ss">:delete_if</span><span class="p">,</span> <span class="ss">:reject</span><span class="p">,</span> <span class="ss">:reject!</span><span class="p">,</span> <span class="ss">:zip</span><span class="p">,</span> <span class="ss">:transpose</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:fill</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:assoc</span><span class="p">,</span> <span class="ss">:rassoc</span><span class="p">,</span> <span class="ss">:+</span><span class="p">,</span> <span class="ss">:*</span><span class="p">,</span> <span class="ss">:-</span><span class="p">,</span> <span class="ss">:&amp;</span><span class="p">,</span> <span class="ss">:|</span><span class="p">,</span> <span class="ss">:uniq</span><span class="p">,</span> <span class="ss">:uniq!</span><span class="p">,</span> <span class="ss">:compact</span><span class="p">,</span> <span class="ss">:compact!</span><span class="p">,</span> <span class="ss">:flatten</span><span class="p">,</span> <span class="ss">:flatten!</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:shuffle!</span><span class="p">,</span> <span class="ss">:shuffle</span><span class="p">,</span> <span class="ss">:sample</span><span class="p">,</span> <span class="ss">:cycle</span><span class="p">,</span> <span class="ss">:permutation</span><span class="p">,</span> <span class="ss">:combination</span><span class="p">,</span> <span class="ss">:repeated_permutation</span><span class="p">,</span> <span class="ss">:repeated_combination</span><span class="p">,</span> <span class="ss">:product</span><span class="p">,</span> <span class="ss">:take</span><span class="p">,</span> <span class="ss">:take_while</span><span class="p">,</span> <span class="ss">:drop</span><span class="p">,</span> <span class="ss">:drop_while</span><span class="p">,</span> <span class="ss">:bsearch</span><span class="p">,</span> <span class="ss">:pack</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:sort_by</span><span class="p">,</span> <span class="ss">:grep</span><span class="p">,</span> <span class="ss">:find</span><span class="p">,</span> <span class="ss">:detect</span><span class="p">,</span> <span class="ss">:find_all</span><span class="p">,</span> <span class="ss">:flat_map</span><span class="p">,</span> <span class="ss">:collect_concat</span><span class="p">,</span> <span class="ss">:inject</span><span class="p">,</span> <span class="ss">:reduce</span><span class="p">,</span> <span class="ss">:partition</span><span class="p">,</span> <span class="ss">:group_by</span><span class="p">,</span> <span class="ss">:all?</span><span class="p">,</span> <span class="ss">:any?</span><span class="p">,</span> <span class="ss">:one?</span><span class="p">,</span> <span class="ss">:none?</span><span class="p">,</span> <span class="ss">:min</span><span class="p">,</span> <span class="ss">:max</span><span class="p">,</span> <span class="ss">:minmax</span><span class="p">,</span> <span class="ss">:min_by</span><span class="p">,</span> <span class="ss">:max_by</span><span class="p">,</span> <span class="ss">:minmax_by</span><span class="p">,</span> <span class="ss">:member?</span><span class="p">,</span> <span class="ss">:each_with_index</span><span class="p">,</span> <span class="ss">:each_entry</span><span class="p">,</span> <span class="ss">:each_slice</span><span class="p">,</span> <span class="ss">:each_cons</span><span class="p">,</span> <span class="ss">:each_with_object</span><span class="p">,</span> <span class="ss">:chunk</span><span class="p">,</span> <span class="ss">:slice_before</span><span class="p">,</span> <span class="ss">:lazy</span><span class="p">,</span> <span class="ss">:nil?</span><span class="p">,</span> <span class="ss">:===</span><span class="p">,</span> <span class="p">:</span><span class="o">=~</span><span class="p">,</span> <span class="p">:</span><span class="o">!~</span><span class="p">,</span> <span class="ss">:class</span><span class="p">,</span> <span class="ss">:singleton_class</span><span class="p">,</span> <span class="ss">:clone</span><span class="p">,</span> <span class="ss">:dup</span><span class="p">,</span> <span class="ss">:taint</span><span class="p">,</span> <span class="ss">:tainted?</span><span class="p">,</span> <span class="ss">:untaint</span><span class="p">,</span> <span class="ss">:untrust</span><span class="p">,</span> <span class="ss">:untrusted?</span><span class="p">,</span> <span class="ss">:trust</span><span class="p">,</span> <span class="ss">:freeze</span><span class="p">,</span> <span class="ss">:methods</span><span class="p">,</span> <span class="ss">:singleton_methods</span><span class="p">,</span> <span class="ss">:protected_methods</span><span class="p">,</span> <span class="ss">:private_methods</span><span class="p">,</span> <span class="ss">:public_methods</span><span class="p">,</span> <span class="ss">:instance_variables</span><span class="p">,</span> <span class="ss">:instance_variable_get</span><span class="p">,</span> <span class="ss">:instance_variable_set</span><span class="p">,</span> <span class="ss">:instance_variable_defined?</span><span class="p">,</span> <span class="ss">:remove_instance_variable</span><span class="p">,</span> <span class="ss">:instance_of?</span><span class="p">,</span> <span class="ss">:kind_of?</span><span class="p">,</span> <span class="ss">:is_a?</span><span class="p">,</span> <span class="ss">:tap</span><span class="p">,</span> <span class="ss">:send</span><span class="p">,</span> <span class="ss">:public_send</span><span class="p">,</span> <span class="ss">:respond_to?</span><span class="p">,</span> <span class="ss">:extend</span><span class="p">,</span> <span class="ss">:display</span><span class="p">,</span> <span class="ss">:method</span><span class="p">,</span> <span class="ss">:public_method</span><span class="p">,</span> <span class="ss">:define_singleton_method</span><span class="p">,</span> <span class="ss">:object_id</span><span class="p">,</span> <span class="ss">:to_enum</span><span class="p">,</span> <span class="ss">:enum_for</span><span class="p">,</span> <span class="ss">:equal?</span><span class="p">,</span> <span class="p">:</span><span class="o">!</span><span class="p">,</span> <span class="p">:</span><span class="o">!=</span><span class="p">,</span> <span class="ss">:instance_eval</span><span class="p">,</span> <span class="ss">:instance_exec</span><span class="p">,</span> <span class="ss">:__send__</span><span class="p">,</span> <span class="ss">:__id__</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>しかし、この結果にはそのオブジェクトで利用できるすべてのメソッドが含まれているので、これを眺めてそのオブジェクトの特性を推測するのは困難です。</p>
+
+<p><code>methods</code>メソッドの引数に<code>false</code>を渡すと、そのオブジェクト固有のメソッドだけが抽出されます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[]</span>
+</code></pre></div>
+
+
+<p>シングルトンメソッドが定義されていない限り、通常何も出力されないので、あまり役に立ちません。</p>
+
+<p>そこで、そのオブジェクトのクラスを調べ、そのクラスに定義されているメソッドを調べることになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">class</span>
+<span class="o">=&gt;</span> <span class="nb">Array</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="nb">Array</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_a</span><span class="p">,</span> <span class="ss">:to_ary</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:at</span><span class="p">,</span> <span class="ss">:fetch</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:last</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:push</span><span class="p">,</span> <span class="ss">:pop</span><span class="p">,</span> <span class="ss">:shift</span><span class="p">,</span> <span class="ss">:unshift</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:each</span><span class="p">,</span> <span class="ss">:each_index</span><span class="p">,</span> <span class="ss">:reverse_each</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="ss">:find_index</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:join</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:rotate</span><span class="p">,</span> <span class="ss">:rotate!</span><span class="p">,</span> <span class="ss">:sort</span><span class="p">,</span> <span class="ss">:sort!</span><span class="p">,</span> <span class="ss">:sort_by!</span><span class="p">,</span> <span class="ss">:collect</span><span class="p">,</span> <span class="ss">:collect!</span><span class="p">,</span> <span class="ss">:map</span><span class="p">,</span> <span class="ss">:map!</span><span class="p">,</span> <span class="ss">:select</span><span class="p">,</span> <span class="ss">:select!</span><span class="p">,</span> <span class="ss">:keep_if</span><span class="p">,</span> <span class="ss">:values_at</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:delete_at</span><span class="p">,</span> <span class="ss">:delete_if</span><span class="p">,</span> <span class="ss">:reject</span><span class="p">,</span> <span class="ss">:reject!</span><span class="p">,</span> <span class="ss">:zip</span><span class="p">,</span> <span class="ss">:transpose</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:fill</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:assoc</span><span class="p">,</span> <span class="ss">:rassoc</span><span class="p">,</span> <span class="ss">:+</span><span class="p">,</span> <span class="ss">:*</span><span class="p">,</span> <span class="ss">:-</span><span class="p">,</span> <span class="ss">:&amp;</span><span class="p">,</span> <span class="ss">:|</span><span class="p">,</span> <span class="ss">:uniq</span><span class="p">,</span> <span class="ss">:uniq!</span><span class="p">,</span> <span class="ss">:compact</span><span class="p">,</span> <span class="ss">:compact!</span><span class="p">,</span> <span class="ss">:flatten</span><span class="p">,</span> <span class="ss">:flatten!</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:shuffle!</span><span class="p">,</span> <span class="ss">:shuffle</span><span class="p">,</span> <span class="ss">:sample</span><span class="p">,</span> <span class="ss">:cycle</span><span class="p">,</span> <span class="ss">:permutation</span><span class="p">,</span> <span class="ss">:combination</span><span class="p">,</span> <span class="ss">:repeated_permutation</span><span class="p">,</span> <span class="ss">:repeated_combination</span><span class="p">,</span> <span class="ss">:product</span><span class="p">,</span> <span class="ss">:take</span><span class="p">,</span> <span class="ss">:take_while</span><span class="p">,</span> <span class="ss">:drop</span><span class="p">,</span> <span class="ss">:drop_while</span><span class="p">,</span> <span class="ss">:bsearch</span><span class="p">,</span> <span class="ss">:pack</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>もう一歩進んで、継承上位のクラスに特徴的なメソッド群がないか見たいこともあります。そんなときは、そのオブジェクトのクラス継承を調べて、メソッドを見つけることになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="nb">Array</span><span class="p">,</span> <span class="no">Enumerable</span><span class="p">,</span> <span class="no">Object</span><span class="p">,</span> <span class="no">Kernel</span><span class="p">,</span> <span class="no">BasicObject</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="no">Enumerable</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:to_a</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:sort</span><span class="p">,</span> <span class="ss">:sort_by</span><span class="p">,</span> <span class="ss">:grep</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:find</span><span class="p">,</span> <span class="ss">:detect</span><span class="p">,</span> <span class="ss">:find_index</span><span class="p">,</span> <span class="ss">:find_all</span><span class="p">,</span> <span class="ss">:select</span><span class="p">,</span> <span class="ss">:reject</span><span class="p">,</span> <span class="ss">:collect</span><span class="p">,</span> <span class="ss">:map</span><span class="p">,</span> <span class="ss">:flat_map</span><span class="p">,</span> <span class="ss">:collect_concat</span><span class="p">,</span> <span class="ss">:inject</span><span class="p">,</span> <span class="ss">:reduce</span><span class="p">,</span> <span class="ss">:partition</span><span class="p">,</span> <span class="ss">:group_by</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:all?</span><span class="p">,</span> <span class="ss">:any?</span><span class="p">,</span> <span class="ss">:one?</span><span class="p">,</span> <span class="ss">:none?</span><span class="p">,</span> <span class="ss">:min</span><span class="p">,</span> <span class="ss">:max</span><span class="p">,</span> <span class="ss">:minmax</span><span class="p">,</span> <span class="ss">:min_by</span><span class="p">,</span> <span class="ss">:max_by</span><span class="p">,</span> <span class="ss">:minmax_by</span><span class="p">,</span> <span class="ss">:member?</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:each_with_index</span><span class="p">,</span> <span class="ss">:reverse_each</span><span class="p">,</span> <span class="ss">:each_entry</span><span class="p">,</span> <span class="ss">:each_slice</span><span class="p">,</span> <span class="ss">:each_cons</span><span class="p">,</span> <span class="ss">:each_with_object</span><span class="p">,</span> <span class="ss">:zip</span><span class="p">,</span> <span class="ss">:take</span><span class="p">,</span> <span class="ss">:take_while</span><span class="p">,</span> <span class="ss">:drop</span><span class="p">,</span> <span class="ss">:drop_while</span><span class="p">,</span> <span class="ss">:cycle</span><span class="p">,</span> <span class="ss">:chunk</span><span class="p">,</span> <span class="ss">:slice_before</span><span class="p">,</span> <span class="ss">:lazy</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>なんか...</p>
+
+<p>面倒ですよね？</p>
+
+<p>そんなわけで...Array#flattenに倣って...</p>
+
+<br />
+
+
+<p><code>Object.methods</code>が数字を取れるようにしてみましたよ！</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Skin</span>
+  <span class="k">def</span> <span class="nf">methods</span><span class="p">(</span><span class="n">lv</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">lv</span>
+    <span class="k">when</span> <span class="no">Fixnum</span>
+      <span class="k">return</span> <span class="k">super</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="k">if</span> <span class="n">lv</span><span class="o">&lt;=</span><span class="mi">0</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">lv</span><span class="p">)</span>
+          <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">klass</span><span class="o">|</span> <span class="n">klass</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="p">}</span>
+          <span class="o">.</span><span class="n">inject</span> <span class="p">{</span> <span class="o">|</span><span class="n">acc</span><span class="p">,</span> <span class="n">klass</span><span class="o">|</span> <span class="n">acc</span> <span class="o">|</span> <span class="n">klass</span> <span class="p">}</span>
+    <span class="k">else</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">Skin</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><code>0</code>はfalseと等価です。数字が増える度に継承上位のメソッド群が足されていきます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_a</span><span class="p">,</span> <span class="ss">:to_ary</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:at</span><span class="p">,</span> <span class="ss">:fetch</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:last</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:push</span><span class="p">,</span> <span class="ss">:pop</span><span class="p">,</span> <span class="ss">:shift</span><span class="p">,</span> <span class="ss">:unshift</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:each</span><span class="p">,</span> <span class="ss">:each_index</span><span class="p">,</span> <span class="ss">:reverse_each</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="ss">:find_index</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:join</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:rotate</span><span class="p">,</span> <span class="ss">:rotate!</span><span class="p">,</span> <span class="ss">:sort</span><span class="p">,</span> <span class="ss">:sort!</span><span class="p">,</span> <span class="ss">:sort_by!</span><span class="p">,</span> <span class="ss">:collect</span><span class="p">,</span> <span class="ss">:collect!</span><span class="p">,</span> <span class="ss">:map</span><span class="p">,</span> <span class="ss">:map!</span><span class="p">,</span> <span class="ss">:select</span><span class="p">,</span> <span class="ss">:select!</span><span class="p">,</span> <span class="ss">:keep_if</span><span class="p">,</span> <span class="ss">:values_at</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:delete_at</span><span class="p">,</span> <span class="ss">:delete_if</span><span class="p">,</span> <span class="ss">:reject</span><span class="p">,</span> <span class="ss">:reject!</span><span class="p">,</span> <span class="ss">:zip</span><span class="p">,</span> <span class="ss">:transpose</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:fill</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:assoc</span><span class="p">,</span> <span class="ss">:rassoc</span><span class="p">,</span> <span class="ss">:+</span><span class="p">,</span> <span class="ss">:*</span><span class="p">,</span> <span class="ss">:-</span><span class="p">,</span> <span class="ss">:&amp;</span><span class="p">,</span> <span class="ss">:|</span><span class="p">,</span> <span class="ss">:uniq</span><span class="p">,</span> <span class="ss">:uniq!</span><span class="p">,</span> <span class="ss">:compact</span><span class="p">,</span> <span class="ss">:compact!</span><span class="p">,</span> <span class="ss">:flatten</span><span class="p">,</span> <span class="ss">:flatten!</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:shuffle!</span><span class="p">,</span> <span class="ss">:shuffle</span><span class="p">,</span> <span class="ss">:sample</span><span class="p">,</span> <span class="ss">:cycle</span><span class="p">,</span> <span class="ss">:permutation</span><span class="p">,</span> <span class="ss">:combination</span><span class="p">,</span> <span class="ss">:repeated_permutation</span><span class="p">,</span> <span class="ss">:repeated_combination</span><span class="p">,</span> <span class="ss">:product</span><span class="p">,</span> <span class="ss">:take</span><span class="p">,</span> <span class="ss">:take_while</span><span class="p">,</span> <span class="ss">:drop</span><span class="p">,</span> <span class="ss">:drop_while</span><span class="p">,</span> <span class="ss">:bsearch</span><span class="p">,</span> <span class="ss">:pack</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_a</span><span class="p">,</span> <span class="ss">:to_ary</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:at</span><span class="p">,</span> <span class="ss">:fetch</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:last</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:push</span><span class="p">,</span> <span class="ss">:pop</span><span class="p">,</span> <span class="ss">:shift</span><span class="p">,</span> <span class="ss">:unshift</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:each</span><span class="p">,</span> <span class="ss">:each_index</span><span class="p">,</span> <span class="ss">:reverse_each</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="ss">:find_index</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:join</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:rotate</span><span class="p">,</span> <span class="ss">:rotate!</span><span class="p">,</span> <span class="ss">:sort</span><span class="p">,</span> <span class="ss">:sort!</span><span class="p">,</span> <span class="ss">:sort_by!</span><span class="p">,</span> <span class="ss">:collect</span><span class="p">,</span> <span class="ss">:collect!</span><span class="p">,</span> <span class="ss">:map</span><span class="p">,</span> <span class="ss">:map!</span><span class="p">,</span> <span class="ss">:select</span><span class="p">,</span> <span class="ss">:select!</span><span class="p">,</span> <span class="ss">:keep_if</span><span class="p">,</span> <span class="ss">:values_at</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:delete_at</span><span class="p">,</span> <span class="ss">:delete_if</span><span class="p">,</span> <span class="ss">:reject</span><span class="p">,</span> <span class="ss">:reject!</span><span class="p">,</span> <span class="ss">:zip</span><span class="p">,</span> <span class="ss">:transpose</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:fill</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:assoc</span><span class="p">,</span> <span class="ss">:rassoc</span><span class="p">,</span> <span class="ss">:+</span><span class="p">,</span> <span class="ss">:*</span><span class="p">,</span> <span class="ss">:-</span><span class="p">,</span> <span class="ss">:&amp;</span><span class="p">,</span> <span class="ss">:|</span><span class="p">,</span> <span class="ss">:uniq</span><span class="p">,</span> <span class="ss">:uniq!</span><span class="p">,</span> <span class="ss">:compact</span><span class="p">,</span> <span class="ss">:compact!</span><span class="p">,</span> <span class="ss">:flatten</span><span class="p">,</span> <span class="ss">:flatten!</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:shuffle!</span><span class="p">,</span> <span class="ss">:shuffle</span><span class="p">,</span> <span class="ss">:sample</span><span class="p">,</span> <span class="ss">:cycle</span><span class="p">,</span> <span class="ss">:permutation</span><span class="p">,</span> <span class="ss">:combination</span><span class="p">,</span> <span class="ss">:repeated_permutation</span><span class="p">,</span> <span class="ss">:repeated_combination</span><span class="p">,</span> <span class="ss">:product</span><span class="p">,</span> <span class="ss">:take</span><span class="p">,</span> <span class="ss">:take_while</span><span class="p">,</span> <span class="ss">:drop</span><span class="p">,</span> <span class="ss">:drop_while</span><span class="p">,</span> <span class="ss">:bsearch</span><span class="p">,</span> <span class="ss">:pack</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:sort_by</span><span class="p">,</span> <span class="ss">:grep</span><span class="p">,</span> <span class="ss">:find</span><span class="p">,</span> <span class="ss">:detect</span><span class="p">,</span> <span class="ss">:find_all</span><span class="p">,</span> <span class="ss">:flat_map</span><span class="p">,</span> <span class="ss">:collect_concat</span><span class="p">,</span> <span class="ss">:inject</span><span class="p">,</span> <span class="ss">:reduce</span><span class="p">,</span> <span class="ss">:partition</span><span class="p">,</span> <span class="ss">:group_by</span><span class="p">,</span> <span class="ss">:all?</span><span class="p">,</span> <span class="ss">:any?</span><span class="p">,</span> <span class="ss">:one?</span><span class="p">,</span> <span class="ss">:none?</span><span class="p">,</span> <span class="ss">:min</span><span class="p">,</span> <span class="ss">:max</span><span class="p">,</span> <span class="ss">:minmax</span><span class="p">,</span> <span class="ss">:min_by</span><span class="p">,</span> <span class="ss">:max_by</span><span class="p">,</span> <span class="ss">:minmax_by</span><span class="p">,</span> <span class="ss">:member?</span><span class="p">,</span> <span class="ss">:each_with_index</span><span class="p">,</span> <span class="ss">:each_entry</span><span class="p">,</span> <span class="ss">:each_slice</span><span class="p">,</span> <span class="ss">:each_cons</span><span class="p">,</span> <span class="ss">:each_with_object</span><span class="p">,</span> <span class="ss">:chunk</span><span class="p">,</span> <span class="ss">:slice_before</span><span class="p">,</span> <span class="ss">:lazy</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="nb">Array</span><span class="p">,</span> <span class="no">Enumerable</span><span class="p">,</span> <span class="no">Object</span><span class="p">,</span> <span class="no">Skin</span><span class="p">,</span> <span class="no">Kernel</span><span class="p">,</span> <span class="no">BasicObject</span><span class="o">]</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">0</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">89</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">120</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">120</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">121</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">160</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">167</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">methods</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">167</span>
+</code></pre></div>
+
+
+<p>Nokogiriでの結果はこんな感じです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;nokogiri&#39;</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span> <span class="o">=</span> <span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:HTML</span><span class="p">(</span><span class="s1">&#39;&lt;html&gt;&lt;/html&gt;&#39;</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;Nokogiri::HTML::Document:0x3fd0ea1d71d0 name=&quot;document&quot; children=[#&lt;Nokogiri::XML::DTD:0x3fd0ea1d6e38 name=&quot;html&quot;&gt;, #&lt;Nokogiri::XML::Element:0x3fd0ea1d6ab4 name=&quot;html&quot;&gt;]&gt;</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:HTML</span><span class="o">::</span><span class="no">Document</span><span class="p">,</span> <span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:XML</span><span class="o">::</span><span class="no">Document</span><span class="p">,</span> <span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:XML</span><span class="o">::</span><span class="no">Node</span><span class="p">,</span> <span class="no">Enumerable</span><span class="p">,</span> <span class="ss">Nokogiri</span><span class="p">:</span><span class="ss">:XML</span><span class="o">::</span><span class="ss">PP</span><span class="p">:</span><span class="ss">:Node</span><span class="p">,</span> <span class="no">Object</span><span class="p">,</span> <span class="no">Skin</span><span class="p">,</span> <span class="no">Kernel</span><span class="p">,</span> <span class="no">BasicObject</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:type</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="o">=</span><span class="p">,</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">:title</span><span class="o">=</span><span class="p">,</span> <span class="ss">:serialize</span><span class="p">,</span> <span class="ss">:fragment</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:type</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="o">=</span><span class="p">,</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">:title</span><span class="o">=</span><span class="p">,</span> <span class="ss">:serialize</span><span class="p">,</span> <span class="ss">:fragment</span><span class="p">,</span> <span class="ss">:root</span><span class="p">,</span> <span class="ss">:root</span><span class="o">=</span><span class="p">,</span> <span class="ss">:encoding</span><span class="p">,</span> <span class="ss">:encoding</span><span class="o">=</span><span class="p">,</span> <span class="ss">:version</span><span class="p">,</span> <span class="ss">:canonicalize</span><span class="p">,</span> <span class="ss">:dup</span><span class="p">,</span> <span class="ss">:url</span><span class="p">,</span> <span class="ss">:create_entity</span><span class="p">,</span> <span class="ss">:remove_namespaces!</span><span class="p">,</span> <span class="ss">:errors</span><span class="p">,</span> <span class="ss">:errors</span><span class="o">=</span><span class="p">,</span> <span class="ss">:create_element</span><span class="p">,</span> <span class="ss">:create_text_node</span><span class="p">,</span> <span class="ss">:create_cdata</span><span class="p">,</span> <span class="ss">:create_comment</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:document</span><span class="p">,</span> <span class="ss">:collect_namespaces</span><span class="p">,</span> <span class="ss">:decorators</span><span class="p">,</span> <span class="ss">:validate</span><span class="p">,</span> <span class="ss">:slop!</span><span class="p">,</span> <span class="ss">:decorate</span><span class="p">,</span> <span class="ss">:to_xml</span><span class="p">,</span> <span class="ss">:clone</span><span class="p">,</span> <span class="ss">:namespaces</span><span class="p">,</span> <span class="ss">:add_child</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:to_java</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:type</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="p">,</span> <span class="ss">:meta_encoding</span><span class="o">=</span><span class="p">,</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">:title</span><span class="o">=</span><span class="p">,</span> <span class="ss">:serialize</span><span class="p">,</span> <span class="ss">:fragment</span><span class="p">,</span> <span class="ss">:root</span><span class="p">,</span> <span class="ss">:root</span><span class="o">=</span><span class="p">,</span> <span class="ss">:encoding</span><span class="p">,</span> <span class="ss">:encoding</span><span class="o">=</span><span class="p">,</span> <span class="ss">:version</span><span class="p">,</span> <span class="ss">:canonicalize</span><span class="p">,</span> <span class="ss">:dup</span><span class="p">,</span> <span class="ss">:url</span><span class="p">,</span> <span class="ss">:create_entity</span><span class="p">,</span> <span class="ss">:remove_namespaces!</span><span class="p">,</span> <span class="ss">:errors</span><span class="p">,</span> <span class="ss">:errors</span><span class="o">=</span><span class="p">,</span> <span class="ss">:create_element</span><span class="p">,</span> <span class="ss">:create_text_node</span><span class="p">,</span> <span class="ss">:create_cdata</span><span class="p">,</span> <span class="ss">:create_comment</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:document</span><span class="p">,</span> <span class="ss">:collect_namespaces</span><span class="p">,</span> <span class="ss">:decorators</span><span class="p">,</span> <span class="ss">:validate</span><span class="p">,</span> <span class="ss">:slop!</span><span class="p">,</span> <span class="ss">:decorate</span><span class="p">,</span> <span class="ss">:to_xml</span><span class="p">,</span> <span class="ss">:clone</span><span class="p">,</span> <span class="ss">:namespaces</span><span class="p">,</span> <span class="ss">:add_child</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:to_java</span><span class="p">,</span> <span class="ss">:add_namespace_definition</span><span class="p">,</span> <span class="ss">:node_name</span><span class="p">,</span> <span class="ss">:node_name</span><span class="o">=</span><span class="p">,</span> <span class="ss">:parent</span><span class="p">,</span> <span class="ss">:child</span><span class="p">,</span> <span class="ss">:first_element_child</span><span class="p">,</span> <span class="ss">:last_element_child</span><span class="p">,</span>
+<span class="ss">:children</span><span class="p">,</span> <span class="ss">:element_children</span><span class="p">,</span> <span class="ss">:next_sibling</span><span class="p">,</span> <span class="ss">:previous_sibling</span><span class="p">,</span> <span class="ss">:next_element</span><span class="p">,</span> <span class="ss">:previous_element</span><span class="p">,</span> <span class="ss">:node_type</span><span class="p">,</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">:key?</span><span class="p">,</span> <span class="ss">:namespaced_key?</span><span class="p">,</span> <span class="ss">:blank?</span><span class="p">,</span> <span class="ss">:attribute_nodes</span><span class="p">,</span>
+ <span class="ss">:attribute</span><span class="p">,</span> <span class="ss">:attribute_with_ns</span><span class="p">,</span> <span class="ss">:namespace</span><span class="p">,</span> <span class="ss">:namespace_definitions</span><span class="p">,</span> <span class="ss">:namespace_scopes</span><span class="p">,</span> <span class="ss">:encode_special_chars</span><span class="p">,</span> <span class="ss">:unlink</span><span class="p">,</span> <span class="ss">:internal_subset</span><span class="p">,</span> <span class="ss">:external_subset</span><span class="p">,</span> <span class="ss">:create_internal_subse</span>
+<span class="n">t</span><span class="p">,</span> <span class="ss">:create_external_subset</span><span class="p">,</span> <span class="ss">:pointer_id</span><span class="p">,</span> <span class="ss">:line</span><span class="p">,</span> <span class="ss">:native_content</span><span class="o">=</span><span class="p">,</span> <span class="ss">:decorate!</span><span class="p">,</span> <span class="ss">:search</span><span class="p">,</span> <span class="ss">:/</span><span class="p">,</span> <span class="ss">:xpath</span><span class="p">,</span> <span class="ss">:css</span><span class="p">,</span> <span class="ss">:&gt;</span><span class="p">,</span> <span class="ss">:at</span><span class="p">,</span> <span class="ss">:%</span><span class="p">,</span> <span class="ss">:at_xpath</span><span class="p">,</span> <span class="ss">:at_css</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:add_previous_sibling</span><span class="p">,</span> <span class="ss">:add_n</span>
+<span class="n">ext_sibling</span><span class="p">,</span> <span class="ss">:before</span><span class="p">,</span> <span class="ss">:after</span><span class="p">,</span> <span class="ss">:inner_html</span><span class="o">=</span><span class="p">,</span> <span class="ss">:children</span><span class="o">=</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:swap</span><span class="p">,</span> <span class="ss">:next</span><span class="p">,</span> <span class="ss">:previous</span><span class="p">,</span> <span class="ss">:next</span><span class="o">=</span><span class="p">,</span> <span class="ss">:previous</span><span class="o">=</span><span class="p">,</span> <span class="ss">:remove</span><span class="p">,</span> <span class="ss">:get_attribute</span><span class="p">,</span> <span class="ss">:attr</span><span class="p">,</span> <span class="ss">:set_attribute</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="ss">:inner_text</span><span class="p">,</span>
+ <span class="ss">:has_attribute?</span><span class="p">,</span> <span class="ss">:name</span><span class="o">=</span><span class="p">,</span> <span class="ss">:to_str</span><span class="p">,</span> <span class="ss">:elements</span><span class="p">,</span> <span class="ss">:attributes</span><span class="p">,</span> <span class="ss">:values</span><span class="p">,</span> <span class="ss">:keys</span><span class="p">,</span> <span class="ss">:each</span><span class="p">,</span> <span class="ss">:remove_attribute</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:matches?</span><span class="p">,</span> <span class="ss">:parse</span><span class="p">,</span> <span class="ss">:content</span><span class="o">=</span><span class="p">,</span> <span class="ss">:parent</span><span class="o">=</span><span class="p">,</span> <span class="ss">:comment?</span><span class="p">,</span> <span class="ss">:cdata?</span><span class="p">,</span> <span class="ss">:xml?</span><span class="p">,</span> <span class="p">:</span>
+<span class="n">html?</span><span class="p">,</span> <span class="ss">:text?</span><span class="p">,</span> <span class="ss">:fragment?</span><span class="p">,</span> <span class="ss">:description</span><span class="p">,</span> <span class="ss">:read_only?</span><span class="p">,</span> <span class="ss">:element?</span><span class="p">,</span> <span class="ss">:elem?</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:inner_html</span><span class="p">,</span> <span class="ss">:css_path</span><span class="p">,</span> <span class="ss">:ancestors</span><span class="p">,</span> <span class="ss">:default_namespace</span><span class="o">=</span><span class="p">,</span> <span class="ss">:add_namespace</span><span class="p">,</span> <span class="ss">:namespace</span><span class="o">=</span><span class="p">,</span> <span class="ss">:traverse</span><span class="p">,</span> <span class="p">:</span>
+<span class="n">accept</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:to_html</span><span class="p">,</span> <span class="ss">:to_xhtml</span><span class="p">,</span> <span class="ss">:write_to</span><span class="p">,</span> <span class="ss">:write_html_to</span><span class="p">,</span> <span class="ss">:write_xhtml_to</span><span class="p">,</span> <span class="ss">:write_xml_to</span><span class="p">,</span> <span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:do_xinclude</span><span class="o">]</span>
+
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">142</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">190</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">192</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">size</span>
+<span class="o">=&gt;</span> <span class="mi">231</span>
+</code></pre></div>
+
+
+<p>どうでしょうか。って、お前の分別はどうしたって話ですけど。</p>
+
+<p>そういえば、<code>Object.methods</code>の引数ってどんなオブジェクトも受けるんですねー。<code>false</code>, <code>nil</code>以外は全部<code>true</code>と解釈されますね。</p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでオブジェクトの特徴的なメソッドを知りたい" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" data-text="Rubyでオブジェクトの特徴的なメソッドを知りたい" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/09/24/rubys-scope" title="Rubyにおけるスコープのおはなし">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでオブジェクトの特徴的なメソッドを知りたい" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" data-text="Rubyでオブジェクトの特徴的なメソッドを知りたい" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/25/count-methods-of-ruby-3/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
