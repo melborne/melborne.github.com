@@ -218,7 +218,7 @@
 <br />
 
 
-<p><code>Object.methods</code>が数字を取れるようにしてみましたよ！</p>
+<p><code>Object#methods</code>が数字を取れるようにしてみましたよ！</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Skin</span>
   <span class="k">def</span> <span class="nf">methods</span><span class="p">(</span><span class="n">lv</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
@@ -313,6 +313,104 @@
 <p>どうでしょうか。って、お前の分別はどうしたって話ですけど。</p>
 
 <p>そういえば、<code>Object.methods</code>の引数ってどんなオブジェクトも受けるんですねー。<code>false</code>, <code>nil</code>以外は全部<code>true</code>と解釈されますね。</p>
+
+<hr />
+
+<p>(追記：2013-09-26)</p>
+
+<p>Twitterで@niku_nameさんに、<code>obj.public_methods(false)</code>を教えて頂きました。これはobjにシングルトンメソッドが定義されていなければ、obj.class.instance_methods(false)と同じになります。</p>
+
+<blockquote><p><a href="https://twitter.com/niku_name/status/383074490726363136" title="Twitter / niku_name: 僕は obj.public_methods(false) ...">Twitter / niku_name: 僕は obj.public_methods(false) ...</a></p></blockquote>
+
+<p>(追記：2013-09-26)</p>
+
+<p>Twitterで@mad_pさんに、pryでcdしてlsする方法を教えて頂きました。</p>
+
+<blockquote><p><a href="https://twitter.com/mad_p/status/383067544292032512" title="Twitter / mad_p: 調べるだけなら、 pry ...">Twitter / mad_p: 調べるだけなら、 pry ...</a></p></blockquote>
+
+<p>nokogiriの例で見てみます。<code>cd [obj] =&gt; ls</code>とせずに、<code>ls [obj]</code>としてもいいのですね。モジュール別にメソッドがリスティングされるので、これは見やすくて便利！</p>
+
+<div class="highlight"><pre><code class="bash"><span class="o">[</span>1<span class="o">]</span> pry<span class="o">(</span>main<span class="o">)</span>&gt; <span class="nv">html</span> <span class="o">=</span> Nokogiri::HTML<span class="o">(</span><span class="s1">&#39;&lt;html&gt;&lt;/html&gt;&#39;</span><span class="o">)</span>
+<span class="o">=</span>&gt; <span class="c">#(Document:0x3fe855ebaa3c {</span>
+  <span class="nv">name</span> <span class="o">=</span> <span class="s2">&quot;document&quot;</span>,
+  <span class="nv">children</span> <span class="o">=</span> <span class="o">[</span>
+    <span class="c">#(DTD:0x3fe855eba0c8 { name = &quot;html&quot; }),</span>
+    <span class="c">#(Element:0x3fe855ebfb18 { name = &quot;html&quot; })]</span>
+  <span class="o">})</span>
+
+<span class="o">[</span>2<span class="o">]</span> pry<span class="o">(</span>main<span class="o">)</span>&gt; html.class.ancestors
+<span class="o">=</span>&gt; <span class="o">[</span>Nokogiri::HTML::Document,
+ Nokogiri::XML::Document,
+ Nokogiri::XML::Node,
+ Enumerable,
+ Nokogiri::XML::PP::Node,
+ Object,
+ PP::ObjectMixin,
+ Kernel,
+ BasicObject<span class="o">]</span>
+
+<span class="o">[</span>3<span class="o">]</span> pry<span class="o">(</span><span class="c">#&lt;Nokogiri::HTML::Document&gt;):1&gt; ls html</span>
+Nokogiri::XML::PP::Node#methods: inspect  pretty_print
+Enumerable#methods:
+  all?            each_cons         flat_map  min           <span class="k">select</span>
+<span class="k">  </span>any?            each_entry        grep      min_by        slice_before
+  chunk           each_slice        group_by  minmax        sort
+  collect         each_with_index   include?  minmax_by     sort_by
+  collect_concat  each_with_object  inject    none?         take
+  count           entries           lazy      one?          take_while
+  cycle           find              map       partition     to_a
+  detect          find_all          max       reduce        zip
+  drop            find_index        max_by    reject
+  drop_while      first             member?   reverse_each
+Nokogiri::XML::Node#methods:
+  %                       delete                <span class="nv">node_name</span><span class="o">=</span>
+  /                       description           node_type
+  &lt;<span class="o">=</span>&gt;                     do_xinclude           <span class="nv">parent</span><span class="o">=</span>
+  <span class="o">==</span>                      each                  parse
+  &gt;                       elem?                 path
+  <span class="o">[]</span>                      element?              pointer_id
+  <span class="o">[]=</span>                     element_children      previous
+  accept                  elements              <span class="nv">previous</span><span class="o">=</span>
+  add_next_sibling        encode_special_chars  previous_element
+  add_previous_sibling    external_subset       previous_sibling
+  after                   first_element_child   read_only?
+  ancestors               fragment?             remove
+  at                      get_attribute         remove_attribute
+  at_css                  has_attribute?        replace
+  at_xpath                html?                 search
+  attr                    inner_html            set_attribute
+  attribute               <span class="nv">inner_html</span><span class="o">=</span>           text
+  attribute_nodes         inner_text            text?
+  attribute_with_ns       internal_subset       to_html
+  before                  key?                  to_s
+  blank?                  keys                  to_str
+  cdata?                  last_element_child    to_xhtml
+  child                   matches?              traverse
+  children                <span class="nv">name</span><span class="o">=</span>                 unlink
+  <span class="nv">children</span><span class="o">=</span>               <span class="nv">namespace</span><span class="o">=</span>            values
+  comment?                namespace_scopes      write_html_to
+  content                 namespaced_key?       write_to
+  <span class="nv">content</span><span class="o">=</span>                <span class="nv">native_content</span><span class="o">=</span>       write_xhtml_to
+  create_external_subset  next                  write_xml_to
+  create_internal_subset  <span class="nv">next</span><span class="o">=</span>                 xml?
+  css                     next_element          xpath
+  css_path                next_sibling
+  decorate!               node_name
+Nokogiri::XML::Document#methods:
+  <span class="s">&lt;&lt;                  create_comment    document   name                to_java</span>
+<span class="s">  add_child           create_element    dup        namespaces          to_xml</span>
+<span class="s">  canonicalize        create_entity     encoding   remove_namespaces!  url</span>
+<span class="s">  clone               create_text_node  encoding=  root                validate</span>
+<span class="s">  collect_namespaces  decorate          errors     root=               version</span>
+<span class="s">  create_c</span>data        decorators        <span class="nv">errors</span><span class="o">=</span>    slop!
+Nokogiri::HTML::Document#methods:
+  fragment  meta_encoding  <span class="nv">meta_encoding</span><span class="o">=</span>  serialize  title  <span class="nv">title</span><span class="o">=</span>  <span class="nb">type</span>
+self.methods: __pry__
+instance variables: @decorators  @errors  @node_cache
+</code></pre></div>
+
+
+
 
 
     <div class="ad" id="topAdsense">

@@ -4,7 +4,7 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-09-26T08:58:42+09:00</updated>
+ <updated>2013-09-26T14:40:45+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
@@ -63,7 +63,7 @@
 &lt;br /&gt;
 
 
-&lt;p&gt;&lt;code&gt;Object.methods&lt;/code&gt;が数字を取れるようにしてみましたよ！&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Object#methods&lt;/code&gt;が数字を取れるようにしてみましたよ！&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Skin&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;methods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -158,6 +158,104 @@
 &lt;p&gt;どうでしょうか。って、お前の分別はどうしたって話ですけど。&lt;/p&gt;
 
 &lt;p&gt;そういえば、&lt;code&gt;Object.methods&lt;/code&gt;の引数ってどんなオブジェクトも受けるんですねー。&lt;code&gt;false&lt;/code&gt;, &lt;code&gt;nil&lt;/code&gt;以外は全部&lt;code&gt;true&lt;/code&gt;と解釈されますね。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;(追記：2013-09-26)&lt;/p&gt;
+
+&lt;p&gt;Twitterで@niku_nameさんに、&lt;code&gt;obj.public_methods(false)&lt;/code&gt;を教えて頂きました。これはobjにシングルトンメソッドが定義されていなければ、obj.class.instance_methods(false)と同じになります。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://twitter.com/niku_name/status/383074490726363136&quot; title=&quot;Twitter / niku_name: 僕は obj.public_methods(false) ...&quot;&gt;Twitter / niku_name: 僕は obj.public_methods(false) ...&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;(追記：2013-09-26)&lt;/p&gt;
+
+&lt;p&gt;Twitterで@mad_pさんに、pryでcdしてlsする方法を教えて頂きました。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://twitter.com/mad_p/status/383067544292032512&quot; title=&quot;Twitter / mad_p: 調べるだけなら、 pry ...&quot;&gt;Twitter / mad_p: 調べるだけなら、 pry ...&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;nokogiriの例で見てみます。&lt;code&gt;cd [obj] =&amp;gt; ls&lt;/code&gt;とせずに、&lt;code&gt;ls [obj]&lt;/code&gt;としてもいいのですね。モジュール別にメソッドがリスティングされるので、これは見やすくて便利！&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; pry&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;html&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Nokogiri::HTML&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;lt;html&amp;gt;&amp;lt;/html&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&quot;c&quot;&gt;#(Document:0x3fe855ebaa3c {&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;document&amp;quot;&lt;/span&gt;,
+  &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;#(DTD:0x3fe855eba0c8 { name = &amp;quot;html&amp;quot; }),&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;#(Element:0x3fe855ebfb18 { name = &amp;quot;html&amp;quot; })]&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; pry&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&amp;gt; html.class.ancestors
+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Nokogiri::HTML::Document,
+ Nokogiri::XML::Document,
+ Nokogiri::XML::Node,
+ Enumerable,
+ Nokogiri::XML::PP::Node,
+ Object,
+ PP::ObjectMixin,
+ Kernel,
+ BasicObject&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; pry&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#&amp;lt;Nokogiri::HTML::Document&amp;gt;):1&amp;gt; ls html&lt;/span&gt;
+Nokogiri::XML::PP::Node#methods: inspect  pretty_print
+Enumerable#methods:
+  all?            each_cons         flat_map  min           &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;  &lt;/span&gt;any?            each_entry        grep      min_by        slice_before
+  chunk           each_slice        group_by  minmax        sort
+  collect         each_with_index   include?  minmax_by     sort_by
+  collect_concat  each_with_object  inject    none?         take
+  count           entries           lazy      one?          take_while
+  cycle           find              map       partition     to_a
+  detect          find_all          max       reduce        zip
+  drop            find_index        max_by    reject
+  drop_while      first             member?   reverse_each
+Nokogiri::XML::Node#methods:
+  %                       delete                &lt;span class=&quot;nv&quot;&gt;node_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+  /                       description           node_type
+  &amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt;                     do_xinclude           &lt;span class=&quot;nv&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;                      each                  parse
+  &amp;gt;                       elem?                 path
+  &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;                      element?              pointer_id
+  &lt;span class=&quot;o&quot;&gt;[]=&lt;/span&gt;                     element_children      previous
+  accept                  elements              &lt;span class=&quot;nv&quot;&gt;previous&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+  add_next_sibling        encode_special_chars  previous_element
+  add_previous_sibling    external_subset       previous_sibling
+  after                   first_element_child   read_only?
+  ancestors               fragment?             remove
+  at                      get_attribute         remove_attribute
+  at_css                  has_attribute?        replace
+  at_xpath                html?                 search
+  attr                    inner_html            set_attribute
+  attribute               &lt;span class=&quot;nv&quot;&gt;inner_html&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;           text
+  attribute_nodes         inner_text            text?
+  attribute_with_ns       internal_subset       to_html
+  before                  key?                  to_s
+  blank?                  keys                  to_str
+  cdata?                  last_element_child    to_xhtml
+  child                   matches?              traverse
+  children                &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;                 unlink
+  &lt;span class=&quot;nv&quot;&gt;children&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;               &lt;span class=&quot;nv&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;            values
+  comment?                namespace_scopes      write_html_to
+  content                 namespaced_key?       write_to
+  &lt;span class=&quot;nv&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;                &lt;span class=&quot;nv&quot;&gt;native_content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;       write_xhtml_to
+  create_external_subset  next                  write_xml_to
+  create_internal_subset  &lt;span class=&quot;nv&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;                 xml?
+  css                     next_element          xpath
+  css_path                next_sibling
+  decorate!               node_name
+Nokogiri::XML::Document#methods:
+  &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt;                  create_comment    document   name                to_java&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  add_child           create_element    dup        namespaces          to_xml&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  canonicalize        create_entity     encoding   remove_namespaces!  url&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  clone               create_text_node  encoding=  root                validate&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  collect_namespaces  decorate          errors     root=               version&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;  create_c&lt;/span&gt;data        decorators        &lt;span class=&quot;nv&quot;&gt;errors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;    slop!
+Nokogiri::HTML::Document#methods:
+  fragment  meta_encoding  &lt;span class=&quot;nv&quot;&gt;meta_encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  serialize  title  &lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;
+self.methods: __pry__
+instance variables: @decorators  @errors  @node_cache
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+
 </content>
  </entry>
  
