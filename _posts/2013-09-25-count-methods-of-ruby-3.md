@@ -55,7 +55,7 @@ irb> Enumerable.instance_methods(false)
 <br />
 
 
-`Object.methods`が数字を取れるようにしてみましたよ！
+`Object#methods`が数字を取れるようにしてみましたよ！
 
 {% highlight ruby %}
 module Skin
@@ -154,4 +154,99 @@ irb> html.methods.size
 
 そういえば、`Object.methods`の引数ってどんなオブジェクトも受けるんですねー。`false`, `nil`以外は全部`true`と解釈されますね。
 
+---
+
+(追記：2013-09-26)
+
+Twitterで@niku_nameさんに、`obj.public_methods(false)`を教えて頂きました。これはobjにシングルトンメソッドが定義されていなければ、obj.class.instance_methods(false)と同じになります。
+
+> [Twitter / niku_name: 僕は obj.public_methods(false) ...](https://twitter.com/niku_name/status/383074490726363136 "Twitter / niku_name: 僕は obj.public_methods(false) ...")
+
+(追記：2013-09-26)
+
+Twitterで@mad_pさんに、pryでcdしてlsする方法を教えて頂きました。
+
+> [Twitter / mad_p: 調べるだけなら、 pry ...](https://twitter.com/mad_p/status/383067544292032512 "Twitter / mad_p: 調べるだけなら、 pry ...")
+
+nokogiriの例で見てみます。`cd [obj] => ls`とせずに、`ls [obj]`としてもいいのですね。モジュール別にメソッドがリスティングされるので、これは見やすくて便利！
+
+{% highlight bash %}
+[1] pry(main)> html = Nokogiri::HTML('<html></html>')
+=> #(Document:0x3fe855ebaa3c {
+  name = "document",
+  children = [
+    #(DTD:0x3fe855eba0c8 { name = "html" }),
+    #(Element:0x3fe855ebfb18 { name = "html" })]
+  })
+
+[2] pry(main)> html.class.ancestors
+=> [Nokogiri::HTML::Document,
+ Nokogiri::XML::Document,
+ Nokogiri::XML::Node,
+ Enumerable,
+ Nokogiri::XML::PP::Node,
+ Object,
+ PP::ObjectMixin,
+ Kernel,
+ BasicObject]
+
+[3] pry(#<Nokogiri::HTML::Document>):1> ls html
+Nokogiri::XML::PP::Node#methods: inspect  pretty_print
+Enumerable#methods:
+  all?            each_cons         flat_map  min           select
+  any?            each_entry        grep      min_by        slice_before
+  chunk           each_slice        group_by  minmax        sort
+  collect         each_with_index   include?  minmax_by     sort_by
+  collect_concat  each_with_object  inject    none?         take
+  count           entries           lazy      one?          take_while
+  cycle           find              map       partition     to_a
+  detect          find_all          max       reduce        zip
+  drop            find_index        max_by    reject
+  drop_while      first             member?   reverse_each
+Nokogiri::XML::Node#methods:
+  %                       delete                node_name=
+  /                       description           node_type
+  <=>                     do_xinclude           parent=
+  ==                      each                  parse
+  >                       elem?                 path
+  []                      element?              pointer_id
+  []=                     element_children      previous
+  accept                  elements              previous=
+  add_next_sibling        encode_special_chars  previous_element
+  add_previous_sibling    external_subset       previous_sibling
+  after                   first_element_child   read_only?
+  ancestors               fragment?             remove
+  at                      get_attribute         remove_attribute
+  at_css                  has_attribute?        replace
+  at_xpath                html?                 search
+  attr                    inner_html            set_attribute
+  attribute               inner_html=           text
+  attribute_nodes         inner_text            text?
+  attribute_with_ns       internal_subset       to_html
+  before                  key?                  to_s
+  blank?                  keys                  to_str
+  cdata?                  last_element_child    to_xhtml
+  child                   matches?              traverse
+  children                name=                 unlink
+  children=               namespace=            values
+  comment?                namespace_scopes      write_html_to
+  content                 namespaced_key?       write_to
+  content=                native_content=       write_xhtml_to
+  create_external_subset  next                  write_xml_to
+  create_internal_subset  next=                 xml?
+  css                     next_element          xpath
+  css_path                next_sibling
+  decorate!               node_name
+Nokogiri::XML::Document#methods:
+  <<                  create_comment    document   name                to_java
+  add_child           create_element    dup        namespaces          to_xml
+  canonicalize        create_entity     encoding   remove_namespaces!  url
+  clone               create_text_node  encoding=  root                validate
+  collect_namespaces  decorate          errors     root=               version
+  create_cdata        decorators        errors=    slop!
+Nokogiri::HTML::Document#methods:
+  fragment  meta_encoding  meta_encoding=  serialize  title  title=  type
+self.methods: __pry__
+instance variables: @decorators  @errors  @node_cache
+{% endhighlight %}
 
