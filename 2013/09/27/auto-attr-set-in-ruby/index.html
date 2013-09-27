@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyistたちのDRY症候群との戦い</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+            <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>27 September 2013</span></div>
+  <h1 class='page-title'><a href="/2013/09/27/auto-attr-set-in-ruby">RubyistたちのDRY症候群との戦い</a> <small> Rubyで自動的にインスタンス変数をセットする </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <h2>DRY症候群</h2>
+
+<p>Rubyistの間では「<a href="http://ja.wikipedia.org/wiki/Don%27t_repeat_yourself" title="Don't repeat yourself - Wikipedia"><strong>DRY原則</strong></a>」が浸透しているので、彼らは重複や同じことの繰り返しを極端に嫌います。コードの中に繰り返しがあると、目や肌が乾燥してきて痒くなり落ち着きがなくなります。「DRY!DRY!DRY!」と叫び出す人もいます。アサヒスーパードライを飲み始める人もいます。これらの症状を総称して<strong>「DRY症候群」</strong>と言います。</p>
+
+<p>Rubyの言語仕様はプログラマーがハッピーにコーディングできるよう考えられているので、RubyistをしてDRY症候群が発症することは稀ですが、日常的にDRY症候群を発症している人たちもいるようです。</p>
+
+<p>以下は、DRY症候群を検査するためのテストコードです。コードを数秒間眺め、痒みが出てきたらあなたは重度のDRY症候群を患っています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:income</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@income</span> <span class="o">=</span> <span class="n">income</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">real_user?</span>
+    <span class="vi">@income</span> <span class="o">&gt;</span> <span class="mi">10_000_000</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>痒みが出なかった人たちに向けて説明すると、「<code>initialize</code>におけるインスタンス変数への引数の引き渡しがDRYでない」、ということです。</p>
+
+<p>それで大抵、彼らは以下を試し、うなだれるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:income</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="vi">@name</span><span class="p">,</span> <span class="vi">@income</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">real_user?</span>
+    <span class="vi">@income</span> <span class="o">&gt;</span> <span class="mi">10_000_000</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># ~&gt; -:3: formal argument cannot be an instance variable</span>
+<span class="c1"># ~&gt;   def initialize(@name, @income)</span>
+<span class="c1"># ~&gt;                       ^</span>
+<span class="c1"># ~&gt; -:3: formal argument cannot be an instance variable</span>
+<span class="c1"># ~&gt;   def initialize(@name, @income)</span>
+<span class="c1"># ~&gt;                                ^</span>
+</code></pre></div>
+
+
+<h2>DartとCoffeeScriptの場合</h2>
+
+<p>グーグルが開発したプログラミング言語「<a href="https://www.dartlang.org/" title="Dart: Structured web apps">Dart</a>」では、<a href="https://www.dartlang.org/articles/idiomatic-dart/#automatic-field-initialization" title="Idiomatic Dart | Dart: Structured web apps">Automatic field initialization</a>という機能によって、以下のコードを、</p>
+
+<div class="highlight"><pre><code class="dart"><span class="kd">class</span> <span class="nc">User</span> <span class="p">{</span>
+  <span class="kt">String</span> <span class="n">name</span><span class="p">;</span>
+  <span class="kt">num</span> <span class="n">income</span><span class="p">;</span>
+
+  <span class="n">User</span><span class="p">(</span><span class="kt">String</span> <span class="n">name</span><span class="p">,</span> <span class="kt">num</span> <span class="n">income</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">income</span> <span class="o">=</span> <span class="n">income</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>以下のように書けるそうです。</p>
+
+<div class="highlight"><pre><code class="dart"><span class="kd">class</span> <span class="nc">User</span> <span class="p">{</span>
+  <span class="kt">String</span> <span class="n">name</span><span class="p">;</span>
+  <span class="kt">num</span> <span class="n">income</span><span class="p">;</span>
+
+  <span class="n">User</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="n">income</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>同様に、「<a href="http://jashkenas.github.io/coffee-script/" title="CoffeeScript">CoffeeScript</a>」でも、以下を、</p>
+
+<div class="highlight"><pre><code class="coffeescript"><span class="k">class</span> <span class="nx">User</span>
+  <span class="nv">constructor: </span><span class="nf">(name, income) -&gt;</span>
+    <span class="vi">@name = </span><span class="nx">name</span>
+    <span class="vi">@income = </span><span class="nx">income</span>
+</code></pre></div>
+
+
+<p>以下のように書けるそうです（<a href="http://jashkenas.github.io/coffee-script/#classes" title="CoffeeScript">classes, Inheritance, and Super</a>）。</p>
+
+<div class="highlight"><pre><code class="coffeescript"><span class="k">class</span> <span class="nx">User</span>
+  <span class="nv">constructor: </span><span class="nf">(@name, @income) -&gt;</span>
+</code></pre></div>
+
+
+<p>羨ましい。</p>
+
+<p>これをもって、DartまたはCoffeeScriptへの鞍替えを検討しているRubyistも少なくないと聞きます。</p>
+
+<h2>さっちゃんによるRuby版AFI</h2>
+
+<p>「<strong>さっちゃん</strong>」こと、@ne_sachirou殿がこの問題を解決すべく、Ruby版AFIの実装を公開してくれてます。</p>
+
+<blockquote><p><a href="http://c4se.hatenablog.com/entry/2013/09/23/075129" title="Dart風のautomatic field initializationをRubyで - c4se記：さっちゃんですよ☆">Dart風のautomatic field initializationをRubyで - c4se記：さっちゃんですよ☆</a></p></blockquote>
+
+<p>記事によれば、以下のように<code>initialize</code>の定義のあとで<code>auto_attr_init</code>クラスメソッドを呼べば、initializeの引数が自動で同名のインスタンス変数にセットされるそうです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;auto_attr_init&#39;</span>
+
+<span class="k">class</span> <span class="nc">Point</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span> <span class="k">end</span>
+  <span class="n">auto_attr_init</span>
+<span class="k">end</span>
+
+<span class="nb">p</span> <span class="o">=</span> <span class="no">Point</span><span class="o">.</span><span class="n">new</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">assert_equal</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p</span><span class="o">.</span><span class="n">x</span>
+<span class="n">assert_equal</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p</span><span class="o">.</span><span class="n">y</span>
+</code></pre></div>
+
+
+<p>自動セットする変数を限定したい場合は、auto_attr_initにシンボルで渡します。</p>
+
+<p>実装は、ソースを<a href="http://doc.ruby-lang.org/ja/1.9.3/library/ripper.html" title="library ripper">Ripper</a>で解析して、必要な処理を施して、<a href="https://github.com/jimweirich/sorcerer" title="jimweirich/sorcerer">sorcerer</a>というツールでRubyのコードに戻す、ということをやってるそうです。スゴイです。</p>
+
+<h2>@merborneによるなんちゃってRuby版AFI</h2>
+
+<p>さっちゃんのお陰で、DRY症候群問題は無事解消しました。</p>
+
+<p>したがって僕の出番はないんですが、Ruby芸人を目指す身（！）としては、もっと安直にやれる方法を模索したくなりました。</p>
+
+<p>で、私、@merborneも同じような機能をもった、「AutoAttrSet」というモジュールを作ったので公開します。</p>
+
+<p>対象のクラスで<code>AutoAttrSet</code>モジュールをextendします。そしてCoffeeScriptのように、initializeで<code>＠</code>を付けて変数を渡します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;auto_attr_set&#39;</span>
+
+<span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">extend</span> <span class="no">AutoAttrSet</span>
+
+  <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:income</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="err">＠</span><span class="nb">name</span><span class="p">,</span> <span class="err">＠</span><span class="n">income</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">real_user?</span>
+    <span class="vi">@income</span> <span class="o">&gt;</span> <span class="mi">10_000_000</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">a_user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">300_000</span><span class="p">)</span>
+<span class="n">a_user</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
+<span class="n">a_user</span><span class="o">.</span><span class="n">income</span> <span class="c1"># =&gt; 300000</span>
+<span class="n">a_user</span><span class="o">.</span><span class="n">real_user?</span> <span class="c1"># =&gt; false</span>
+<span class="n">a_user</span><span class="o">.</span><span class="n">instance_variables</span> <span class="c1"># =&gt; [:@name, :@income]</span>
+</code></pre></div>
+
+
+<p>デフォルト値が渡せない、<code>*</code>や<code>&amp;</code>を伴う引数の後に渡せないなどの制約はありますが、このコードはシンタックスエラーにはなりません。普通の引数を間に挟むこともできます。</p>
+
+<p>えっ？</p>
+
+<p>...。</p>
+
+<p>...バレちゃいましたか？</p>
+
+<br />
+
+
+
+
+<br />
+
+
+
+
+<br />
+
+
+<p>initializeの<code>＠</code>。</p>
+
+<p>これは<code>'@'.ord # =&gt; 64</code>ではなく、<code>'＠'.ord # =&gt; 65312</code>なんです...。</p>
+
+<h2>AutoAttrSetの実装</h2>
+
+<p>実装です。</p>
+
+<div><script src='https://gist.github.com/6728411.js?file='></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6728411&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>簡単に説明します。Class.newをオーバーライドして、そこで<code>set_instance_variables</code>というメソッドを呼びます。set_instance_variablesでは、initializeをMethodオブジェクト化して<code>Method#parameters</code>でその引数を取り出します。取り出した引数のうち特定のフォームを持ったものを対象として、<code>instance_variable_set</code>を使ってインスタンス変数をセットします。特定のフォームは<code>name_for_instance_variable?</code>のcandidatesに登録しておきます。ここでは、<code>'＠'</code>または<code>'at_'</code>で始まる名前が登録されています。</p>
+
+<p><code>at_</code>の例も示しておきます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Point</span>
+  <span class="kp">extend</span> <span class="no">AutoAttrSet</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">at_x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">at_y</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span><span class="p">)</span>
+    
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">po</span> <span class="o">=</span> <span class="no">Point</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">po</span><span class="o">.</span><span class="n">x</span> <span class="c1"># =&gt; 10</span>
+<span class="n">po</span><span class="o">.</span><span class="n">y</span> <span class="c1"># =&gt; 30</span>
+<span class="n">po</span><span class="o">.</span><span class="n">instance_variables</span> <span class="c1"># =&gt; [:@x, :@y]</span>
+</code></pre></div>
+
+
+<p>こんなもの書いてる暇があるなら、さっちゃんのコード読んでろって話ですが。</p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2012/rack_cover.png" alt="rack" style="width:200px" />
+</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyistたちのDRY症候群との戦い" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" data-text="RubyistたちのDRY症候群との戦い" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/09/26/be-string-enumerable" title="Rubyの文字列だってえにゅめらぶるしたい！">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyistたちのDRY症候群との戦い" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" data-text="RubyistたちのDRY症候群との戦い" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
