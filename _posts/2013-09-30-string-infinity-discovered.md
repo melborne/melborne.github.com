@@ -231,6 +231,10 @@ String.send(:include, StringExtension)
 
 それにしても、文字列にInfinityという概念はあり得るんでしょうかねぇ。
 
+
+まあ、通常、`(a_string..'zzz'*100).to_enum`くらいにしとけば問題ないんでしょうけど。
+
+
 ---
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
