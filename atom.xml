@@ -4,13 +4,207 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-10-08T18:53:48+09:00</updated>
+ <updated>2013-10-15T13:32:37+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>やっぱり通貨換算もターミナルでしたいよね！ - Google Currency APIをRubyで使う</title>
+   <link href="http://melborne.github.io/2013/10/15/yet-another-currency-converter-in-ruby"/>
+   <updated>2013-10-15T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2013/10/15/yet-another-currency-converter-in-ruby</id>
+   <content type="html">&lt;p&gt;Web上には無数の通貨換算ツールがあるけれどもやっぱりターミナル上で簡単に通貨換算できたらうれしいよね。&lt;/p&gt;
+
+&lt;p&gt;で手頃なAPIはないかと探していたら次の記事にであったんだ。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://motyar.blogspot.jp/2011/12/googles-currency-converter-and-json-api.html&quot; title=&quot;Google&#39;s Currency Converter and JSON API&quot;&gt;Google&#39;s Currency Converter and JSON API&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;記事によればGoogleが通貨換算のJSON APIを非公式で公開してるそうだよ（ちょっとそのJSON壊れてるようなんだけれども..）。&lt;/p&gt;
+
+&lt;p&gt;それでRubyで実装された通貨換算ツールがいろいろあることを承知のうえでまあ何事も勉強だからということでターミナルで簡単に利用できるもう一つの通貨換算ツールを作ったから公開するよ。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/money_exchange&quot; title=&quot;melborne/money_exchange&quot;&gt;melborne/money_exchange&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/money_exchange&quot; title=&quot;money_exchange | RubyGems.org | your community gem host&quot;&gt;money_exchange | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;一応gemにもしたから&lt;code&gt;gem i money_exchange&lt;/code&gt;でインストールもできるよ。&lt;/p&gt;
+
+&lt;h2&gt;ターミナルでの使い方&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;MoneyExchange&lt;/code&gt;をインストールすると&lt;code&gt;money_exchange&lt;/code&gt;ってコマンドが使えるようになるよ。でこれを実行すると次のようなヘルプメッセージがでるよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% money_exchange
+Commands:
+  money_exchange ex AMOUNT BASE *TARGETS  &lt;span class=&quot;c&quot;&gt;# Currency Exchange from base to targets&lt;/span&gt;
+  money_exchange &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;           &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
+  money_exchange version                  &lt;span class=&quot;c&quot;&gt;# Show MoneyExchange version&lt;/span&gt;
+
+Available currency codes:
+  AUD: Australian dollar
+  CAD: Canadian dollar
+  CHF: Swiss franc
+  CNY: Chinese yuan
+  DKK: Danish krone
+  EUR: Euro
+  GBP: British pound
+  HKD: Hong Kong dollar
+  HUF: Hungarian forint
+  INR: Indian rupee
+  JPY: Japanese yen
+  MXN: Mexican peso
+  NOK: Norwegian krone
+  NZD: New Zealand dollar
+  PLN: Polish złoty
+  SEK: Swedish krona
+  SGD: Singapore dollar
+  TRY: Turkish lira
+  USD: United States Dollar
+  ZAR: South African rand
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でヘルプにしたがって&lt;code&gt;ex&lt;/code&gt;コマンドに続いて金額とコードを入れれば結果が出力されるよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% money_exchange ex 1 usd jpy
+USD &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; JPY 98.65
+
+% money_exchange ex 1 usd jpy eur gbp
+USD &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; JPY 98.65
+          EUR 0.74
+          GBP 0.63
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;コマンドライン・パーサーには「&lt;a href=&quot;https://github.com/erikhuda/thor&quot; title=&quot;erikhuda/thor&quot;&gt;Thor&lt;/a&gt;」を使ってるんだけどこれ便利だからもし使ったことなければオススメするよ。&lt;/p&gt;
+
+&lt;h2&gt;Rubyでの使い方&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;money_exchange&lt;/code&gt;をrequireするとFixnumとStringに&lt;code&gt;#xxx_to_yyy&lt;/code&gt;と&lt;code&gt;#xxx_to&lt;/code&gt;というメソッドが追加されるよ。&lt;code&gt;xxx&lt;/code&gt;, &lt;code&gt;yyy&lt;/code&gt;には通貨コードが入るよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;sx&quot;&gt;% irb &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rmoney_exchange&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;IRB&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to_jpy&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 98.65&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to_jpy&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 98.65&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:jpy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:eur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:gbp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [98.65, 0.74, 0.63]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;MoneyExchangeの実装&lt;/h2&gt;
+
+&lt;p&gt;実はGoogleのAPIがどの通貨に対応しているかは分かってなくて先に上げたもの以外でも呼び出せる可能性があるよ。MoneyExchangeではユーザが投げたコードをそのままAPIに投げる構造になっているよ。悪しき習慣&lt;code&gt;method_missing&lt;/code&gt;フックを使ってるんだ ;-(&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;MoneyExchange&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;# Presume &amp;#39;#xxx_to&amp;#39; style methods as for money exchanges&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^([a-z]{3})_to_([a-z]{3})$/&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;captures&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;to_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^([a-z]{3})_to$/&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;to_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Money&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:currency&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@currency&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^to_([a-z]{3})$/&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;Exchange&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exchange&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NoCurrencyDataError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;StandardError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call_google_currency_api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parse_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;parse_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fix_json&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# when no error&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;rhs&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_f&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NoCurrencyDataError&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# Because Google Currency API returns a broken json.&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fix_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/(\w+):/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;\1&amp;quot;:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;call_google_currency_api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://www.google.com/ig/calculator&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;?hl=en&amp;amp;q=1&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=?&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;URI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;OpenURI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:HTTPError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;abort&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;HTTP Access Error:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Numeric&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;MoneyExchange&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;MoneyExchange&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;GoogleのこのAPIも僕のコードも信用ならないから真面目な用途には使えないけどターミナルでちょっとレートをってときに便利に使ってくれたらうれしいよ。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/money_exchange&quot; title=&quot;melborne/money_exchange&quot;&gt;melborne/money_exchange&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/money_exchange&quot; title=&quot;money_exchange | RubyGems.org | your community gem host&quot;&gt;money_exchange | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Rubyのバグだと思ったら自分がバグだった ─ Enumerator解説編 ─</title>
@@ -1225,334 +1419,6 @@ Nokogiri::HTML::Document#methods:
 self.methods: __pry__
 instance variables: @decorators  @errors  @node_cache
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-
-</content>
- </entry>
- 
- <entry>
-   <title>Rubyにおけるスコープのおはなし</title>
-   <link href="http://melborne.github.io/2013/09/24/rubys-scope"/>
-   <updated>2013-09-24T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2013/09/24/rubys-scope</id>
-   <content type="html">&lt;p&gt;今ここで「首相は誰？」と言ったら、答えは「安倍晋三」になります。ジュネーブの国際会議で「首相は誰？」と言ったら、答えは「不定」になります。しかし世界統一国家なるものが存在しうるなら、そこでの答えは「バラク・オバマ」になります。&lt;/p&gt;
-
-&lt;p&gt;つまり「首相」という語は環境依存です。&lt;/p&gt;
-
-&lt;p&gt;「首相」における環境依存性を排除する一つの方法は、それに名前空間、つまり対象限定子を付けることです。「&lt;strong&gt;日本の&lt;/strong&gt;首相は誰？」「&lt;strong&gt;世界統一国家の&lt;/strong&gt;首相は誰？」と言えば、どんな環境にあろうとも「首相」という語が指す対象は一意です&lt;sup id=&#39;fnref:1&#39;&gt;&lt;a href=&#39;#fn:1&#39; rel=&#39;footnote&#39;&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-
-&lt;h2&gt;Rubyの定数&lt;/h2&gt;
-
-&lt;p&gt;Rubyにも名前空間の機能があるので、環境依存性を排除した首相を実装できます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UK&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;David Camelon&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Germany&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Angela Merkel&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;USA&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;President&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Barack Obama&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# The United Countries of the World&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;USA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:President&lt;/span&gt;
-
-&lt;span class=&quot;ss&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PrimeMinister&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;UK&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PrimeMinister&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;David Camelon&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;Germany&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PrimeMinister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Angela Merkel&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Barack Obama&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Rubyではスコープ演算子&lt;code&gt;::&lt;/code&gt;が自然言語における「の」の役割を担います。&lt;/p&gt;
-
-&lt;p&gt;あなたが地球外生命体を信じているなら、こうしたほうが確実です。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Earth&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UK&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;David Camelon&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Germany&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Angela Merkel&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;USA&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;President&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Barack Obama&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;c1&quot;&gt;# The United Countries of the World&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;USA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:President&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;ss&quot;&gt;Earth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;Earth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:UK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;David Camelon&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;Earth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Germany&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Angela Merkel&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;Earth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PrimeMinister&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Barack Obama&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;もちろん、日本国内ではいちいち「日本の」と限定する必要はありません。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;消費税上げないで、&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;PrimeMinister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;さん！&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;消費税上げないで、Shinzo Abeさん！&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2&gt;Rubyの変数&lt;/h2&gt;
-
-&lt;p&gt;ここで、あなたが経験豊富なRubyistで政治に明るい人なら、先のコードを見て次のようなツッコミを入れるでしょう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;首相は定数じゃなくて、変数だから！特に日本じゃね！
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;では、変数版「首相」を定義して日本の外から呼んでみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;ss&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:prime_minister&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# ~&amp;gt; -:5:in `&amp;lt;main&amp;gt;&amp;#39;: undefined method `prime_minister&amp;#39; for Japan:Class (NoMethodError)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;そう、Rubyでは自然言語における名前空間の場合とは異なり、変数&lt;code&gt;prime_minister&lt;/code&gt;はJapanオブジェクトの外からは参照できないのです。&lt;/p&gt;
-
-&lt;p&gt;では、内側からはどうでしょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;消費税上げないで、&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;さん！&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# ~&amp;gt; -:4:in `people_saying&amp;#39;: undefined local variable or method `prime_minister&amp;#39; for Japan:Class (NameError)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;同様に、これもダメなのです。&lt;/p&gt;
-
-&lt;p&gt;つまりRubyの変数は、オブジェクトの壁やメソッドの壁を超えては参照できず、それが定義された場所でしか通用しない極めてローカルなものなのです（故に、ローカル変数と呼ばれます）。言うなればローカル変数は「方言」や「ギャル語」と同じです。&lt;/p&gt;
-
-&lt;h2&gt;インスタンス変数&lt;/h2&gt;
-
-&lt;p&gt;周知のとおり我が国では「ギャル語」を国の公用語にしようとする運動が盛んです。かつてRubyの世界でも同種の運動があり、その結果として、変数の頭に対象拡張子&lt;code&gt;@&lt;/code&gt;を付するという条件付きで、その有効範囲を拡張できるような仕組みが導入されました。&lt;/p&gt;
-
-&lt;p&gt;任意のオブジェクトの中で&lt;code&gt;@&lt;/code&gt;を前置した変数は、そのオブジェクトの中ならどこからでも参照・変更できるようになります。つまり対象拡張子&lt;code&gt;@&lt;/code&gt;はオブジェクトを差しているのです。Rubyにおいてオブジェクトはクラスのインスタンスですから、これはインスタンス変数と呼ばれています。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt;を使って、Japanオブジェクトにおけるメソッド&lt;code&gt;people_saying&lt;/code&gt;の壁を乗り越えます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;vi&quot;&gt;@prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;消費税上げないで、&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@prime_minister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;さん！&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;消費税上げないで、Shinzo Abeさん！&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;とは言え、Japanオブジェクトの外から直接これを参照することまでは原則許容されません。その必要がある場合はゲッターを介した間接参照を使います。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;vi&quot;&gt;@prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prime_minister&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@prime_minister&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;c1&quot;&gt;# または&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# class &amp;lt;&amp;lt; self&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;#   attr_reader :prime_minister&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2&gt;グローバル変数&lt;/h2&gt;
-
-&lt;p&gt;実はRubyの世界ではもっと過激な運動がありました。それは言わば、「ギャル語」を世界の共通語にする運動です。そして世界規模のこの運動にRubyの設計者は最終的には抗うことができず、対象拡張子&lt;code&gt;$&lt;/code&gt;を付するならグローバルな参照を許す、という妥協案を提示しました。グローバル変数の導入です。&lt;/p&gt;
-
-&lt;p&gt;対象拡張子&lt;code&gt;$&lt;/code&gt;を前置した変数は、当然に任意のオブジェクト内におけるメソッドの壁を乗り越えます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;消費税上げないで、&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;さん！&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;消費税上げないで、Shinzo Abeさん！&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;そしてオブジェクトの壁も乗り越えます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Japan&lt;/span&gt;
-  &lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;消費税上げないで、&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;さん！&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Greece&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;people_saying&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;More Jobs! Mr. &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Greece&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;More Jobs! Mr. Shinzo Abe&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;vg&quot;&gt;$prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Antonis Samaras&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Greece&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;More Jobs! Mr. Antonis Samaras&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Japan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;people_saying&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;消費税上げないで、Antonis Samarasさん！&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;対象拡張子&lt;code&gt;$&lt;/code&gt;はグローバルを差しています。それがどこで定義されようと、どこからでも参照および変更が可能です。つまりグローバル変数は名前空間という社会秩序を破壊します。&lt;/p&gt;
-
-&lt;p&gt;もっとも、Rubyにおけるグローバル変数は厳密に言えばグローバルではありません。私のプログラムで&lt;code&gt;$fav = &#39;programming&#39;&lt;/code&gt;としても、あなたのプログラムにおける&lt;code&gt;$fav&lt;/code&gt;変数は&lt;code&gt;&#39;money&#39;&lt;/code&gt;のままです。更に言えば、私の別のプログラムにおける&lt;code&gt;$fav&lt;/code&gt;も&lt;code&gt;&#39;blogging&#39;&lt;/code&gt;のままです。つまりプログラムにおけるグローバルとは、その起動プロセスを指しています。誰かがプログラミングにおいて真のグローバルを求めたとき、世界は完全に崩壊します。&lt;/p&gt;
-
-&lt;p&gt;ちなみにグローバル変数の記号&lt;code&gt;$&lt;/code&gt;はドル（Dollar）であり、これは将来世界共通通貨ドルが生まれることを予言しています。&lt;/p&gt;
-
-&lt;h2&gt;クラス変数&lt;/h2&gt;
-
-&lt;p&gt;地球人皆友達（グローバル変数）は余りに過激で、ひとり言語（インスタンス変数）は寂しすぎます。「せめて家族だけでも」というのは、携帯家族割が当り前の世にあって傾聴に値する意見です。&lt;/p&gt;
-
-&lt;p&gt;任意のクラスの中で対象拡張子&lt;code&gt;@@&lt;/code&gt;を前置した変数は、そのクラスおよびそこから生成されるオブジェクト（インスタンス）の中ならどこからでも参照可能です。クラスをベースにした有効範囲を持つこの変数は、クラス変数と呼ばれます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;JapanPref&lt;/span&gt;
-  &lt;span class=&quot;vc&quot;&gt;@@prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Shinzo Abe&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prime_minister&lt;/span&gt;
-    &lt;span class=&quot;vc&quot;&gt;@@prime_minister&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pm&lt;/span&gt;
-    &lt;span class=&quot;vc&quot;&gt;@@prime_minister&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vc&quot;&gt;@@prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;tokyo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:tokyo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;tokyo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; :tokyo&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;tokyo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;okinawa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:okinawa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;okinawa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; :okinawa&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;okinawa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Shinzo Abe&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;ここでokinawaオブジェクトにおけるpmに私、&#39;Charlie&#39;をセットしてみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;okinawa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Charlie&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Charlie&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;tokyo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Charlie&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;瞬時に日本全国でその意見が共有されました。&lt;/p&gt;
-
-&lt;p&gt;更にクラス変数は、そのクラス系譜、つまり継承クラス群およびそのインスタンスでも有効です。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;JapanCity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;
-  &lt;span class=&quot;vc&quot;&gt;@@prime_minister&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Charlie II&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;sapporo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JapanCity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sapporo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;sapporo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; :sapporo&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;sapporo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Charlie II&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;matsue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JapanCity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:matsue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;matsue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Matz&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;sapporo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Matz&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;JapanCity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Matz&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;JapanPref&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime_minister&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Matz&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;okinawa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;quot;Matz&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;松江市の策略でMatzが総理になることに何ら異論はありませんが、クラス変数の有効範囲はちょっと広すぎる感がありますね（&#39;Charlie&#39;を外されてスネてるわけではありません...）。Objectクラスのクラス変数はほぼグローバル変数と等価になります。&lt;/p&gt;
-
-&lt;p&gt;Rubyにおけるスコープのおはなしは以上です。さようなら。&lt;/p&gt;
-
-&lt;p&gt;─ この物語はフィクションです ─&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;(追記：2013-09-26) @haisekaiさんのアドバイスを受けて一部追記しました。ありがとう！&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2012/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2012/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;footnotes&quot;&gt;
-    &lt;ol&gt;
-        &lt;li id=&#39;fn:1&#39;&gt;ここでは時制の問題は議論しません &lt;a href=&#39;#fnref:1&#39; rev=&#39;footnote&#39;&gt;↩&lt;/a&gt;&lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/div&gt;
 
 
 
