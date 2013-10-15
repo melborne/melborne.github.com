@@ -8,7 +8,9 @@ date: 2012-04-27
 published: true
 ---
 {% include JB/setup %}
+
 Rubyのヒアドキュメントは便利です。複数行に渡る整形文章を出力するときに、これを使わない手はありません。
+
 {% highlight ruby %}
 class ATool
   def self.help
@@ -45,6 +47,7 @@ puts ATool.help
 {% endhighlight %}
 
 ただ、終端ラベル(EOS)のポジションが見苦しいです。これは`<<`に代えて`<<-`とすることで解決できます。
+
 {% highlight ruby %}
 class ATool
   def self.help
@@ -78,11 +81,13 @@ puts ATool.help
 # >> 
 # >>                    from Today!
 {% endhighlight %}
+
 EOSをオフセットできました。
 
 ##ヒアドキュメントの問題点
 
 しかし依然、問題があります。文章の先頭マージンを除去したい場合は、次のようにしなければなりません。
+
 {% highlight ruby %}
 class ATool
   def self.help
@@ -127,6 +132,7 @@ puts ATool.help
 そこで解決策を考えてみました。
 
 まずはDATAの活用です。\_\_END\_\_以降に整形文章を先頭マージン無しで置き、これを読み込むようにします。
+
 {% highlight ruby %}
 class ATool
   def self.help
@@ -166,12 +172,14 @@ __END__
 # >>                from Today!
 # >> 
 {% endhighlight %}
+
 可読性は上がりました。しかし、DATAはファイルをrequireすると読めないなどの問題があり、実用的ではありません。
 
 ##`~`(チルダ)による解決策
 そこで先日のトリビアで紹介した、単項演算子`~`(チルダ)を使う手を思いついたのです。`~`はそのレシーバがメソッドの後ろに来るというユニークな特徴があります。
 
 まず、`String#~`を定義します。
+
 {% highlight ruby %}
 class String
   def ~
@@ -180,9 +188,11 @@ class String
   end
 end
 {% endhighlight %}
+
 このコードで先頭マージンが除去されます。
 
 そしてヒアドキュメントにおける`<<`の前に、~を置いて`~<<-EOS`のようにすればいいのです。
+
 {% highlight ruby %}
 class ATool
   def self.help
