@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "やっぱり通貨換算もターミナルでしたいよね！ - Google Currency APIをRubyで使う"
+title: "やっぱり通貨換算もターミナルでしたいよね - Google Currency APIをRubyで使う"
 description: ""
 category: 
 tags: 
