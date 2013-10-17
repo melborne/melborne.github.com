@@ -296,23 +296,17 @@ Railsの名前規約に従っていれば、Railsアプリケーションは簡�
 
 <blockquote><p>||
 class CreatePosts &lt; ActiveRecord::Migration
-  def self.up</p>
+  def self.up
+    create_table :posts do |t|
+      t.column :title, :string
+      t.column :body,  :text
+      t.column :created_at :datetime
+    end
+  end</p></blockquote>
 
-<pre><code>create_table :posts do |t|
-  t.column :title, :string
-  t.column :body,  :text
-  t.column :created_at :datetime
-end
-</code></pre>
-
-<p>  end</p></blockquote>
-
-<p>  def self.down</p>
-
-<pre><code>drop_table :posts
-</code></pre>
-
-<p>  end
+<p>  def self.down
+    drop_table :posts
+  end
 end
 ||&lt;
 雛形が出来上がっているので、create_tableのブロック内を追加するだけです。このときidコラムは自動生成されるためここでの追加は不要です。
@@ -458,22 +452,16 @@ TextMateでblog_controller.rbを見てみると、いろいろなコードが生
 
 <blockquote><p>||
 class CreateComments &lt; ActiveRecord::Migration
-  def self.up</p>
+  def self.up
+    create_table :comments do |t|
+      t.column :body, :text
+      t.column :post_id, :integer
+    end
+  end</p></blockquote>
 
-<pre><code>create_table :comments do |t|
-  t.column :body, :text
-  t.column :post_id, :integer
-end
-</code></pre>
-
-<p>  end</p></blockquote>
-
-<p>  def self.down</p>
-
-<pre><code>drop_table :comments
-</code></pre>
-
-<p>  end
+<p>  def self.down
+    drop_table :comments
+  end
 end
 ||&lt;
 そして、migrateします。</p>
