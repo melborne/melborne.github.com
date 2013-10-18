@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Hatena Bookmark entries in terminal"
 title: "はてなブックマークの人気エントリーもターミナルでみたいよね - ブクマ取得APIをRubyで使う"
 description: ""
 category: 
@@ -186,46 +185,51 @@ puts merged
 
 最後にHatebuEntryで生成したhp12cの人気記事トップ２０のリンクを貼ってお別れしたいと思います。タイトルとブクマ数はリンクになっていますので、興味のある記事がありましたら読んでもらえたらうれしいです。では、さようなら。
 
+## hp12cの人気エントリーTOP20
 
-[[1414]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/04/09/to-newbie/) : [これからRubyを始める人たちへ](http://melborne.github.com/2012/04/09/to-newbie/)
+[[1414](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/04/09/to-newbie/)] : [これからRubyを始める人たちへ](http://melborne.github.com/2012/04/09/to-newbie/)
 
-[[ 670]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/) : [知って得する！５５のRubyのトリビアな記法](http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/)
+[[670](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/)] : [知って得する！５５のRubyのトリビアな記法](http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/)
 
-[[ 613]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/) : [Rubyのcaseを〇〇(言語名)のswitch文だと思っている人たちにぼくから一言ガツンと申し上げたい](http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/)
+[[614](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/)] : [Rubyのcaseを〇〇(言語名)のswitch文だと思っている人たちにぼくから一言ガツンと申し上げたい](http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/)
 
-[[ 545]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/) : [知って得する21のRubyのトリビアな記法](http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
+[[545](http://b.hatena.ne.jp/entry/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)] : [知って得する21のRubyのトリビアな記法](http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/)
 
-[[ 442]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/) : [Ruby脳が理解するJavaScriptのオブジェクト指向](http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/)
+[[442](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/)] : [Ruby脳が理解するJavaScriptのオブジェクト指向](http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/)
 
-[[ 272]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/) : [今年の冬休みに電子書籍であなたがRubyを習得しなければいけないたった一つの理由](http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/)
+[[272](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/)] : [今年の冬休みに電子書籍であなたがRubyを習得しなければいけないたった一つの理由](http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/)
 
-[[ 236]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/07/16/ruby-methods-analysis/) : [Ruby、君のオブジェクトはなんて呼び出せばいいの？](http://melborne.github.com/2012/07/16/ruby-methods-analysis/)
+[[236](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/07/16/ruby-methods-analysis/)] : [Ruby、君のオブジェクトはなんて呼び出せばいいの？](http://melborne.github.com/2012/07/16/ruby-methods-analysis/)
 
-[[ 202]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/21/why-fp-with-ruby/) : [Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（改定）─ 前編 ─ 但し後編の予定なし](http://melborne.github.com/2013/01/21/why-fp-with-ruby/)
+[[202](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/21/why-fp-with-ruby/)] : [Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（改定）─ 前編 ─ 但し後編の予定なし](http://melborne.github.com/2013/01/21/why-fp-with-ruby/)
 
-[[ 178]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/) : [Ruby脳が理解するJavaScriptのオブジェクト指向（その２）](http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/)
+[[180](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/)] : [Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について](http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/)
 
-[[ 180]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/) : [Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について](http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/)
+[[178](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/)] : [Ruby脳が理解するJavaScriptのオブジェクト指向（その２）](http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/)
 
-[[ 144]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/) : [第2弾!知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/)
+[[159](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/13/first-step-of-jekyll/)] : [30分のチュートリアルでJekyllを理解する](http://melborne.github.com/2012/05/13/first-step-of-jekyll/)
 
-[[ 159]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/13/first-step-of-jekyll/) : [30分のチュートリアルでJekyllを理解する](http://melborne.github.com/2012/05/13/first-step-of-jekyll/)
+[[150](http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/)] : [Jekyllいつやるの？ジキやルの？今でしょ！](http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/)
 
-[[ 109]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/) : [一生涯はてな記法しますか？それともMarkdownしますか？](http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/)
+[[144](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/)] : [第2弾!知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/)
 
-[[ 100]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/) : [RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ](http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/)
+[[111](http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/04/is-that-a-yet-another-rdoc/)] : [メソッドの使い方もRubyに教えてほしい](http://melborne.github.io/2013/09/04/is-that-a-yet-another-rdoc/)
 
-[[  98]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/) : [東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/)
+[[109](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/)] : [一生涯はてな記法しますか？それともMarkdownしますか？](http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/)
 
-[[  91]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/) : [Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！](http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/)
+[[107](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/10/29/rubys-new-control-structure-by-tap-and-break/)] : [TapがRubyの新たな制御構造の世界を開く](http://melborne.github.com/2012/10/29/rubys-new-control-structure-by-tap-and-break/)
 
-[[  93]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/) : [ねえRuby、どこまでが君でどこからが内部DSLなの？](http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/)
+[[100](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/)] : [RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ](http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/)
 
-[[  74]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/04/27/ruby-heredoc-without-leading-whitespace/) : [チルダがRubyのヒアドキュメントをもっと良くする](http://melborne.github.com/2012/04/27/ruby-heredoc-without-leading-whitespace/)
+[[98](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/)] : [東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/)
 
-[[  71]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/04/26/ruby-trivias-you-should-know/) : [第３弾！知って得する12のRubyのトリビアな記法](http://melborne.github.com/2012/04/26/ruby-trivias-you-should-know/)
+[[93](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/)] : [ねえRuby、どこまでが君でどこからが内部DSLなの？](http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/)
 
-[[  88]](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/06/18/i-am-inject-lover-too/) : [YOUたち!RubyでinjectしちゃいなYO!](http://melborne.github.com/2012/06/18/i-am-inject-lover-too/)
+[[91](http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/)] : [Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！](http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/)
+
+---
+
+(追記：2013-10-17) hp12c人気エントリーのリストを修正しました。
 
 ---
 
@@ -246,3 +250,4 @@ puts merged
 {% footnotes %}
 {% fn 似たようなAPIは公式のものでもあるようです %}
 {% endfootnotes %}
+
