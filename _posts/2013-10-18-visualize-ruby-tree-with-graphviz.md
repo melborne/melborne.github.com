@@ -79,7 +79,7 @@ save :ruby_tree, :png
 {% lightbox  2013/10/ruby_tree2.png, rubyTree, alt noshadow %}
 （クリックで拡大）
 
-以前として収集がつかないのでレイアウトを変えてみる。
+依然として収集がつかないのでレイアウトを変えてみる。
 
 {% highlight ruby %}
  classes = ObjectSpace.each_object(Class)
@@ -257,6 +257,11 @@ save :ruby_tree, :png
 
 {% gist 7039236 %}
 
+---
+
+(追記：2013-10-19) Ruiniusも視覚化しました。
+
+[Rubiniusユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/19/visualize-rubinius-tree/ "Rubiniusユニバースも視覚化してみる")
 
 ---
 
