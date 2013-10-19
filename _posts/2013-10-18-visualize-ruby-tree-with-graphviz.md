@@ -265,6 +265,14 @@ save :ruby_tree, :png
 
 ---
 
+関連記事：
+
+[Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！]({{ BASE_PATH }}/2012/09/25/ruby-plus-graphviz-should-eql-gviz/ "Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！")
+
+[東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く]({{ BASE_PATH }}/2012/10/02/draw-metro-map-with-gviz/ "東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く")
+
+---
+
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
 [M'ELBORNE BOOKS]({{ BASE_PATH }}/books/ "M'ELBORNE BOOKS")

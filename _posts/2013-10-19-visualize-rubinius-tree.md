@@ -121,4 +121,14 @@ RubiniusにはCRubyにはないクラスが依然含まれていて`Continuation
 
 > 参考：[Inside the Rubinius 2.0 Preview Release - Rubinius](http://rubini.us/2011/06/07/inside-rubinius-20-preview/ "Inside the Rubinius 2.0 Preview Release - Rubinius")
 
+---
+
+関連記事：
+
+[Rubiniusユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/19/visualize-rubinius-tree/ "Rubiniusユニバースも視覚化してみる")
+
+[JRubyユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/20/visualize-jruby-tree/ "JRubyユニバースも視覚化してみる")
+
+[Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！]({{ BASE_PATH }}/2012/09/25/ruby-plus-graphviz-should-eql-gviz/ "Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！")
+
 
