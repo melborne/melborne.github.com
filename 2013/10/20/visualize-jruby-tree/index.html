@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     
-      <title>Rubiniusユニバースも視覚化してみる</title>
+      <title>JRubyユニバースも視覚化してみる</title>
     
     <meta name="description" content="" />
     <meta name="author" content="kyoendo" />
@@ -155,8 +155,8 @@
       <div class="content">
         
 <div class="page-header span8">
-  <div class="date"><span>19 October 2013</span></div>
-  <h1 class='page-title'><a href="/2013/10/19/visualize-rubinius-tree">Rubiniusユニバースも視覚化してみる</a> <small>  </small></h1>
+  <div class="date"><span>20 October 2013</span></div>
+  <h1 class='page-title'><a href="/2013/10/20/visualize-jruby-tree">JRubyユニバースも視覚化してみる</a> <small>  </small></h1>
 </div>
 
 <div class="row">
@@ -175,19 +175,25 @@
       </script>
     </div>
 
-    <p>前の記事でRubyのクラスツリーをGraphvizを使って視覚化した。</p>
+    <p>前の前の記事でCRubyのクラスツリーをGraphvizを使って視覚化した。</p>
 
 <blockquote><p><a href="/2013/10/18/visualize-ruby-tree-with-graphviz/" title="RubyユニバースをGraphvizで視覚化する">RubyユニバースをGraphvizで視覚化する</a></p></blockquote>
 
-<p>そうしたら今度はRubiniusでどうなるのかも見てみたくなったので以下の辺りを参考にRubiniusをインストールしてやってみることにした。</p>
+<p>前の記事でRubiniusのクラスツリーをGraphvizを使って視覚化した。</p>
 
-<blockquote><p><a href="http://qiita.com/taiki45/items/b90002c72352ab382183" title="Ruby - Rubinius 2.0.0-dev をインストールする with rbenv - Qiita [キータ]">Ruby - Rubinius 2.0.0-dev をインストールする with rbenv - Qiita [キータ]</a></p>
+<blockquote><p><a href="/2013/10/19/visualize-rubinius-tree/" title="Rubiniusユニバースも視覚化してみる">Rubiniusユニバースも視覚化してみる</a></p></blockquote>
 
-<p><a href="https://gist.github.com/amateurhuman/2005745" title="Installing Rubinius 2.0.0-dev with rbenv">Installing Rubinius 2.0.0-dev with rbenv</a></p></blockquote>
+<p>そうしたら今度はJRubyでどうなるのかも見てみたくなったのでJRubyをインストールしてやってみることにした。</p>
 
-<p>例外クラスとモジュールを除いたRubyのクラスツリーをRubiniusで書いてみる。</p>
+<div class="highlight"><pre><code class="bash">% rbenv install jruby-1.7.4
+% rbenv <span class="nb">local </span>jruby-1.7.4
+% ruby -v
+jruby 1.7.4 <span class="o">(</span>1.9.3p392<span class="o">)</span> 2013-05-16 2390d3b on Java HotSpot<span class="o">(</span>TM<span class="o">)</span> 64-Bit Server VM 1.6.0_51-b11-456-11M4508 <span class="o">[</span>darwin-x86_64<span class="o">]</span>
+% gem install gviz
+</code></pre></div>
 
-<p>どういうわけか<code>gviz</code>コマンドが使えるようにならないのでrubyで実行できるよう修正する。前回のコードをGraphのブロックで囲えばいい(必要色数が増えたのでcolorschemeをpurd6からpurd7に変えている）。</p>
+
+<p>例外クラスとモジュールを除いたRubyのクラスツリーをJRubyで書いてみる。</p>
 
 <div class="highlight"><pre><code class="ruby"> <span class="c1"># ruby_tree.rb</span>
  <span class="nb">require</span> <span class="s1">&#39;gviz&#39;</span>
@@ -195,7 +201,7 @@
  <span class="n">classes</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span><span class="p">(</span><span class="no">Class</span><span class="p">)</span>
                       <span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">match</span> <span class="sr">/Gem|Thor|Gviz/</span> <span class="p">}</span>
  
-<span class="o">+</span><span class="no">Graph</span> <span class="k">do</span>
+ <span class="no">Graph</span> <span class="k">do</span>
    <span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;fdp&#39;</span>
    <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="ss">colorscheme</span><span class="p">:</span><span class="s1">&#39;purd7&#39;</span>
  
@@ -213,85 +219,31 @@
    <span class="k">end</span>
  
    <span class="n">save</span> <span class="ss">:ruby_tree</span><span class="p">,</span> <span class="ss">:png</span>
-<span class="o">+</span><span class="k">end</span>
-</code></pre></div>
-
-
-<p>Rubyを切り替えてヴァージョンを確認して実行してみる。</p>
-
-<div class="highlight"><pre><code class="bash">% rbenv <span class="nb">local </span>rbx-2.0.0
-% ruby -v
-rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span class="o">)</span> <span class="o">[</span>x86_64-darwin12.5.0<span class="o">]</span>
-% ruby ruby_tree.rb
-</code></pre></div>
-
-
-<p>うわっ。</p>
-
-<p><br/></p>
-
-<p><a href="/assets/images/2013/10/ruby_tree8.png" rel="lightbox" title="ruby_tree"><img src="/assets/images/2013/10/ruby_tree8.png" alt="alt noshadow" /></a>
-（クリックで拡大）</p>
-
-<p>クラスの数がなんかぜんぜん違う。一部を拡大して見てみる。</p>
-
-<p><a href="/assets/images/2013/10/ruby_tree9.png" rel="lightbox" title="ruby_tree"><img src="/assets/images/2013/10/ruby_tree9.png" alt="alt noshadow" /></a>
-（クリックで拡大）</p>
-
-<p>おびただしい数のRubinius関連クラスが見える。これらはRubyの組み込みクラスを補完するクラス群なのだろう。</p>
-
-<blockquote><p>参考：<a href="http://patshaughnessy.net/2012/1/25/my-first-impression-of-rubinius-internals" title="My first impression of Rubinius internals - Pat Shaughnessy">My first impression of Rubinius internals - Pat Shaughnessy</a></p></blockquote>
-
-<p>Rubinius関連クラス群を除外して描画してみる。</p>
-
-<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s1">&#39;gviz&#39;</span>
- 
- <span class="n">classes</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span><span class="p">(</span><span class="no">Class</span><span class="p">)</span>
-<span class="o">+</span>                     <span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">match</span> <span class="sr">/Gem|Thor|Gviz|Rubinius/</span> <span class="p">}</span>
- 
- <span class="no">Graph</span> <span class="k">do</span>
-   <span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;fdp&#39;</span>
-   <span class="n">nodes</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="ss">colorscheme</span><span class="p">:</span><span class="s1">&#39;purd6&#39;</span>
- 
-   <span class="n">classes</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">klass</span><span class="o">|</span>
-     <span class="n">tree</span><span class="p">,</span> <span class="n">mods</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">ancestors</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">anc</span><span class="o">|</span> <span class="n">anc</span><span class="o">.</span><span class="n">is_a?</span> <span class="no">Class</span> <span class="p">}</span>
-                       <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">reverse</span> <span class="p">}</span>
-     <span class="k">next</span> <span class="k">if</span> <span class="n">tree</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="no">Exception</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">tree</span><span class="o">[-</span><span class="mi">1</span><span class="o">]</span> <span class="o">!=</span> <span class="no">Exception</span>
-     <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="o">]</span> <span class="p">}</span>
-     <span class="n">tree</span><span class="o">.</span><span class="n">each_cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ai</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">bi</span><span class="p">)</span><span class="o">|</span>
-       <span class="n">a_id</span><span class="p">,</span> <span class="n">b_id</span> <span class="o">=</span> <span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">].</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_id</span><span class="p">)</span>
-       <span class="n">route</span> <span class="n">a_id</span> <span class="o">=&gt;</span> <span class="n">b_id</span>
-       <span class="n">node</span> <span class="n">a_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">a</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="mi">6</span><span class="o">-</span><span class="n">ai</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="mi">6</span><span class="o">-</span><span class="n">ai</span>
-       <span class="n">node</span> <span class="n">b_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">b</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="mi">6</span><span class="o">-</span><span class="n">bi</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="mi">6</span><span class="o">-</span><span class="n">bi</span>
-     <span class="k">end</span>
-   <span class="k">end</span>
- 
-   <span class="n">save</span> <span class="ss">:ruby_tree</span><span class="p">,</span> <span class="ss">:png</span>
  <span class="k">end</span>
 </code></pre></div>
 
 
-<p><a href="/assets/images/2013/10/ruby_tree10.png" rel="lightbox" title="ruby_tree"><img src="/assets/images/2013/10/ruby_tree10.png" alt="alt noshadow" /></a>
-（クリックで拡大）</p>
+<p>ファイルを実行して生成されたpngを開いてみる。</p>
 
-<p>大分スッキリした。これでCRubyにおけるクラスツリーに近づいてきた。対応するCRubyのグラフを貼って見比べてみる。</p>
+<div class="highlight"><pre><code class="bash">% ruby ruby_tree.rb
+% open ruby_tree.png
+</code></pre></div>
+
 
 <p><br/></p>
 
-<p><a href="/assets/images/2013/10/ruby_tree4.png" rel="lightbox" title="ruby_tree"><img src="/assets/images/2013/10/ruby_tree4.png" alt="alt noshadow" /></a>
+<p><a href="/assets/images/2013/10/ruby_tree11.png" rel="lightbox" title="ruby_tree"><img src="/assets/images/2013/10/ruby_tree11.png" alt="alt noshadow" /></a>
 （クリックで拡大）</p>
 
-<p>RubiniusにはCRubyにはないクラスが依然含まれていて<code>Continuation</code>（継続）なんてものも見える。Rubiniusは単一実装で1.8系と1.9系をカバーするようだからそうなんだろう（インストール時に--enable-versionという設定項目がある）。</p>
-
-<blockquote><p>参考：<a href="http://rubini.us/2011/06/07/inside-rubinius-20-preview/" title="Inside the Rubinius 2.0 Preview Release - Rubinius">Inside the Rubinius 2.0 Preview Release - Rubinius</a></p></blockquote>
+<p>拡大すると<code>JavaProxy</code>というクラスからJavaの世界へつながるような構造が見える。</p>
 
 <hr />
 
 <p>関連記事：</p>
 
-<p><a href="/2013/10/19/visualize-rubinius-tree/" title="Rubiniusユニバースも視覚化してみる">Rubiniusユニバースも視覚化してみる</a></p>
+<p><a href="/2013/10/18/visualize-ruby-tree-with-graphviz/" title="RubyユニバースをGraphvizで視覚化する">RubyユニバースをGraphvizで視覚化する</a></p>
 
-<p><a href="/2013/10/20/visualize-jruby-tree/" title="JRubyユニバースも視覚化してみる">JRubyユニバースも視覚化してみる</a></p>
+<p><a href="/2013/10/19/visualize-rubinius-tree/" title="Rubiniusユニバースも視覚化してみる">Rubiniusユニバースも視覚化してみる</a></p>
 
 <p><a href="/2012/09/25/ruby-plus-graphviz-should-eql-gviz/" title="Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！">Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！</a></p>
 
@@ -313,15 +265,15 @@ rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span cla
     <hr>
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubiniusユニバースも視覚化してみる" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/10/20/visualize-jruby-tree/" class="hatena-bookmark-button" data-hatena-bookmark-title="JRubyユニバースも視覚化してみる" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" data-text="Rubiniusユニバースも視覚化してみる" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" data-text="JRubyユニバースも視覚化してみる" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" />
+  <link rel="canonical" href="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -336,7 +288,7 @@ rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span cla
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
@@ -348,12 +300,12 @@ rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span cla
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2013/10/18/visualize-ruby-tree-with-graphviz" title="RubyユニバースをGraphvizで視覚化する">&larr; Previous</a></li>
+        <li class="prev"><a href="/2013/10/19/visualize-rubinius-tree" title="Rubiniusユニバースも視覚化してみる">&larr; Previous</a></li>
       
         <li><a href="/">Archive</a></li>
         <!--<li><a href="/archive.html">Archive</a></li>-->
       
-        <li class="next"><a href="/2013/10/20/visualize-jruby-tree" title="JRubyユニバースも視覚化してみる">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -400,15 +352,15 @@ rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span cla
 
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubiniusユニバースも視覚化してみる" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/10/20/visualize-jruby-tree/" class="hatena-bookmark-button" data-hatena-bookmark-title="JRubyユニバースも視覚化してみる" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" data-text="Rubiniusユニバースも視覚化してみる" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" data-text="JRubyユニバースも視覚化してみる" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" />
+  <link rel="canonical" href="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -423,7 +375,7 @@ rubinius 2.1.1n292 <span class="o">(</span>2.1.0 9f9da9ed 2013-10-19 JI<span cla
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2013/10/19/visualize-rubinius-tree/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2013/10/20/visualize-jruby-tree/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
