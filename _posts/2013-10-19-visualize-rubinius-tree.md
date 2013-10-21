@@ -123,6 +123,12 @@ RubiniusにはCRubyにはないクラスが依然含まれていて`Continuation
 
 ---
 
+(追記：2013-10-20) JRubyも視覚化しました。
+
+[JRubyユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/20/visualize-jruby-tree/ "JRubyユニバースも視覚化してみる")
+
+---
+
 関連記事：
 
 [Rubiniusユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/19/visualize-rubinius-tree/ "Rubiniusユニバースも視覚化してみる")
