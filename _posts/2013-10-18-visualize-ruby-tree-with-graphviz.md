@@ -271,6 +271,9 @@ save :ruby_tree, :png
 
 [東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く]({{ BASE_PATH }}/2012/10/02/draw-metro-map-with-gviz/ "東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く")
 
+
+[Rubyのソースディレクトリも視覚化してみる]({{ BASE_PATH }}/2013/10/21/visualize-ruby-files-with-graphviz/ "Rubyのソースディレクトリも視覚化してみる")
+
 ---
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>

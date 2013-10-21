@@ -129,6 +129,8 @@ RubiniusにはCRubyにはないクラスが依然含まれていて`Continuation
 
 [JRubyユニバースも視覚化してみる]({{ BASE_PATH }}/2013/10/20/visualize-jruby-tree/ "JRubyユニバースも視覚化してみる")
 
+[Rubyのソースディレクトリも視覚化してみる]({{ BASE_PATH }}/2013/10/21/visualize-ruby-files-with-graphviz/ "Rubyのソースディレクトリも視覚化してみる")
+
 [Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！]({{ BASE_PATH }}/2012/09/25/ruby-plus-graphviz-should-eql-gviz/ "Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！")
 
 
