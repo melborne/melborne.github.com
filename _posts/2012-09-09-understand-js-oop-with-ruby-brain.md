@@ -468,8 +468,6 @@ earl.ageInDays(); // 15330
 [Ruby脳が理解するJavaScriptのオブジェクト指向（その２）](http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/ 'Ruby脳が理解するJavaScriptのオブジェクト指向（その２）')
 ____
 
-{{ 4873115736 | amazon_medium_image }}
-{{ 4873115736 | amazon_link }} by {{ 4873115736 | amazon_authors }}
 
 
 {% footnotes %}
