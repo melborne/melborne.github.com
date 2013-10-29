@@ -64,7 +64,7 @@ gem_project
 
 > [Download. | Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php "Download. | Graphviz - Graph Visualization Software")
 
-対象Rubyバージョンは`>= 2.0.0`です。
+対象Rubyバージョンは`>= 2.0.0`です。最新のMac OS（Mavericks）を使っているなら`gem install dir_friend`で準備は完了です。
 
 ## DirFriendのターミナルでの使い方
 
@@ -330,6 +330,8 @@ Graphviz opened tempfile: /var/folders/sk/9h0z77c10g16n_vc0khd_chr0000gn/T/dirfr
 説明は以上です。
 
 あなたのプロジェクトもDirFriendで視覚化してみませんか？
+
+(追記：2013-10-29) 対象Rubyバージョンなどについて記述を追加しました。
 
 ---
 
