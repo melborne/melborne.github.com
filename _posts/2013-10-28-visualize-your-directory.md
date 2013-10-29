@@ -102,6 +102,8 @@ Dot file created: `a.dot`
 
 Graphvizが起動してそのWindowに以下が表示されます。
 
+(追記：version0.0.4よりMac OSでは自動でGraphvizが起動するようになりました。)
+
 ![dir_friend noshadow]({{ BASE_PATH }}/assets/images/2013/10/prj_tree1.png)
 
 `dot`サブコマンドは色々なオプションを取れます。まずはヘルプで確認します。
@@ -123,6 +125,8 @@ Options:
                                    # Default: a
   -d, [--depth=DEPTH]
                                    # Default: 9
+  -o, [--with-open]
+                                   # Default: true
 
 Description:
   ex.
@@ -141,7 +145,7 @@ Dot file created: `a.dot`
 
 ![Alt title noshadow]({{ BASE_PATH }}/assets/images/2013/10/prj_tree2.png)
 
-ディレクトリの深さに応じて色がグラデーションします。colorschemeにセットできる色は以下で確認できます（使えない色もあります）。
+ディレクトリの深さに応じて色がグラデーションします。colorschemeにセットできる色は以下で確認できます。
 
 > [Color Names | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/color-names "Color Names | Graphviz - Graph Visualization Software")
 
@@ -325,13 +329,21 @@ Graphviz opened tempfile: /var/folders/sk/9h0z77c10g16n_vc0khd_chr0000gn/T/dirfr
 
 ![dir_friend noshadow]({{ BASE_PATH }}/assets/images/2013/10/prj_tree1.png)
 
-残念がらこの機能はコマンドでは実現できていません（泣）help me.
+<del>残念がらこの機能はコマンドでは実現できていません（泣）help me.</del>
+
+    追記：help meと書いたら@rosylillyさんがプルリクで助けてくれました。これによりMac限定ですが、dotコマンドにおいて生成したDotファイルは自動でオープンされるようになりました。スバラシイ！
+
+> [Add a 'with_open' option to a 'dot' subcommand by rosylilly · Pull Request #1 · melborne/dir_friend](https://github.com/melborne/dir_friend/pull/1 "Add a `with_open` option to a `dot` subcommand by rosylilly · Pull Request #1 · melborne/dir_friend")
 
 説明は以上です。
 
 あなたのプロジェクトもDirFriendで視覚化してみませんか？
 
+---
+
 (追記：2013-10-29) 対象Rubyバージョンなどについて記述を追加しました。
+
+(追記：2013-10-29) MacでDotファイルを自動オープンする記述について追加しました。
 
 ---
 
