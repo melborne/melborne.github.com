@@ -345,6 +345,10 @@ Graphviz opened tempfile: /var/folders/sk/9h0z77c10g16n_vc0khd_chr0000gn/T/dirfr
 
 (追記：2013-10-29) MacでDotファイルを自動オープンする記述について追加しました。
 
+(追記：2013-11-01) DirFriendのバージョンアップについての記事を書きました。
+
+> [あなたはファイルシステムに美を見るか？]({{ BASE_PATH }}/2013/10/31/there-is-a-beauty-in-your-computer/ "あなたはファイルシステムに美を見るか？")
+
 ---
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
