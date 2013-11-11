@@ -1,0 +1,864 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Excelデータを最速でWebアプリ(Heroku)にする１０のステップ</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>11 November 2013</span></div>
+  <h1 class='page-title'><a href="/2013/11/11/your-data-from-excel-to-the-web">Excelデータを最速でWebアプリ(Heroku)にする１０のステップ</a> <small> CtoD: a tool for exporting csv data to database with Ruby </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>ローカルには映画の視聴記録とか食べ歩きのお店評価とか投資履歴とかガラクタコレクションリストとかの自身の活動記録的なデータが溜まります。そしてどういうわけかそれらのデータは大概表計算ソフト「Excel」の上に置かれているのです。その結果、溜めたはいいが有効に活用されない、場合によっては見ることすらしないという事態に陥ります。それらのデータが本来的に置かれる場所が「データベース」であり、その活用によりデータ価値が向上するということに誰も異論はないとしても、データはExcelに置かれるのです。</p>
+
+<p>理由は一つ。そう、データベースは敷居が高いのです。</p>
+
+<p>データベースの敷居が下がれば、みんながローカルのデータをもっともっと大量に公開して世の中はもっと便利になるに違いありません。</p>
+
+<p>まあ、実際のところはよくわかりませんが。</p>
+
+<hr />
+
+<p>そんなわけで...</p>
+
+<p>データベースの敷居を下げるべく、CSVデータを簡単にデータベース化するRuby製のツール<code>CtoD</code>を作りました:-)</p>
+
+<p>テストがないとか自分にデータベース周りの知識がないとかで変なコトやってる可能性大ですが、自分の環境では一応動いているので公開します。</p>
+
+<blockquote><p><a href="https://rubygems.org/gems/ctoD" title="ctoD | RubyGems.org | your community gem host">ctoD | RubyGems.org | your community gem host</a></p>
+
+<p><a href="https://github.com/melborne/ctoD" title="melborne/ctoD">melborne/ctoD</a></p></blockquote>
+
+<hr />
+
+<p>以下では、<code>CtoD</code>とSiantraを使ってNumbers上のデータをHeroku上でWebアプリ化する手順を書きます。ExcelではなくAppleのNumbersです。環境はMac OSX（Mavericks）です。Herokuにアカウントがあることを前提とします。Windowsでの手順はわかりません。Excelとか言っておいてごめんなさいm(__)m</p>
+
+<h2>STEP0: Numbers上にデータを用意する</h2>
+
+<p>Numbers上に以下のような映画視聴記録データがあると仮定します。</p>
+
+<p><img src="/assets/images/2013/11/movie1.png" alt="movie noshadow" /></p>
+
+<p>例を作るため、ここでは公開されている以下の映画データを利用させて頂きましたm(__)m</p>
+
+<blockquote><p><a href="http://matome.naver.jp/odai/2134966019824796901" title="ひとりで観たいオシャレな恋愛映画11選 - NAVER まとめ">ひとりで観たいオシャレな恋愛映画11選 - NAVER まとめ</a></p></blockquote>
+
+<h2>STEP1: NumbersデータをCSVにする</h2>
+
+<p>Numbersのエクスポート機能を使ってデータをCSV形式にします。CSV化に当たり以下のような制約があります。</p>
+
+<blockquote><ol>
+<li>CSVのファイル名は英単語の複数形であること</li>
+<li>余分な行・列が含まれていないこと</li>
+<li>各フィールドのヘッダー名が各異なる<strong>英文字</strong>であること</li>
+<li>idフィールドは自動生成されるので削除すること</li>
+<li>日付のフィールドは<code>YYYY-MM-DD</code>または<code>YYYY/MM/DD</code>の形式とすること</li>
+<li>論理値の値は'true'または'false'にすること</li>
+<li>先頭レコードの各フィールドをできるだけ空欄にしないこと</li>
+</ol>
+</blockquote>
+
+<p>ここではファイル名を<code>movies.csv</code>とし、<code>/mymovie</code>ディレクトリに保存します。</p>
+
+<h2>STEP2: Postgresをインストールする</h2>
+
+<p>HerokuのデータベースがPostgresなのでローカルの環境にもこれをインストールします。Macで最も簡単な方法は<code>Postgres.app</code>をインストール方法でしょう。</p>
+
+<blockquote><p><a href="http://postgresapp.com/" title="Postgres.app | the easiest way to run PostgreSQL on the Mac">Postgres.app | the easiest way to run PostgreSQL on the Mac</a></p></blockquote>
+
+<p>Herokuにデプロイせず、ローカルで楽しむだけならsqlite3（Macにプリインストール）、mysqlなどを使うこともできます（その他のデータベースでは試していません）。</p>
+
+<h2>STEP3: movieデータベースを作る</h2>
+
+<p>Postgresのインストールで、<code>psql</code>というコマンドラインツールが使えるようになります。これを使ってデータベースを作ります。名前は<code>movies</code>とします。Postgresが起動していることを確認した上で以下を実行します。</p>
+
+<pre><code>/mymovie% psql
+psql (9.3.0)
+Type "help" for help.
+
+keyes=# create database movies;
+CREATE DATABASE
+</code></pre>
+
+<p>データベースの生成を確認してquitします。</p>
+
+<pre><code>keyes=# \list
+                         List of databases
+   Name    | Owner | Encoding | Collate | Ctype | Access privileges
+-----------+-------+----------+---------+-------+-------------------
+ movies    | keyes | UTF8     | C       | C     |
+ postgres  | keyes | UTF8     | C       | C     |
+
+keyes=#\q
+/mymovie%
+</code></pre>
+
+<h2>STEP4: CtoDでCSVからデータベース・テーブルを作る</h2>
+
+<p><code>CtoD gem</code>をインストールします。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% gem install ctoD
+Fetching: ctoD-0.0.1.gem <span class="o">(</span>100%<span class="o">)</span>
+Successfully installed ctoD-0.0.1
+1 gem installed
+</code></pre></div>
+
+
+<p>これでターミナル上で<code>ctoD</code>コマンドが使えるようになります。</p>
+
+<p><code>ctoD</code>コマンドで表示されるhelpを確認した上で、<code>export</code>サブコマンドを実行します。exportサブコマンドは引数で渡されたcsvファイルを読み取って、ターゲットデータベース上にテーブルを作成し、そこにcsvのデータをエクスポートします。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% ctoD <span class="nb">export </span>movies.csv postgres://localhost/movies
+Table <span class="s1">&#39;movies&#39;</span> created at postgresql://localhost/movies.
+CSV data exported successfully.
+</code></pre></div>
+
+
+<p>上で見るようにデータベースの指定は、そのスキーマ、ホスト、DB名を含むアドレスで行います。データベースへのログイン情報が必要な場合は以下のようにします。</p>
+
+<pre><code>mysql://root:mypassword@localhost/movies
+</code></pre>
+
+<p>sqlite3の場合は以下のようにデータベースファイルの保存先を絶対パスで指定します。</p>
+
+<pre><code>sqlite3://localhost//Users/yourname/path/to/movies.sqlite3
+</code></pre>
+
+<p>localhostの後のスラッシュが２つ必要な点気をつけてください。</p>
+
+<p><code>CtoD</code>は内部的には<code>ActiveRecord</code>を使っています。CtoDのもう少し詳しい説明は別途記事にします。</p>
+
+<hr />
+
+<p>psqlでmoviesテーブルが生成されているか確認します。</p>
+
+<pre><code>/mymovie% psql movies
+psql (9.3.0)
+Type "help" for help.
+movies=# \d movies;
+                                     Table "public.movies"
+   Column   |            Type             |                      Modifiers
+------------+-----------------------------+-------------------------------------
+ id         | integer                     | not null default nextval('movies_id_seq'::regclass)
+ title      | character varying(255)      |
+ director   | character varying(255)      |
+ original   | character varying(255)      |
+ music      | character varying(255)      |
+ actor      | character varying(255)      |
+ outline    | text                        |
+ released   | integer                     |
+ rating     | integer                     |
+ created_at | timestamp without time zone | not null
+ updated_at | timestamp without time zone | not null
+Indexes:
+    "movies_pkey" PRIMARY KEY, btree (id)
+</code></pre>
+
+<p>データがインポートされているか確認します。</p>
+
+<pre><code>movies=# select title, actor from movies;
+            title             |                     actor
+------------------------------+------------------------------------------------
+ プラダを着た悪魔             | アン・ハサウェー
+ ぼくのエリ　200歳の少女      | カーレ・ヘーデブラント他
+ ノッティングヒルの恋人       | ヒュー・グラント／ジュリア・ロバーツ
+ ロミオ+ジュリエット          | レオナルド・ディカプリオ
+ ブロークバック・マウンテン   | ヒース・レジャー／ジェイク・ジレンホール
+ プリティ・プリンセス         | アン・ハサウェー
+ ブリジット・ジョーンズの日記 | レネー・ゼルウィガー
+ メリーに首ったけ             | ベン・スティラー／キャメロン・ディアス
+ ゴースト ニューヨークの幻    | パトリック・スジェイジ／デミ・ムーア
+ パールハーバー               | ジョシュ・ハートネット／ケイト・ベッキンセール
+ 猟奇的な彼女inNY             | ジェシー・ブラドフォード／エリシャ・カスバート
+(11 rows)
+
+movies=# \q
+/mymovie%
+</code></pre>
+
+<p>上手くいっているようです。</p>
+
+<h2>STEP5: SinatraでWebアプリを作る</h2>
+
+<p>次に、このデータをブラウザ上で表示できるようWebアプリを作ります。Sinatra + hamlを使います。</p>
+
+<p><code>app.rb</code>という名称で以下のようなコードを書きます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#app.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;sinatra&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;haml&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;ctoD&#39;</span>
+
+<span class="k">class</span> <span class="nc">Movie</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+<span class="k">end</span>
+
+<span class="n">configure</span> <span class="ss">:production</span> <span class="k">do</span>
+  <span class="ss">CtoD</span><span class="p">:</span><span class="ss">:DB</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="o">]</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">configure</span> <span class="ss">:development</span> <span class="k">do</span>
+  <span class="ss">CtoD</span><span class="p">:</span><span class="ss">:DB</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;postgres://localhost/movies&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span>
+  <span class="n">redirect</span> <span class="s1">&#39;/movie&#39;</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s1">&#39;/movie&#39;</span> <span class="k">do</span>
+  <span class="vi">@movies</span> <span class="o">=</span> <span class="no">Movie</span><span class="o">.</span><span class="n">all</span>
+  <span class="n">haml</span> <span class="ss">:index</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s1">&#39;/movie/:id&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+  <span class="vi">@movie</span> <span class="o">=</span> <span class="no">Movie</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="n">haml</span> <span class="ss">:movie</span>
+<span class="k">end</span>
+
+<span class="n">helpers</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">columns</span>
+    <span class="no">Movie</span><span class="o">.</span><span class="n">column_names</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">match</span> <span class="sr">/_at$/</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ActiveRecordを継承したMovieクラスを作ります。クラス名はテーブル名の最後から<code>s</code>を除いたものにします（persons => personです;( ）。<code>CtoD::DB.connect</code>を使ってデータベースに接続します。本番環境では<code>ENV['DATABASE_URL']</code>を渡します。<code>/movie</code>パスでデータ一覧を、<code>/movie/:id</code>で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-)</p>
+
+<p>ここではテンプレートはinline templateを使います。同じファイルの<code>__END__</code>以下に次のコードを書き足します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="cp">__END__</span>
+<span class="cp">@@layout</span>
+<span class="cp">!!!</span>
+<span class="cp">%html</span>
+<span class="cp">  %head</span>
+<span class="cp">    %meta{charset:&#39;utf-8&#39;}</span>
+<span class="cp">    %title Movie Reviews</span>
+<span class="cp">    %link{:href=&gt;&quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css&quot;, :rel=&gt;&quot;stylesheet&quot;}</span>
+<span class="cp">    %script{:src=&gt;&quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js&quot;}</span>
+<span class="cp">  %body</span>
+<span class="cp">    .container</span>
+<span class="cp">      != yield</span>
+
+<span class="cp">@@index</span>
+<span class="cp">%h2 Movie Reviews</span>
+<span class="cp">%table.table.table-striped.table-hover.table-bordered</span>
+<span class="cp">  %thead.header</span>
+<span class="cp">    - columns.each do |t|</span>
+<span class="cp">      %th= t</span>
+<span class="cp">  %tbody</span>
+<span class="cp">    - @movies.each do |st|</span>
+<span class="cp">      %tr</span>
+<span class="cp">        - columns.each do |t|</span>
+<span class="cp">          - if t==&#39;title&#39;</span>
+<span class="cp">            %td</span>
+<span class="cp">              %a{href:&quot;/movie/#{st.id}&quot;}= st[t]</span>
+<span class="cp">          - else</span>
+<span class="cp">            %td= st[t]</span>
+
+<span class="cp">@@movie</span>
+<span class="cp">%h3= @movie.title</span>
+<span class="cp">%table.table</span>
+<span class="cp">  - columns.each do |t|</span>
+<span class="cp">    %tr</span>
+<span class="cp">      %td= t</span>
+<span class="cp">      %td= @movie[t]</span>
+</code></pre></div>
+
+
+<p>Twitter bootstrapを読み込んでいます。</p>
+
+<blockquote><p><a href="http://www.bootstrapcdn.com/" title="Bootstrap CDN">Bootstrap CDN</a></p></blockquote>
+
+<h2>STEP6: ローカルで起動してみる</h2>
+
+<p>用意ができたのでまずはローカルで起動してみます。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% ruby app.rb
+<span class="o">==</span> Sinatra/1.4.4 has taken the stage on 4567 <span class="k">for </span>development with backup from Thin
+&gt;&gt; Thin web server <span class="o">(</span>v1.5.1 codename Straight Razor<span class="o">)</span>
+&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
+&gt;&gt; Listening on localhost:4567, CTRL+C to stop
+</code></pre></div>
+
+
+<p>まずはトップページ。</p>
+
+<p><img src="/assets/images/2013/11/movie2.png" alt="movie noshadow" /></p>
+
+<p>タイトルをクリックすれば個別ページに遷移します。</p>
+
+<p><img src="/assets/images/2013/11/movie4.png" alt="movie noshadow" /></p>
+
+<p>いいですね！</p>
+
+<h2>STEP7: Heroku用のファイルを用意する</h2>
+
+<p>さて、引き続きHerokuにデプロイするためのファイルを用意します。デプロイには<code>Gemfile</code>と<code>Procfile</code>が必要です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#Gemfile</span>
+<span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
+<span class="n">ruby</span> <span class="s1">&#39;2.0.0&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;haml&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;ctoD&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;pg&#39;</span>
+</code></pre></div>
+
+
+<p><code>pg</code>はPostgreのインタフェースです。<code>bundle install</code>します。</p>
+
+<div class="highlight"><pre><code class="bash">mymovie% bundle install
+Fetching gem metadata from https://rubygems.org/...........
+Fetching gem metadata from https://rubygems.org/..
+Resolving dependencies...
+Using i18n <span class="o">(</span>0.6.5<span class="o">)</span>
+Using multi_json <span class="o">(</span>1.8.2<span class="o">)</span>
+Using activesupport <span class="o">(</span>3.2.15<span class="o">)</span>
+Using builder <span class="o">(</span>3.0.4<span class="o">)</span>
+Using activemodel <span class="o">(</span>3.2.15<span class="o">)</span>
+Using arel <span class="o">(</span>3.0.2<span class="o">)</span>
+Using tzinfo <span class="o">(</span>0.3.38<span class="o">)</span>
+Using activerecord <span class="o">(</span>3.2.15<span class="o">)</span>
+Using thor <span class="o">(</span>0.18.1<span class="o">)</span>
+Using ctoD <span class="o">(</span>0.0.1<span class="o">)</span>
+Using tilt <span class="o">(</span>1.4.1<span class="o">)</span>
+Using haml <span class="o">(</span>4.0.4<span class="o">)</span>
+Using pg <span class="o">(</span>0.17.0<span class="o">)</span>
+Using rack <span class="o">(</span>1.5.2<span class="o">)</span>
+Using rack-protection <span class="o">(</span>1.5.1<span class="o">)</span>
+Using sinatra <span class="o">(</span>1.4.4<span class="o">)</span>
+Using bundler <span class="o">(</span>1.3.5<span class="o">)</span>
+Your bundle is <span class="nb">complete</span>!
+Use <span class="sb">`</span>bundle show <span class="o">[</span>gemname<span class="o">]</span><span class="sb">`</span> to see where a bundled gem is installed.
+</code></pre></div>
+
+
+<p>次にProcfileを作ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#Procfile</span>
+<span class="ss">web</span><span class="p">:</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">ruby</span> <span class="n">app</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="nb">p</span> <span class="vg">$PORT</span>
+</code></pre></div>
+
+
+<p>このファイルにより<code>foreman start</code>でローカルで起動するようになります。デフォルトポートは5000番です。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% foreman start
+21:38:45 web.1  | started with pid 84425
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  WEBrick 1.3.1
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  ruby 2.0.0 <span class="o">(</span>2013-02-24<span class="o">)</span> <span class="o">[</span>x86_64-darwin12.2.0<span class="o">]</span>
+21:38:48 web.1  | <span class="o">==</span> Sinatra/1.4.4 has taken the stage on 5000 <span class="k">for </span>development with backup from WEBrick
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>84425 <span class="nv">port</span><span class="o">=</span>5000
+</code></pre></div>
+
+
+<h2>STEP8: Herokuにデプロイする</h2>
+
+<p>作成したファイルを確認します。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% tree
+.
+├── Gemfile
+├── Gemfile.lock
+├── Procfile
+├── app.rb
+├── movies.csv
+
+0 directories, 5 files
+</code></pre></div>
+
+
+<p>これらのファイルをgitで管理します。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% git init
+/mymovie% git add .
+/mymovie% git commit -m <span class="s1">&#39;init&#39;</span>
+</code></pre></div>
+
+
+<p><code>heroku create</code>コマンドでHerokuにアプリを作ります。アプリ名を渡さなければHerokuが自動生成します。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% heroku create
+Creating serene-retreat-5896... <span class="k">done</span>, stack is cedar
+http://serene-retreat-5896.herokuapp.com/ | git@heroku.com:serene-retreat-5896.git
+Git remote heroku added
+</code></pre></div>
+
+
+<p>デプロイします。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% git push heroku master
+Counting objects: 7, <span class="k">done</span>.
+Delta compression using up to 2 threads.
+Compressing objects: 100% <span class="o">(</span>6/6<span class="o">)</span>, <span class="k">done</span>.
+Writing objects: 100% <span class="o">(</span>7/7<span class="o">)</span>, 4.18 KiB, <span class="k">done</span>.
+Total 7 <span class="o">(</span>delta 0<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+
+-----&gt; Ruby app detected
+-----&gt; Compiling Ruby/Rack
+-----&gt; Using Ruby version: ruby-2.0.0
+-----&gt; Installing dependencies using Bundler version 1.3.2
+       New app detected loading default bundler cache
+       Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin --deployment
+       Fetching gem metadata from https://rubygems.org/..........
+       Fetching gem metadata from https://rubygems.org/..
+       .
+       .
+       .
+</code></pre></div>
+
+
+<p>この段階ではまだデータの準備ができていないのでサイトを開いても<code>Internal Server Error</code>になりますが、データベースの下準備ができていることは<code>heroku config</code>で確認できます。</p>
+
+<div class="highlight"><pre><code class="bash">% heroku <span class="nv">config</span>
+<span class="o">===</span> serene-retreat-5896 Config Vars
+DATABASE_URL:                postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j
+HEROKU_POSTGRESQL_IVORY_URL: postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j
+</code></pre></div>
+
+
+<p>環境変数<code>DATABASE_URL</code>にPostgresがセットされているのが分かります。</p>
+
+<h2>STEP9: movieデータをダンプしてDropboxにアップする</h2>
+
+<p>次にローカルのmovieデータをHeroku上のデータベースに移管する手順を説明します。詳細はこちらで。</p>
+
+<blockquote><p><a href="https://devcenter.heroku.com/articles/heroku-postgres-import-export#import" title="Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center">Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center</a></p>
+
+<p><a href="https://devcenter.heroku.com/articles/heroku-postgresql#local-setup" title="Heroku Postgres | Heroku Dev Center">Heroku Postgres | Heroku Dev Center</a></p></blockquote>
+
+<p>まずは<code>pg_dump</code>コマンドを使ってデータをダンプします。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% pg_dump -Fc --no-acl --no-owner -h localhost  movies &gt; movies.dump
+</code></pre></div>
+
+
+<p>Heroku側からこのダンプファイルにHTTPアクセスできるようにします。ここではDropboxを使います。ファイルをDropboxのPublicフォルダに移動します。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% mv movies.dump ~/Dropbox/Public
+</code></pre></div>
+
+
+<p>DropboxのWebサイトに行き該当ファイルを右クリックしてCopy public linkをコピーしておきます。</p>
+
+<p><img src="/assets/images/2013/11/movie5.png" alt="movie noshadow" /></p>
+
+<h2>STEP10: herokuにリストアする</h2>
+
+<p>Herokuへデータを取り込むため<code>PG Backups add-on</code>を使います。<code>heroku addons:add</code>コマンドで使えるようにします。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% heroku addons:add pgbackups
+Adding pgbackups on serene-retreat-5896... <span class="k">done</span>, v6 <span class="o">(</span>free<span class="o">)</span>
+You can now use <span class="s2">&quot;pgbackups&quot;</span> to backup your databases or import an external backup.
+Use <span class="sb">`</span>heroku addons:docs pgbackups<span class="sb">`</span> to view documentation.
+</code></pre></div>
+
+
+<p>先ほど取得したDropbox上のurlを引数にしてそのデータをHeroku上のデータベースにリストアします。途中で確認がでますので、アプリ名を入れて対応します。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% heroku pgbackups:restore DATABASE_URL <span class="s1">&#39;https://dl.dropboxusercontent.com/u/xxxxx/movies.dump&#39;</span>
+
+HEROKU_POSTGRESQL_IVORY_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>  &lt;---restore---  movies.dump
+
+ !    WARNING: Destructive Action
+ !    This <span class="nb">command </span>will affect the app: serene-retreat-5896
+ !    To proceed, <span class="nb">type</span> <span class="s2">&quot;serene-retreat-5896&quot;</span> or re-run this <span class="nb">command </span>with --confirm serene-retreat-5896
+
+&gt; serene-retreat-5896
+
+Retrieving... <span class="k">done</span>
+Restoring... <span class="k">done</span>
+</code></pre></div>
+
+
+<p>さあ、これでHeroku上にデータが移管されました。完成したサイトを見てみます。</p>
+
+<div class="highlight"><pre><code class="bash">/mymovie% heroku open
+Opening serene-retreat-5896... <span class="k">done</span>
+</code></pre></div>
+
+
+<p><img src="/assets/images/2013/11/movie3.png" alt="movie noshadow" /></p>
+
+<p>いいですね！</p>
+
+<p>データベースの敷居、少しは下がりましたかね？</p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2013/04/ruby_tutorial_cover.png" alt="ruby_tutorial" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
+</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" class="hatena-bookmark-button" data-hatena-bookmark-title="Excelデータを最速でWebアプリ(Heroku)にする１０のステップ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" data-text="Excelデータを最速でWebアプリ(Heroku)にする１０のステップ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/10/31/there-is-a-beauty-in-your-computer" title="あなたはファイルシステムに美を見るか？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" class="hatena-bookmark-button" data-hatena-bookmark-title="Excelデータを最速でWebアプリ(Heroku)にする１０のステップ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" data-text="Excelデータを最速でWebアプリ(Heroku)にする１０のステップ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -4,13 +4,511 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-11-01T14:15:11+09:00</updated>
+ <updated>2013-11-11T14:29:50+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Excelデータを最速でWebアプリ(Heroku)にする１０のステップ</title>
+   <link href="http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web"/>
+   <updated>2013-11-11T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2013/11/11/your-data-from-excel-to-the-web</id>
+   <content type="html">&lt;p&gt;ローカルには映画の視聴記録とか食べ歩きのお店評価とか投資履歴とかガラクタコレクションリストとかの自身の活動記録的なデータが溜まります。そしてどういうわけかそれらのデータは大概表計算ソフト「Excel」の上に置かれているのです。その結果、溜めたはいいが有効に活用されない、場合によっては見ることすらしないという事態に陥ります。それらのデータが本来的に置かれる場所が「データベース」であり、その活用によりデータ価値が向上するということに誰も異論はないとしても、データはExcelに置かれるのです。&lt;/p&gt;
+
+&lt;p&gt;理由は一つ。そう、データベースは敷居が高いのです。&lt;/p&gt;
+
+&lt;p&gt;データベースの敷居が下がれば、みんながローカルのデータをもっともっと大量に公開して世の中はもっと便利になるに違いありません。&lt;/p&gt;
+
+&lt;p&gt;まあ、実際のところはよくわかりませんが。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;そんなわけで...&lt;/p&gt;
+
+&lt;p&gt;データベースの敷居を下げるべく、CSVデータを簡単にデータベース化するRuby製のツール&lt;code&gt;CtoD&lt;/code&gt;を作りました:-)&lt;/p&gt;
+
+&lt;p&gt;テストがないとか自分にデータベース周りの知識がないとかで変なコトやってる可能性大ですが、自分の環境では一応動いているので公開します。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/ctoD&quot; title=&quot;ctoD | RubyGems.org | your community gem host&quot;&gt;ctoD | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/ctoD&quot; title=&quot;melborne/ctoD&quot;&gt;melborne/ctoD&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;以下では、&lt;code&gt;CtoD&lt;/code&gt;とSiantraを使ってNumbers上のデータをHeroku上でWebアプリ化する手順を書きます。ExcelではなくAppleのNumbersです。環境はMac OSX（Mavericks）です。Herokuにアカウントがあることを前提とします。Windowsでの手順はわかりません。Excelとか言っておいてごめんなさいm(__)m&lt;/p&gt;
+
+&lt;h2&gt;STEP0: Numbers上にデータを用意する&lt;/h2&gt;
+
+&lt;p&gt;Numbers上に以下のような映画視聴記録データがあると仮定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/movie1.png&quot; alt=&quot;movie noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;例を作るため、ここでは公開されている以下の映画データを利用させて頂きましたm(__)m&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://matome.naver.jp/odai/2134966019824796901&quot; title=&quot;ひとりで観たいオシャレな恋愛映画11選 - NAVER まとめ&quot;&gt;ひとりで観たいオシャレな恋愛映画11選 - NAVER まとめ&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;STEP1: NumbersデータをCSVにする&lt;/h2&gt;
+
+&lt;p&gt;Numbersのエクスポート機能を使ってデータをCSV形式にします。CSV化に当たり以下のような制約があります。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;ol&gt;
+&lt;li&gt;CSVのファイル名は英単語の複数形であること&lt;/li&gt;
+&lt;li&gt;余分な行・列が含まれていないこと&lt;/li&gt;
+&lt;li&gt;各フィールドのヘッダー名が各異なる&lt;strong&gt;英文字&lt;/strong&gt;であること&lt;/li&gt;
+&lt;li&gt;idフィールドは自動生成されるので削除すること&lt;/li&gt;
+&lt;li&gt;日付のフィールドは&lt;code&gt;YYYY-MM-DD&lt;/code&gt;または&lt;code&gt;YYYY/MM/DD&lt;/code&gt;の形式とすること&lt;/li&gt;
+&lt;li&gt;論理値の値は&#39;true&#39;または&#39;false&#39;にすること&lt;/li&gt;
+&lt;li&gt;先頭レコードの各フィールドをできるだけ空欄にしないこと&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ここではファイル名を&lt;code&gt;movies.csv&lt;/code&gt;とし、&lt;code&gt;/mymovie&lt;/code&gt;ディレクトリに保存します。&lt;/p&gt;
+
+&lt;h2&gt;STEP2: Postgresをインストールする&lt;/h2&gt;
+
+&lt;p&gt;HerokuのデータベースがPostgresなのでローカルの環境にもこれをインストールします。Macで最も簡単な方法は&lt;code&gt;Postgres.app&lt;/code&gt;をインストール方法でしょう。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://postgresapp.com/&quot; title=&quot;Postgres.app | the easiest way to run PostgreSQL on the Mac&quot;&gt;Postgres.app | the easiest way to run PostgreSQL on the Mac&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Herokuにデプロイせず、ローカルで楽しむだけならsqlite3（Macにプリインストール）、mysqlなどを使うこともできます（その他のデータベースでは試していません）。&lt;/p&gt;
+
+&lt;h2&gt;STEP3: movieデータベースを作る&lt;/h2&gt;
+
+&lt;p&gt;Postgresのインストールで、&lt;code&gt;psql&lt;/code&gt;というコマンドラインツールが使えるようになります。これを使ってデータベースを作ります。名前は&lt;code&gt;movies&lt;/code&gt;とします。Postgresが起動していることを確認した上で以下を実行します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/mymovie% psql
+psql (9.3.0)
+Type &quot;help&quot; for help.
+
+keyes=# create database movies;
+CREATE DATABASE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;データベースの生成を確認してquitします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;keyes=# \list
+                         List of databases
+   Name    | Owner | Encoding | Collate | Ctype | Access privileges
+-----------+-------+----------+---------+-------+-------------------
+ movies    | keyes | UTF8     | C       | C     |
+ postgres  | keyes | UTF8     | C       | C     |
+
+keyes=#\q
+/mymovie%
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;STEP4: CtoDでCSVからデータベース・テーブルを作る&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;CtoD gem&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% gem install ctoD
+Fetching: ctoD-0.0.1.gem &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;100%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Successfully installed ctoD-0.0.1
+1 gem installed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでターミナル上で&lt;code&gt;ctoD&lt;/code&gt;コマンドが使えるようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ctoD&lt;/code&gt;コマンドで表示されるhelpを確認した上で、&lt;code&gt;export&lt;/code&gt;サブコマンドを実行します。exportサブコマンドは引数で渡されたcsvファイルを読み取って、ターゲットデータベース上にテーブルを作成し、そこにcsvのデータをエクスポートします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% ctoD &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;movies.csv postgres://localhost/movies
+Table &lt;span class=&quot;s1&quot;&gt;&amp;#39;movies&amp;#39;&lt;/span&gt; created at postgresql://localhost/movies.
+CSV data exported successfully.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上で見るようにデータベースの指定は、そのスキーマ、ホスト、DB名を含むアドレスで行います。データベースへのログイン情報が必要な場合は以下のようにします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysql://root:mypassword@localhost/movies
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;sqlite3の場合は以下のようにデータベースファイルの保存先を絶対パスで指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sqlite3://localhost//Users/yourname/path/to/movies.sqlite3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;localhostの後のスラッシュが２つ必要な点気をつけてください。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;CtoD&lt;/code&gt;は内部的には&lt;code&gt;ActiveRecord&lt;/code&gt;を使っています。CtoDのもう少し詳しい説明は別途記事にします。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;psqlでmoviesテーブルが生成されているか確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/mymovie% psql movies
+psql (9.3.0)
+Type &quot;help&quot; for help.
+movies=# \d movies;
+                                     Table &quot;public.movies&quot;
+   Column   |            Type             |                      Modifiers
+------------+-----------------------------+-------------------------------------
+ id         | integer                     | not null default nextval(&#39;movies_id_seq&#39;::regclass)
+ title      | character varying(255)      |
+ director   | character varying(255)      |
+ original   | character varying(255)      |
+ music      | character varying(255)      |
+ actor      | character varying(255)      |
+ outline    | text                        |
+ released   | integer                     |
+ rating     | integer                     |
+ created_at | timestamp without time zone | not null
+ updated_at | timestamp without time zone | not null
+Indexes:
+    &quot;movies_pkey&quot; PRIMARY KEY, btree (id)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;データがインポートされているか確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;movies=# select title, actor from movies;
+            title             |                     actor
+------------------------------+------------------------------------------------
+ プラダを着た悪魔             | アン・ハサウェー
+ ぼくのエリ　200歳の少女      | カーレ・ヘーデブラント他
+ ノッティングヒルの恋人       | ヒュー・グラント／ジュリア・ロバーツ
+ ロミオ+ジュリエット          | レオナルド・ディカプリオ
+ ブロークバック・マウンテン   | ヒース・レジャー／ジェイク・ジレンホール
+ プリティ・プリンセス         | アン・ハサウェー
+ ブリジット・ジョーンズの日記 | レネー・ゼルウィガー
+ メリーに首ったけ             | ベン・スティラー／キャメロン・ディアス
+ ゴースト ニューヨークの幻    | パトリック・スジェイジ／デミ・ムーア
+ パールハーバー               | ジョシュ・ハートネット／ケイト・ベッキンセール
+ 猟奇的な彼女inNY             | ジェシー・ブラドフォード／エリシャ・カスバート
+(11 rows)
+
+movies=# \q
+/mymovie%
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上手くいっているようです。&lt;/p&gt;
+
+&lt;h2&gt;STEP5: SinatraでWebアプリを作る&lt;/h2&gt;
+
+&lt;p&gt;次に、このデータをブラウザ上で表示できるようWebアプリを作ります。Sinatra + hamlを使います。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;app.rb&lt;/code&gt;という名称で以下のようなコードを書きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#app.rb&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;sinatra&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;haml&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ctoD&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Movie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Base&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:production&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;CtoD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:DB&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DATABASE_URL&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:development&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;CtoD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:DB&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;postgres://localhost/movies&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/movie&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/movie&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@movies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Movie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;haml&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:index&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/movie/:id&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@movie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Movie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;haml&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:movie&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;helpers&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;columns&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Movie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;column_names&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/_at$/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ActiveRecordを継承したMovieクラスを作ります。クラス名はテーブル名の最後から&lt;code&gt;s&lt;/code&gt;を除いたものにします（persons =&gt; personです;( ）。&lt;code&gt;CtoD::DB.connect&lt;/code&gt;を使ってデータベースに接続します。本番環境では&lt;code&gt;ENV[&#39;DATABASE_URL&#39;]&lt;/code&gt;を渡します。&lt;code&gt;/movie&lt;/code&gt;パスでデータ一覧を、&lt;code&gt;/movie/:id&lt;/code&gt;で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-)&lt;/p&gt;
+
+&lt;p&gt;ここではテンプレートはinline templateを使います。同じファイルの&lt;code&gt;__END__&lt;/code&gt;以下に次のコードを書き足します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;cp&quot;&gt;__END__&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;@@layout&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;!!!&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;%html&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;  %head&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    %meta{charset:&amp;#39;utf-8&amp;#39;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    %title Movie Reviews&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    %link{:href=&amp;gt;&amp;quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css&amp;quot;, :rel=&amp;gt;&amp;quot;stylesheet&amp;quot;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    %script{:src=&amp;gt;&amp;quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js&amp;quot;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;  %body&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    .container&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;      != yield&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;@@index&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;%h2 Movie Reviews&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;%table.table.table-striped.table-hover.table-bordered&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;  %thead.header&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    - columns.each do |t|&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;      %th= t&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;  %tbody&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    - @movies.each do |st|&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;      %tr&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;        - columns.each do |t|&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;          - if t==&amp;#39;title&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;            %td&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;              %a{href:&amp;quot;/movie/#{st.id}&amp;quot;}= st[t]&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;          - else&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;            %td= st[t]&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;@@movie&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;%h3= @movie.title&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;%table.table&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;  - columns.each do |t|&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;    %tr&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;      %td= t&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;      %td= @movie[t]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Twitter bootstrapを読み込んでいます。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://www.bootstrapcdn.com/&quot; title=&quot;Bootstrap CDN&quot;&gt;Bootstrap CDN&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;STEP6: ローカルで起動してみる&lt;/h2&gt;
+
+&lt;p&gt;用意ができたのでまずはローカルで起動してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% ruby app.rb
+&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; Sinatra/1.4.4 has taken the stage on 4567 &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;development with backup from Thin
+&amp;gt;&amp;gt; Thin web server &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;v1.5.1 codename Straight Razor&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&amp;gt;&amp;gt; Maximum connections &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to 1024
+&amp;gt;&amp;gt; Listening on localhost:4567, CTRL+C to stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;まずはトップページ。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/movie2.png&quot; alt=&quot;movie noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;タイトルをクリックすれば個別ページに遷移します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/movie4.png&quot; alt=&quot;movie noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;いいですね！&lt;/p&gt;
+
+&lt;h2&gt;STEP7: Heroku用のファイルを用意する&lt;/h2&gt;
+
+&lt;p&gt;さて、引き続きHerokuにデプロイするためのファイルを用意します。デプロイには&lt;code&gt;Gemfile&lt;/code&gt;と&lt;code&gt;Procfile&lt;/code&gt;が必要です。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#Gemfile&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;https://rubygems.org&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.0.0&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;sinatra&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;haml&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ctoD&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;pg&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;pg&lt;/code&gt;はPostgreのインタフェースです。&lt;code&gt;bundle install&lt;/code&gt;します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;mymovie% bundle install
+Fetching gem metadata from https://rubygems.org/...........
+Fetching gem metadata from https://rubygems.org/..
+Resolving dependencies...
+Using i18n &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.6.5&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using multi_json &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.8.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using activesupport &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.2.15&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using builder &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.0.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using activemodel &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.2.15&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using arel &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using tzinfo &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.3.38&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using activerecord &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.2.15&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using thor &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.18.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using ctoD &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using tilt &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.4.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using haml &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4.0.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using pg &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.17.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using rack &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.5.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using rack-protection &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.5.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using sinatra &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.4.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Using bundler &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.3.5&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Your bundle is &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;!
+Use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bundle show &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;gemname&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; to see where a bundled gem is installed.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;次にProcfileを作ります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#Procfile&lt;/span&gt;
+&lt;span class=&quot;ss&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bundle&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$PORT&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;このファイルにより&lt;code&gt;foreman start&lt;/code&gt;でローカルで起動するようになります。デフォルトポートは5000番です。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% foreman start
+21:38:45 web.1  | started with pid 84425
+21:38:48 web.1  | &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2013-11-10 21:38:48&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  WEBrick 1.3.1
+21:38:48 web.1  | &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2013-11-10 21:38:48&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  ruby 2.0.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2013-02-24&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;x86_64-darwin12.2.0&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+21:38:48 web.1  | &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; Sinatra/1.4.4 has taken the stage on 5000 &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;development with backup from WEBrick
+21:38:48 web.1  | &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2013-11-10 21:38:48&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; INFO  WEBrick::HTTPServer#start: &lt;span class=&quot;nv&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;84425 &lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;STEP8: Herokuにデプロイする&lt;/h2&gt;
+
+&lt;p&gt;作成したファイルを確認します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% tree
+.
+├── Gemfile
+├── Gemfile.lock
+├── Procfile
+├── app.rb
+├── movies.csv
+
+0 directories, 5 files
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これらのファイルをgitで管理します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% git init
+/mymovie% git add .
+/mymovie% git commit -m &lt;span class=&quot;s1&quot;&gt;&amp;#39;init&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;heroku create&lt;/code&gt;コマンドでHerokuにアプリを作ります。アプリ名を渡さなければHerokuが自動生成します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% heroku create
+Creating serene-retreat-5896... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;, stack is cedar
+http://serene-retreat-5896.herokuapp.com/ | git@heroku.com:serene-retreat-5896.git
+Git remote heroku added
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;デプロイします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% git push heroku master
+Counting objects: 7, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;.
+Delta compression using up to 2 threads.
+Compressing objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6/6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;.
+Writing objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7/7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 4.18 KiB, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;.
+Total 7 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, reused 0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+-----&amp;gt; Ruby app detected
+-----&amp;gt; Compiling Ruby/Rack
+-----&amp;gt; Using Ruby version: ruby-2.0.0
+-----&amp;gt; Installing dependencies using Bundler version 1.3.2
+       New app detected loading default bundler cache
+       Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin --deployment
+       Fetching gem metadata from https://rubygems.org/..........
+       Fetching gem metadata from https://rubygems.org/..
+       .
+       .
+       .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この段階ではまだデータの準備ができていないのでサイトを開いても&lt;code&gt;Internal Server Error&lt;/code&gt;になりますが、データベースの下準備ができていることは&lt;code&gt;heroku config&lt;/code&gt;で確認できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% heroku &lt;span class=&quot;nv&quot;&gt;config&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; serene-retreat-5896 Config Vars
+DATABASE_URL:                postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j
+HEROKU_POSTGRESQL_IVORY_URL: postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;にPostgresがセットされているのが分かります。&lt;/p&gt;
+
+&lt;h2&gt;STEP9: movieデータをダンプしてDropboxにアップする&lt;/h2&gt;
+
+&lt;p&gt;次にローカルのmovieデータをHeroku上のデータベースに移管する手順を説明します。詳細はこちらで。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://devcenter.heroku.com/articles/heroku-postgres-import-export#import&quot; title=&quot;Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center&quot;&gt;Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://devcenter.heroku.com/articles/heroku-postgresql#local-setup&quot; title=&quot;Heroku Postgres | Heroku Dev Center&quot;&gt;Heroku Postgres | Heroku Dev Center&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;まずは&lt;code&gt;pg_dump&lt;/code&gt;コマンドを使ってデータをダンプします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% pg_dump -Fc --no-acl --no-owner -h localhost  movies &amp;gt; movies.dump
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Heroku側からこのダンプファイルにHTTPアクセスできるようにします。ここではDropboxを使います。ファイルをDropboxのPublicフォルダに移動します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% mv movies.dump ~/Dropbox/Public
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;DropboxのWebサイトに行き該当ファイルを右クリックしてCopy public linkをコピーしておきます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/movie5.png&quot; alt=&quot;movie noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h2&gt;STEP10: herokuにリストアする&lt;/h2&gt;
+
+&lt;p&gt;Herokuへデータを取り込むため&lt;code&gt;PG Backups add-on&lt;/code&gt;を使います。&lt;code&gt;heroku addons:add&lt;/code&gt;コマンドで使えるようにします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% heroku addons:add pgbackups
+Adding pgbackups on serene-retreat-5896... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;, v6 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;free&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+You can now use &lt;span class=&quot;s2&quot;&gt;&amp;quot;pgbackups&amp;quot;&lt;/span&gt; to backup your databases or import an external backup.
+Use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;heroku addons:docs pgbackups&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; to view documentation.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;先ほど取得したDropbox上のurlを引数にしてそのデータをHeroku上のデータベースにリストアします。途中で確認がでますので、アプリ名を入れて対応します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% heroku pgbackups:restore DATABASE_URL &lt;span class=&quot;s1&quot;&gt;&amp;#39;https://dl.dropboxusercontent.com/u/xxxxx/movies.dump&amp;#39;&lt;/span&gt;
+
+HEROKU_POSTGRESQL_IVORY_URL &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;DATABASE_URL&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  &amp;lt;---restore---  movies.dump
+
+ !    WARNING: Destructive Action
+ !    This &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;will affect the app: serene-retreat-5896
+ !    To proceed, &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;serene-retreat-5896&amp;quot;&lt;/span&gt; or re-run this &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;with --confirm serene-retreat-5896
+
+&amp;gt; serene-retreat-5896
+
+Retrieving... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+Restoring... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;さあ、これでHeroku上にデータが移管されました。完成したサイトを見てみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/mymovie% heroku open
+Opening serene-retreat-5896... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/movie3.png&quot; alt=&quot;movie noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;いいですね！&lt;/p&gt;
+
+&lt;p&gt;データベースの敷居、少しは下がりましたかね？&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>あなたはファイルシステムに美を見るか？</title>
@@ -2080,200 +2578,6 @@ IRB on Ruby2.0.0
 
 
 
-</content>
- </entry>
- 
- <entry>
-   <title>やっぱり通貨換算もターミナルでしたいよね - Google Currency APIをRubyで使う</title>
-   <link href="http://melborne.github.io/2013/10/15/yet-another-currency-converter-in-ruby"/>
-   <updated>2013-10-15T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2013/10/15/yet-another-currency-converter-in-ruby</id>
-   <content type="html">&lt;p&gt;Web上には無数の通貨換算ツールがあるけれどもやっぱりターミナル上で簡単に通貨換算できたらうれしいよね。&lt;/p&gt;
-
-&lt;p&gt;で手頃なAPIはないかと探していたら次の記事にであったんだ。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://motyar.blogspot.jp/2011/12/googles-currency-converter-and-json-api.html&quot; title=&quot;Google&#39;s Currency Converter and JSON API&quot;&gt;Google&#39;s Currency Converter and JSON API&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;記事によればGoogleが通貨換算のJSON APIを非公式で公開してるそうだよ（ちょっとそのJSON壊れてるようなんだけれども..）。&lt;/p&gt;
-
-&lt;p&gt;それでRubyで実装された通貨換算ツールがいろいろあることを承知のうえでまあ何事も勉強だからということでターミナルで簡単に利用できるもう一つの通貨換算ツールを作ったから公開するよ。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/money_exchange&quot; title=&quot;melborne/money_exchange&quot;&gt;melborne/money_exchange&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/money_exchange&quot; title=&quot;money_exchange | RubyGems.org | your community gem host&quot;&gt;money_exchange | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;一応gemにもしたから&lt;code&gt;gem i money_exchange&lt;/code&gt;でインストールもできるよ。&lt;/p&gt;
-
-&lt;h2&gt;ターミナルでの使い方&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;MoneyExchange&lt;/code&gt;をインストールすると&lt;code&gt;money_exchange&lt;/code&gt;ってコマンドが使えるようになるよ。でこれを実行すると次のようなヘルプメッセージがでるよ。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% money_exchange
-Commands:
-  money_exchange ex AMOUNT BASE *TARGETS  &lt;span class=&quot;c&quot;&gt;# Currency Exchange from base to targets&lt;/span&gt;
-  money_exchange &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;           &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
-  money_exchange version                  &lt;span class=&quot;c&quot;&gt;# Show MoneyExchange version&lt;/span&gt;
-
-Available currency codes:
-  AUD: Australian dollar
-  CAD: Canadian dollar
-  CHF: Swiss franc
-  CNY: Chinese yuan
-  DKK: Danish krone
-  EUR: Euro
-  GBP: British pound
-  HKD: Hong Kong dollar
-  HUF: Hungarian forint
-  INR: Indian rupee
-  JPY: Japanese yen
-  MXN: Mexican peso
-  NOK: Norwegian krone
-  NZD: New Zealand dollar
-  PLN: Polish złoty
-  SEK: Swedish krona
-  SGD: Singapore dollar
-  TRY: Turkish lira
-  USD: United States Dollar
-  ZAR: South African rand
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でヘルプにしたがって&lt;code&gt;ex&lt;/code&gt;コマンドに続いて金額とコードを入れれば結果が出力されるよ。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% money_exchange ex 1 usd jpy
-USD &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; JPY 98.65
-
-% money_exchange ex 1 usd jpy eur gbp
-USD &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; JPY 98.65
-          EUR 0.74
-          GBP 0.63
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;コマンドライン・パーサーには「&lt;a href=&quot;https://github.com/erikhuda/thor&quot; title=&quot;erikhuda/thor&quot;&gt;Thor&lt;/a&gt;」を使ってるんだけどこれ便利だからもし使ったことなければオススメするよ。&lt;/p&gt;
-
-&lt;h2&gt;Rubyでの使い方&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;money_exchange&lt;/code&gt;をrequireするとFixnumとStringに&lt;code&gt;#xxx_to_yyy&lt;/code&gt;と&lt;code&gt;#xxx_to&lt;/code&gt;というメソッドが追加されるよ。&lt;code&gt;xxx&lt;/code&gt;, &lt;code&gt;yyy&lt;/code&gt;には通貨コードが入るよ。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;sx&quot;&gt;% irb &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rmoney_exchange&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;IRB&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to_jpy&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 98.65&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to_jpy&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 98.65&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usd_to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:jpy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:eur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:gbp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [98.65, 0.74, 0.63]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h2&gt;MoneyExchangeの実装&lt;/h2&gt;
-
-&lt;p&gt;実はGoogleのAPIがどの通貨に対応しているかは分かってなくて先に上げたもの以外でも呼び出せる可能性があるよ。MoneyExchangeではユーザが投げたコードをそのままAPIに投げる構造になっているよ。悪しき習慣&lt;code&gt;method_missing&lt;/code&gt;フックを使ってるんだ ;-(&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;MoneyExchange&lt;/span&gt;
-
-  &lt;span class=&quot;c1&quot;&gt;# Presume &amp;#39;#xxx_to&amp;#39; style methods as for money exchanges&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^([a-z]{3})_to_([a-z]{3})$/&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;captures&lt;/span&gt;
-      &lt;span class=&quot;no&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;to_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^([a-z]{3})_to$/&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;to_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Money&lt;/span&gt;
-    &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:currency&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;vi&quot;&gt;@currency&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;meth&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^to_([a-z]{3})$/&lt;/span&gt;
-        &lt;span class=&quot;no&quot;&gt;Exchange&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$~&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exchange&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NoCurrencyDataError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;StandardError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-      &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call_google_currency_api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parse_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      
-      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;parse_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fix_json&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# when no error&lt;/span&gt;
-          &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;rhs&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_f&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NoCurrencyDataError&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-      &lt;span class=&quot;c1&quot;&gt;# Because Google Currency API returns a broken json.&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fix_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/(\w+):/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;\1&amp;quot;:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;call_google_currency_api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://www.google.com/ig/calculator&amp;quot;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;?hl=en&amp;amp;q=1&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=?&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-        &lt;span class=&quot;no&quot;&gt;URI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;OpenURI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:HTTPError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;abort&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;HTTP Access Error:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Numeric&lt;/span&gt;
-  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;MoneyExchange&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;
-  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;MoneyExchange&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;GoogleのこのAPIも僕のコードも信用ならないから真面目な用途には使えないけどターミナルでちょっとレートをってときに便利に使ってくれたらうれしいよ。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/money_exchange&quot; title=&quot;melborne/money_exchange&quot;&gt;melborne/money_exchange&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/money_exchange&quot; title=&quot;money_exchange | RubyGems.org | your community gem host&quot;&gt;money_exchange | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
