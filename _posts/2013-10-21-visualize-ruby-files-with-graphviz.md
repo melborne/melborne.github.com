@@ -9,6 +9,11 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2013-11-01) 本機能をGem化しました。良かったら使ってみてください。
+
+> [あなたのプロジェクトを美しく視覚化する]({{ BASE_PATH }}/2013/10/28/visualize-your-directory/ "あなたのプロジェクトを美しく視覚化する")
+
+---
 
 前の前の前の記事でCRubyのクラスツリーをGraphvizを使って視覚化した。
 

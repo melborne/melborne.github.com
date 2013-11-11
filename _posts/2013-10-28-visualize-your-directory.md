@@ -10,6 +10,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2013-11-01) DirFriendのバージョンアップについての記事を書きました。
+
+> [あなたはファイルシステムに美を見るか？]({{ BASE_PATH }}/2013/10/31/there-is-a-beauty-in-your-computer/ "あなたはファイルシステムに美を見るか？")
+
+---
+
 プロジェクトにおけるディレクトリ構造をさっと把握したいという欲求があります。そういうときは通常`tree`します。
 
 {% highlight bash %}
@@ -344,10 +350,6 @@ Graphviz opened tempfile: /var/folders/sk/9h0z77c10g16n_vc0khd_chr0000gn/T/dirfr
 (追記：2013-10-29) 対象Rubyバージョンなどについて記述を追加しました。
 
 (追記：2013-10-29) MacでDotファイルを自動オープンする記述について追加しました。
-
-(追記：2013-11-01) DirFriendのバージョンアップについての記事を書きました。
-
-> [あなたはファイルシステムに美を見るか？]({{ BASE_PATH }}/2013/10/31/there-is-a-beauty-in-your-computer/ "あなたはファイルシステムに美を見るか？")
 
 ---
 
