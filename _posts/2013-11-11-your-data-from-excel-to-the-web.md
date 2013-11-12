@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Excelデータを最速でWebアプリ(Heroku)にする１０のステップ"
+title: "Excelデータを最速でWebアプリ(Heroku)にする<del>１０</del>９のステップ"
 tagline: "CtoD: a tool for exporting csv data to database with Ruby"
 description: ""
 category: 
@@ -421,6 +421,52 @@ HEROKU_POSTGRESQL_IVORY_URL: postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw
 環境変数`DATABASE_URL`にPostgresがセットされているのが分かります。
 
 
+## STEP9: Heroku上でCtoDを使ってmovieデータをインポートする
+
+ローカルでしたのと同じ方法で、CtoDを使い、Heroku上のPostgresにmoviesテーブルを作ってmovie.csvのデータを移管します。
+
+`heroku run bash`でheroku上のshellに入ります。
+
+    /mymovie% heroku run bash
+    Running `bash` attached to terminal... up, run.5226
+    ~ $ ls
+    app.rb  bin  Gemfile  Gemfile.lock  movies.csv  Procfile  tmp  vendor
+    ~ $ ctoD
+    Commands:
+      ctoD create_table CSV DATABASE  # Create a database table for CSV
+      ctoD export CSV DATABASE        # Export CSV data to DATABASE
+      ctoD help [COMMAND]             # Describe available commands or one specific command
+    
+    ~ $ echo $DATABASE_URL
+    postgres://sohuhqdovqldxg:SLoVuN9ebo-xxIP-B42h4rGLFN@ec2-23-23-81-171.compute-1.amazonaws.com:5432/d5e2t0r73fspnb
+    
+`ctoD export`を実行します。
+
+    ~ $ ctoD export movies.csv $DATABASE_URL
+    Table 'movies' created at postgresql://sohuhqdovqldxg:SLoVuN9ebo-xxIP-B42h4rGLFN@ec2-23-23-81-171.compute-1.amazonaws.com:5432/d5e2t0r73fspnb.
+    CSV data exported successfully.
+    ~ $ exit
+    exit
+    /mymovie%
+
+さあ、これでmovieデータがデータベースに収まりました。完成したサイトを見てみます。
+
+{% highlight bash %}
+/mymovie% heroku open
+Opening serene-retreat-5896... done
+{% endhighlight %}
+
+![movie noshadow]({{ BASE_PATH }}/assets/images/2013/11/movie3.png)
+
+いいですね！
+
+
+データベースの敷居、少しは下がりましたかね？
+
+---
+
+以下のSTEP9および10は、上記STEP9で行ったHeroku上でCtoDを実行する方法を使わずに、ローカルのPostgresにあるデータをHeroku上のPostgresに移管する方法を使う場合のステップです。
+
 ## STEP9: movieデータをダンプしてDropboxにアップする
 
 次にローカルのmovieデータをHeroku上のデータベースに移管する手順を説明します。詳細はこちらで。
@@ -475,20 +521,12 @@ Retrieving... done
 Restoring... done
 {% endhighlight %}
 
-さあ、これでHeroku上にデータが移管されました。完成したサイトを見てみます。
-
-{% highlight bash %}
-/mymovie% heroku open
-Opening serene-retreat-5896... done
-{% endhighlight %}
-
-![movie noshadow]({{ BASE_PATH }}/assets/images/2013/11/movie3.png)
-
-いいですね！
+これでHeroku上にデータが移管されました。
 
 
-データベースの敷居、少しは下がりましたかね？
+---
 
+(追記：2013-11-12) Heroku上でCtoDを実行する新たなSTEP9を追記しました。
 
 ---
 
