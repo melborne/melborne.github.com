@@ -225,7 +225,7 @@ helpers do
 end
 {% endhighlight %}
 
-ActiveRecordを継承したMovieクラスを作ります。クラス名はテーブル名の最後から`s`を除いたものにします（persons => personです;( ）。`CtoD::DB.connect`を使ってデータベースに接続します。本番環境では`ENV['DATABASE_URL']`を渡します。`/movie`パスでデータ一覧を、`/movie/:id`で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-) 
+ActiveRecord::Baseを継承したMovieクラスを作ります。クラス名はテーブル名の単数形にします。`CtoD::DB.connect`を使ってデータベースに接続します。本番環境では`ENV['DATABASE_URL']`を渡します。`/movie`パスでデータ一覧を、`/movie/:id`で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-) 
 
 ここではテンプレートはinline templateを使います。同じファイルの`__END__`以下に次のコードを書き足します。
 
@@ -525,6 +525,11 @@ Restoring... done
 
 これでHeroku上にデータが移管されました。
 
+---
+
+(追記：2013-11-14) CtoDのもう少し詳しい説明を書きました。
+
+[CSVデータをデータベース化するツール「CtoD」の紹介]({{ BASE_PATH }}/2013/11/14/introduce-ctod-gem-easyway-to-make-a-database-table/ "CSVデータをデータベース化するツール「CtoD」の紹介")
 
 ---
 
