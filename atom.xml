@@ -4,13 +4,345 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-11-13T08:12:41+09:00</updated>
+ <updated>2013-11-14T14:45:53+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>CSVデータをデータベース化するツール「CtoD」の紹介</title>
+   <link href="http://melborne.github.io/2013/11/14/introduce-ctod-gem-easyway-to-make-a-database-table"/>
+   <updated>2013-11-14T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2013/11/14/introduce-ctod-gem-easyway-to-make-a-database-table</id>
+   <content type="html">&lt;p&gt;前の記事では&lt;code&gt;CtoD&lt;/code&gt;を使ってCSVデータからHeroku上にWebアプリを構築する手順を説明しました。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2013/11/11/your-data-from-excel-to-the-web/&quot; title=&quot;Excelデータを最速でWebアプリ(Heroku)にする&amp;lt;del&amp;gt;１０&amp;lt;/del&amp;gt;９のステップ&quot;&gt;Excelデータを最速でWebアプリ(Heroku)にする&lt;del&gt;１０&lt;/del&gt;９のステップ&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;ここでは&lt;code&gt;CtoD&lt;/code&gt;の詳細を説明します。対象バージョンは0.0.3です。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/ctoD&quot; title=&quot;ctoD | RubyGems.org | your community gem host&quot;&gt;ctoD | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/ctoD&quot; title=&quot;melborne/ctoD&quot;&gt;melborne/ctoD&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;gem install ctoD&lt;/code&gt;でインストールすると、&lt;code&gt;ctoD&lt;/code&gt;ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% ctoD
+Commands:
+  ctoD create_table CSV DATABASE  &lt;span class=&quot;c&quot;&gt;# Create a database table for CSV&lt;/span&gt;
+  ctoD &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;CSV DATABASE        &lt;span class=&quot;c&quot;&gt;# Export CSV data to DATABASE&lt;/span&gt;
+  ctoD &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;             &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
+  ctoD version                    &lt;span class=&quot;c&quot;&gt;# Show CtoD version&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;create_table&lt;/code&gt;サブコマンドは、引数で渡したDATABASEにテーブルを生成します。テーブルの名称およびスキーマは第1引数で渡すCSVデータの内容に基づき構築されます。第1引数のCSVにはそのファイルパスを指定し、第2引数のDATABASEにはデータベースURLアドレスを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;export&lt;/code&gt;サブコマンドは、DATABASEに該当テーブルがなければそれを構築した上で、CSVデータの内容をテーブルにストアします。&lt;/p&gt;
+
+&lt;h2&gt;データベースURL&lt;/h2&gt;
+
+&lt;p&gt;第2引数で渡すデータベースURLは、スキーマ、ユーザおよびそのパスワード、ホスト、データベース名で構成されるデータベースのアドレスです。例を示します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;postgres://localhost/movies
+
+mysql://root:mypasswd@localhost/movies
+
+sqlite3://localhost//Users/username/path/to/file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;mysqlの例ではユーザ名とパスワードを渡しています。sqlite3の例ではデータベースとなるファイルの絶対パスを渡します（ホストとパスの間の&lt;code&gt;//&lt;/code&gt;に注意）。&lt;/p&gt;
+
+&lt;h2&gt;CSVデータの規約&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;CtoD&lt;/code&gt;では基になるCSVデータの内容に応じてテーブルのスキーマを決定しています。フィールドのデータ型はActiveRecordにおけるデータ型の何れかです（CtoDではテーブルの生成にActiveRecord::Base.connection.create_tableを使っています）。version0.0.3におけるルールは次のようになっています（将来変更の可能性があります）。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;ol&gt;
+&lt;li&gt;テーブル名はCSVファイル名と同じとなる&lt;/li&gt;
+&lt;li&gt;CSVの先頭行はテーブルのヘッダーとして使われる&lt;/li&gt;
+&lt;li&gt;先頭レコードにおける値が&#39;true&#39;または&#39;false&#39;のフィールドは、boolean型になる&lt;/li&gt;
+&lt;li&gt;先頭レコードにおける値が&lt;code&gt;YYYY-MM-DD&lt;/code&gt;または&lt;code&gt;YYYY/MM/DD&lt;/code&gt;の形式のフィールドは、date型になる&lt;/li&gt;
+&lt;li&gt;値が数値で構成されるフィールドは、そのフィールドの何れかの値がFloat型である場合はfloat型に、そうでない場合はinteger型になる&lt;/li&gt;
+&lt;li&gt;既定の文字数（デフォルトで100文字）を超える値を持ったフィールドはtext型に、それ以外はstring型になる&lt;/li&gt;
+&lt;li&gt;先頭レコードにおける値がないフィールドは、string型になる&lt;/li&gt;
+&lt;li&gt;id, created_at, updated_atの各フィールドが自動生成される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;text型を判定する文字数は、create_tableまたはexportコマンドの&lt;code&gt;--string-size&lt;/code&gt;オプションで変更できます。&lt;/p&gt;
+
+&lt;p&gt;この規約に従って期待するテーブルを作るために、以下の方針を取るのがいいです。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;ol&gt;
+&lt;li&gt;CSVのファイル名は英単語の複数形にすること（ActiveRecordを使っているため）&lt;/li&gt;
+&lt;li&gt;余分な行・列が含まれていないこと&lt;/li&gt;
+&lt;li&gt;各フィールドのヘッダー名が各異なる&lt;strong&gt;英文字&lt;/strong&gt;であること&lt;/li&gt;
+&lt;li&gt;idフィールドは削除すること&lt;/li&gt;
+&lt;li&gt;日付のフィールドは&lt;code&gt;YYYY-MM-DD&lt;/code&gt;または&lt;code&gt;YYYY/MM/DD&lt;/code&gt;の形式とすること&lt;/li&gt;
+&lt;li&gt;論理値の値は&#39;true&#39;または&#39;false&#39;にすること&lt;/li&gt;
+&lt;li&gt;先頭レコードの各フィールドをできるだけ空欄にしないこと&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;sqlite3での例&lt;/h2&gt;
+
+&lt;p&gt;以下のような&lt;code&gt;langs.csv&lt;/code&gt;があるとして、SQLite3でテーブルを作る方法を示します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;year,name,designer,predecessor
+1995,Ruby,Yukihiro Matsumoto,Smalltalk / Perl
+1959,LISP,John McCarthy,IPL
+1972,Smalltalk,Daniel Henry Holmes Ingalls Jr. / Xerox PARC,Simula 67
+1990,Haskell,Simon Peyton Jones,Miranda
+1995,JavaScript,Brendan Eich,LiveScript
+1995,Java,James Gosling,C / Simula 67 / C++ / Smalltalk
+1993,Lua,Roberto Ierusalimschy,Scheme / SNOBOL / Modula / CLU
+1987,Erlang,Joe Armstrong,Prolog
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;&lt;p&gt;from &lt;a href=&quot;http://en.wikipedia.org/wiki/Timeline_of_programming_languages&quot; title=&quot;Timeline of programming languages - Wikipedia, the free encyclopedia&quot;&gt;Timeline of programming languages - Wikipedia, the free encyclopedia&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code&gt;export&lt;/code&gt;サブコマンドを実行します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/plangs% ctoD &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;langs.csv sqlite3://localhost/&lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;/langs.sqlite3
+Table &lt;span class=&quot;s1&quot;&gt;&amp;#39;langs&amp;#39;&lt;/span&gt; created at sqlite3://localhost//Users/keyes/plangs/langs.sqlite3.
+CSV data exported successfully.
+/plangs% ls
+langs.csv     langs.sqlite3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テーブルが生成されているか確かめてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/plangs% sqlite3 langs.sqlite3
+SQLite version 3.7.13 2012-07-17 17:46:21
+Enter &quot;.help&quot; for instructions
+Enter SQL statements terminated with a &quot;;&quot;
+sqlite&amp;gt; .tables
+langs
+sqlite&amp;gt; .schema
+CREATE TABLE &quot;langs&quot; (&quot;id&quot; INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, &quot;year&quot; integer, &quot;name&quot; varchar(255), &quot;designer&quot; varchar(255), &quot;predecessor&quot; varchar(255), &quot;created_at&quot; datetime NOT NULL, &quot;updated_at&quot; datetime NOT NULL);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テーブルのスキーマを見ると、id, created_at, updated_atのフィールドが自動生成されているのが分かります。また&lt;code&gt;year&lt;/code&gt;フィールドのデータ型は&lt;code&gt;integer&lt;/code&gt;で他は&lt;code&gt;varchar(255)&lt;/code&gt;であることが確認できます。&lt;/p&gt;
+
+&lt;p&gt;テーブルにデータが挿入されているかも確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sqlite&amp;gt; select name, designer, year from langs;
+Ruby|Yukihiro Matsumoto|1995
+LISP|John McCarthy|1959
+Smalltalk|Daniel Henry Holmes Ingalls Jr. / Xerox PARC|1972
+Haskell|Simon Peyton Jones|1990
+JavaScript|Brendan Eich|1995
+Java|James Gosling|1995
+Lua|Roberto Ierusalimschy|1993
+Erlang|Joe Armstrong|1987
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;PostgreSQLでの例&lt;/h2&gt;
+
+&lt;p&gt;事前にdatabaseを作っておく必要があります。ここでは&lt;code&gt;psql&lt;/code&gt;コマンドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/plangs% psql
+psql (9.3.0)
+Type &quot;help&quot; for help.
+
+keyes=# create database langs;
+CREATE DATABASE
+keyes=# \l
+                         List of databases
+   Name    | Owner | Encoding | Collate | Ctype | Access privileges
+-----------+-------+----------+---------+-------+-------------------
+ keyes     | keyes | UTF8     | C       | C     |
+ langs     | keyes | UTF8     | C       | C     |
+ postgres  | keyes | UTF8     | C       | C     |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;ctoD export&lt;/code&gt;サブコマンドを実行します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/plangs% ctoD &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;langs.csv postgres://localhost/langs
+Table &lt;span class=&quot;s1&quot;&gt;&amp;#39;langs&amp;#39;&lt;/span&gt; created at postgresql://localhost/langs.
+CSV data exported successfully.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テーブルが生成されているか確かめてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/plangs% psql langs
+psql (9.3.0)
+Type &quot;help&quot; for help.
+
+langs=# \d langs;
+                                      Table &quot;public.langs&quot;
+   Column    |            Type             |                     Modifiers
+-------------+-----------------------------+-------------------------------
+ id          | integer                     | not null default nextval(&#39;langs_id_seq&#39;::regclass)
+ year        | integer                     |
+ name        | character varying(255)      |
+ designer    | character varying(255)      |
+ predecessor | character varying(255)      |
+ created_at  | timestamp without time zone | not null
+ updated_at  | timestamp without time zone | not null
+Indexes:
+    &quot;langs_pkey&quot; PRIMARY KEY, btree (id)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テーブルにデータが挿入されているかも確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;langs=# select name, designer, year from langs;
+    name    |                   designer                   | year
+------------+----------------------------------------------+------
+ Ruby       | Yukihiro Matsumoto                           | 1995
+ LISP       | John McCarthy                                | 1959
+ Smalltalk  | Daniel Henry Holmes Ingalls Jr. / Xerox PARC | 1972
+ Haskell    | Simon Peyton Jones                           | 1990
+ JavaScript | Brendan Eich                                 | 1995
+ Java       | James Gosling                                | 1995
+ Lua        | Roberto Ierusalimschy                        | 1993
+ Erlang     | Joe Armstrong                                | 1987
+(8 rows)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;MySQLでの例&lt;/h2&gt;
+
+&lt;p&gt;事前にdatabaseを作っておく必要があります。ここでは&lt;code&gt;mysql&lt;/code&gt;コマンドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/plangs% mysql -u root -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.6.14 MySQL Community Server (GPL)
+
+mysql&amp;gt; create database langs character set utf8;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&amp;gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| langs              |
+| mysql              |
+| performance_schema |
++--------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;ctoD export&lt;/code&gt;サブコマンドを実行します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;/plangs% ctoD &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;langs.csv mysql://root:xxxx@localhost/langs
+Table &lt;span class=&quot;s1&quot;&gt;&amp;#39;langs&amp;#39;&lt;/span&gt; created at mysql://root:xxxx@localhost/langs.
+CSV data exported successfully.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テーブルが生成されているか確かめてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/plangs% mysql -u root -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 6
+Server version: 5.6.14 MySQL Community Server (GPL)
+
+mysql&amp;gt; use langs;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql&amp;gt; show create table langs;
++-------+---------------------------------------------+
+| Table | Create Table                                |
++-------+---------------------------------------------+
+| langs | CREATE TABLE `langs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `designer` varchar(255) DEFAULT NULL,
+  `predecessor` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 |
++-------+----------------------------------------------+
+1 row in set (0.01 sec)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テーブルにデータが挿入されているかも確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysql&amp;gt; select name, designer, year from langs;
++------------+----------------------------------------------+------+
+| name       | designer                                     | year |
++------------+----------------------------------------------+------+
+| Ruby       | Yukihiro Matsumoto                           | 1995 |
+| LISP       | John McCarthy                                | 1959 |
+| Smalltalk  | Daniel Henry Holmes Ingalls Jr. / Xerox PARC | 1972 |
+| Haskell    | Simon Peyton Jones                           | 1990 |
+| JavaScript | Brendan Eich                                 | 1995 |
+| Java       | James Gosling                                | 1995 |
+| Lua        | Roberto Ierusalimschy                        | 1993 |
+| Erlang     | Joe Armstrong                                | 1987 |
++------------+----------------------------------------------+------+
+8 rows in set (0.01 sec)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Rubyからデータベースに接続する&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;CtoD&lt;/code&gt;は&lt;code&gt;CtoD::DB.connect&lt;/code&gt;というデータベースに接続するためのメソッドをもっており、かつActiveRecordをrequireしているので、Rubyからデータベースにアクセスするのは簡単です。irbを立ち上げてアクセスしてみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;irb&quot;&gt;&lt;span class=&quot;go&quot;&gt;/plangs% irb -rctoD&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;IRB on Ruby2.0.0&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;CtoD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:DB&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;postgres://localhost/langs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; #&amp;lt;URI::Generic:0x007f81f330c4e8 URL:postgresql://localhost/langs&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; nil&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Lang&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;┌-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;┌-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 2  ╎ 1959 ╎ LISP       ╎ John McCarthy       ╎ IPL                         |&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 3  ╎ 1972 ╎ Smalltalk  ╎ Daniel Henry Holmes ╎ Simula 67                   |&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 4  ╎ 1990 ╎ Haskell    ╎ Simon Peyton Jones  ╎ Miranda                     |&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 7  ╎ 1993 ╎ Lua        ╎ Roberto Ierusalimsch╎ Scheme / SNOBOL / Modula / C╎&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 8  ╎ 1987 ╎ Erlang     ╎ Joe Armstrong       ╎ Prolog                      | &lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;└-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;8 rows in set&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Lang&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;year&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1995&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;┌-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;┌-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;└-------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;3 rows in set&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上です。&lt;/p&gt;
+
+&lt;p&gt;データベースのシードを適当に作る場合などに使ってもらえるといいかもしれません。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Excelデータを最速でWebアプリ(Heroku)にする<del>１０</del>９のステップ</title>
@@ -232,7 +564,7 @@ movies=# \q
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;ActiveRecordを継承したMovieクラスを作ります。クラス名はテーブル名の最後から&lt;code&gt;s&lt;/code&gt;を除いたものにします（persons =&gt; personです;( ）。&lt;code&gt;CtoD::DB.connect&lt;/code&gt;を使ってデータベースに接続します。本番環境では&lt;code&gt;ENV[&#39;DATABASE_URL&#39;]&lt;/code&gt;を渡します。&lt;code&gt;/movie&lt;/code&gt;パスでデータ一覧を、&lt;code&gt;/movie/:id&lt;/code&gt;で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-)&lt;/p&gt;
+&lt;p&gt;ActiveRecord::Baseを継承したMovieクラスを作ります。クラス名はテーブル名の単数形にします。&lt;code&gt;CtoD::DB.connect&lt;/code&gt;を使ってデータベースに接続します。本番環境では&lt;code&gt;ENV[&#39;DATABASE_URL&#39;]&lt;/code&gt;を渡します。&lt;code&gt;/movie&lt;/code&gt;パスでデータ一覧を、&lt;code&gt;/movie/:id&lt;/code&gt;で個別ページを表示するようにします。CRUDのCUD、ログイン認証については実装を割愛します:-)&lt;/p&gt;
 
 &lt;p&gt;ここではテンプレートはinline templateを使います。同じファイルの&lt;code&gt;__END__&lt;/code&gt;以下に次のコードを書き足します。&lt;/p&gt;
 
@@ -528,6 +860,12 @@ Restoring... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
 
 
 &lt;p&gt;これでHeroku上にデータが移管されました。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;(追記：2013-11-14) CtoDのもう少し詳しい説明を書きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/2013/11/14/introduce-ctod-gem-easyway-to-make-a-database-table/&quot; title=&quot;CSVデータをデータベース化するツール「CtoD」の紹介&quot;&gt;CSVデータをデータベース化するツール「CtoD」の紹介&lt;/a&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -2365,261 +2703,6 @@ rubinius 2.1.1n292 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.0 9f9da9ed 
 &lt;a href=&quot;/books/&quot;&gt;
   &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
 &lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>はてなブックマークの人気エントリーもターミナルでみたいよね - ブクマ取得APIをRubyで使う</title>
-   <link href="http://melborne.github.io/2013/10/16/hatena-bookmark-entries-in-terminal"/>
-   <updated>2013-10-16T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2013/10/16/hatena-bookmark-entries-in-terminal</id>
-   <content type="html">&lt;p&gt;自分のブログの人気エントリーは、はてなブックマークのエントリーリストにサイトのURLを投げることで見ることができます。例えば、このブログ（hp12c）における人気エントリーを見るにはブラウザで以下にアクセスします。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://b.hatena.ne.jp/entrylist?sort=count&amp;amp;url=http://melborne.github.io&quot;&gt;http://b.hatena.ne.jp/entrylist?sort=count&amp;amp;url=http://melborne.github.io&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;人気記事上位20件が表示されます。ここでsortのパラメータに&lt;code&gt;eid&lt;/code&gt;を渡すとブクマされたすべての記事から新着20件が表示され、また&lt;code&gt;hot&lt;/code&gt;を渡すとブクマ3件以上の新着20件が表示されます。&lt;/p&gt;
-
-&lt;p&gt;ところでこれには対応する非公式のAPIがあってプログラムからアクセスが可能です&lt;sup id=&#39;fnref:1&#39;&gt;&lt;a href=&#39;#fn:1&#39; rel=&#39;footnote&#39;&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://www.koikikukan.com/archives/jsonp/2012/06/&quot; title=&quot;小粋空間: JSONP: 2012年6月 アーカイブ&quot;&gt;小粋空間: JSONP: 2012年6月 アーカイブ&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;そうとなればRubyでアクセスしない手はないですよね。ちょうどこのブログはギットハブにおける諸事情によりドメインが途中で変わってしまい、ブクマが分散してるのでその総数を知りたいという事情もありますし。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;参考：&lt;a href=&quot;http://melborne.github.io/2013/04/15/i-need-bookmarks/&quot; title=&quot;ギットハブにはてブとはてスタを殺されたので、このブログの人気記事一覧を作りました。&quot;&gt;ギットハブにはてブとはてスタを殺されたので、このブログの人気記事一覧を作りました。&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
-
-&lt;p&gt;そんなわけで...&lt;/p&gt;
-
-&lt;p&gt;ターミナルで簡単にはてブの人気エントリーリストを出力するツール「HatebuEntry」を作りましたので公開します。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/hatebu_entry&quot; title=&quot;melborne/hatebu_entry&quot;&gt;melborne/hatebu_entry&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/hatebu_entry&quot; title=&quot;hatebu_entry | RubyGems.org | your community gem host&quot;&gt;hatebu_entry | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;h2&gt;ターミナルでの使い方&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;gem install hatebu_entry&lt;/code&gt;でHatebuEntryをインストールすると、&lt;code&gt;hatebu_entry&lt;/code&gt;というコマンドが使えるようになります。これを実行すると次のようなメッセージが出力されます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% hatebu_entry
-Commands:
-  hatebu_entry get URL         &lt;span class=&quot;c&quot;&gt;# Get Hatena bookmark entries for URL&lt;/span&gt;
-  hatebu_entry &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
-  hatebu_entry merge *URLs     &lt;span class=&quot;c&quot;&gt;# Merge counts for same entries on several URLs&lt;/span&gt;
-  hatebu_entry version         &lt;span class=&quot;c&quot;&gt;# Show HatebuEntry version&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;code&gt;get&lt;/code&gt;コマンドで対象のURLに対する人気エントリーが取得できます。&lt;code&gt;http://d.hatena.ne.jp&lt;/code&gt;を見てみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% hatebu_entry get http://d.hatena.ne.jp
- 6691: 僕は自分が思っていたほどは頭がよくなかった - しのごの... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hat...
- 5785: 「 2 」か「 9 」で割ってみる - ナイトシフト &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/nig...
- 5605: 読みやすい文章を書くための技法 - RyoAnna’s iPhone Blog &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hate...
- 4483: この「いじめ対策」はすごい！ - 森口朗公式ブログ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp...
- 4167: 知らないと損する英語の速読方法（1） - 一法律学徒の英語... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.ha...
- 3973: パワポでもここまでできる！米財務省から学べる美しい資... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hate...
- 3967: デジタル一眼レフカメラの基礎から実践まで - &lt;span class=&quot;c&quot;&gt;#RyoAnnaBlog (http://d.hate...&lt;/span&gt;
- 3853: 『忙しい人』と『仕事ができる人』の２０の違い &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/fa...
- 3717: MacBook Air 11インチ欲しい！とは - はてなキーワード &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.n...
- 3715: おさえておきたいメールで使う敬語 - かみんぐあうとっ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.n...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;（ここでの表記上、URLの一部を省略しています）&lt;/p&gt;
-
-&lt;p&gt;デフォルトで10件ですが、&lt;code&gt;--pages&lt;/code&gt;オプションで取得件数を増やせます。1で20件、2で40件になります。&lt;code&gt;--sort&lt;/code&gt;オプションには先に書いた&lt;code&gt;hot&lt;/code&gt;, &lt;code&gt;eid&lt;/code&gt;が渡せます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% hatebu_entry get http://d.hatena.ne.jp -p1 -s hot
-    6: 公式Twitterアカウント運用についてのアドバイス - とかいろいろ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://...
-    7: 産経新聞、整理・校閲部門を一部分社化　社員は出向 - edgefirstのメモ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;h...
-    3: 市場と闘い続けた視点 - LittermanによるFamaへのインタビュー - 投資の消...
-   19: JAGATセミナー　電子書籍の最新事情とEPUB制作環境の進展 - ちくちく日記 ...
-   16: 研究職を考えたきっかけは「育英会」の奨学金 - 殺シ屋鬼司令 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.h...
-    3: スティーブン・キングの新作『11/22/63』は残酷なまでの切なさに満ちた傑 ...
-   18: 意味がなさすぎる「日本を元気にする国民運動」 - シェイブテイル日記 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ht...
-  433: 文科系の大学生にプログラミングを教えて思ったこと - UEI shi3zの日記 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;h...
-    5: 『GATCHAMAN CROWDS』　中村健治監督　ヒーローものはどこへ行くのか？　 ...
-    7: やなせたかし先生、あなたが僕のアンパンマンでした。 - 琥珀色の戯言 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ht...
-    4: 「1964年のジャイアント馬場」中間報告。「プロレススーパースター列伝」 ...
-   21: 昆虫研究界に新エースあらわる - むしブロ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/horika...
-    4: 洋書も左から右へ並べるようだ - 最終防衛ライン２ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.j...
-    5: 10月15日 - finalventの日記 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/finalvent/20131015/...
-   76: 汝はヒーローなりや？／『ガッチャマンクラウズ』の宿題 - デマこいてんじ...
-    4: 3つでやめるルール - laiso &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/laiso/20131015/p1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;...
-   19: はてなブックマーク人気エントリにおけるコメント率の変化 - Life like a ...
-   22: 東京国立博物館『京都―洛中洛外図と障壁画の美』、西洋美術館『ミケラン ...
-    3: 『BE BLUES!』高校編、桜庭さん再登場で一気におもしろい - 水星さん家 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;h...
-   20: 愛された子の副作用 - 傘をひらいて、空を &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://d.hatena.ne.jp/kasawo...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;code&gt;merge&lt;/code&gt;コマンドは別のドメインにおける同じ記事のブックマーク数をマージして出力します。このブログの以前のURL&lt;code&gt;http://melborne.github.com&lt;/code&gt;と現在をマージしてみます。まずは比較のため以前のURLを普通に出力してみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% hatebu_entry get http://melborne.github.com
- 1377: これからRubyを始める人たちへ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/2012/04/09/t...
-  633: 知って得する！５５のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/...
-  514: Rubyのcaseを〇〇&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;言語名&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;のswitch文だと思っている人たちにぼ... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http:/...
-  442: 知って得する21のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/2011...
-  435: Ruby脳が理解するJavaScriptのオブジェクト指向 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github....
-  269: 今年の冬休みに電子書籍であなたがRubyを習得しなければい... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://mel...
-  236: Ruby、君のオブジェクトはなんて呼び出せばいいの？ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.git...
-  187: Rubyを使って「なぜ関数プログラミングは重要か」を読み解... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://mel...
-  178: Ruby脳が理解するJavaScriptのオブジェクト指向（その２） &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melbor...
-  145: Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件につ... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http:/...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;次に現在のURLとマージした結果を出力します。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% hatebu_entry merge http://melborne.github.com http://melborne.github.io
- 1414: これからRubyを始める人たちへ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/2012/04/09/t...
-  670: 知って得する！５５のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/...
-  613: Rubyのcaseを〇〇&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;言語名&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;のswitch文だと思っている人たちにぼくから一言 ...
-  545: 知って得する21のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/2011...
-  435: Ruby脳が理解するJavaScriptのオブジェクト指向 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github....
-  269: 今年の冬休みに電子書籍であなたがRubyを習得しなければいけないたった一 ...
-  236: Ruby、君のオブジェクトはなんて呼び出せばいいの？ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.git...
-  187: Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（改定）─ 前...
-  180: Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http:...
-  178: Ruby脳が理解するJavaScriptのオブジェクト指向（その２） &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melbor...
-  159: 30分のチュートリアルでJekyllを理解する &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.com/20...
-  150: Jekyllいつやるの？ジキやルの？今でしょ！ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/2...
-  144: 第2弾!知って得する12のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.co...
-  111: メソッドの使い方もRubyに教えてほしい &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/2013/...
-  106: 一生涯はてな記法しますか？それともMarkdownしますか？ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne...
-   98: RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ ...
-   96: 東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.gi...
-                                  .
-                                  .
-                                  .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;マージされた結果のブックマーク数が増えているのがわかると思います。まあこのコマンドに用のある人は少ないでしょうけど。&lt;/p&gt;
-
-&lt;h2&gt;Rubyでの使い方&lt;/h2&gt;
-
-&lt;p&gt;Rubyで先の&lt;code&gt;get&lt;/code&gt;コマンドを使いたい場合は、HatebuEntry.newにURLを渡して&lt;code&gt;#entries&lt;/code&gt;を呼びます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% irb
-IRB on Ruby2.0.0
-&amp;gt;&amp;gt; require &lt;span class=&quot;s1&quot;&gt;&amp;#39;hatebu_entry&amp;#39;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#=&amp;gt; true&lt;/span&gt;
-&amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;hent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; HatebuEntry.new&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;http://melborne.github.io&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#=&amp;gt; #&amp;lt;HatebuEntry:0x007f8ad9b1e110 @params={:url=&amp;gt;&amp;quot;http://melborne.github.io&amp;quot;, :sort=&amp;gt;&amp;quot;count&amp;quot;, :of=&amp;gt;0}&amp;gt;&lt;/span&gt;
-&amp;gt;&amp;gt; hent.entries
-&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/&amp;quot;, count=150, title=&amp;quot;Jekyllいつやるの？ジキやルの？今でしょ！&amp;quot;&amp;gt;, #&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2013/09/04/is-that-a-yet-another-rdoc/&amp;quot;, count=111, title=&amp;quot;メソッドの使い方もRubyに教えてほしい&amp;quot;&amp;gt;, #&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/&amp;quot;, count=103, title=&amp;quot;知って得する21のRubyのトリビアな記法&amp;quot;&amp;gt;, ...（省略）... #&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2013/09/27/auto-attr-set-in-ruby/&amp;quot;, count=59, title=&amp;quot;RubyistたちのDRY症候群との戦い&amp;quot;&amp;gt;, #&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2012/10/29/rubys-new-control-structure-by-tap-and-break/&amp;quot;, count=46, title=&amp;quot;TapがRubyの新たな制御構造の世界を開く&amp;quot;&amp;gt;, #&amp;lt;struct HatebuEntry::Entry link=&amp;quot;http://melborne.github.io/2012/05/13/first-step-of-jekyll/&amp;quot;, count=41, title=&amp;quot;30分のチュートリアルでJekyllを理解する&amp;quot;&amp;gt;]&lt;/span&gt;
-&amp;gt;&amp;gt; puts hent.entries &lt;span class=&quot;c&quot;&gt;#=&amp;gt; nil&lt;/span&gt;
-  150: Jekyllいつやるの？ジキやルの？今でしょ！ &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.i...
-  111: メソッドの使い方もRubyに教えてほしい &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/20...
-  103: 知って得する21のRubyのトリビアな記法 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/20...
-   99: Rubyのcaseを〇〇&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;言語名&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;のswitch文だと思っている人たちにぼ... &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;htt...
-   87: 分別のあるRubyモンキーパッチャーになるために &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.gith...
-   72: &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Rubyで&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 書く &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Lisp&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; インタプリタ&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/201...
-   62: ええ、ハッキリ言います。私はRubyのArray#unshiftが嫌いです。 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http:...
-   59: RubyistたちのDRY症候群との戦い &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/2013/09/...
-   46: TapがRubyの新たな制御構造の世界を開く &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/2...
-   41: 30分のチュートリアルでJekyllを理解する &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://melborne.github.io/...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;code&gt;sort&lt;/code&gt;オプションはnewの第２引数として渡します。&lt;code&gt;pages&lt;/code&gt;は#entriesの引数として渡します。実装上、引数なしの場合は先の非公式API（JSONPを返します）にアクセスしていますが、引数を渡して20件以上を取得する場合はhtmlページを取得してnokogiriでパースしています。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;merge&lt;/code&gt;は&lt;code&gt;HatebuEntry::Entry.merge&lt;/code&gt;を使います。こんな感じで。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;ent1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HatebuEntry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;http://melborne.github.com&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ent2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HatebuEntry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;http://melborne.github.io&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;merged&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;HatebuEntry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Entry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ent1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ent2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;merged&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;マージされる記事の同一性の判断は、URLから取得される日付の一致とタイトルの前方の一致を見るというちょっと適当な実装になってます。&lt;/p&gt;
-
-&lt;p&gt;使い方の説明は以上です。&lt;/p&gt;
-
-&lt;p&gt;よかったら使ってみてください:-)&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/hatebu_entry&quot; title=&quot;melborne/hatebu_entry&quot;&gt;melborne/hatebu_entry&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/hatebu_entry&quot; title=&quot;hatebu_entry | RubyGems.org | your community gem host&quot;&gt;hatebu_entry | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;最後にHatebuEntryで生成したhp12cの人気記事トップ２０のリンクを貼ってお別れしたいと思います。タイトルとブクマ数はリンクになっていますので、興味のある記事がありましたら読んでもらえたらうれしいです。では、さようなら。&lt;/p&gt;
-
-&lt;h2&gt;hp12cの人気エントリーTOP20&lt;/h2&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/04/09/to-newbie/&quot;&gt;1414&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/04/09/to-newbie/&quot;&gt;これからRubyを始める人たちへ&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/&quot;&gt;670&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2013/03/04/ruby-trivias-you-should-know-4/&quot;&gt;知って得する！５５のRubyのトリビアな記法&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/&quot;&gt;614&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2013/02/25/i-wanna-say-something-about-rubys-case/&quot;&gt;Rubyのcaseを〇〇(言語名)のswitch文だと思っている人たちにぼくから一言ガツンと申し上げたい&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/&quot;&gt;545&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2011/06/22/21-Ruby-21-Trivia-Notations-you-should-know-in-Ruby/&quot;&gt;知って得する21のRubyのトリビアな記法&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/&quot;&gt;442&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/&quot;&gt;Ruby脳が理解するJavaScriptのオブジェクト指向&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/&quot;&gt;272&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/12/25/ebooks-for-learning-ruby/&quot;&gt;今年の冬休みに電子書籍であなたがRubyを習得しなければいけないたった一つの理由&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/07/16/ruby-methods-analysis/&quot;&gt;236&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/07/16/ruby-methods-analysis/&quot;&gt;Ruby、君のオブジェクトはなんて呼び出せばいいの？&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/21/why-fp-with-ruby/&quot;&gt;202&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2013/01/21/why-fp-with-ruby/&quot;&gt;Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（改定）─ 前編 ─ 但し後編の予定なし&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/&quot;&gt;180&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2013/01/24/csv-table-method-is-awesome/&quot;&gt;Ruby標準添付ライブラリcsvのCSV.tableメソッドが最強な件について&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/&quot;&gt;178&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/09/15/understand-js-oop-with-ruby-brain-2/&quot;&gt;Ruby脳が理解するJavaScriptのオブジェクト指向（その２）&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/13/first-step-of-jekyll/&quot;&gt;159&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/05/13/first-step-of-jekyll/&quot;&gt;30分のチュートリアルでJekyllを理解する&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/&quot;&gt;150&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.io/2013/05/20/now-the-time-to-start-jekyll/&quot;&gt;Jekyllいつやるの？ジキやルの？今でしょ！&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/&quot;&gt;144&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/02/08/2-12-Ruby-12-Trivia-Notations-you-should-know-in-Ruby/&quot;&gt;第2弾!知って得する12のRubyのトリビアな記法&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/09/04/is-that-a-yet-another-rdoc/&quot;&gt;111&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.io/2013/09/04/is-that-a-yet-another-rdoc/&quot;&gt;メソッドの使い方もRubyに教えてほしい&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/&quot;&gt;109&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/&quot;&gt;一生涯はてな記法しますか？それともMarkdownしますか？&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/10/29/rubys-new-control-structure-by-tap-and-break/&quot;&gt;107&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/10/29/rubys-new-control-structure-by-tap-and-break/&quot;&gt;TapがRubyの新たな制御構造の世界を開く&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/&quot;&gt;100&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/&quot;&gt;RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/&quot;&gt;98&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/&quot;&gt;東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/&quot;&gt;93&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/08/17/what-is-dsl-for-ruby/&quot;&gt;ねえRuby、どこまでが君でどこからが内部DSLなの？&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&quot;http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot;&gt;91&lt;/a&gt;] : &lt;a href=&quot;http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot;&gt;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&lt;/a&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;(追記：2013-10-17) hp12c人気エントリーのリストを修正しました。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;footnotes&quot;&gt;
-    &lt;ol&gt;
-        &lt;li id=&#39;fn:1&#39;&gt;似たようなAPIは公式のものでもあるようです &lt;a href=&#39;#fnref:1&#39; rev=&#39;footnote&#39;&gt;↩&lt;/a&gt;&lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/div&gt;
-
-
-
 </content>
  </entry>
  
