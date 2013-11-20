@@ -268,6 +268,12 @@ __END__
 
 ---
 
+(追記：2013-11-20) ItunesTrackの説明記事を書きました。
+
+[iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介](http://localhost:4000/2013/11/20/introduce-itunestrack-gem/ "iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介")
+
+---
+
 {{ 'B000JCENFM' | amazon_medium_image }}
 
 {{ 'B000JCENFM' | amazon_link }}
