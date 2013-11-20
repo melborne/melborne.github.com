@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/?keyword=merborne">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>20 November 2013</span></div>
+  <h1 class='page-title'><a href="/2013/11/20/introduce-itunestrack-gem">iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>前の記事では<code>iTunesTrack</code>を使ってiTunesから音楽データを抽出しWebアプリ化する手順を説明しました。</p>
+
+<blockquote><p><a href="/2013/11/19/build-a-database-for-itunes-music-data/" title="iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ">iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ</a></p></blockquote>
+
+<p>ここでは<code>iTunesTrack</code>の詳細を説明します。対象バージョンは0.0.1です。</p>
+
+<blockquote><p><a href="https://rubygems.org/gems/itunes_track" title="itunes_track | RubyGems.org | your community gem host">itunes_track | RubyGems.org | your community gem host</a></p>
+
+<p><a href="https://github.com/melborne/itunes_track" title="melborne/itunes_track">melborne/itunes_track</a></p></blockquote>
+
+<h2>ターミナルでの使い方</h2>
+
+<p><code>gem install itunes_track</code>でインストールすると、<code>itunes_track</code>ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。</p>
+
+<div class="highlight"><pre><code class="bash">% itunes_track
+Commands:
+  itunes_track csv PATH        <span class="c"># Create CSV file from tracks data</span>
+  itunes_track <span class="nb">help</span> <span class="o">[</span>COMMAND<span class="o">]</span>  <span class="c"># Describe available commands or one specific command</span>
+  itunes_track size <span class="o">[</span>ARTIST<span class="o">]</span>   <span class="c"># Show track size for ARTIST match</span>
+  itunes_track tracks          <span class="c"># Show tracks</span>
+  itunes_track version         <span class="c"># Show ItunesTrack version</span>
+</code></pre></div>
+
+
+<p><code>size</code>サブコマンドは、引数で渡したARTISTにマッチするトラックの数を返します。引数を省略すると全楽曲数が返ります。</p>
+
+<div class="highlight"><pre><code class="bash">% itunes_track size sixpence
+47
+% itunes_track size
+1091
+</code></pre></div>
+
+
+<p><code>tracks</code>サブコマンドは楽曲一覧を表示するもので、<code>--artist</code>と<code>--album</code>というオプションを取れます。</p>
+
+<div class="highlight"><pre><code class="bash">% itunes_track <span class="nb">help </span>tracks
+Usage:
+  itunes_track tracks
+
+Options:
+  -a, <span class="o">[</span>--artist<span class="o">=</span>ARTIST<span class="o">]</span>
+  -l, <span class="o">[</span>--album<span class="o">=</span>ALBUM<span class="o">]</span>
+
+Show tracks
+</code></pre></div>
+
+
+<pre><code>% itunes_track tracks -a sixpence -l 'Best Of'
+ Kiss Me 3:29 Sixpence None The Richer The Best Of Sixpence None The Richer 36
+ Loser Like Me 3:33 Sixpence None The Richer The Best Of Sixpence None The Richer 53
+ Need To Be Next To You 4:07 Sixpence None The Richer The Best Of Sixpence None The Richer 51
+ Breathe 4:05 Sixpence None The Richer The Best Of Sixpence None The Richer 53
+ Dancing Queen 4:02 Sixpence None The Richer The Best Of Sixpence None The Richer 46
+ Melody Of You 4:50 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ I Can't Catch You 4:12 Sixpence None The Richer The Best Of Sixpence None The Richer 38
+ I Just Wasn't Made For These Times 3:02 Sixpence None The Richer The Best Of Sixpence None The Richer 57
+ There She Goes 2:43 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+ Don't Dream It's Over 4:02 Sixpence None The Richer The Best Of Sixpence None The Richer 45
+ I Need Love 4:12 Sixpence None The Richer The Best Of Sixpence None The Richer 54
+ Breathe Your Name 3:56 Sixpence None The Richer The Best Of Sixpence None The Richer 37
+ Us 4:22 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ The Ground You Shook 4:18 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ Too Far Gone 6:37 Sixpence None The Richer The Best Of Sixpence None The Richer 45
+ Waiting On The Sun 2:52 Sixpence None The Richer The Best Of Sixpence None The Richer 46
+ Brighten My Heart 4:38 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+ Trust 3:21 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+</code></pre>
+
+<p>現状、カラー化できていないので非常に見づらいものとなっています^ ^;</p>
+
+<p><code>csv</code>サブコマンドは、抽出したトラックデータをCSVファイルに保存するためのコマンドです。対象フィールドを指定する<code>--fields</code>とアーティストを特定する<code>--artist</code>オプションがあります。</p>
+
+<div class="highlight"><pre><code class="bash">% itunes_track <span class="nb">help </span>csv
+Usage:
+  itunes_track csv PATH
+
+Options:
+  -f, <span class="o">[</span>--fields<span class="o">=</span>FIELDS<span class="o">]</span>
+                         <span class="c"># Default: name,time,artist,album,genre,rating,played_count,year,composer,track_count,track_number,disc_count,disc_number,lyrics</span>
+  -a, <span class="o">[</span>--artist<span class="o">=</span>ARTIST<span class="o">]</span>
+
+Create CSV file from tracks data
+</code></pre></div>
+
+
+<p>次のように使います。</p>
+
+<div class="highlight"><pre><code class="bash">% itunes_track csv sixpence.csv -a sixpence -f name,artist,album,year
+I am working on csv...
+CSV file successfully created at sixpence.csv.
+</code></pre></div>
+
+
+<p>以下のようなファイルが出来上がります。</p>
+
+<pre><code>name,artist,album,year
+Kiss Me,Sixpence None The Richer,The Best Of Sixpence None The Richer,1999
+Loser Like Me,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Need To Be Next To You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Breathe,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Dancing Queen,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Melody Of You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+I Can't Catch You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+I Just Wasn't Made For These Times,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+There She Goes,Sixpence None The Richer,The Best Of Sixpence None The Richer,1997
+Don't Dream It's Over,Sixpence None The Richer,The Best Of Sixpence None The Richer,2002
+I Need Love,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Breathe Your Name,Sixpence None The Richer,The Best Of Sixpence None The Richer,2002
+Us,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+The Ground You Shook,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Too Far Gone,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Waiting On The Sun,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Brighten My Heart,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Trust,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+ .
+ .
+ .
+</code></pre>
+
+<h2>Rubyスクリプトでの使い方</h2>
+
+<p>ItunesTrackクラスは次のようなクラスメソッドを持っています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% irb </span><span class="o">-</span><span class="n">ritunes_track</span>
+<span class="no">IRB</span> <span class="n">on</span> <span class="no">Ruby2</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="c1">#=&gt; [:build, :full_build, :tracks, :itunes, :itunes_tracks, :size, :track_properties, :to_csv]</span>
+<span class="o">&gt;&gt;</span>
+</code></pre></div>
+
+
+<p><code>.size</code>メソッドは楽曲数を返しますが、条件を指定したブロックを取ることができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">size</span> <span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">match</span> <span class="sr">/jazz/i</span> <span class="p">}</span> <span class="c1">#=&gt; 66</span>
+<span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">size</span> <span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">match</span> <span class="sr">/hello/i</span> <span class="p">}</span> <span class="c1">#=&gt; 3</span>
+</code></pre></div>
+
+
+<p><code>rb-appscript</code>の仕様上、メソッドの最後で<code>get</code>する必要があります（イケてない）。</p>
+
+<p><code>.build</code>メソッドは対象のタグ（フィールド）を指定して、ブロックで渡した条件のトラックのリストを生成し<code>tracks</code>変数に格納します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:time</span><span class="p">,</span> <span class="ss">:artist</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">get</span> <span class="o">==</span> <span class="s1">&#39;Adele&#39;</span> <span class="p">}</span>
+
+<span class="o">=&gt;</span> <span class="o">[</span><span class="c1">#&lt;ItunesTrack::Track name=&quot;Daydreamer&quot;, time=&quot;3:40&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Best For Last&quot;, time=&quot;4:18&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Chasing Pavements&quot;, time=&quot;3:30&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Cold Shoulder&quot;, time=&quot;3:11&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Crazy For You&quot;, time=&quot;3:28&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Melt My Heart To Stone&quot;, time=&quot;3:23&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;First Love&quot;, time=&quot;3:10&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Right As Rain&quot;, time=&quot;3:17&quot;, artist=&quot;Adele&quot;&gt;, ... ]</span>
+</code></pre></div>
+
+
+<p>引数を省略した場合、name, time, artist, album, genre, rating, played_count, year, composer, track_count, track_number, disc_count, disc_number, lyricsを対象にリストを生成します。<code>rb-appscript</code>でアクセス可能なすべてのタグを取得したい場合は<code>build</code>に代えて<code>full_build</code>メソッドを使います。楽曲数が多い場合、生成に時間がかかることを覚悟します。</p>
+
+<p><code>.to_csv</code>メソッドはbuildしたデータをcsvファイルに保存します。第２引数でCSV化するフィールドを更に限定することもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">ItunesTrack</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;adele.csv&#39;</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:album</span><span class="p">,</span> <span class="ss">:time</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>大体以上です。</p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2013/04/ruby_tutorial_cover.png" alt="ruby_tutorial" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
+</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" class="hatena-bookmark-button" data-hatena-bookmark-title="iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" data-text="iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/11/19/build-a-database-for-itunes-music-data" title="iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" class="hatena-bookmark-button" data-hatena-bookmark-title="iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" data-text="iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

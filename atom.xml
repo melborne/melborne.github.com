@@ -4,13 +4,194 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2013-11-19T08:49:31+09:00</updated>
+ <updated>2013-11-20T14:17:12+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介</title>
+   <link href="http://melborne.github.io/2013/11/20/introduce-itunestrack-gem"/>
+   <updated>2013-11-20T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2013/11/20/introduce-itunestrack-gem</id>
+   <content type="html">&lt;p&gt;前の記事では&lt;code&gt;iTunesTrack&lt;/code&gt;を使ってiTunesから音楽データを抽出しWebアプリ化する手順を説明しました。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2013/11/19/build-a-database-for-itunes-music-data/&quot; title=&quot;iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ&quot;&gt;iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;ここでは&lt;code&gt;iTunesTrack&lt;/code&gt;の詳細を説明します。対象バージョンは0.0.1です。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/itunes_track&quot; title=&quot;itunes_track | RubyGems.org | your community gem host&quot;&gt;itunes_track | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/itunes_track&quot; title=&quot;melborne/itunes_track&quot;&gt;melborne/itunes_track&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;ターミナルでの使い方&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;gem install itunes_track&lt;/code&gt;でインストールすると、&lt;code&gt;itunes_track&lt;/code&gt;ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% itunes_track
+Commands:
+  itunes_track csv PATH        &lt;span class=&quot;c&quot;&gt;# Create CSV file from tracks data&lt;/span&gt;
+  itunes_track &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
+  itunes_track size &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ARTIST&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;   &lt;span class=&quot;c&quot;&gt;# Show track size for ARTIST match&lt;/span&gt;
+  itunes_track tracks          &lt;span class=&quot;c&quot;&gt;# Show tracks&lt;/span&gt;
+  itunes_track version         &lt;span class=&quot;c&quot;&gt;# Show ItunesTrack version&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;size&lt;/code&gt;サブコマンドは、引数で渡したARTISTにマッチするトラックの数を返します。引数を省略すると全楽曲数が返ります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% itunes_track size sixpence
+47
+% itunes_track size
+1091
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;tracks&lt;/code&gt;サブコマンドは楽曲一覧を表示するもので、&lt;code&gt;--artist&lt;/code&gt;と&lt;code&gt;--album&lt;/code&gt;というオプションを取れます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% itunes_track &lt;span class=&quot;nb&quot;&gt;help &lt;/span&gt;tracks
+Usage:
+  itunes_track tracks
+
+Options:
+  -a, &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;--artist&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ARTIST&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  -l, &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;--album&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ALBUM&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+Show tracks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;pre&gt;&lt;code&gt;% itunes_track tracks -a sixpence -l &#39;Best Of&#39;
+ Kiss Me 3:29 Sixpence None The Richer The Best Of Sixpence None The Richer 36
+ Loser Like Me 3:33 Sixpence None The Richer The Best Of Sixpence None The Richer 53
+ Need To Be Next To You 4:07 Sixpence None The Richer The Best Of Sixpence None The Richer 51
+ Breathe 4:05 Sixpence None The Richer The Best Of Sixpence None The Richer 53
+ Dancing Queen 4:02 Sixpence None The Richer The Best Of Sixpence None The Richer 46
+ Melody Of You 4:50 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ I Can&#39;t Catch You 4:12 Sixpence None The Richer The Best Of Sixpence None The Richer 38
+ I Just Wasn&#39;t Made For These Times 3:02 Sixpence None The Richer The Best Of Sixpence None The Richer 57
+ There She Goes 2:43 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+ Don&#39;t Dream It&#39;s Over 4:02 Sixpence None The Richer The Best Of Sixpence None The Richer 45
+ I Need Love 4:12 Sixpence None The Richer The Best Of Sixpence None The Richer 54
+ Breathe Your Name 3:56 Sixpence None The Richer The Best Of Sixpence None The Richer 37
+ Us 4:22 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ The Ground You Shook 4:18 Sixpence None The Richer The Best Of Sixpence None The Richer 42
+ Too Far Gone 6:37 Sixpence None The Richer The Best Of Sixpence None The Richer 45
+ Waiting On The Sun 2:52 Sixpence None The Richer The Best Of Sixpence None The Richer 46
+ Brighten My Heart 4:38 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+ Trust 3:21 Sixpence None The Richer The Best Of Sixpence None The Richer 44
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;現状、カラー化できていないので非常に見づらいものとなっています^ ^;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;csv&lt;/code&gt;サブコマンドは、抽出したトラックデータをCSVファイルに保存するためのコマンドです。対象フィールドを指定する&lt;code&gt;--fields&lt;/code&gt;とアーティストを特定する&lt;code&gt;--artist&lt;/code&gt;オプションがあります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% itunes_track &lt;span class=&quot;nb&quot;&gt;help &lt;/span&gt;csv
+Usage:
+  itunes_track csv PATH
+
+Options:
+  -f, &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;--fields&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;FIELDS&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+                         &lt;span class=&quot;c&quot;&gt;# Default: name,time,artist,album,genre,rating,played_count,year,composer,track_count,track_number,disc_count,disc_number,lyrics&lt;/span&gt;
+  -a, &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;--artist&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ARTIST&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+Create CSV file from tracks data
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;次のように使います。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% itunes_track csv sixpence.csv -a sixpence -f name,artist,album,year
+I am working on csv...
+CSV file successfully created at sixpence.csv.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以下のようなファイルが出来上がります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;name,artist,album,year
+Kiss Me,Sixpence None The Richer,The Best Of Sixpence None The Richer,1999
+Loser Like Me,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Need To Be Next To You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Breathe,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Dancing Queen,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Melody Of You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+I Can&#39;t Catch You,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+I Just Wasn&#39;t Made For These Times,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+There She Goes,Sixpence None The Richer,The Best Of Sixpence None The Richer,1997
+Don&#39;t Dream It&#39;s Over,Sixpence None The Richer,The Best Of Sixpence None The Richer,2002
+I Need Love,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Breathe Your Name,Sixpence None The Richer,The Best Of Sixpence None The Richer,2002
+Us,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+The Ground You Shook,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Too Far Gone,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Waiting On The Sun,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Brighten My Heart,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+Trust,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
+ .
+ .
+ .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Rubyスクリプトでの使い方&lt;/h2&gt;
+
+&lt;p&gt;ItunesTrackクラスは次のようなクラスメソッドを持っています。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;sx&quot;&gt;% irb &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ritunes_track&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;IRB&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ItunesTrack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [:build, :full_build, :tracks, :itunes, :itunes_tracks, :size, :track_properties, :to_csv]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;.size&lt;/code&gt;メソッドは楽曲数を返しますが、条件を指定したブロックを取ることができます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ItunesTrack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;genre&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/jazz/i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 66&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ItunesTrack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/hello/i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; 3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;rb-appscript&lt;/code&gt;の仕様上、メソッドの最後で&lt;code&gt;get&lt;/code&gt;する必要があります（イケてない）。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;.build&lt;/code&gt;メソッドは対象のタグ（フィールド）を指定して、ブロックで渡した条件のトラックのリストを生成し&lt;code&gt;tracks&lt;/code&gt;変数に格納します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ItunesTrack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:artist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;artist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Adele&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#&amp;lt;ItunesTrack::Track name=&amp;quot;Daydreamer&amp;quot;, time=&amp;quot;3:40&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Best For Last&amp;quot;, time=&amp;quot;4:18&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Chasing Pavements&amp;quot;, time=&amp;quot;3:30&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Cold Shoulder&amp;quot;, time=&amp;quot;3:11&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Crazy For You&amp;quot;, time=&amp;quot;3:28&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Melt My Heart To Stone&amp;quot;, time=&amp;quot;3:23&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;First Love&amp;quot;, time=&amp;quot;3:10&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, #&amp;lt;ItunesTrack::Track name=&amp;quot;Right As Rain&amp;quot;, time=&amp;quot;3:17&amp;quot;, artist=&amp;quot;Adele&amp;quot;&amp;gt;, ... ]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;引数を省略した場合、name, time, artist, album, genre, rating, played_count, year, composer, track_count, track_number, disc_count, disc_number, lyricsを対象にリストを生成します。&lt;code&gt;rb-appscript&lt;/code&gt;でアクセス可能なすべてのタグを取得したい場合は&lt;code&gt;build&lt;/code&gt;に代えて&lt;code&gt;full_build&lt;/code&gt;メソッドを使います。楽曲数が多い場合、生成に時間がかかることを覚悟します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;.to_csv&lt;/code&gt;メソッドはbuildしたデータをcsvファイルに保存します。第２引数でCSV化するフィールドを更に限定することもできます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;ItunesTrack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;adele.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:album&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;大体以上です。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/02/ruby_object_cover.png&quot; alt=&quot;ruby_object&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/04/ruby_tutorial_cover.png&quot; alt=&quot;ruby_tutorial&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/2013/03/ruby_trivia_cover.png&quot; alt=&quot;ruby_trivia&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ</title>
@@ -271,6 +452,12 @@ CSV data exported successfully.
 &lt;p&gt;&lt;img src=&quot;/assets/images/2013/11/itune2.png&quot; alt=&quot;itunes noshadow&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;ソートとかフィルタリングとか検索とかの機能がほしいですねぇ。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;(追記：2013-11-20) ItunesTrackの説明記事を書きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://localhost:4000/2013/11/20/introduce-itunestrack-gem/&quot; title=&quot;iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介&quot;&gt;iTuneの音楽ライブラリにアクセスしてCSV化できる「iTunesTrack」の紹介&lt;/a&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -2551,141 +2738,6 @@ jruby 1.7.4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.9.3p392&lt;span clas
 &lt;p&gt;&lt;a href=&quot;/2013/10/18/visualize-ruby-tree-with-graphviz/&quot; title=&quot;RubyユニバースをGraphvizで視覚化する&quot;&gt;RubyユニバースをGraphvizで視覚化する&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/2013/10/19/visualize-rubinius-tree/&quot; title=&quot;Rubiniusユニバースも視覚化してみる&quot;&gt;Rubiniusユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot; title=&quot;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&quot;&gt;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Rubiniusユニバースも視覚化してみる</title>
-   <link href="http://melborne.github.io/2013/10/19/visualize-rubinius-tree"/>
-   <updated>2013-10-19T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2013/10/19/visualize-rubinius-tree</id>
-   <content type="html">&lt;p&gt;前の記事でRubyのクラスツリーをGraphvizを使って視覚化した。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/18/visualize-ruby-tree-with-graphviz/&quot; title=&quot;RubyユニバースをGraphvizで視覚化する&quot;&gt;RubyユニバースをGraphvizで視覚化する&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;そうしたら今度はRubiniusでどうなるのかも見てみたくなったので以下の辺りを参考にRubiniusをインストールしてやってみることにした。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://qiita.com/taiki45/items/b90002c72352ab382183&quot; title=&quot;Ruby - Rubinius 2.0.0-dev をインストールする with rbenv - Qiita [キータ]&quot;&gt;Ruby - Rubinius 2.0.0-dev をインストールする with rbenv - Qiita [キータ]&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/amateurhuman/2005745&quot; title=&quot;Installing Rubinius 2.0.0-dev with rbenv&quot;&gt;Installing Rubinius 2.0.0-dev with rbenv&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;例外クラスとモジュールを除いたRubyのクラスツリーをRubiniusで書いてみる。&lt;/p&gt;
-
-&lt;p&gt;どういうわけか&lt;code&gt;gviz&lt;/code&gt;コマンドが使えるようにならないのでrubyで実行できるよう修正する。前回のコードをGraphのブロックで囲えばいい(必要色数が増えたのでcolorschemeをpurd6からpurd7に変えている）。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt; &lt;span class=&quot;c1&quot;&gt;# ruby_tree.rb&lt;/span&gt;
- &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;gviz&amp;#39;&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ObjectSpace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each_object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/Gem|Thor|Gviz/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Graph&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fdp&amp;#39;&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;filled&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;colorscheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;purd7&amp;#39;&lt;/span&gt;
- 
-   &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mods&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;group_by&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;anc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;anc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_a?&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                       &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-     &lt;span class=&quot;k&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Exception&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with_index&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each_cons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:to_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;
-     &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
- 
-   &lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:ruby_tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Rubyを切り替えてヴァージョンを確認して実行してみる。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% rbenv &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;rbx-2.0.0
-% ruby -v
-rubinius 2.1.1n292 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.0 9f9da9ed 2013-10-19 JI&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;x86_64-darwin12.5.0&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-% ruby ruby_tree.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;うわっ。&lt;/p&gt;
-
-&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/10/ruby_tree8.png&quot; rel=&quot;lightbox&quot; title=&quot;ruby_tree&quot;&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree8.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大）&lt;/p&gt;
-
-&lt;p&gt;クラスの数がなんかぜんぜん違う。一部を拡大して見てみる。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/10/ruby_tree9.png&quot; rel=&quot;lightbox&quot; title=&quot;ruby_tree&quot;&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree9.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大）&lt;/p&gt;
-
-&lt;p&gt;おびただしい数のRubinius関連クラスが見える。これらはRubyの組み込みクラスを補完するクラス群なのだろう。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;参考：&lt;a href=&quot;http://patshaughnessy.net/2012/1/25/my-first-impression-of-rubinius-internals&quot; title=&quot;My first impression of Rubinius internals - Pat Shaughnessy&quot;&gt;My first impression of Rubinius internals - Pat Shaughnessy&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;Rubinius関連クラス群を除外して描画してみる。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;gviz&amp;#39;&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ObjectSpace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each_object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;                     &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/Gem|Thor|Gviz|Rubinius/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
- &lt;span class=&quot;no&quot;&gt;Graph&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fdp&amp;#39;&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;filled&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;colorscheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;purd6&amp;#39;&lt;/span&gt;
- 
-   &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mods&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;group_by&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;anc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;anc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_a?&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                       &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-     &lt;span class=&quot;k&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Exception&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with_index&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-     &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each_cons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:to_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ai&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bi&lt;/span&gt;
-     &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
- 
-   &lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:ruby_tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
- &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/10/ruby_tree10.png&quot; rel=&quot;lightbox&quot; title=&quot;ruby_tree&quot;&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree10.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大）&lt;/p&gt;
-
-&lt;p&gt;大分スッキリした。これでCRubyにおけるクラスツリーに近づいてきた。対応するCRubyのグラフを貼って見比べてみる。&lt;/p&gt;
-
-&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2013/10/ruby_tree4.png&quot; rel=&quot;lightbox&quot; title=&quot;ruby_tree&quot;&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree4.png&quot; alt=&quot;alt noshadow&quot; /&gt;&lt;/a&gt;
-（クリックで拡大）&lt;/p&gt;
-
-&lt;p&gt;RubiniusにはCRubyにはないクラスが依然含まれていて&lt;code&gt;Continuation&lt;/code&gt;（継続）なんてものも見える。Rubiniusは単一実装で1.8系と1.9系をカバーするようだからそうなんだろう（インストール時に--enable-versionという設定項目がある）。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;参考：&lt;a href=&quot;http://rubini.us/2011/06/07/inside-rubinius-20-preview/&quot; title=&quot;Inside the Rubinius 2.0 Preview Release - Rubinius&quot;&gt;Inside the Rubinius 2.0 Preview Release - Rubinius&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;(追記：2013-10-20) JRubyも視覚化しました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2013/10/20/visualize-jruby-tree/&quot; title=&quot;JRubyユニバースも視覚化してみる&quot;&gt;JRubyユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;関連記事：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2013/10/19/visualize-rubinius-tree/&quot; title=&quot;Rubiniusユニバースも視覚化してみる&quot;&gt;Rubiniusユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2013/10/20/visualize-jruby-tree/&quot; title=&quot;JRubyユニバースも視覚化してみる&quot;&gt;JRubyユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2013/10/21/visualize-ruby-files-with-graphviz/&quot; title=&quot;Rubyのソースディレクトリも視覚化してみる&quot;&gt;Rubyのソースディレクトリも視覚化してみる&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot; title=&quot;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&quot;&gt;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&lt;/a&gt;&lt;/p&gt;
 </content>
