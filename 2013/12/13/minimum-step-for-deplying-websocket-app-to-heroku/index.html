@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>
+            <!--<a href="/atom.xml" id="rss">-->
+              <!--<img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />-->
+            <!--</a>-->
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/users/54">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>13 December 2013</span></div>
+  <h1 class='page-title'><a href="/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku">Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ</a> <small> Sinatra-websocket-templateの紹介 </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>「テレビ放送が駄目になった」と言われて久しいですがその理由ははっきりしています。それは放送というものがリアルタイム・コンテンツを扱う媒体だからです。リアルタイム・コンテンツはユーザの自由を奪います。ある番組を見るためにユーザはその時間テレビの前に固定化されます。録画放送番組は字義的にはバッファード・コンテンツ<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>と言えますが、ユーザがそのコントロール権を持っていないつまりその視聴タイミングの制御を製作者側が持っているので、これはリアルタイム・コンテンツなのです。ユーザの唯一の武器はDVDレコーダによる制約の中のローカルバファリングのみです。</p>
+
+<p>現在の<strong>Web</strong>は主としてバッファード・コンテンツを扱う媒体です。バッファード・コンテンツの世界ではユーザは好きな時間に好きなだけコンテンツを視聴できるという自由が与えられます。コンテンツの製作者側・提供者側にそのタイミングをコントロールする自由はありません。ユーザがコンテンツのコントロール権を持っている世界、それが<strong>Web</strong>なのです。</p>
+
+<p>その一方でWebにも変化が訪れています。<strong>体験の共有</strong>に対する回帰です。リアルタイム・コンテンツの消費からバッファード・コンテンツの消費への移行でユーザが失ったもの、それが<strong>体験の共有</strong>です。体験の共有はコンテンツに対する消費の同時性つまりリアルタイム性を要求します。前述のようにこれはユーザにとっての制約です。しかしユーザは今、この制約の一部を受け入れてでもWeb上での体験の共有を求めるようになってきています。その結果としてWeb上のコンテンツもバッファード・コンテンツから偽リアルタイム・コンテンツにその一部が変質しつつあります。テキストコンテンツは頁という概念を失い、リアルタイム・コミュニケーションのために140文字の言葉のかけらに圧縮されました。</p>
+
+<p>この変化をWebがすべてを飲み込んでいると見ることもできるでしょう。結局、この世界では誰もコントロール権など持っていない（いらない）、そう理解するのが正しいのかもしれません。</p>
+
+<p>とか。</p>
+
+<hr />
+
+<p>そんなわけで、WebSocketです。WebSocketはWebの世界で真のリアルタイムを実現します。そしてその準備は整いつつあります。</p>
+
+<p>まずは体験です。さあ、次のリンクをクリックして真のリアルタイムの世界を、体験の共有を味わってください！</p>
+
+<blockquote><p><a href="http://typewr.herokuapp.com/" title="Typewr">Typewr</a></p></blockquote>
+
+<p>使い方の説明はこちら。</p>
+
+<blockquote><p><a href="/2013/12/10/is-this-chat-or-typewriter/" title="チャット？　タイプライター？　音？　何？">チャット？　タイプライター？　音？　何？</a></p></blockquote>
+
+<p><br/></p>
+
+<p>スイマセン...遊びに来てくれる人が少なくて...宣伝...。</p>
+
+<p>まあ、でもこれがWebSocketによるリアルタイムWebの一サンプルです。リアルタイムWebの世界は未開拓の地です。発想次第でユニークなものが生まれる可能性があります。</p>
+
+<h2>Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ</h2>
+
+<p>さて、ここからが本題です。ふぅ。</p>
+
+<p>Herokuでは現在試験的機能として、WebSocketを可能にするオプションが用意されています。これを使うと<a href="http://pusher.com/" title="Pusher | HTML5 WebSocket Powered Realtime Messaging Service">Pusher</a>などの外部サービスに頼らずに、HerokuでホスティングされるWebアプリ上でWebSocketの機能を実現できるようになります。</p>
+
+<blockquote><p><a href="https://devcenter.heroku.com/articles/heroku-labs-websockets" title="Heroku Labs: WebSockets | Heroku Dev Center">Heroku Labs: WebSockets | Heroku Dev Center</a></p></blockquote>
+
+<p>加えて、HerokuはRuby（Sinatra）でWebSocketを使ったチャットシステムのサンプル＆デモも公開しています。</p>
+
+<blockquote><p><a href="https://devcenter.heroku.com/articles/ruby-websockets#deploy" title="Using WebSockets on Heroku with Ruby | Heroku Dev Center">Using WebSockets on Heroku with Ruby | Heroku Dev Center</a></p></blockquote>
+
+<p>で、この記事に従えばWebSocketのアプリを作って公開することが簡単にできるのですが、それでもやっぱり定型的なコードを一つずつ用意するのには骨が折れます。SinatraにはRailsのようなGeneratorもないですし。</p>
+
+<p>そんなわけで...。</p>
+
+<p>SinatraでWebSocketを作る際のスケルトンを生成する<code>Sinatra-websocket-template</code>というGemを作りました:-)</p>
+
+<blockquote><p><a href="https://rubygems.org/gems/sinatra_websocket_template" title="sinatra_websocket_template | RubyGems.org | your community gem host">sinatra_websocket_template | RubyGems.org | your community gem host</a></p>
+
+<p><a href="https://github.com/melborne/sinatra-websocket-template" title="melborne/sinatra-websocket-template">melborne/sinatra-websocket-template</a></p></blockquote>
+
+<p><code>Sinatra-websocket-template</code>は、<code>bundle gem PROJECT</code>で生成されるファイル群に加えて、上記記事を参考にしたWebSocketに必要なファイル群を生成、出力します。ファイルにはWebSocketを実現するサンプルコードが載っているので、コードを一行も書くこと無くWebSocketの体験ができます。</p>
+
+<p>以下では、このGemを使ってWebSocketアプリを作る手順および作ったWebアプリをHerokuにデプロイする手順を説明します。</p>
+
+<h2>STEP1: Sinatra-websocket-templateのインストール</h2>
+
+<p><code>Sinatra-websocket-template</code>をインストールします。</p>
+
+<pre><code>% gem install sinatra_websocket_template
+Fetching: sinatra_websocket_template-0.0.1.gem (100%)
+Successfully installed sinatra_websocket_template-0.0.1
+1 gem installed
+</code></pre>
+
+<h2>STEP2: プロジェクトの生成</h2>
+
+<p><code>sinatra_websocket_template</code>コマンドを実行してサブコマンドを確認します。</p>
+
+<pre><code>% sinatra_websocket_template
+Commands:
+  sinatra_websocket_template help [COMMAND]  # Describe available commands or one specific command
+  sinatra_websocket_template new PROJECT     # Creates a skeleton for your project
+  sinatra_websocket_template version         # Prints the SinatraWebsocketTemplate's version
+</code></pre>
+
+<p><code>new</code>サブコマンドにプロジェクトの名前を渡して、プロジェクトのスケルトンを生成します。</p>
+
+<pre><code>$ sinatra_websocket_template new hello_chat
+      create  hello_chat/Procfile
+      create  hello_chat/config.ru
+      create  hello_chat/lib/app.rb
+      create  hello_chat/lib/views/index.haml
+      create  hello_chat/lib/public/css/main.css
+      create  hello_chat/lib/public/js/application.js
+      create  hello_chat/lib/hello_chat/backend.rb
+      create  hello_chat/Gemfile
+      create  hello_chat/Rakefile
+      create  hello_chat/LICENSE.txt
+      create  hello_chat/README.md
+      create  hello_chat/.gitignore
+      create  hello_chat/hello_chat.gemspec
+      create  hello_chat/lib/hello_chat.rb
+      create  hello_chat/lib/hello_chat/version.rb
+Initializating git repo in /Users/keyes/Dropbox/playground/hello_chat
+</code></pre>
+
+<p>プロジェクトのディレクトリに移動して、生成されたファイル群を確認します。</p>
+
+<pre><code>% cd hello_chat
+/hello_chat% tree
+.
+├── Gemfile
+├── LICENSE.txt
+├── Procfile
+├── README.md
+├── Rakefile
+├── config.ru
+├── hello_chat.gemspec
+└── lib
+    ├── app.rb
+    ├── hello_chat
+    │   ├── backend.rb
+    │   └── version.rb
+    ├── hello_chat.rb
+    ├── public
+    │   ├── css
+    │   │   └── main.css
+    │   └── js
+    │       └── application.js
+    └── views
+        └── index.haml
+
+6 directories, 14 files
+</code></pre>
+
+<p>折角だから、「<a href="https://rubygems.org/gems/dir_friend" title="dir_friend">dir_friend</a>」を使って、ビジュアライズもします:-)</p>
+
+<pre><code>% dir_friend dot .
+'a.dot' created in the current directory.
+</code></pre>
+
+<p><img src="/assets/images/2013/12/hello_chat1.png" alt="hello chat noshadow" /></p>
+
+<p>（参考：<a href="/2013/10/31/there-is-a-beauty-in-your-computer/" title="あなたはファイルシステムに美を見るか？">あなたはファイルシステムに美を見るか？</a>）</p>
+
+<p>この中でWebSocketを実現する重要なファイルは、<code>lib/hello_chat/backend.rb</code>と<code>lib/public/js/application.js</code>です。中身は後で確認するとして、先に進みます。</p>
+
+<h2>STEP3: ローカルでのプロジェクトの起動</h2>
+
+<p>まずは<code>bundle install</code>します。</p>
+
+<pre><code>/hello_chat% bundle install
+Fetching gem metadata from https://rubygems.org/...........
+Fetching gem metadata from https://rubygems.org/..
+Resolving dependencies...
+Using rake (10.1.0)
+Using bundler (1.3.5)
+Using dotenv (0.9.0)
+Using eventmachine (1.0.3)
+Using websocket-driver (0.3.1)
+Using faye-websocket (0.7.1)
+Using thor (0.18.1)
+Using foreman (0.63.0)
+Using tilt (1.4.1)
+Using haml (4.0.4)
+Using rack (1.5.2)
+Using puma (2.7.1)
+Using rack-protection (1.5.1)
+Using sinatra (1.4.4)
+Using hello_chat (0.0.1) from source at /Users/keyes/Dropbox/playground/hello_chat
+hello_chat at /Users/keyes/Dropbox/playground/hello_chat did not have a valid gemspec.
+This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
+The validation message from Rubygems was:
+  "FIXME" or "TODO" is not a description
+
+Your bundle is complete!
+Use `bundle show [gemname]` to see where a bundled gem is installed.
+</code></pre>
+
+<p>アプリケーションに必要なGemsがインストールされました。プロセスマネージャのforemanを通してアプリを起動します。</p>
+
+<pre><code>/hello_chat% bundle exec foreman start
+13:37:24 web.1  | started with pid 18722
+13:37:27 web.1  | Puma starting in single mode...
+13:37:27 web.1  | * Version 2.7.1, codename: Earl of Sandwich Partition
+13:37:27 web.1  | * Min threads: 0, max threads: 16
+13:37:27 web.1  | * Environment: development
+13:37:27 web.1  | * Listening on tcp://0.0.0.0:5000
+13:37:27 web.1  | Use Ctrl-C to stop
+</code></pre>
+
+<p>5000番ポートでサーバが起動したので、２つのブラウザを起動してアクセスします。</p>
+
+<p>それぞれのブラウザでページ上のHello!ボタンを交互に押してみます。</p>
+
+<p><img src="/assets/images/2013/12/hello_chat2.png" alt="hello chat noshadow" /></p>
+
+<p>WebSocketによる通信が成功しています。これでSinatra-websocket-templateで生成されるスケルトンで一応WebSocketが実現できることが確認できました。</p>
+
+<h2>STEP4: プロジェクトのコードを書く</h2>
+
+<p>生成されたスケルトンを土台にしてプロジェクトに必要なコードを書きます。あなたの出番です。</p>
+
+<p><code>git commit</code>で準備が完了しました。</p>
+
+<h2>STEP5: Herokuへデプロイ</h2>
+
+<p>プロジェクトが完成したのでHerokuにアプリを作ります。</p>
+
+<pre><code>% heroku create hellochat
+</code></pre>
+
+<p>Heroku上のWebSocketの機能を有効にします。</p>
+
+<pre><code>% heroku labs:enable websockets
+</code></pre>
+
+<p>デプロイです。</p>
+
+<pre><code>% git push heroku master
+% heroku open
+</code></pre>
+
+<p>これで完了です。</p>
+
+<h2>backend.rbとapplication.jsの中身</h2>
+
+<p>スケルトンにおける<code>backend.rb（WebSocketにおけるサーバー側）</code>と<code>application.js（クライアント側）</code>の中身だけ確認してみます。</p>
+
+<p>backend.rbはRackのミドルウェアとして構成されています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># backend.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;faye/websocket&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
+
+<span class="k">module</span> <span class="nn">HelloChat</span>
+  <span class="k">class</span> <span class="nc">Backend</span>
+    <span class="no">KEEPALIVE_TIME</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+      <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+      <span class="vi">@clients</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ss">Faye</span><span class="p">:</span><span class="ss">:WebSocket</span><span class="o">.</span><span class="n">websocket?</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">ws</span> <span class="o">=</span> <span class="ss">Faye</span><span class="p">:</span><span class="ss">:WebSocket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">ping</span><span class="p">:</span> <span class="no">KEEPALIVE_TIME</span><span class="p">)</span>
+        
+        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:open</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:open</span><span class="p">,</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span><span class="o">]</span>
+          <span class="vi">@clients</span> <span class="o">&lt;&lt;</span> <span class="n">ws</span>
+          <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">you</span><span class="p">:</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
+          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">count</span><span class="p">:</span> <span class="vi">@clients</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+
+        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:message</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:message</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">]</span>
+          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span> <span class="n">client</span><span class="o">.</span><span class="n">send</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span> <span class="p">}</span>
+        <span class="k">end</span>
+
+        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:close</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:close</span><span class="p">,</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span><span class="o">]</span>
+          <span class="vi">@clients</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">count</span><span class="p">:</span> <span class="vi">@clients</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
+          <span class="k">end</span>
+          <span class="n">ws</span> <span class="o">=</span> <span class="kp">nil</span>
+        <span class="k">end</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">rack_response</span>
+      <span class="k">else</span>
+        <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>クライアント側からの通信がWebSocketに係る場合、Backend#callでそのイベントをソケット側にハイジャックし（Faye::WebSocket.websocket?(env)）、ここでそのイベントに応じた処理を返します。例えば、クライアント側からWebSocketに係るメッセージが送信されてきた場合は、これを<code>ws.on :message</code>で受けて、そのメッセージを全クライントにブロードキャストしています。また、クライアントが立ち上げられたときは、これを<code>ws.on :open</code>で受けて、そのクライアントに自身の識別ID（object_id）を返すと共に、クライアントの総数をブロードキャストしています。</p>
+
+<p>次に、<code>application.js</code>のコードを見ます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="c1">// application.js</span>
+<span class="kd">function</span> <span class="nx">counterRefresh</span> <span class="p">(</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#user-counter&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">count</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">appendMessage</span> <span class="p">(</span><span class="nx">userid</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#message-box&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;&lt;div class=&#39;message&#39;&gt;&lt;span class=&#39;user-id&#39;&gt;&quot;</span> <span class="o">+</span> <span class="nx">userid</span> <span class="o">+</span> <span class="s2">&quot;:&lt;/span&gt; &quot;</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#count-button&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">innerHTML</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">userid</span><span class="o">:</span> <span class="nx">myid</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span> <span class="p">});</span>
+  <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">myid</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^http/</span><span class="p">,</span> <span class="s1">&#39;ws&#39;</span><span class="p">));</span>
+
+<span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">you</span><span class="p">)</span> <span class="p">{</span> <span class="nx">myid</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">id</span><span class="p">;</span>
+    <span class="nx">myid</span><span class="o">==</span><span class="nx">data</span><span class="p">.</span><span class="nx">userid</span> <span class="o">?</span> <span class="nx">id</span> <span class="o">=</span> <span class="s1">&#39;my-message&#39;</span> <span class="o">:</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">userid</span><span class="p">;</span>
+    <span class="nx">appendMessage</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">text</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span> <span class="nx">counterRefresh</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>クライアント側では、WebSocketオブジェクトを生成して<code>ws.onmessage</code>にサーバー側からのメッセージを受けたときの処理を登録しています。そして受信データに含まれるプロパティに応じて処理を切り分けています。また、<code>Hello!</code>ボタンがクリックされたときに,<code>ws.send(data)</code>でサーバー側にメッセージを送信します。</p>
+
+<p>以上で、説明は終わりです。</p>
+
+<p>是非とも<code>Sinatra-websocket-template</code>をベースに何か面白いものを作ってくださいね。</p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2012/rack_cover.png" alt="rack" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" style="width:200px" />
+</a></p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>今勝手に考えた造語です。ユーザがランダムアクセス可能なリソースをイメージしています。 <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" data-text="Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/12/10/is-this-chat-or-typewriter" title="チャット？　タイプライター？　音？　何？">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next"><a href="/2013/12/13/translate-let-it-snow-in-the-terminal" title="「Macのターミナルで雪が降る」をカラー化した。翻訳した。">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />
+      </a>
+      <p id="comment">100円で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" data-text="Ruby製WebSocketアプリを最速でHerokuにデプロイする５つのステップ" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2013/12/13/minimum-step-for-deplying-websocket-app-to-heroku/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
