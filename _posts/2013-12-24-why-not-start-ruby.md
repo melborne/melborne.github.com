@@ -212,7 +212,7 @@ Jekyllはブログのような静的サイトを構築するためのRuby製フ�
   <img src="/assets/images/books/ruby_pack8.png" alt="ruby_pack8" style="width:200px" />
 </a>
 
-<a href="https://gum.co/WwoyT">電子書籍「Ruby入門パッケージ８」EPUB/MOBI版</a> <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+<a href="https://gum.co/WwoyT" class="gumroad-button">電子書籍「Ruby入門パッケージ８」EPUB/MOBI版</a> <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
 
 
 ## ステップ１２（所要時間：∞分、投資額：∞円）
