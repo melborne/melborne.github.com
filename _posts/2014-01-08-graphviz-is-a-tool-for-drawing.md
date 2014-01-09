@@ -141,3 +141,9 @@ save :draw3
 お前は何がしたいんだ、って感じですが。
 
 
+---
+
+(追記：2013-1-9) 関連記事を書きました。
+
+> [Rubyでサインカーブを描いて癒やされる]({{ BASE_PATH }}/2014/01/09/discover-beauty-of-sine-curves-through-graphviz/ 'Rubyでサインカーブを描いて癒やされる')
+
