@@ -66,15 +66,19 @@ SinatraはDSLには違いありませんが、それとイコールではあり�
 
 ---
 
-マージされた`README.jp.md`のリンクを貼っておきます。
+マージされた`README.ja.md`のリンクを貼っておきます。
 
-> [sinatra/README.jp.md at master · sinatra/sinatra](https://github.com/sinatra/sinatra/blob/master/README.jp.md "sinatra/README.jp.md at master · sinatra/sinatra")
+> [sinatra/README.ja.md at master · sinatra/sinatra](https://github.com/sinatra/sinatra/blob/master/README.ja.md "sinatra/README.ja.md at master · sinatra/sinatra")
 
 前述のとおり訳文に対しては開発者側のチェック機能は働いていないと思われます。よって、私の力不足によりドキュメントにはケアレスなミス、意味不明の解説、深刻な誤訳が含まれている可能性があります。このような問題に気づかれましたら、本家にプルリクするか、それが手間であれば私に連絡くだされば可能な限り対応します。
 
 なお、上記ドキュメントはその変更点が多いためGithub上で差分表示ができません。差分は以下で確認できます。
 
 > [History for README.jp.md - melborne/sinatra](https://github.com/melborne/sinatra/commits/update-readme-jp-spike/README.jp.md "History for README.jp.md - melborne/sinatra")
+
+---
+
+(追記:2014-1-26) `README.jp.md` => `README.ja.md`への変更がマージされたのでリンク先を修正。
 
 ---
 
