@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>Togglateを使ってRuby Quizを作ったよ！</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <!--<a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>-->
+            <a href="/atom.xml" id="rss">
+              <img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />
+            </a>
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/users/54">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>19 February 2014</span></div>
+  <h1 class='page-title'><a href="/2014/02/19/build-ruby-quiz-with-togglate">Togglateを使ってRuby Quizを作ったよ！</a> <small>  </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>翻訳ドキュメント作成支援ツール「<code>togglate</code>」というものを作ったのですが、これはWeb単語帳とか問題集とかの、一部を見せたり隠したりするページを作るのにも使えるのです。</p>
+
+<p>それで早速「<strong>Ruby Quiz</strong>」なるものを作ってみたので、時間が許す人は挑戦してください。まあどれもRubyの基礎的な他愛のない問題なので、時間の無駄になるかもしれませんが。「答え」をクリックすると答えと簡単な解説が表示されます。</p>
+
+<p>問題の作り方は下のほうに書きましたので、問題づくりに興味のある方はどうぞ。</p>
+
+<h2>Ruby Quiz</h2>
+
+<p>Rubyバージョンは2.1。</p>
+
+<hr />
+
+<p>問１．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = [1,2,3].push *[4,*[5,*[6,7]]]
+</code></pre>
+
+
+
+
+<!--original
+答え：[1, 2, 3, 4, 5, 6, 7]
+解説：*(splat)により配列が展開されて、Array#pushには複数の引数として渡される。
+-->
+
+
+
+
+<p>問２．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = [1,2,3] * ([4, 5] * &#39;6&#39;)
+</code></pre>
+
+
+
+
+<!--original
+答え："146524653"
+解説：Array#*にStringオブジェクトを渡すと#joinとして機能する。
+-->
+
+
+
+
+<p>問３．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = (&#39;a&#39;..&#39;c&#39;).size == (&#39;c&#39;..&#39;f&#39;).size
+</code></pre>
+
+
+
+
+<!--original
+答え：true
+解説：('a'..'c').sizeはnilになる。
+-->
+
+
+
+
+<p>問４．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = 3
+x = *x..x**2
+</code></pre>
+
+
+
+
+<!--original
+答え：[3, 4, 5, 6, 7, 8, 9]
+解説：範囲式..は式を取れる。
+-->
+
+
+
+
+<p>問５．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>a = (a=[1,2,3]).push a
+x = a[3][3][3][0]
+</code></pre>
+
+
+
+
+<!--original
+答え：1
+解説：配列aの第4要素の値は再帰的にaになる。
+-->
+
+
+
+
+<p>問６．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>a = (a=[1,2,3]).push *a
+x = a[3][3][3][0]
+</code></pre>
+
+
+
+
+<!--original
+答え：0
+解説：配列aの第4要素の値は1であり、それ以降はFixnum#[]が呼ばれる。
+-->
+
+
+
+
+<p>問７．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = !:false.!
+</code></pre>
+
+
+
+
+<!--original
+答え：true
+解説：:falseはfalse,nil以外の値でtrueと評価される。
+-->
+
+
+
+
+<p>問８．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = :-&gt;:+, :======:===
+</code></pre>
+
+
+
+
+<!--original
+答え：[true, true]
+解説：Symbol#>, Symbol#===でシンボル値を比較している。
+-->
+
+
+
+
+<p>問９．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>x = send(def d(n); n * 2 end, 3)
+</code></pre>
+
+
+
+
+<!--original
+答え：6
+解説：メソッド定義はメソッド名をシンボルで返す。
+-->
+
+
+
+
+<p>問１０．xの値は何か。</p>
+
+
+
+
+<pre lang="ruby"><code>&quot;R&quot; &lt;&lt; 117 &lt;&lt; 98 &lt;&lt; 121
+</code></pre>
+
+
+
+
+<!--original
+答え："Ruby"
+解説：String#<<は引数が整数ならそのASCII文字を追加する。
+-->
+
+
+
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+
+
+<script>
+$(function() {
+  $("*").contents().filter(function() {
+    return this.nodeType==8 && this.nodeValue.match(/^original/);
+  }).each(function(i, e) {
+    var tooltips = e.nodeValue.replace(/^original *[\n\r]|[\n\r]$/g, '');
+    var link = "<span><a href='#' onclick='javascript:return false;' class='toggleLink'>" + "答え" + "</a></span>";
+    $(this).prev().next().append(link);
+    $(this).prev().next().after("<pre style='display:none'>"+ tooltips + "</pre>");
+  });
+
+  $('.toggleLink').click(
+    function() {
+      if ($(this).text()=="答え") {
+       $(this).parent().parent().next('pre').slideDown(200);
+       $(this).text("隠す");
+      } else {
+        $(this).parent().parent().next('pre').slideUp(200);
+        $(this).text("答え");
+      };
+    });
+});
+</script>
+
+
+<p>全問正解しましたか？ええ、もちろんそうでしょうとも！</p>
+
+<p><br/></p>
+
+<h2>Togglateを使った問題の作り方</h2>
+
+<p>まず、<code>ruby_quiz_original.md</code>として以下のようなファイルを用意します。各問は前に4スペース空けます（コメントブロックで囲まれないようにするため）。</p>
+
+<div class="highlight"><pre><code class="text">    問１．xの値は何か。
+
+```ruby
+x = [1,2,3].push *[4,*[5,*[6,7]]]
+```
+
+答え：[1, 2, 3, 4, 5, 6, 7]
+解説：*(splat)により配列が展開されて、Array#pushには複数の引数として渡される。
+
+    問２．xの値は何か。
+
+```ruby
+x = [1,2,3] * ([4, 5] * &#39;6&#39;)
+```
+
+答え：&quot;146524653&quot;
+解説：Array#*にStringオブジェクトを渡すと#joinとして機能する。
+
+（以下省略）
+</code></pre></div>
+
+
+<p><code>gem install togglate</code>でtogglateをインストールすると、<code>togglate</code>コマンドが使えるようになります。</p>
+
+<p><code>togglate create</code>サブコマンドにいくつかのオプションを適用して、結果の出力を<code>ruby_quiz.md</code>に格納します。</p>
+
+<pre><code> % togglate create ruby_quiz_original.md -m=toggle -c --toggle-link-text '答え' '隠す' &gt; ruby_quiz.md
+</code></pre>
+
+<p><code>-c</code>オプション(--code-block)はコードブロックをコメントで囲まないようにします。次のような<code>ruby_quiz.md</code>ファイルが得られます。</p>
+
+<div class="highlight"><pre><code class="text">    問１．xの値は何か。
+
+```ruby
+x = [1,2,3].push *[4,*[5,*[6,7]]]
+```
+
+[translation here]
+
+&lt;!--original
+答え：[1, 2, 3, 4, 5, 6, 7]
+解説：*(splat)により配列が展開されて、Array#pushには複数の引数として渡される。
+--&gt;
+
+    問２．xの値は何か。
+
+```ruby
+x = [1,2,3] * ([4, 5] * &#39;6&#39;)
+```
+
+[translation here]
+
+&lt;!--original
+答え：&quot;146524653&quot;
+解説：Array#*にStringオブジェクトを渡すと#joinとして機能する。
+--&gt;
+
+（中略）
+
+ &lt;script src=&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;&gt;&lt;/script&gt;
+ &lt;script&gt;
+ $(function() {
+   $(&quot;*&quot;).contents().filter(function() {
+     return this.nodeType==8 &amp;&amp; this.nodeValue.match(/^original/);
+   }).each(function(i, e) {
+     var tooltips = e.nodeValue.replace(/^original *[\n\r]|[\n\r]$/g, &#39;&#39;);
+     var link = &quot;&lt;span&gt;&lt;a href=&#39;#&#39; onclick=&#39;javascript:return false;&#39; class=&#39;toggleLink&#39;&gt;&quot; + &quot;答え&quot; + &quot;&lt;/a&gt;&lt;/span&gt;&quot;;
+     $(this).prev().append(link);
+     $(this).prev().after(&quot;&lt;pre style=&#39;display:none&#39;&gt;&quot;+ tooltips + &quot;&lt;/pre&gt;&quot;);
+   });
+ 
+   $(&#39;.toggleLink&#39;).click(
+     function() {
+       if ($(this).text()==&quot;答え&quot;) {
+        $(this).parent().parent().next(&#39;pre&#39;).slideDown(200);
+        $(this).text(&quot;隠す&quot;);
+       } else {
+         $(this).parent().parent().next(&#39;pre&#39;).slideUp(200);
+         $(this).text(&quot;答え&quot;);
+       };
+     });
+ });
+ &lt;/script&gt;
+</code></pre></div>
+
+
+<p>答えのブロックがコメントで囲まれ、末尾にそれをトグルするコードが追加されます。</p>
+
+<p>このファイルに対して、各問いの前のスペースと、<code>[translation here]</code>の文字を削除します。</p>
+
+<div class="highlight"><pre><code class="text">問１．xの値は何か。
+
+```ruby
+x = [1,2,3].push *[4,*[5,*[6,7]]]
+```
+
+&lt;!--original
+答え：[1, 2, 3, 4, 5, 6, 7]
+解説：*(splat)により配列が展開されて、Array#pushには複数の引数として渡される。
+--&gt;
+
+問２．xの値は何か。
+
+```ruby
+x = [1,2,3] * ([4, 5] * &#39;6&#39;)
+```
+
+&lt;!--original
+答え：&quot;146524653&quot;
+解説：Array#*にStringオブジェクトを渡すと#joinとして機能する。
+--&gt;
+
+（以下省略）
+</code></pre></div>
+
+
+<p><code>gem install github-markdown</code>して、<code>gfm</code>コマンドを使ってこのMarkdownファイルをHTMLに変換します（gfmコマンドはパスを通す必要があります）。</p>
+
+<pre><code>% gfm ruby_quiz.md &gt; ruby_quiz.html
+</code></pre>
+
+<p>以上で先のRuby Quizが出来上がります。</p>
+
+<blockquote><p><a href="https://rubygems.org/gems/togglate" title="togglate | RubyGems.org | your community gem host">togglate | RubyGems.org | your community gem host</a></p>
+
+<p><a href="https://github.com/melborne/togglate" title="melborne/togglate">melborne/togglate</a></p></blockquote>
+
+<p>関連記事： <a href="http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation/" title="英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）">英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）</a></p>
+
+<hr />
+
+<p style='color:red'>=== Ruby関連電子書籍100円〜で好評発売中！ ===</p>
+
+
+<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+
+<p><a href="/books/">
+  <img src="/assets/images/books/rack_cover.png" alt="rack" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/books/ruby_pack8.png" alt="pack8" style="width:200px" />
+</a>
+<a href="/books/">
+  <img src="/assets/images/books/ruby_parallel_cover.png" alt="ruby_parallel" style="width:200px" />
+</a></p>
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" class="hatena-bookmark-button" data-hatena-bookmark-title="Togglateを使ってRuby Quizを作ったよ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" data-text="Togglateを使ってRuby Quizを作ったよ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2014/02/17/update-togglate-for-renewed-proposal-to-translation" title="英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <!--<img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />-->
+        <img src="/assets/images/books/ruby_pack8.png" alt="ruby_pack8" style="width:200px" />
+      </a>
+      <p id="comment">100円〜で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" class="hatena-bookmark-button" data-hatena-bookmark-title="Togglateを使ってRuby Quizを作ったよ！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" data-text="Togglateを使ってRuby Quizを作ったよ！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/02/19/build-ruby-quiz-with-togglate/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
