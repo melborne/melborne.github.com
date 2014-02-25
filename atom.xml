@@ -4,13 +4,488 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-02-19T21:50:46+09:00</updated>
+ <updated>2014-02-25T14:51:45+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>翻訳ドキュメント作成支援ツールTogglateで翻訳要らず？</title>
+   <link href="http://melborne.github.io/2014/02/24/togglate-meets-mymemory"/>
+   <updated>2014-02-24T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/02/24/togglate-meets-mymemory</id>
+   <content type="html">&lt;p&gt;翻訳ドキュメント作成支援ツール「&lt;code&gt;togglate&lt;/code&gt;」というものがありまして。これは単に、翻訳ドキュメント内に原文をそのセンテンスごとに埋め込んで、翻訳ドキュメントを作るためのベースとなるものを出力するだけの極めて単純なミニツールです。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate | RubyGems.org | your community gem host&quot;&gt;togglate | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/togglate&quot; title=&quot;melborne/togglate&quot;&gt;melborne/togglate&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;基本的にはmarkdownで書かれた原文を基にHTMLの訳文を作る、以下のようなプロセスで使われることを想定しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/togglate1.png&quot; alt=&quot;togglate noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;詳しくは以下の記事を読んでください。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation/&quot; title=&quot;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&quot;&gt;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;図において、「&lt;strong&gt;You!&lt;/strong&gt;」と書かれたところが翻訳者の手仕事になります。&lt;/p&gt;
+
+&lt;p&gt;ここで世界全自動化信奉者としては「&lt;strong&gt;You!&lt;/strong&gt;」のところを何とかしたい、と考えるわけです。&lt;/p&gt;
+
+&lt;p&gt;そんなわけで...&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;togglate create&lt;/code&gt;サブコマンドに&lt;code&gt;translate&lt;/code&gt;オプションを付けました（version 0.1.1）。&lt;/p&gt;
+
+&lt;p&gt;なお、togglateは本バージョンよりRuby2.1.0以降が必要になります（Refinmentsしたかったもので..）。&lt;/p&gt;
+
+&lt;h2&gt;translateオプション&lt;/h2&gt;
+
+&lt;p&gt;togglateはその出力において、原文の各センテンスの前には訳を書く位置を示す&lt;code&gt;[translation here]&lt;/code&gt;という文字列を挿入します。&lt;code&gt;translate&lt;/code&gt;オプションを利用すると、この文字列に代えて機械翻訳による原文対応訳が挿入されることになります。翻訳は&lt;a href=&quot;http://mymemory.translated.net/doc/spec.php&quot; title=&quot;MyMemory API technical specifications&quot;&gt;MyMemory translated.net&lt;/a&gt;のAPIを通して取得しています（APIの制約などについては後述します）。&lt;/p&gt;
+
+&lt;p&gt;このオプションはハッシュを取るので以下のようにします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% togglate create README.md --translate=from:en to:ja &amp;gt; README.ja.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;to&lt;/code&gt;は省略できませんが&lt;code&gt;from&lt;/code&gt;を省略した場合はen(English)からの翻訳として解釈されます。&lt;/p&gt;
+
+&lt;h2&gt;出力サンプル その１&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;translate&lt;/code&gt;オプションを実際に使ってみます。RailsのREADME.mdから翻訳ドキュメントを作るとします。各センテンスが500文字以下になるように加工します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## Welcome to Rails
+
+Rails is a web-application framework that includes everything needed to
+create database-backed web applications according to the
+[Model-View-Controller (MVC)](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
+pattern.
+
+Understanding the MVC pattern is key to understanding Rails. MVC divides your
+application into three layers, each with a specific responsibility.
+
+The _Model layer_ represents your domain model (such as Account, Product,
+Person, Post, etc.) and encapsulates the business logic that is specific to
+your application. In Rails, database-backed model classes are derived from
+`ActiveRecord::Base`.
+
+Active Record allows you to present the data from
+database rows as objects and embellish these data objects with business logic
+methods. Although most Rails models are backed by a database, models can also
+be ordinary Ruby classes, or Ruby classes that implement a set of interfaces
+as provided by the Active Model module. You can read more about Active Record
+in its [README](activerecord/README.rdoc).
+
+The _Controller layer_ is responsible for handling incoming HTTP requests and
+providing a suitable response. Usually this means returning HTML, but Rails controllers
+can also generate XML, JSON, PDFs, mobile-specific views, and more. Controllers load and
+manipulate models, and render view templates in order to generate the appropriate HTTP response.
+
+In Rails, incoming requests are routed by Action Dispatch to an appropriate controller, and
+controller classes are derived from `ActionController::Base`. Action Dispatch and Action Controller
+are bundled together in Action Pack. You can read more about Action Pack in its
+[README](actionpack/README.rdoc).
+
+The _View layer_ is composed of &amp;quot;templates&amp;quot; that are responsible for providing
+appropriate representations of your application&amp;#39;s resources. Templates can
+come in a variety of formats, but most view templates are HTML with embedded
+Ruby code (ERB files). Views are typically rendered to generate a controller response,
+or to generate the body of an email. In Rails, View generation is handled by Action View.
+You can read more about Action View in its [README](actionview/README.rdoc).
+
+Active Record, Action Pack, and Action View can each be used independently outside Rails.
+In addition to them, Rails also comes with Action Mailer ([README](actionmailer/README.rdoc)), a library
+to generate and send emails; and Active Support ([README](activesupport/README.rdoc)), a collection of
+utility classes and standard library extensions that are useful for Rails, and may also be used
+independently outside Rails.
+
+## Getting Started
+
+1. Install Rails at the command prompt if you haven&amp;#39;t yet:
+
+        gem install rails
+
+2. At the command prompt, create a new Rails application:
+
+        rails new myapp
+
+   where &amp;quot;myapp&amp;quot; is the application name.
+
+3. Change directory to `myapp` and start the web server:
+
+        cd myapp
+        rails server
+
+   Run with `--help` or `-h` for options.
+
+4. Using a browser, go to `http://localhost:3000` and you&amp;#39;ll see:
+&amp;quot;Welcome aboard: You&amp;#39;re riding Ruby on Rails!&amp;quot;
+
+5. Follow the guidelines to start developing your application. You may find
+   the following resources handy:
+    * [Getting Started with Rails](http://guides.rubyonrails.org/getting_started.html)
+    * [Ruby on Rails Guides](http://guides.rubyonrails.org)
+    * [The API Documentation](http://api.rubyonrails.org)
+    * [Ruby on Rails Tutorial](http://ruby.railstutorial.org/ruby-on-rails-tutorial-book)
+
+## Contributing
+
+We encourage you to contribute to Ruby on Rails! Please check out the
+[Contributing to Ruby on Rails guide](http://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html) for guidelines about how to proceed. [Join us!](http://contributors.rubyonrails.org)
+
+## Code Status
+
+* [![Build Status](https://travis-ci.org/rails/rails.png?branch=master)](https://travis-ci.org/rails/rails)
+
+## License
+
+Ruby on Rails is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/rails/rails/blob/master/README.md&quot; title=&quot;rails/README.md at master · rails/rails&quot;&gt;rails/README.md at master · rails/rails&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;このドキュメントに対し次のコマンドを適用し&lt;code&gt;README.ja.md&lt;/code&gt;を得ます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% togglate create README.md --translate=to:ja --code-block --no-embed-code &amp;gt; README.ja.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ここでは&lt;code&gt;--code-block&lt;/code&gt;オプションによりコードブロックを翻訳対象外とし、&lt;code&gt;--no-embed-code&lt;/code&gt;で原文を表示・非表示させるJavaScriptコードを挿入しないようにしています。&lt;/p&gt;
+
+&lt;p&gt;出力はこのようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;レールに＃＃ようこそ
+
+&amp;lt;!--original
+## Welcome to Rails
+--&amp;gt;
+
+Railsは、[モデル - ビュー - コントローラ（MVC）]（http://en.wikipedia.org/wiki/Model％E2％80％に従ってデータベース支援のWebアプリケーションを作成するために必要なすべてが含まれていたWebアプリケーションフレームワークです93view％のE2％80％93controller）パターン。
+
+&amp;lt;!--original
+Rails is a web-application framework that includes everything needed to
+create database-backed web applications according to the
+[Model-View-Controller (MVC)](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
+pattern.
+--&amp;gt;
+
+MVCパターンを理解することは、レールを理解するうえで重要です。 MVCは3層、具体的な責任を持って、それぞれにアプリケーションを分割します。
+
+&amp;lt;!--original
+Understanding the MVC pattern is key to understanding Rails. MVC divides your
+application into three layers, each with a specific responsibility.
+--&amp;gt;
+
+_modelのlayer_は（などのアカウント、製品、人物、ポストなど）ドメインモデルを表しており、アプリケーションに固有のもので、ビジネスロジックをカプセル化します。 Railsでは、データベース支援のモデルクラスは `のActiveRecord :: Baseの`から派生しています。
+
+&amp;lt;!--original
+The _Model layer_ represents your domain model (such as Account, Product,
+Person, Post, etc.) and encapsulates the business logic that is specific to
+your application. In Rails, database-backed model classes are derived from
+`ActiveRecord::Base`.
+--&amp;gt;
+
+[translation here]
+
+&amp;lt;!--original
+Active Record allows you to present the data from
+database rows as objects and embellish these data objects with business logic
+methods. Although most Rails models are backed by a database, models can also
+be ordinary Ruby classes, or Ruby classes that implement a set of interfaces
+as provided by the Active Model module. You can read more about Active Record
+in its [README](activerecord/README.rdoc).
+--&amp;gt;
+
+_controllerのlayer_は受信HTTP要求を処理し、適切な応答を提供する責任があります。通常、これはHTMLを返すことを意味するが、コントローラはまた、XML、JSON、PDFファイル、携帯電話固有のビューなどを生成することができますRailsの。コントローラ負荷やモデルを操作し、適当なHTTP応答を生成するために、ビューテンプレートをレンダリングする。
+
+&amp;lt;!--original
+The _Controller layer_ is responsible for handling incoming HTTP requests and
+providing a suitable response. Usually this means returning HTML, but Rails controllers
+can also generate XML, JSON, PDFs, mobile-specific views, and more. Controllers load and
+manipulate models, and render view templates in order to generate the appropriate HTTP response.
+--&amp;gt;
+
+Railsでは、着信要求を適切なコントローラにアクションディスパッチによってルーティングされ、コントローラクラスは `ActionController :: Baseの`から派生しています。行動発送、アクションコントローラはアクションパックに一緒にバンドルされています。あなたはその[READMEを]（actionpack / README.rdoc）でアクションパックについての詳細を読むことができます。
+
+&amp;lt;!--original
+In Rails, incoming requests are routed by Action Dispatch to an appropriate controller, and
+controller classes are derived from `ActionController::Base`. Action Dispatch and Action Controller
+are bundled together in Action Pack. You can read more about Action Pack in its
+[README](actionpack/README.rdoc).
+--&amp;gt;
+
+_Viewのlayer_は、アプリケーションのリソースの適切な表現を提供する責任がある「テンプレート」で構成されている。テンプレートには、さまざまな形式で来ることができるが、ほとんどのビューテンプレートは、埋め込まれたRubyコード（ERBファイル）をHTML形式である。ビューは、通常、コントローラの応答を生成するために、または電子メールの本文を生成するためにレンダリングされる。 Railsでは、ビュー生成は、アクションビューによって処理されます。あなたは、その[READMEを]でアクションの表示についての詳細を読むことができます（はActionView / README.rdoc）。
+
+&amp;lt;!--original
+The _View layer_ is composed of &amp;quot;templates&amp;quot; that are responsible for providing
+appropriate representations of your application&amp;#39;s resources. Templates can
+come in a variety of formats, but most view templates are HTML with embedded
+Ruby code (ERB files). Views are typically rendered to generate a controller response,
+or to generate the body of an email. In Rails, View generation is handled by Action View.
+You can read more about Action View in its [README](actionview/README.rdoc).
+--&amp;gt;
+
+アクティブレコード、アクションパック、およびアクションビューには、各レールの外に独立して使用することができます。それらに加えて、Railsはまた、アクションメーラー（[READMEを]（のActionMailer / README.rdoc））、電子メールを生成して送信するためのライブラリが付属しています。とアクティブサポート（[READMEを]（activesupportの/ README.rdoc））、コレクションユーティリティクラスとRailsのために有用である標準ライブラリの拡張の、またRailsの外で独立して使用することができる。
+
+&amp;lt;!--original
+Active Record, Action Pack, and Action View can each be used independently outside Rails.
+In addition to them, Rails also comes with Action Mailer ([README](actionmailer/README.rdoc)), a library
+to generate and send emails; and Active Support ([README](activesupport/README.rdoc)), a collection of
+utility classes and standard library extensions that are useful for Rails, and may also be used
+independently outside Rails.
+--&amp;gt;
+
+はじめに
+
+&amp;lt;!--original
+## Getting Started
+--&amp;gt;
+
+1。あなたは、まだいない場合は、コマンドプロンプトでレールを取り付けます。
+
+&amp;lt;!--original
+1. Install Rails at the command prompt if you haven&amp;#39;t yet:
+--&amp;gt;
+
+        gem install rails
+
+2。コマンドプロンプトで、新しいRailsアプリケーションを作成します。
+
+&amp;lt;!--original
+2. At the command prompt, create a new Rails application:
+--&amp;gt;
+
+        rails new myapp
+
+「myappのは、「アプリケーション名です。
+
+&amp;lt;!--original
+   where &amp;quot;myapp&amp;quot; is the application name.
+--&amp;gt;
+
+3。 `myappに &amp;amp;#39;にディレクトリを変更し、Webサーバーを起動します。
+
+&amp;lt;!--original
+3. Change directory to `myapp` and start the web server:
+--&amp;gt;
+
+        cd myapp
+        rails server
+
+オプションのヘルプ `や`-H &amp;amp;#39; -  `で実行されます。
+
+&amp;lt;!--original
+   Run with `--help` or `-h` for options.
+--&amp;gt;
+
+4。ブラウザを使用して、 `http://localhost:3000に`に移動し、あなたが表示されます。「乗っようこそ！あなたはRuby on Railsで乗っている」
+
+&amp;lt;!--original
+4. Using a browser, go to `http://localhost:3000` and you&amp;#39;ll see:
+&amp;quot;Welcome aboard: You&amp;#39;re riding Ruby on Rails!&amp;quot;
+--&amp;gt;
+
+5。アプリケーションの開発を開始するためのガイドラインに従ってください。あなたが便利な以下のリソースを見つけることができます：*（http://guides.rubyonrails.org/getting_started.html）[Railsの入門] * [Railsのガイドのルビー]（http://guides.rubyonrails.org）* [ APIドキュメント]（http://api.rubyonrails.org）* [ルビーon Railsのチュートリアル]（http://ruby.railstutorial.org/ruby-on-rails-tutorial-book）
+
+&amp;lt;!--original
+5. Follow the guidelines to start developing your application. You may find
+   the following resources handy:
+    * [Getting Started with Rails](http://guides.rubyonrails.org/getting_started.html)
+    * [Ruby on Rails Guides](http://guides.rubyonrails.org)
+    * [The API Documentation](http://api.rubyonrails.org)
+    * [Ruby on Rails Tutorial](http://ruby.railstutorial.org/ruby-on-rails-tutorial-book)
+--&amp;gt;
+
+＃＃貢献
+
+&amp;lt;!--original
+## Contributing
+--&amp;gt;
+
+私たちはRuby on Railsでに貢献することをお勧めします！進め方についてのガイドラインについては、[案内レール上のRubyへの貢献]（http://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html）をチェックしてみてください。 [ご参加！]（http://contributors.rubyonrails.org）
+
+&amp;lt;!--original
+We encourage you to contribute to Ruby on Rails! Please check out the
+[Contributing to Ruby on Rails guide](http://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html) for guidelines about how to proceed. [Join us!](http://contributors.rubyonrails.org)
+--&amp;gt;
+
+＃＃コードステータス
+
+&amp;lt;!--original
+## Code Status
+--&amp;gt;
+
+* [！[ステータスのビルド]（https://travis-ci.org/rails/rails.png?branch=master）]（https://travis-ci.org/rails/rails）
+
+&amp;lt;!--original
+* [![Build Status](https://travis-ci.org/rails/rails.png?branch=master)](https://travis-ci.org/rails/rails)
+--&amp;gt;
+
+ライセンス
+
+&amp;lt;!--original
+## License
+--&amp;gt;
+
+Ruby on Railsはは[MITライセンス]（http://www.opensource.org/licenses/MIT）の下でリリースされている。
+
+&amp;lt;!--original
+Ruby on Rails is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+--&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;「乗っようこそ！あなたはRuby on Railsで乗っている」&lt;/p&gt;
+
+&lt;p&gt;想像以上の良い結果が得られました。&lt;/p&gt;
+
+&lt;h2&gt;出力サンプル その２&lt;/h2&gt;
+
+&lt;p&gt;日本語から英語の翻訳も試してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;Ruby（ルビー）は、まつもとゆきひろ（通称 Matz）により開発されたオブジェクト指向スクリプト言語であり、スクリプト言語が用いられてきた領域でのオブジェクト指向プログラミングを実現する。
+
+概要
+Ruby は当初1993年2月24日に生まれ、1995年12月にfj上で発表された。名称の Ruby は、プログラミング言語 Perl が6月の誕生石である Pearl（真珠）と同じ発音をすることから、まつもとの同僚の誕生石（7月）のルビーを取って名付けられた。
+
+機能として、クラス定義、ガベージコレクション、強力な正規表現処理、マルチスレッド、例外処理、イテレータ、クロージャ、Mixin、演算子オーバーロードなどがある。Perl を代替可能であることが初期の段階から重視されている。Perlと同様にグルー言語としての使い方が可能で、C言語プログラムやライブラリを呼び出す拡張モジュールを組み込むことができる。
+
+Ruby 処理系は、主にインタプリタとして実装されている（詳しくは#実装を参照）。
+可読性を重視した構文となっている。Ruby においては整数や文字列なども含めデータ型はすべてがオブジェクトであり、純粋なオブジェクト指向言語といえる。
+
+長らく言語仕様が明文化されず、まつもとによる実装が言語仕様に準ずるものとして扱われて来たが、2010年6月現在、JRuby や Rubinius といった互換実装の作者を中心に機械実行可能な形で明文化する RubySpec という試みが行われている。公的規格としては2011年3月22日にJIS規格（JIS X 3017）が制定され、その後2012年4月1日に日本発のプログラム言語では初めてISO/IEC規格（ISO/IEC 30170）として承認された [2]。
+
+フリーソフトウェアとして Ruby ライセンス（Ruby License や Ruby&amp;#39;sと表記されることもある。GPLかArtisticに似た独自ライセンスを選択するデュアルライセンス。）で配布されている。
+設計思想
+
+開発者のまつもとゆきひろは、「Rubyの言語仕様策定において最も重視しているのはストレスなくプログラミングを楽しむことである (enjoy programming)」と述べている。（ただし、まつもとによる明文化された言語仕様は存在しない。）
+
+Perlのモットー「やり方はいろいろある (There&amp;#39;s More Than One Way To Do It; TMTOWTDI)」は「多様性は善 (Diversity is Good)」というスローガンで Ruby に引き継がれてはいるものの最重要なものではないとも述べており、非推奨な手法も可能にするとともに、そのような手法を言語仕様により使いにくくすることによって自粛を促している。これは言語仕様が「望ましい」習慣の押し付けを行うということであり、洗脳言語（Babel-17）と言われる一面でもある。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://ja.wikipedia.org/wiki/Ruby&quot; title=&quot;Ruby - Wikipedia&quot;&gt;Ruby - Wikipedia&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;コマンドを実行します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% togglate create RUBY.txt --translate=from:ja to:en --no-embed-code &amp;gt; RUBY.en.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;結果は次のようになりました。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;Ruby （ Ruby ） to provide object-oriented programming in object-oriented scripting language developed by Hiromi （ a.k.a. Matz ） Matz, and scripting language has been used.
+
+&amp;lt;!--original
+Ruby（ルビー）は、まつもとゆきひろ（通称 Matz）により開発されたオブジェクト指向スクリプト言語であり、スクリプト言語が用いられてきた領域でのオブジェクト指向プログラミングを実現する。
+--&amp;gt;
+
+About Ruby initially was born in 2/24/1993, was announced on the fj 12/1995. Named, taking the Ruby Birthstone name Ruby is from that sounded similar to the programming language Perl in the June birthstone Pearl （ Pearl ） Matsumoto and colleagues (July).
+
+&amp;lt;!--original
+概要
+Ruby は当初1993年2月24日に生まれ、1995年12月にfj上で発表された。名称の Ruby は、プログラミング言語 Perl が6月の誕生石である Pearl（真珠）と同じ発音をすることから、まつもとの同僚の誕生石（7月）のルビーを取って名付けられた。
+--&amp;gt;
+
+As a function, a class definition, garbage collection, powerful regular expression processing, multithreading, exception processing, iterators, closures, Mixin, operator overloading, etc. Perl have been emphasizing from the early stages that alternate. You can incorporate the extension module allows use as a glue language similar to Perl and C programs and libraries to call.
+
+&amp;lt;!--original
+機能として、クラス定義、ガベージコレクション、強力な正規表現処理、マルチスレッド、例外処理、イテレータ、クロージャ、Mixin、演算子オーバーロードなどがある。Perl を代替可能であることが初期の段階から重視されている。Perlと同様にグルー言語としての使い方が可能で、C言語プログラムやライブラリを呼び出す拡張モジュールを組み込むことができる。
+--&amp;gt;
+
+Ruby processing system is implemented primarily as an interpreter （ for details # implementing ）. Has been emphasizing human-readable syntax. Ruby integer and string data types including the all objects in a pure object-oriented language can be said.
+
+&amp;lt;!--original
+Ruby 処理系は、主にインタプリタとして実装されている（詳しくは#実装を参照）。
+可読性を重視した構文となっている。Ruby においては整数や文字列なども含めデータ型はすべてがオブジェクトであり、純粋なオブジェクト指向言語といえる。
+--&amp;gt;
+
+Long language specification does not stipulate, Matz and by implementing other equivalent language specification has been named RubySpec came is treated as a 6/2010 now, the author-compatible implementations like JRuby and Rubinius is written mainly machinery available in. 3/22/2011 to JIS （ JIS X 3017 ） enacted as public standards, then 2012 April 1 in Japan from programming languages for the first time as an ISO/IEC standard （ ISO/IEC 30170 ） approved [2].
+
+&amp;lt;!--original
+長らく言語仕様が明文化されず、まつもとによる実装が言語仕様に準ずるものとして扱われて来たが、2010年6月現在、JRuby や Rubinius といった互換実装の作者を中心に機械実行可能な形で明文化する RubySpec という試みが行われている。公的規格としては2011年3月22日にJIS規格（JIS X 3017）が制定され、その後2012年4月1日に日本発のプログラム言語では初めてISO/IEC規格（ISO/IEC 30170）として承認された [2]。
+--&amp;gt;
+
+Ruby&amp;#39;s license as a free software （ may be referred to as Ruby License and Ruby&amp;#39;s. Dual license to choose their own licenses like the GPL or Artistic.
+） in have been distributed. Design philosophy
+
+&amp;lt;!--original
+フリーソフトウェアとして Ruby ライセンス（Ruby License や Ruby&amp;#39;sと表記されることもある。GPLかArtisticに似た独自ライセンスを選択するデュアルライセンス。）で配布されている。
+設計思想
+--&amp;gt;
+
+Matz of the developer does, &amp;#39; is very important in the Ruby language specification is enjoy the programming without the stress that (enjoy programming)&amp;quot;and said. （ Matsumoto, however, and by the written language specification does not exist. ）
+
+&amp;lt;!--original
+開発者のまつもとゆきひろは、「Rubyの言語仕様策定において最も重視しているのはストレスなくプログラミングを楽しむことである (enjoy programming)」と述べている。（ただし、まつもとによる明文化された言語仕様は存在しない。）
+--&amp;gt;
+
+Perl&amp;#39;s motto &amp;#39; there are various ways (There&amp;#39;s More Than One Way To Do It; TMTOWTDI) &amp;#39; is says, is not taken over Ruby in the slogan that diversity is good (Diversity is Good), but the most important ones and also a non-recommended to refrain from urging by cumbersome language specification techniques so that the method also enables you to. Also one side doing language specification is desirable habits are pushing this, and said to brainwash language （ Babel-17 ）.
+
+&amp;lt;!--original
+Perlのモットー「やり方はいろいろある (There&amp;#39;s More Than One Way To Do It; TMTOWTDI)」は「多様性は善 (Diversity is Good)」というスローガンで Ruby に引き継がれてはいるものの最重要なものではないとも述べており、非推奨な手法も可能にするとともに、そのような手法を言語仕様により使いにくくすることによって自粛を促している。これは言語仕様が「望ましい」習慣の押し付けを行うということであり、洗脳言語（Babel-17）と言われる一面でもある。
+--&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;なかなか上出来です。でも、まつもとさんが海外で「&lt;strong&gt;Hiromi&lt;/strong&gt;」って呼ばれてるの、初めて知りましたよw&lt;/p&gt;
+
+&lt;h2&gt;MyMemory Translated.netの利用について&lt;/h2&gt;
+
+&lt;p&gt;MyMemoryはWebから利用できる&lt;a href=&quot;http://ja.wikipedia.org/wiki/%E7%BF%BB%E8%A8%B3%E3%83%A1%E3%83%A2%E3%83%AA&quot; title=&quot;翻訳メモリ - Wikipedia&quot;&gt;Translation Memory(翻訳メモリ)&lt;/a&gt;のサービスで、翻訳結果を取得するREST APIが公開されています。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://mymemory.translated.net/doc/spec.php&quot; title=&quot;MyMemory API technical specifications&quot;&gt;MyMemory API technical specifications&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;このAPIにアクセスするRuby gem「&lt;a href=&quot;https://github.com/spaghetticode/mymemory&quot; title=&quot;spaghetticode/mymemory&quot;&gt;spaghetticode/mymemory&lt;/a&gt;」が公開されており、togglateではこれを利用しています。&lt;/p&gt;
+
+&lt;h3&gt;アクセスの制約&lt;/h3&gt;
+
+&lt;p&gt;MyMemoryは無料で認証手続きも不要なので直ぐに利用できることが利点です。一方で、一日のAPIコールが&lt;strong&gt;100回&lt;/strong&gt;までという制約があります。Togglateを使って日に100回を超えるアクセスをした場合、翻訳結果の代わりに次のメッセージが挿入されることになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATION FOR TODAY. CONTACT ALBERTO@TRANSLATED.NET TO TRANSLATE MORE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このメッセージにあるようにMyMemory側にコンタクトしてメールアドレスを登録すれば、1000 requests/dayまで利用できるようになるようです。自分はまだ試していませんが、登録したメールアドレスを&lt;code&gt;--translate&lt;/code&gt;に渡すことで一応対応できるようにはなっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% togglate create README.md --translate=to:ja email:user@yourdomain.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;現在のtogglateの実装では、各センテンスブロックごとにAPIコールを発するというユーザ＆APIフレンドリ&lt;strong&gt;でない&lt;/strong&gt;ものになっているので、項目数の多いドキュメントを対象にすると直ぐにリミットに達してしまいます。必要に応じて、短いセンテンスをまとめるなどして対応してください。&lt;/p&gt;
+
+&lt;p&gt;一方で、一つのセンテンスが500文字を超えると、アクセスは拒否され代わりに次のメッセージが挿入されることになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;QUERY LENGTH LIMIT EXCEDEED. MAX ALLOWED QUERY : 500 CHARS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;センテンスを分割して対応してください。&lt;/p&gt;
+
+&lt;p&gt;この辺はtogglate側でよしなにやってくれるべきですよねー。&lt;/p&gt;
+
+&lt;p&gt;また、各アクセスは5秒でタイムアウトするようになっています。その場合は代わりに&lt;code&gt;[translation here]&lt;/code&gt;が挿入されます。先のサンプルでも一箇所タイムアウトしたところがあったようです。&lt;/p&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;p&gt;そんなわけで、&lt;code&gt;togglate create&lt;/code&gt;に&lt;code&gt;translate&lt;/code&gt;オプションを付けたよ、という話でした。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円〜で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_pack8.png&quot; alt=&quot;pack8&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Togglateを使ってRuby Quizを作ったよ！</title>
@@ -5575,228 +6050,6 @@ Please, don&amp;#39;t. https://github.com/styleguide/templates/2.0
 
 
 
-</content>
- </entry>
- 
- <entry>
-   <title>Rubyでサインカーブを描いて癒やされる</title>
-   <link href="http://melborne.github.io/2014/01/09/discover-beauty-of-sine-curves-through-graphviz"/>
-   <updated>2014-01-09T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/01/09/discover-beauty-of-sine-curves-through-graphviz</id>
-   <content type="html">&lt;p&gt;前回の続きなわけです。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2014/01/08/graphviz-is-a-tool-for-drawing/&quot; title=&quot;Graphvizがドローイングソフトになってしまった件について&quot;&gt;Graphvizがドローイングソフトになってしまった件について&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;今回は、GvizのDraw系メソッドを使ってサインカーブを描いたら、その美しさに癒やされたという話です。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/gviz&quot; title=&quot;gviz | RubyGems.org | your community gem host&quot;&gt;gviz | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/Gviz&quot; title=&quot;melborne/Gviz&quot;&gt;melborne/Gviz&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;つまり、Gvizでこんなお遊びもできるよという話ですね。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;まずは座標軸を。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#graph.ru&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;pre&gt;&lt;code&gt;% gviz build
-% open sine.dot
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;出力です。ちなみにこのlineは内部的には見えないノードを結ぶエッジで描いてます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine1.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;h2&gt;point&lt;/h2&gt;
-
-&lt;p&gt;さて、最初に&lt;code&gt;point&lt;/code&gt;を使ってサインカーブを書いてみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;point&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;このコードのポイント、何だか分かりますか？&lt;/p&gt;
-
-&lt;p&gt;そうです、Numeric#stepでキーワード引数使ってるところですね！Ruby2.1の新機能です。これまだ、るりまにも載っていません（riにはあります）。&lt;/p&gt;
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine2.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;サインカーブです。美しいです。&lt;/p&gt;
-
-&lt;h2&gt;circle&lt;/h2&gt;
-
-&lt;p&gt;さて、次に&lt;code&gt;circle&lt;/code&gt;を使ってサインカーブに立体感を出してみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;circle&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine3.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;立体感出ました。干渉縞が見えます。いいですね。&lt;/p&gt;
-
-&lt;p&gt;さて、次は少しcircleの径を弄ってみます。原点からの距離に応じて経を大きくします。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;circle&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;004&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;abs&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine4.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;うねってます、トルネードです。&lt;/p&gt;
-
-&lt;p&gt;もっと径を大きくしてみます。密度も増やし、色を付けて。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;colorscheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;blues9&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cycle&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;circle&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;02&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine5.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;印象が大分変わりました。サインカーブの面影が消えました。中心辺りじっと見てるとその渦の中に吸い込まれそうになります。美しいです。ところで、こういうときEnumerable#cycleは便利ですね。&lt;/p&gt;
-
-&lt;h2&gt;diamond&lt;/h2&gt;
-
-&lt;p&gt;次に、&lt;code&gt;diamond&lt;/code&gt;をやってみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;diamond&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine6.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;金属棒を曲げたような硬質な感じがします。カーブのところの格子状模様がいいですね。&lt;/p&gt;
-
-&lt;p&gt;diamondのサイズを変えて、色を付けてみます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;diamond&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;brown&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine7.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;面白い形ができました。レモン絞りの突起のような形が中に見えます。&lt;/p&gt;
-
-&lt;h2&gt;star&lt;/h2&gt;
-
-&lt;p&gt;Graphvizには&lt;code&gt;star&lt;/code&gt;という変わったshapeもあります。最後にこれを出力してみましょう。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:PI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;180&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;star&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;gold&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sine&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine8.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;頂点の軌跡が描くサインカーブが美しいです。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;簡単なコードで変化に飛んだ実に美しい絵が描かれるものです。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2012/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2012/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/2012/js_oop_cover.png&quot; alt=&quot;js_oop&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
