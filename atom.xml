@@ -4,13 +4,627 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-02-26T18:22:31+09:00</updated>
+ <updated>2014-02-27T23:47:11+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</title>
+   <link href="http://melborne.github.io/2014/02/27/gviz-posts"/>
+   <updated>2014-02-27T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/02/27/gviz-posts</id>
+   <content type="html">&lt;p&gt;このブログにはGvizに関する大量の記述があるのだけれどもまともにタグ付けされてないサイト検索もできないと非常にアクセスビリティの悪い有り様でまあ本来なら気合を入れてひとつその全体解説たる記事を書き下ろしてここに公開！と宣言してついでにEPUBにまとめて一攫千金と相成りたいところ如何せん筆がぁ筆がぁっつって一向に気持ちがそちら方面に向かわずにおるわけで。&lt;/p&gt;
+
+&lt;p&gt;そこで代わりといってはなんですが「&lt;strong&gt;Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！&lt;/strong&gt;」と題して過去の記事をここにまとめて一覧できるように致しましたのでGvizをご利用頂いていていままで右往左往させられていた方あるいは使い方がわからん何が描けるのかわからん全く意味がわからんという方あるいは将来においてGvizに興味を持たれる可能性のある方居られましたら是非ともこのページを基点として各ページに飛んで頂きたくお願い申し上げます。&lt;/p&gt;
+
+&lt;p&gt;っていってそれじゃあまりにあまりお前のゆーざふれんどり精神あるいはおもてなしの心どこいったという精神内紛が勃発惹起されてしまったので仕方なく前置きくらいは書いておくかと書き始めてみたら筆がぁ筆がぁって走りだしてそれなりに長い記事になりましたが最後までお付き合いのほどよろしくね。&lt;/p&gt;
+
+&lt;h2&gt;Graphvizって何？&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.graphviz.org/&quot; title=&quot;Graphviz | Graphviz - Graph Visualization Software&quot;&gt;Graphviz&lt;/a&gt;はAT&amp;amp;T研究所が開発したオープンソースのグラフ描画ツールパッケージです。ここでいうグラフはExcelでいうところのグラフではなくグラフ理論でいうところのグラフです。ノードという玉とエッジという線を繋いだ体のもので、依然「&lt;strong&gt;?&lt;/strong&gt;」な人はフローチャートや家系図をイメージしてください。Excelのグラフは数字を比較可能にビジュアライズします。一方で、Graphvizのグラフは「物事の関係性」をビジュアライズします。&lt;/p&gt;
+
+&lt;p&gt;Graphvizは、&lt;a href=&quot;http://ja.wikipedia.org/wiki/DOT%E8%A8%80%E8%AA%9E&quot; title=&quot;DOT言語 - Wikipedia&quot;&gt;&lt;strong&gt;DOT言語&lt;/strong&gt;&lt;/a&gt;という専用言語で記述された物事の関係性を読み込んで、これを描画出力します。png, jpeg, bmp, pdf, svgなど&lt;a href=&quot;http://www.graphviz.org/content/output-formats&quot; title=&quot;Output Formats | Graphviz - Graph Visualization Software&quot;&gt;多様な画像フォーマット&lt;/a&gt;への変換機能を持っています。プラットフォームに合ったものを&lt;a href=&quot;http://www.graphviz.org/Download..php&quot; title=&quot;Download. | Graphviz - Graph Visualization Software&quot;&gt;ここから&lt;/a&gt;ダウンロードして、エディタで以下のようなファイルを書きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;/* sample.dot */
+digraph G {
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ファイルを開くと、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% open sample.dot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Graphvizソフトが立ち上がって、次のような出力が得られます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz01.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;任意の画像フォーマットへの変換は&lt;a href=&quot;http://www.graphviz.org/content/command-line-invocation&quot; title=&quot;Command-line Invocation | Graphviz - Graph Visualization Software&quot;&gt;コマンドラインツール&lt;/a&gt;でも、Graphvizソフトのexport機能を使ってもできます。&lt;/p&gt;
+
+&lt;p&gt;Graphvizの最大の特徴は、例のように関係性を記述すればその配置はGraphviz側でよしなにやってくれることです。一方でそれがGraphvizの最大の弱点にもなっています。個々のノードの配置を望み通りにコントロールするのは困難です。しかし手段がないわけではありません。&lt;/p&gt;
+
+&lt;h3&gt;ノードの配置その１&lt;/h3&gt;
+
+&lt;p&gt;Graphvizはその大枠としてのレイアウトの指定ができます。デフォルトは&lt;code&gt;dot&lt;/code&gt;ですが、&lt;code&gt;fdp&lt;/code&gt;, &lt;code&gt;neato&lt;/code&gt;, &lt;code&gt;circo&lt;/code&gt;, &lt;code&gt;osage&lt;/code&gt;などその名前からは配置が全く想像できないwレイアウトが使えます。&lt;/p&gt;
+
+&lt;p&gt;layoutに&lt;code&gt;neato&lt;/code&gt;を指定してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  layout=neato;  /* レイアウトの指定 */
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力は以下のように変わります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz02.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;ノードの配置その２&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;rankdir&lt;/code&gt;属性でレイアウトの向きというのを変えることができます。&lt;/p&gt;
+
+&lt;p&gt;左から右（LR）を指定してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  rankdir=LR; // 左から右へ
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz03.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;ノードの配置その３&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;rank&lt;/code&gt;属性でレイアウトにおけるノードの並び順位を指定できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+  { rank=same; Papa; GrandmaA } // これらを同じランクに
+  { rank=same; Mama; GrandmaB }
+  { rank=min; You } // 最小ランクに
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz04.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;ノードの配置その４&lt;/h3&gt;
+
+&lt;p&gt;究極の配置手段として絶対位置指定&lt;code&gt;pos&lt;/code&gt;属性があります。これは&lt;code&gt;fdp&lt;/code&gt;, &lt;code&gt;neato&lt;/code&gt;などのレイアウトで有効になります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  layout=neato;
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+  You [pos=&amp;quot;0,0!&amp;quot;];
+  Papa [pos=&amp;quot;100,100!&amp;quot;];
+  Mama [pos=&amp;quot;0,-100!&amp;quot;];
+  GrandmaA [pos=&amp;quot;100,0!&amp;quot;];
+  GrandmaB [pos=&amp;quot;-100,0!&amp;quot;];
+  GrandpaB [pos=&amp;quot;100,-100!&amp;quot;];
+  GrandpaA [pos=&amp;quot;-100,100!&amp;quot;];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz05.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;属性指定&lt;/h3&gt;
+
+&lt;p&gt;Graphvizのもう一つの大きな特徴は、多様な属性指定ができることです。グラフ全体、ノード、エッジなどに対して細かい属性指定が可能です。&lt;/p&gt;
+
+&lt;p&gt;先のグラフにいろいろと属性を指定してみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  bgcolor=&amp;quot;cornsilk&amp;quot;;
+  node [shape=egg];
+  GrandpaA -&amp;gt; Papa [style=dotted];
+  GrandmaA -&amp;gt; Papa [arrowhead=&amp;quot;odiamond&amp;quot;];
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama [color=&amp;quot;red&amp;quot;];
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+  You [shape=doublecircle, style=filled, fillcolor=&amp;quot;orange&amp;quot;];
+  Papa [shape=house, style=&amp;quot;filled&amp;quot;, color=&amp;quot;purple&amp;quot;, fontcolor=&amp;quot;white&amp;quot;, label=&amp;quot;パパ&amp;quot;];
+  Mama [shape=invhouse, style=&amp;quot;filled&amp;quot;, color=&amp;quot;pink&amp;quot;, label=&amp;quot;ママ&amp;quot;];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz06.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;色&lt;/h3&gt;
+
+&lt;p&gt;上で見たようにGraphvizではノード、エッジ、背景に自由に色を付けられます。簡単にかつ美しい色付けをしたい場合は&lt;code&gt;colorscheme&lt;/code&gt;属性が便利です。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;digraph G {
+  node [style=filled, colorscheme=rdpu3];
+  GrandpaA -&amp;gt; Papa;
+  GrandmaA -&amp;gt; Papa;
+  GrandpaB -&amp;gt; Mama;
+  GrandmaB -&amp;gt; Mama;
+  Papa -&amp;gt; You;
+  Mama -&amp;gt; You;
+  You [style=filled, fillcolor=1];
+  Papa [style=filled, fillcolor=2];
+  Mama [style=filled, fillcolor=2];
+  GrandmaA [style=filled, fillcolor=3];
+  GrandmaB [style=filled, fillcolor=3];
+  GrandpaB [style=filled, fillcolor=3];
+  GrandpaA [style=filled, fillcolor=3];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz07.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;文献&lt;/h3&gt;
+
+&lt;p&gt;使えるレイアウト、属性、色などの情報は本家サイトのドキュメントを見るのが早いです。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://www.graphviz.org/Documentation.php&quot; title=&quot;Documentation | Graphviz - Graph Visualization Software&quot;&gt;Documentation | Graphviz - Graph Visualization Software&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;まとまった資料としては以下のPDF（英語版）があります。2006年版ということでちょっと古いです。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://www.graphviz.org/Documentation/dotguide.pdf&quot; title=&quot;dotguide.pdf&quot;&gt;dotguide.pdf&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;さらに古い2003年版を対象にしたものですが、日本語版を作られた方がいます。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://www.cbrc.jp/%7Etominaga/translations/graphviz/dotguide.pdf&quot; title=&quot;dotguide.pdf&quot;&gt;dotguide.pdf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.cbrc.jp/%7Etominaga/translations/index.html#dot&quot; title=&quot;日本語訳の文章: GSL, plotutils, etc.&quot;&gt;日本語訳の文章: GSL, plotutils, etc.&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;Gvizって何？&lt;/h2&gt;
+
+&lt;p&gt;GvizはDOT言語を使わずにRubyのコード（DSL）を書くことでGraphvizによるグラフ描画を可能にするライブラリ＆コマンドラインツールです。つまりRubyのコードをDOT言語によるコードに変換するコンバータです。DOT言語は制御構造を持っていないので、ノード数の多い複雑なグラフやプログラムに読み込めるデータに基づくグラフを描画する場合には、Gvizを使ったほうが圧倒的に早く仕事を終わらせられます。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/Gviz/&quot; title=&quot;Gviz&quot;&gt;Gvizのサイト&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Rubyによる同種のプログラムは多数存在します。古くからあって最も人気のあるものは「&lt;a href=&quot;https://rubygems.org/gems/ruby-graphviz&quot; title=&quot;ruby-graphviz | RubyGems.org | your community gem host&quot;&gt;ruby-graphviz&lt;/a&gt;」です。比較的新しくて人気のあるものにRyan Davisの「&lt;a href=&quot;https://rubygems.org/gems/graph&quot; title=&quot;graph | RubyGems.org | your community gem host&quot;&gt;graph&lt;/a&gt;」があります。Gvizはgraphにインスパイアされて作りました。私見ですがruby-graphvizはRuby成分が少なくgraphはtoo much DSLなので、Gvizは「&lt;strong&gt;ほどよいDSL&lt;/strong&gt;」のインタフェースを目指しました。最新バージョンは0.3.4、Rubyは2.0.0以上が必要です。&lt;/p&gt;
+
+&lt;h2&gt;Gvizの使い方&lt;/h2&gt;
+
+&lt;p&gt;２種類の使い方、つまりプログラムからの使い方とコマンドラインインタフェース（CLI）を通しての使い方があります。まずは&lt;code&gt;gem install gviz&lt;/code&gt;します。&lt;/p&gt;
+
+&lt;h3&gt;プログラムから&lt;/h3&gt;
+
+&lt;p&gt;この記事の最初のサンプルをrubyで書いてみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# sample.rb&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;gviz&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;gv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Gviz&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;gv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaA&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Papa&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaB&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Mama&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Papa&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:You&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;gv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;add&lt;/code&gt;メソッド（またはroute）にHashを渡してノード同士のつなぎを指定します。各ノード名はSymbolの必要があります。渡されるHashのキー、バリュとしてこのように配列を指定できます。ここではaddを3回呼んでいますが、すべてのつなぎを一つのaddに渡しても構いません。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;save&lt;/code&gt;メソッドの第１引数に出力ファイル名を、第２引数に画像フォーマットを渡します。第２引数を省略した場合はdotファイルだけが出力されます。&lt;/p&gt;
+
+&lt;p&gt;このファイルを実行すれば、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% ruby sample.rb
+% open sample.dot #または sample.png
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;次の出力が得られます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz01.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Gvizは&lt;code&gt;Graph&lt;/code&gt;というトップレベルのショートカット関数を持っているので、上のコードは次のようにDSLを使ってより簡潔に記述できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# sample.rb&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;gviz&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;Graph&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaA&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Papa&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaB&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Mama&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Papa&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:You&lt;/span&gt;
+  
+  &lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;CLIから&lt;/h3&gt;
+
+&lt;p&gt;Gvizをインストールするとターミナルで&lt;code&gt;gviz&lt;/code&gt;コマンドが使えるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% gviz
+Gviz is a tool &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;generating graphviz dot data with simple Ruby&lt;span class=&quot;s1&quot;&gt;&amp;#39;s syntax.&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;It works with a graph spec file (defaulting to load &amp;#39;&lt;/span&gt;graph.ru&lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+
+Example of graph.ru:
+
+  route :main &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;:init, :parse, :cleanup, :printf&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  route :init &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; :make, :parse &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; :execute
+  route :execute &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;:make, :compare, :printf&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+  save&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:sample, :png&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+Commands:
+  gviz build &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;FILE&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# Build a graphviz dot data based on a file&lt;/span&gt;
+  gviz &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# Describe available commands or one specific command&lt;/span&gt;
+  gviz man &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;NAME&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;# Show available attributes, constants, colors for graphviz&lt;/span&gt;
+  gviz version         &lt;span class=&quot;c&quot;&gt;# Show Gviz version&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;graph.ru&lt;/code&gt;という名前で次のように記述します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#graph.ru&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaA&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Papa&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaB&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Mama&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Papa&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:You&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ファイルのディレクトリで&lt;code&gt;gviz build&lt;/code&gt;コマンドを実行します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% gviz build
+% open sample.png
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;省略しますが同様の結果が得られます。&lt;/p&gt;
+
+&lt;p&gt;先の属性を指定した例も示します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#graph.ru&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;bgcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;cornsilk&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;egg&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaA&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Papa&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;GrandpaB&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GrandmaB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Mama&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Papa&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:You&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:You&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;doublecircle&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;filled&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;orange&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Papa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;house&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;filled&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;purple&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fontcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;white&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;パパ&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;invhouse&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;filled&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;pink&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;ママ&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;edge&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:GrandpaA_Papa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;dotted&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;edge&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:GrandmaA_Papa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;arrowhead&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;odiamond&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;edge&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:GrandmaB_Mama&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;red&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sample&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;global&lt;/code&gt;メソッドでグラフ全体の属性を指定します。&lt;code&gt;nodes&lt;/code&gt;メソッドでノード全体の、またここでは出てきませんが&lt;code&gt;edges&lt;/code&gt;メソッドでエッジ全体の属性を指定します。&lt;/p&gt;
+
+&lt;p&gt;各ノード、エッジの属性指定はそれぞれ&lt;code&gt;node&lt;/code&gt;, &lt;code&gt;edge&lt;/code&gt;メソッドを使います。第１引数はidでありlabel属性がなければラベルとしても使われます。idはSymbolでなければならず、エッジのidはノードのidを&lt;code&gt;_&lt;/code&gt;（アンダーバー）で結んだものになります。ここでは使われていませんが、&lt;code&gt;Object#to_id&lt;/code&gt;を使って任意のオブジェクトからidを生成することができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz06.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Rubyの図&lt;/h3&gt;
+
+&lt;p&gt;Rubyらしい図も書いてみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Fixnum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Bignum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;box3d&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;colorscheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;blues8&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;filled&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each_cons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ab&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fillcolor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;edge&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;maroon&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:png&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Module#ancestorsを使ってRubyのメソッド探索ルートをグラフ化します。普通にRubyのコードが書けます。&lt;/p&gt;
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/graphviz09.png&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;いいですね。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Gvizの他の機能やどんなグラフや図が描けるのかについては、以下の記事一覧から辿って該当記事を読んでください。&lt;/p&gt;
+
+&lt;h2&gt;ブログ記事一覧&lt;/h2&gt;
+
+&lt;p&gt;このブログにおいてGvizに関連する記事は以下になります（時系列昇順）。現時点で28件ありますが今後も新しい記事が書かれた際はここに追加します。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot; title=&quot;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&quot;&gt;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/09/27/usstates-map-data-vasualization-with-gviz/&quot; title=&quot;Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！&quot;&gt;Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/02/draw-metro-map-with-gviz/&quot; title=&quot;東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/03/draw-metro-logos-with-gviz/&quot; title=&quot;東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/03/draws-color-sign-of-programming-languages-with-gviz/&quot; title=&quot;プログラミング言語にも案内サインシステムを！&quot;&gt;プログラミング言語にも案内サインシステムを！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/07/meet-prime-with-fibonacci/&quot; title=&quot;素数とフィボナッチ数の出会いをGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;素数とフィボナッチ数の出会いをGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/16/add-gviz-command-to-gviz-gem/&quot; title=&quot;GvizでAKB48をビジュアライズするよ！&quot;&gt;GvizでAKB48をビジュアライズするよ！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/10/20/get-graphviz-attributes-from-gviz/&quot; title=&quot;GvizでGraphvizのノードの形とかエッジの形とか使える色の名前とかの属性情報をゲットするよ！&quot;&gt;GvizでGraphvizのノードの形とかエッジの形とか使える色の名前とかの属性情報をゲットするよ！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/11/07/play-gviz-with-colorable/&quot; title=&quot;Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く&quot;&gt;Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2012/12/04/simple-ruby-logo-with-gviz/&quot; title=&quot;GraphvizでRubyのロゴは描けますか？&quot;&gt;GraphvizでRubyのロゴは描けますか？&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/03/22/map-of-japan/&quot; title=&quot;Graphvizで作る、私たちの国「日本」の本当の姿かたち&quot;&gt;Graphvizで作る、私たちの国「日本」の本当の姿かたち&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/03/25/map-of-japan-2/&quot; title=&quot;Graphvizで作る、私たちの国「日本」の今度こそ本当の姿かたち&quot;&gt;Graphvizで作る、私たちの国「日本」の今度こそ本当の姿かたち&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/03/25/this-is-another-world-of-graphviz/&quot; title=&quot;これもまた、Graphvizなんです。&quot;&gt;これもまた、Graphvizなんです。&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/03/28/space-invader-invade-graphviz-kingdom/&quot; title=&quot;スペースインベーダー、Graphviz侵略ス&quot;&gt;スペースインベーダー、Graphviz侵略ス&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/04/02/graphviz-layouts/&quot; title=&quot;Graphvizレイアウトサンプル&quot;&gt;Graphvizレイアウトサンプル&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/04/23/map-of-national-flags-with-graphviz/&quot; title=&quot;Graphvizで作る国旗の類似度世界地図&quot;&gt;Graphvizで作る国旗の類似度世界地図&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/08/09/now-pikmin-come-to-graphviz/&quot; title=&quot;ピクミンがGraphvizにやって来た！&quot;&gt;ピクミンがGraphvizにやって来た！&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/18/visualize-ruby-tree-with-graphviz/&quot; title=&quot;RubyユニバースをGraphvizで視覚化する&quot;&gt;RubyユニバースをGraphvizで視覚化する&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/19/visualize-rubinius-tree/&quot; title=&quot;Rubiniusユニバースも視覚化してみる&quot;&gt;Rubiniusユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/20/visualize-jruby-tree/&quot; title=&quot;JRubyユニバースも視覚化してみる&quot;&gt;JRubyユニバースも視覚化してみる&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/21/visualize-ruby-files-with-graphviz/&quot; title=&quot;Rubyのソースディレクトリも視覚化してみる&quot;&gt;Rubyのソースディレクトリも視覚化してみる&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/28/visualize-your-directory/&quot; title=&quot;あなたのプロジェクトを美しく視覚化する&quot;&gt;あなたのプロジェクトを美しく視覚化する&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2013/10/31/there-is-a-beauty-in-your-computer/&quot; title=&quot;あなたはファイルシステムに美を見るか？&quot;&gt;あなたはファイルシステムに美を見るか？&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2014/01/08/graphviz-is-a-tool-for-drawing/&quot; title=&quot;Graphvizがドローイングソフトになってしまった件について&quot;&gt;Graphvizがドローイングソフトになってしまった件について&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2014/01/09/discover-beauty-of-sine-curves-through-graphviz/&quot; title=&quot;Rubyでサインカーブを描いて癒やされる&quot;&gt;Rubyでサインカーブを描いて癒やされる&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2014/01/14/matreska-is-rack-for-every-rubyist/&quot; title=&quot;Rack以外でRackしたいRubyistのためのMatreska&quot;&gt;Rack以外でRackしたいRubyistのためのMatreska&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2014/02/03/build-table-nodes-with-html-like-labels-in-graphviz/&quot; title=&quot;Graphvizで表そして気になる都知事選2014のゆくえ&quot;&gt;Graphvizで表そして気になる都知事選2014のゆくえ&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;/2014/02/26/edges-between-clusters-now-enabled-with-gviz/&quot; title=&quot;Gviz（Graphviz ruby wrapper）でクラスタエッジとか無向グラフとか&quot;&gt;Gviz（Graphviz ruby wrapper）でクラスタエッジとか無向グラフとか&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;各記事の概要説明&lt;/h2&gt;
+
+&lt;p&gt;記事の検索性を上げるためその概要も書いておきます。あらためて、なんというかGraphvizの本来の使い方とかけ離れた使い方ばかりで...。あまり参考にならないかもしれません。&lt;/p&gt;
+
+&lt;h3&gt;1. &lt;a href=&quot;/2012/09/25/ruby-plus-graphviz-should-eql-gviz/&quot; title=&quot;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&quot;&gt;Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事ではGvizを公開したこと、その基本機能の説明およびサンプルとして次のような日本地図を描きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/pref4.png&quot; alt=&quot;pref4 noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;2. &lt;a href=&quot;/2012/09/27/usstates-map-data-vasualization-with-gviz/&quot; title=&quot;Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！&quot;&gt;Ruby Graphvizラッパー「Gviz」でアメリカ合衆国をデータビジュアライズしよう！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事ではアメリカ合衆国の各州の統合年、面積および人口を、ノードの色、大きさおよび多角形の辺の数を使ってビジュアライズしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/usa6.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;3. &lt;a href=&quot;/2012/10/02/draw-metro-map-with-gviz/&quot; title=&quot;東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、&lt;a href=&quot;http://www.ekidata.jp/index.html&quot;&gt;『駅データ．ｊｐ』&lt;/a&gt;が提供する路線情報を使って、東京の地下鉄路線図をビジュアライズしました。ここでは駅の緯度・経度情報から正しい位置に駅ノードを配置しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/metro6.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;4. &lt;a href=&quot;/2012/10/03/draw-metro-logos-with-gviz/&quot; title=&quot;東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;東京の地下鉄の路線サインをGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、東京の地下鉄の路線サインを描画しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/metrologo.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;5. &lt;a href=&quot;/2012/10/03/draws-color-sign-of-programming-languages-with-gviz/&quot; title=&quot;プログラミング言語にも案内サインシステムを！&quot;&gt;プログラミング言語にも案内サインシステムを！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、地下鉄の路線サインにヒントを得て、プログラミング言語のサインを作ってみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/langlogo.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/langlogo2.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;6. &lt;a href=&quot;/2012/10/07/meet-prime-with-fibonacci/&quot; title=&quot;素数とフィボナッチ数の出会いをGviz（Ruby Graphviz Wrapper）で描く&quot;&gt;素数とフィボナッチ数の出会いをGviz（Ruby Graphviz Wrapper）で描く&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Rubyで素数とフィボナッチ数を出力してそれが交わる様子をグラフ化してみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/number4.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;7. &lt;a href=&quot;/2012/10/16/add-gviz-command-to-gviz-gem/&quot; title=&quot;GvizでAKB48をビジュアライズするよ！&quot;&gt;GvizでAKB48をビジュアライズするよ！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Gvizに追加された（１）Gvizコマンド、（２）multiple edge指定、（３）Object#idの機能の紹介と、AKB48のメンバー名をグラフ化した例を載せました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/akb5.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;8. &lt;a href=&quot;/2012/10/20/get-graphviz-attributes-from-gviz/&quot; title=&quot;GvizでGraphvizのノードの形とかエッジの形とか使える色の名前とかの属性情報をゲットするよ！&quot;&gt;GvizでGraphvizのノードの形とかエッジの形とか使える色の名前とかの属性情報をゲットするよ！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Gvizに追加された（１）&lt;code&gt;gviz man&lt;/code&gt;コマンド、（２）Graphvizの属性情報定数の紹介と、属性情報定数を使った属性情報サンプルのグラフ化をしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/attr3.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;9. &lt;a href=&quot;/2012/11/07/play-gviz-with-colorable/&quot; title=&quot;Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く&quot;&gt;Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Rubyで色を扱うライブラリ「&lt;a href=&quot;https://rubygems.org/gems/colorable&quot; title=&quot;colorable | RubyGems.org | your community gem host&quot;&gt;colorable&lt;/a&gt;」の紹介と、これをGvizと組合せて作ったカラーリングについて書きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/color4.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;10. &lt;a href=&quot;/2012/12/04/simple-ruby-logo-with-gviz/&quot; title=&quot;GraphvizでRubyのロゴは描けますか？&quot;&gt;GraphvizでRubyのロゴは描けますか？&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Gvizで簡単にRubyのロゴが描けるか挑戦しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2012/rubylogo7.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;イマイチでした。&lt;/p&gt;
+
+&lt;h3&gt;11. &lt;a href=&quot;/2013/03/22/map-of-japan/&quot; title=&quot;Graphvizで作る、私たちの国「日本」の本当の姿かたち&quot;&gt;Graphvizで作る、私たちの国「日本」の本当の姿かたち&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、@antlaboさんが公開されている&lt;a href=&quot;http://d.hatena.ne.jp/antlabo/20121029/1351520444&quot; title=&quot;wikipediaの隣接市区町村の記載をデータベース化したものをcsvで公開 - 蟻の実験工房（別館ラボ）&quot;&gt;隣接市区町村のCSVデータ&lt;/a&gt;を使って、日本地図の描画に挑戦しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/03/jpmap_color.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ええ、これが私たちの住む&lt;strong&gt;日本&lt;/strong&gt;です。&lt;/p&gt;
+
+&lt;h3&gt;12. &lt;a href=&quot;/2013/03/25/map-of-japan-2/&quot; title=&quot;Graphvizで作る、私たちの国「日本」の今度こそ本当の姿かたち&quot;&gt;Graphvizで作る、私たちの国「日本」の今度こそ本当の姿かたち&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、先の記事を見て@antlaboさんが全国市町村の位置情報データを公開してくれたので、これに基いて日本地図の描画にリベンジした様子を書いています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/03/japanmap_color.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;13. &lt;a href=&quot;/2013/03/25/this-is-another-world-of-graphviz/&quot; title=&quot;これもまた、Graphvizなんです。&quot;&gt;これもまた、Graphvizなんです。&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事は、&lt;code&gt;osage&lt;/code&gt;というレイアウトを使ってカラーサンプルを描画しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/03/tile1.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;14. &lt;a href=&quot;/2013/03/28/space-invader-invade-graphviz-kingdom/&quot; title=&quot;スペースインベーダー、Graphviz侵略ス&quot;&gt;スペースインベーダー、Graphviz侵略ス&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事は、&lt;code&gt;osage&lt;/code&gt;レイアウトを使ってスペースインベーダーの描画に挑戦した様子を書いています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/03/invader5.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ええ、これもGraphvizで書いてるんです。&lt;/p&gt;
+
+&lt;h3&gt;15. &lt;a href=&quot;/2013/04/02/graphviz-layouts/&quot; title=&quot;Graphvizレイアウトサンプル&quot;&gt;Graphvizレイアウトサンプル&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、名前からはその形が皆目検討がつかないというGraphvizのレイアウトのサンプルを描画しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/04/neato.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/04/tree_fdp.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/04/tree_circo.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;16. &lt;a href=&quot;/2013/04/23/map-of-national-flags-with-graphviz/&quot; title=&quot;Graphvizで作る国旗の類似度世界地図&quot;&gt;Graphvizで作る国旗の類似度世界地図&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、これまた@antlaboさんが公開されている国旗の類似度データを使って、グラフ上で類似度の分布が現れるかに挑戦しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/04/flag2.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;17. &lt;a href=&quot;/2013/08/09/now-pikmin-come-to-graphviz/&quot; title=&quot;ピクミンがGraphvizにやって来た！&quot;&gt;ピクミンがGraphvizにやって来た！&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Gvizコマンドの仕様の変更（Thorの利用）の紹介とピクミンの描画に挑戦しています。ピクミンはpng画像データから画素情報を抽出し、間引きを行って各画素をノードとしてGraphvizによる画像化をしています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/08/gv_red_pikmin.png&quot; alt=&quot;noshadow&quot; style=&quot;width:100px&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/08/gv_blue_pikmin.png&quot; alt=&quot;noshadow&quot; style=&quot;width:100px&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/08/gv_yellow_pikmin.png&quot; alt=&quot;noshadow&quot; style=&quot;width:100px&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/08/gv_rock_pikmin.png&quot; alt=&quot;noshadow&quot; style=&quot;width:100px&quot; /&gt;
+&lt;img src=&quot;/assets/images/2013/08/gv_pink_pikmin.png&quot; alt=&quot;noshadow&quot; style=&quot;width:100px&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;18. &lt;a href=&quot;/2013/10/18/visualize-ruby-tree-with-graphviz/&quot; title=&quot;RubyユニバースをGraphvizで視覚化する&quot;&gt;RubyユニバースをGraphvizで視覚化する&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Rubyのクラス階層をグラフ化しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree7.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;19. &lt;a href=&quot;/2013/10/19/visualize-rubinius-tree/&quot; title=&quot;Rubiniusユニバースも視覚化してみる&quot;&gt;Rubiniusユニバースも視覚化してみる&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、今度はRubiniusのクラス階層をグラフ化しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree8.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;20. &lt;a href=&quot;/2013/10/20/visualize-jruby-tree/&quot; title=&quot;JRubyユニバースも視覚化してみる&quot;&gt;JRubyユニバースも視覚化してみる&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、更にJRubyのクラス階層をグラフ化しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_tree11.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;21. &lt;a href=&quot;/2013/10/21/visualize-ruby-files-with-graphviz/&quot; title=&quot;Rubyのソースディレクトリも視覚化してみる&quot;&gt;Rubyのソースディレクトリも視覚化してみる&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Rubyのソースディレクトリのグラフ化に挑戦しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/ruby_dir10.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;22. &lt;a href=&quot;/2013/10/28/visualize-your-directory/&quot; title=&quot;あなたのプロジェクトを美しく視覚化する&quot;&gt;あなたのプロジェクトを美しく視覚化する&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事ではディレクトリ構造を簡単にビジュアライズする「&lt;a href=&quot;https://rubygems.org/gems/dir_friend&quot; title=&quot;dir_friend | RubyGems.org | your community gem host&quot;&gt;dir_friend&lt;/a&gt;」というツールの紹介をしています。dir_friendは内部でGvizを使っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/prj_tree2.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;23. &lt;a href=&quot;/2013/10/31/there-is-a-beauty-in-your-computer/&quot; title=&quot;あなたはファイルシステムに美を見るか？&quot;&gt;あなたはファイルシステムに美を見るか？&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、dir_friendでテーマを設定できる機能紹介をしています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2013/10/theme_tree3.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;24. &lt;a href=&quot;/2014/01/08/graphviz-is-a-tool-for-drawing/&quot; title=&quot;Graphvizがドローイングソフトになってしまった件について&quot;&gt;Graphvizがドローイングソフトになってしまった件について&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、Gvizに追加されたDrawライクなメソッド群の紹介およびそのサンプルについて書いています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/gviz_draw2.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2014/01/gviz_draw3.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2014/01/gviz_batman.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;25. &lt;a href=&quot;/2014/01/09/discover-beauty-of-sine-curves-through-graphviz/&quot; title=&quot;Rubyでサインカーブを描いて癒やされる&quot;&gt;Rubyでサインカーブを描いて癒やされる&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事ではGvizのDraw系メソッドを使ってサインカーブのいろいろなバラエティを描画しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sine3.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2014/01/sine5.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;26. &lt;a href=&quot;/2014/01/14/matreska-is-rack-for-every-rubyist/&quot; title=&quot;Rack以外でRackしたいRubyistのためのMatreska&quot;&gt;Rack以外でRackしたいRubyistのためのMatreska&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、アダプタブルなマルチフィルターバンドラー「&lt;a href=&quot;https://rubygems.org/gems/matreska&quot; title=&quot;matreska | RubyGems.org | your community gem host&quot;&gt;matreska&lt;/a&gt;」の紹介と、これとGvizを組合せてアニメーションGIFを作る例を紹介しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/anpan.gif&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;27. &lt;a href=&quot;/2014/02/03/build-table-nodes-with-html-like-labels-in-graphviz/&quot; title=&quot;Graphvizで表そして気になる都知事選2014のゆくえ&quot;&gt;Graphvizで表そして気になる都知事選2014のゆくえ&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、@otahiさんからのPull Requestから実現したHTML風ラベルの機能紹介と、そのサンプルについて書いています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/html_label2.png&quot; alt=&quot;usa noshadow&quot; /&gt;
+&lt;img src=&quot;/assets/images/2014/02/html_label4.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;28. &lt;a href=&quot;/2014/02/26/edges-between-clusters-now-enabled-with-gviz/&quot; title=&quot;Gviz（Graphviz ruby wrapper）でクラスタエッジとか無向グラフとか&quot;&gt;Gviz（Graphviz ruby wrapper）でクラスタエッジとか無向グラフとか&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;この記事では、@k1LoWさんからのリクエストで実現したsubgraph（cluster）同士の連結および無向グラフの機能についての紹介をしています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/gviz_subgraph03.png&quot; alt=&quot;usa noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;以上、「Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！」でした。ふぅ。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円〜で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_pack8.png&quot; alt=&quot;pack8&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Gviz（Graphviz ruby wrapper）でクラスタエッジとか無向グラフとか</title>
@@ -3771,100 +4385,6 @@ Please, don&amp;#39;t. https://github.com/styleguide/templates/2.0
 &lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/gviz&quot; title=&quot;gviz | RubyGems.org | your community gem host&quot;&gt;gviz | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/Gviz&quot; title=&quot;melborne/Gviz&quot;&gt;melborne/Gviz&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>英語圏のオープンソースプロジェクトに貢献する最も簡単な方法またはsinatra/README.jp.mdまたは彼はなぜ私を愛するようになったか</title>
-   <link href="http://melborne.github.io/2014/01/23/contribute-to-english-based-opensource-project-or-sinatra-japanese-readme"/>
-   <updated>2014-01-23T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/01/23/contribute-to-english-based-opensource-project-or-sinatra-japanese-readme</id>
-   <content type="html">&lt;p&gt;今年はもう少しまじめにWebフレームワークというものを勉強しようと考えました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://rubyonrails.org/&quot; title=&quot;Ruby on Rails&quot;&gt;Rails&lt;/a&gt;は私にはちょっと敷居が高いので、軽量Webフレームワークである&lt;a href=&quot;http://www.sinatrarb.com/&quot; title=&quot;Sinatra&quot;&gt;Sinatra&lt;/a&gt;を理解することに決めました。今までにSinatraを使ったことは何度かありますがSinatraを知っているとはいえない状況でした。&lt;/p&gt;
-
-&lt;p&gt;理解のために、まずは公式サイトのドキュメントを読むことにしました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.sinatrarb.com/&quot; title=&quot;Sinatra&quot;&gt;サイト&lt;/a&gt;のトップにはプロジェクトの&lt;code&gt;README&lt;/code&gt;が掲載されており、そのページを開くと実に9000ワード3000行にも及ぶ、充実した内容の機能解説が目に飛び込んできました。&lt;/p&gt;
-
-&lt;p&gt;その分量に圧倒されながらも、ページのヘッダ部分をよく見ると他言語によるREADMEへのリンクが張られていることに気づきました。そして有難いことに、その中には日本語版が含まれていました。&lt;/p&gt;
-
-&lt;p&gt;迷うことなく私は日本語版のページを開きました。そして愕然としました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sinatra01.png&quot; alt=&quot;sinatra noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;SinatraはDSLには違いありませんが、それとイコールではあり得ません。原文を確認してみると、果たして次のような正しい説明になっていました。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;Sinatra is a &lt;a href=&quot;http://en.wikipedia.org/wiki/Domain-specific_language&quot;&gt;DSL&lt;/a&gt; for quickly creating web applications in Ruby with minimal effort:&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;アップデートの過程で誤ってテキストを誰かが落としてしまったのでしょう。文頭の大切な一文にも拘らず、これが長い間放置されていたようです。翻訳文にはコミッタによるチェック機能が働かないのです。&lt;/p&gt;
-
-&lt;p&gt;加えて、日本語版の解説は原文に相当期間追随していないということがわかりました。調べてみると、細かい追加・修正は途中で何度かなされているものの、オリジナルの文章は2010年10月にアップデートされたバージョン1.0のものに対する解説、つまり３年以上も前に書かれたものだということが分かりました（最新バージョンは1.4）。&lt;/p&gt;
-
-&lt;p&gt;これらの出来事に私は少なからずショックを受けました。&lt;/p&gt;
-
-&lt;p&gt;ご存知のように、SinatraはRuby製のWebフレームワークにおいてRailsに次ぐ人気を誇るライブラリです。現在のGithubにおいてスターの数は5509であり、939のForkが存在し、193人のコントリビュータがいて、現在も活発にアップデートが続けられています。日本人ユーザも相当数が存在すると思われます。そのようなプロジェクトにおいて、３年以上も日本語ドキュメントのアップデートが放置されていたのです！&lt;/p&gt;
-
-&lt;p&gt;この事実つまり開発者とユーザとの間の深い溝あるいは言語の壁の問題の深さを痛感しうなだれていると、一条の光が差し込みそこにステージがこつ然と映し出されました。そしてステージ上には若く美しいスーパーヒーローが立っており、私に向いてやさしく微笑みかけながらこう言ったのです。&lt;/p&gt;
-
-&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://2.gravatar.com/avatar/5c2b452f6eea4a6d84c105ebd971d2a4?d=https%3A%2F%2Fidenticons.github.com%2F2ae3d2aaceaf26246581744124859b07.png&amp;amp;r=x&amp;amp;s=200&quot; alt=&quot;rkh noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;「I&#39;m waiting for you.」&lt;/p&gt;
-
-&lt;p&gt;「 君を待ってたんだ。」&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;こうして私は&lt;code&gt;sinatra/README.jp.md&lt;/code&gt;のアップデートに取り掛かったのです。&lt;/p&gt;
-
-&lt;p&gt;技術力・翻訳力に不足する私には翻訳作業はかならずしも楽ではありませんでしたが、これがまずはSinatraの全体像を把握する最善の道ともなりました。不足する記述の追加だけでなく、既訳の修正、形式の統一などを行った結果、&lt;code&gt;README.jp.md&lt;/code&gt;に対し1933件の追加、552件の削除を実施しました。&lt;/p&gt;
-
-&lt;p&gt;「&lt;a href=&quot;http://d.hatena.ne.jp/hnw/20110528&quot; title=&quot;GitHubへpull requestする際のベストプラクティス - hnwの日記&quot;&gt;GitHubへpull requestする際のベストプラクティス - hnwの日記&lt;/a&gt;」に従い、本家をcloneして専用ブランチで作業を行いそれをまとめて１件のpull requestを出しました。&lt;/p&gt;
-
-&lt;p&gt;数時間もするとメインコントリビュータの&lt;a href=&quot;https://github.com/rkh&quot; title=&quot;rkh (Konstantin Haase)&quot;&gt;rkh (Konstantin Haase)&lt;/a&gt;からmergeしたのと通知を受けました。Pull Requestのページを開いてみると果たしてそこにはmergeしたとの事実だけではなく、彼の気持ちも示されていました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/01/sinatra02.png&quot; alt=&quot;pull request noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/sinatra/sinatra/pull/832&quot; title=&quot;Update README.jp.md as a whole by melborne · Pull Request #832 · sinatra/sinatra&quot;&gt;Update README.jp.md as a whole by melborne · Pull Request #832 · sinatra/sinatra&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;今私は面識のない外国美少年からの突然の愛の告白に当惑していますが、pull requestをするというのはそういう意味つまり「私をプルして！」という意味だと悟ったのです。&lt;/p&gt;
-
-&lt;p&gt;もしあなたに愛が必要なら、お気に入りのオープンソースプロジェクトに是非ともPull Requestを投げてみてください。あなたの心は愛で満たされるはずです。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;マージされた&lt;code&gt;README.ja.md&lt;/code&gt;のリンクを貼っておきます。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/sinatra/sinatra/blob/master/README.ja.md&quot; title=&quot;sinatra/README.ja.md at master · sinatra/sinatra&quot;&gt;sinatra/README.ja.md at master · sinatra/sinatra&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;前述のとおり訳文に対しては開発者側のチェック機能は働いていないと思われます。よって、私の力不足によりドキュメントにはケアレスなミス、意味不明の解説、深刻な誤訳が含まれている可能性があります。このような問題に気づかれましたら、本家にプルリクするか、それが手間であれば私に連絡くだされば可能な限り対応します。&lt;/p&gt;
-
-&lt;p&gt;なお、上記ドキュメントはその変更点が多いためGithub上で差分表示ができません。差分は以下で確認できます。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/sinatra/commits/update-readme-jp-spike/README.jp.md&quot; title=&quot;History for README.jp.md - melborne/sinatra&quot;&gt;History for README.jp.md - melborne/sinatra&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;(追記:2014-1-26) &lt;code&gt;README.jp.md&lt;/code&gt; =&gt; &lt;code&gt;README.ja.md&lt;/code&gt;への変更がマージされたのでリンク先を修正。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円〜で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/ruby_pack8.png&quot; alt=&quot;pack8&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
