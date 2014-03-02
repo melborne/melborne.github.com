@@ -14,7 +14,7 @@ published: true
 
     ruby -e 'trap(:INT){print"\e[?25h\e[0;0H";exit(0)};x,y=[`tput lines`,`tput cols`].map{|n|n.to_i/2};print"\e[?25l";ARGF.read.scan(/[\w.]+/).unshift(*%w(3 2 1 0 Go!)).cycle{|w|c=w.size/2;w=w.dup;cw=w[c];w[c]="\e[31m#{cw}\e[0m";print"\e[2J\e[#{x};#{y-c}H",w;sleep(0.3)}' TEXT
 
-![spritz noshadow](http://gifzo.net/YwLUDBoM8P.gif)
+![spritz noshadow](http://gifzo.net/fIXhdmsleg.gif)
 
 Hosted by [Gifzo](http://gifzo.net/ "Gifzo - 宇宙一簡単なスクリーンキャスト共有")
 
