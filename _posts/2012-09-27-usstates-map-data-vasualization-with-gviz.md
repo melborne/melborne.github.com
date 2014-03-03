@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 <p>RubyのGraphvizラッパー「<a href="https://rubygems.org/gems/gviz" title="gviz">Gviz</a>」を前回紹介しました。</p>
 
 <blockquote><p><a href="/2012/09/25/ruby-plus-graphviz-should-eql-gviz/" title="Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！">Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！</a></p></blockquote>

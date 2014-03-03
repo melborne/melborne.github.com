@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 [Graphviz](http://www.graphviz.org/ 'Graphviz | Graphviz - Graph Visualization Software')は楽しいです。簡単なコードで複雑なグラフを一瞬で生成してくれます。ノードやエッジの形を変えたり色を付けたりそれらの属性を調整することで、グラフは一層リッチになります。
 
 でもこの属性が余りにも多岐にわたるので、その選択は時に困難を極めます。そのたびにGraphvizのサイトに逝って使える属性を確認する必要がでてきます。せめて使える属性の一覧が手元にほしいと切に思います。

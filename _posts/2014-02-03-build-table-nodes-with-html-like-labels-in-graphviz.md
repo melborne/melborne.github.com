@@ -9,6 +9,13 @@ published: true
 ---
 {% include JB/setup %}
 
+
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 GraphvizのRubyラッパーである[gviz](https://rubygems.org/gems/gviz "gviz")に対して、@otahiさんからPull Requestを頂きました。
 
 > [Enable HTML like label in attributes by otahi · Pull Request #1 · melborne/Gviz](https://github.com/melborne/Gviz/pull/1 "Enable HTML like label in attributes by otahi · Pull Request #1 · melborne/Gviz")

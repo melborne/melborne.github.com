@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 Graphvizには複数のレイアウトフォーマットがありますが、どれも名前が変わっていて生成されるレイアウトを名前から想像することが困難です。幾つかのレイアウトの説明は[Graphvizのサイト](http://www.graphviz.org/ "Graphviz | Graphviz - Graph Visualization Software")に書いてあるのですが、それを読んでもやっぱりピンと来ません。その結果、毎度グラフを作るたびにレイアウトを試行錯誤することになります。
 
 でも、レイアウトはやっぱりサンプルを見るのが一番手っ取り早いですよね。

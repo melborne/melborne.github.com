@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 前回の投稿で東京の地下鉄路線図を描きました。
 
 > [東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/ '東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く')

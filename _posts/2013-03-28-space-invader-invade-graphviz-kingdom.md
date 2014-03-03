@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 
 Graphvizには「**osage**」という変わった名前のレイアウトがあります。これは多数のノードを整列して配置します。GraphvizのRubyラッパー「[gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")」を使って100個のノードを整列表示するには次のようにします{% fn_ref 1 %}。
 

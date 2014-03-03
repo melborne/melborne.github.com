@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 前の記事でRubyのクラスツリーをGraphvizを使って視覚化した。
 
 > [RubyユニバースをGraphvizで視覚化する]({{ BASE_PATH }}/2013/10/18/visualize-ruby-tree-with-graphviz/ "RubyユニバースをGraphvizで視覚化する")

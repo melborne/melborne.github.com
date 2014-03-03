@@ -254,6 +254,12 @@ Graphvizでこんなに綺麗なリングが描けるなんて、ちょっと感
 
 ----
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 {{ '0375810919' | amazon_medium_image }}
 {{ '0375810919' | amazon_link }} by {{ '0375810919' | amazon_authors }}
 

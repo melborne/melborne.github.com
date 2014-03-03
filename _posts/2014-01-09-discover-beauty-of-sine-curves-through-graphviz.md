@@ -9,6 +9,13 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
+
 前回の続きなわけです。
 
 > [Graphvizがドローイングソフトになってしまった件について]({{ BASE_PATH }}/2014/01/08/graphviz-is-a-tool-for-drawing/ 'Graphvizがドローイングソフトになってしまった件について')

@@ -413,6 +413,11 @@ Enjoy!
 
 (追記：2013-11-01) 一部追記しました。
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+
 ---
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>

@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 僕は前回、[antlabo](http://d.hatena.ne.jp/antlabo/)さんが公開されている[全国市区町村の隣接データ](http://d.hatena.ne.jp/antlabo/20121029/1351520444)に基いて、Graphvizで次のような日本を作りました。
 
 <a href="{{ site.url }}/assets/images/2013/03/jpmap_svg.html" title="Metro Map"><img src="{{ site.url }}/assets/images/2013/03/jpmap_color.png" alt="japan noshadow" /></a>

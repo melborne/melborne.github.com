@@ -351,6 +351,12 @@ Graphviz opened tempfile: /var/folders/sk/9h0z77c10g16n_vc0khd_chr0000gn/T/dirfr
 
 (追記：2013-10-29) MacでDotファイルを自動オープンする記述について追加しました。
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 ---
 
 <p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>

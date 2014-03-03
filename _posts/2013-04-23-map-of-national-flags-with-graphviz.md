@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 antlaboさんが世界の国旗の類似度を可視化した作品を公開しています。
 
 > [国旗の類似度を可視化](http://infanimation.antlabo.jp/kokki/index.html "国旗の類似度を可視化")

@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 antlaboさんがGraphvizを使って、北海道の市町村の隣接を可視化したものを公開されています。
 
 > [Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）](http://d.hatena.ne.jp/antlabo/20130320/1363796474 "Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）")

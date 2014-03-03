@@ -8,6 +8,13 @@ date: 2012-12-04
 published: true
 ---
 {% include JB/setup %}
+
+(追記：2014-3-3) Gvizについてのまとめ頁を作りました。
+
+> [Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！]({{ BASE_PATH }}/2014/02/27/gviz-posts/ "Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！")
+
+---
+
 ええ、まあなんとか。
 
 ここではGraphvizのRubyラッパー「[Gviz](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')」を使います。
