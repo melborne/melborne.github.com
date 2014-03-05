@@ -4,13 +4,94 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-03-03T18:29:21+09:00</updated>
+ <updated>2014-03-05T18:29:03+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Rubyでパイプライン？</title>
+   <link href="http://melborne.github.io/2014/03/05/filter-in-ruby"/>
+   <updated>2014-03-05T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/03/05/filter-in-ruby</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://angularjs.org/&quot; title=&quot;AngularJS — Superheroic JavaScript MVW Framework&quot;&gt;AngularJS&lt;/a&gt;というものを眺めていたらその中にビューテンプレートなどで使える&lt;a href=&quot;http://js.studio-kingdom.com/angularjs/guide/filter&quot; title=&quot;フィルターについて | AngularJS 1.2 日本語リファレンス | js STUDIO&quot;&gt;フィルター&lt;/a&gt;という概念がでてきて、あーこれLiquidにもあったけどUNIXのパイプラインみたいで面白いなあRubyでできないかなあ、ということでちょっと試してみましたという内容の投稿です。&lt;/p&gt;
+
+&lt;p&gt;まあ、メソッドチェーンでいいよ、って話で終わりなんですが。&lt;/p&gt;
+
+&lt;p&gt;AngulraJSのFilterというのはビューテンプレートの中で、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{ 12 | currency  }}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;のようにすると、&lt;code&gt;12&lt;/code&gt;が&lt;code&gt;currency&lt;/code&gt;フィルタを通って&lt;code&gt;$12.00&lt;/code&gt;が出力されるといった代物です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{ expression | filter1 | filter2 | filter3  }}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;のように複数のフィルタを順次適用することもできます。まさにパイプですね。&lt;/p&gt;
+
+&lt;h2&gt;Rubyでパイプ？&lt;/h2&gt;
+
+&lt;p&gt;でこんな感じのものをRubyで書いてみました。&lt;/p&gt;
+
+&lt;div&gt;&lt;script src=&#39;https://gist.github.com/9363948.js?file=&#39;&gt;&lt;/script&gt;
+&lt;noscript&gt;&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;You are being &amp;lt;a href=&amp;quot;https://github.com/gist/9363948&amp;quot;&amp;gt;redirected&amp;lt;/a&amp;gt;.&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/noscript&gt;&lt;/div&gt;
+
+
+&lt;p&gt;そうすると、こんな風に書けるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;./filter&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CoreExt&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;hello&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:upcase&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; HELLO&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:next&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 124&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;もちろんチェーンもできます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Mississippi&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:upcase&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:squeeze&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:chars&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:reverse&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; [&amp;quot;I&amp;quot;, &amp;quot;P&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;S&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;S&amp;quot;, &amp;quot;I&amp;quot;, &amp;quot;M&amp;quot;]&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:even?&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;Filter.add&lt;/code&gt;を使って新たなフィルターを追加できます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:currency&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ArgumentError&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_a?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Numeric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&amp;quot;$%.2f&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;45&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:currency&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; $370.35&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:titleize&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/\w+/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:capitalize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39; &amp;#39;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ruby on rails&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:titleize&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; Ruby On Rails&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でも引数取れないんですorz..&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると...</title>
@@ -2545,21 +2626,6 @@ $(function() {
 &lt;a href=&quot;/books/&quot;&gt;
   &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
 &lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>FeedBurnerは遂に死んだのか？</title>
-   <link href="http://melborne.github.io/2014/02/12/goodbye-feedburner"/>
-   <updated>2014-02-12T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/02/12/goodbye-feedburner</id>
-   <content type="html">&lt;p&gt;既に死にかけていたFeedBurnerを去年2月に設置してRSS配信に利用していましたが、今年1月半ば辺りの記事からの配信が滞っていることが、@otahiさんからのツイートで分かりましたorz..&lt;/p&gt;
-
-&lt;p&gt;FeedBurnerは死んだのですか？&lt;/p&gt;
-
-&lt;p&gt;というわけで、FeedBurner経由の配信は停止しました。本ブログの購読者でFeedBurner経由の配信を登録されている方おられましたら、大変にお手数ですが、右上オレンジのRSSアイコンをクリック、または &lt;a href=&quot;http://melborne.github.io/atom.xml&quot;&gt;http://melborne.github.io/atom.xml&lt;/a&gt; を開いてRSSリーダーへの再登録をお願い申し上げますm(__)m&lt;/p&gt;
-
-&lt;p&gt;@otahiさんありがとうございます。&lt;/p&gt;
 </content>
  </entry>
  

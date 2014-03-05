@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     
-      <title>「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると...</title>
+      <title>Rubyでパイプライン？</title>
     
     <meta name="description" content="" />
     <meta name="author" content="kyoendo" />
@@ -159,8 +159,8 @@
       <div class="content">
         
 <div class="page-header span8">
-  <div class="date"><span>01 March 2014</span></div>
-  <h1 class='page-title'><a href="/2014/03/01/spritz-with-ruby-oneliner-2">「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると...</a> <small>  </small></h1>
+  <div class="date"><span>05 March 2014</span></div>
+  <h1 class='page-title'><a href="/2014/03/05/filter-in-ruby">Rubyでパイプライン？</a> <small>  </small></h1>
 </div>
 
 <div class="row">
@@ -179,33 +179,79 @@
       </script>
     </div>
 
-    <p>動体視力が鍛えられるようになります。</p>
+    <p><a href="http://angularjs.org/" title="AngularJS — Superheroic JavaScript MVW Framework">AngularJS</a>というものを眺めていたらその中にビューテンプレートなどで使える<a href="http://js.studio-kingdom.com/angularjs/guide/filter" title="フィルターについて | AngularJS 1.2 日本語リファレンス | js STUDIO">フィルター</a>という概念がでてきて、あーこれLiquidにもあったけどUNIXのパイプラインみたいで面白いなあRubyでできないかなあ、ということでちょっと試してみましたという内容の投稿です。</p>
 
-<pre><code>ruby -e 'trap(:INT){print"\e[?25h\e[0;0H";exit(0)};x,y=[`tput lines`,`tput cols`].map{|n|n.to_i/2};print"\e[?25l";ARGF.read.scan(/\w+/).unshift(*%w(3 2 1 0 Go!)).cycle{|w|c=w.size/2;w=w.dup;cw=w[c];w[c]="\e[#{rand 31..37}m#{cw}\e[0m";print"\e[2J\e[#{x+rand(-x/2..x/2)};#{y-c+rand(-y/2..y/2)}H",w;sleep(0.3)}' TEXT
+<p>まあ、メソッドチェーンでいいよ、って話で終わりなんですが。</p>
+
+<p>AngulraJSのFilterというのはビューテンプレートの中で、</p>
+
+<pre><code>{{ 12 | currency  }}
 </code></pre>
 
-<p><img src="http://gifzo.net/rmey2H2yKF.gif" alt="spritz noshadow" /></p>
+<p>のようにすると、<code>12</code>が<code>currency</code>フィルタを通って<code>$12.00</code>が出力されるといった代物です。</p>
 
-<p>Hosted by <a href="http://gifzo.net/" title="Gifzo - 宇宙一簡単なスクリーンキャスト共有">Gifzo</a></p>
-
-<h3>TEXT</h3>
-
-<pre><code>Ruby is a dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.
-
-Ruby is a language of careful balance. Its creator, Yukihiro “Matz” Matsumoto, blended parts of his favorite languages (Perl, Smalltalk, Eiffel, Ada, and Lisp) to form a new language that balanced functional programming with imperative programming.
-
-He has often said that he is “trying to make Ruby natural, not simple,” in a way that mirrors life.
+<pre><code>{{ expression | filter1 | filter2 | filter3  }}
 </code></pre>
 
-<hr />
+<p>のように複数のフィルタを順次適用することもできます。まさにパイプですね。</p>
 
-<p><a href="/2014/03/01/spritz-with-ruby-oneliner/" title="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyでやると...">「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyでやると...</a></p>
+<h2>Rubyでパイプ？</h2>
 
-<p> <a href="http://gigazine.net/news/20140228-spritz/" title="単語が目に飛び込んできてすごい速度で文章を読めるようになる「Spritz」 - GIGAZINE">単語が目に飛び込んできてすごい速度で文章を読めるようになる「Spritz」 - GIGAZINE</a></p>
+<p>でこんな感じのものをRubyで書いてみました。</p>
 
-<hr />
+<div><script src='https://gist.github.com/9363948.js?file='></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9363948&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
-<p>(追記：2014-3-2) 画像を大きいものに差し替えました。</p>
+
+<p>そうすると、こんな風に書けるようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;./filter&quot;</span>
+<span class="n">using</span> <span class="no">CoreExt</span>
+
+<span class="nb">puts</span> <span class="s1">&#39;hello&#39;</span> <span class="o">|</span> <span class="ss">:upcase</span>
+
+<span class="c1"># &gt;&gt; HELLO</span>
+
+<span class="nb">puts</span> <span class="mi">123</span> <span class="o">|</span> <span class="ss">:next</span>
+
+<span class="c1"># &gt;&gt; 124</span>
+</code></pre></div>
+
+
+<p>もちろんチェーンもできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="s1">&#39;Mississippi&#39;</span> <span class="o">|</span> <span class="ss">:upcase</span> <span class="o">|</span> <span class="ss">:squeeze</span> <span class="o">|</span> <span class="ss">:chars</span> <span class="o">|</span> <span class="ss">:reverse</span>
+
+<span class="c1"># &gt;&gt; [&quot;I&quot;, &quot;P&quot;, &quot;I&quot;, &quot;S&quot;, &quot;I&quot;, &quot;S&quot;, &quot;I&quot;, &quot;M&quot;]</span>
+
+<span class="nb">puts</span> <span class="mi">123</span> <span class="o">|</span> <span class="ss">:next</span> <span class="o">|</span> <span class="ss">:even?</span>
+
+<span class="c1"># &gt;&gt; true</span>
+</code></pre></div>
+
+
+<p><code>Filter.add</code>を使って新たなフィルターを追加できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Filter</span><span class="o">.</span><span class="n">add</span> <span class="ss">:currency</span> <span class="k">do</span> <span class="o">|</span><span class="n">int</span><span class="o">|</span>
+  <span class="k">raise</span> <span class="no">ArgumentError</span> <span class="k">unless</span> <span class="n">int</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">Numeric</span><span class="p">)</span>
+  <span class="s2">&quot;$%.2f&quot;</span> <span class="o">%</span> <span class="n">int</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="mi">123</span><span class="o">.</span><span class="mi">45</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">|</span> <span class="ss">:currency</span>
+
+<span class="c1"># &gt;&gt; $370.35</span>
+
+<span class="no">Filter</span><span class="o">.</span><span class="n">add</span> <span class="ss">:titleize</span> <span class="k">do</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span>
+  <span class="n">str</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">)</span><span class="o">*</span><span class="s1">&#39; &#39;</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="s1">&#39;ruby on rails&#39;</span> <span class="o">|</span> <span class="ss">:titleize</span>
+
+<span class="c1"># &gt;&gt; Ruby On Rails</span>
+</code></pre></div>
+
+
+<p>でも引数取れないんですorz..</p>
 
 
     <div class="ad" id="topAdsense">
@@ -225,15 +271,15 @@ He has often said that he is “trying to make Ruby natural, not simple,” in a
     <hr>
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" class="hatena-bookmark-button" data-hatena-bookmark-title="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると..." data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/03/05/filter-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでパイプライン？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" data-text="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると..." data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/03/05/filter-in-ruby/" data-text="Rubyでパイプライン？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" />
+  <link rel="canonical" href="http://melborne.github.io/2014/03/05/filter-in-ruby/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -248,7 +294,7 @@ He has often said that he is “trying to make Ruby natural, not simple,” in a
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2014/03/05/filter-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
@@ -260,12 +306,12 @@ He has often said that he is “trying to make Ruby natural, not simple,” in a
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2014/03/01/spritz-with-ruby-oneliner" title="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyでやると...">&larr; Previous</a></li>
+        <li class="prev"><a href="/2014/03/01/spritz-with-ruby-oneliner-2" title="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると...">&larr; Previous</a></li>
       
         <li><a href="/">Archive</a></li>
         <!--<li><a href="/archive.html">Archive</a></li>-->
       
-        <li class="next"><a href="/2014/03/05/filter-in-ruby" title="Rubyでパイプライン？">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -313,15 +359,15 @@ He has often said that he is “trying to make Ruby natural, not simple,” in a
 
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" class="hatena-bookmark-button" data-hatena-bookmark-title="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると..." data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/03/05/filter-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyでパイプライン？" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" data-text="「単語が目に飛び込んできてすごい速度で文章を..」ってやつをRubyで..を改良すると..." data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/03/05/filter-in-ruby/" data-text="Rubyでパイプライン？" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" />
+  <link rel="canonical" href="http://melborne.github.io/2014/03/05/filter-in-ruby/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -336,7 +382,7 @@ He has often said that he is “trying to make Ruby natural, not simple,” in a
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2014/03/01/spritz-with-ruby-oneliner-2/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2014/03/05/filter-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
