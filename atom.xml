@@ -4,13 +4,121 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-03-06T21:55:25+09:00</updated>
+ <updated>2014-03-07T11:20:18+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>DRY重患者RubyistのためのNullObjectパターン</title>
+   <link href="http://melborne.github.io/2014/03/07/nullobject-pattern-in-ruby"/>
+   <updated>2014-03-07T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/03/07/nullobject-pattern-in-ruby</id>
+   <content type="html">&lt;p&gt;以前私はRubyistはDRY症候群に掛かっているという記事を書いた。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2013/09/27/auto-attr-set-in-ruby/&quot; title=&quot;RubyistたちのDRY症候群との戦い&quot;&gt;RubyistたちのDRY症候群との戦い&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;要約するとDRYじゃないコードを見るとRubyistはムズムズするといった内容だ。&lt;/p&gt;
+
+&lt;p&gt;前回私が書いた記事の中に、次のようなコードが出てきた。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;run&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@methods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;custom&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;custom&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2014/03/05/filter-in-ruby/&quot; title=&quot;Rubyでパイプライン？&quot;&gt;Rubyでパイプライン？&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;これは&lt;code&gt;@methods&lt;/code&gt;に格納したメソッドを&lt;code&gt;@obj&lt;/code&gt;に対し順次呼び出すが、同名のフィルタがFilter.filtersにあるのならそれをcallする、といったコードである。&lt;/p&gt;
+
+&lt;p&gt;あなたが重度のDRY症候群に掛かっているなら、このコードを見てムズムズしているに違いない。&lt;/p&gt;
+
+&lt;p&gt;これは一般に、「あるなら呼べ、そうでないならお前は黙ってろ」パターンと呼ばれている。以下も同様である。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;liz&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;score&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;liz&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;score&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;しかし、この頻出するパターンに対し患者たちは叫ぶ。「そうじゃない。僕たちはこう書きたいんだ。」&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;run&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@methods&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;liz&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;score&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これを、「呼んで駄目なら黙ってろ」パターンという。&lt;/p&gt;
+
+&lt;p&gt;当然、Rubyからは次のような返事が帰ってくる。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;34&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`block in run&amp;#39;: undefined method `&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:NilClass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;NoMethodError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;重患者のための即効性特効薬&lt;/h2&gt;
+
+&lt;p&gt;そこで私は彼ら重度患者のために、21年の歳月を掛けてこの深刻なる問題について研究を重ねた。そして遂にその特効薬を開発したのだ。その名も「&lt;strong&gt;NullObjectモジュール&lt;/strong&gt;」。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;NullObject&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;refine&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NilClass&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;method_missing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;患者たちは直ちに&lt;code&gt;using&lt;/code&gt;を使ってあなたの体にNullObjectを注入せよ。&lt;/p&gt;
+
+&lt;p&gt;早期の回復を望んでいる。&lt;/p&gt;
+
+&lt;p&gt;私も一つ打っておくか...。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NullObject&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Struct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:scores&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;charlie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Charlie&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;charlie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scores&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;35&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;english&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;78&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;music&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;charlie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scores&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 35&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;liz&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Liz&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;liz&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scores&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; nil&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+
+&lt;p&gt;ほんとうにヤバい人は、&lt;code&gt;naught&lt;/code&gt;を使ってくださいm(__)m&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/avdi/naught&quot; title=&quot;avdi/naught&quot;&gt;avdi/naught&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;関連記事：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2012/10/29/existential-operator-in-ruby/&quot; title=&quot;Rubyに存在演算子は存在するの？&quot;&gt;Rubyに存在演算子は存在するの？&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Rubyでパイプライン？</title>
@@ -2787,913 +2895,6 @@ x = [1,2,3] * ([4, 5] * &amp;#39;6&amp;#39;)
 &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/togglate&quot; title=&quot;melborne/togglate&quot;&gt;melborne/togglate&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
 
 &lt;p&gt;関連記事： &lt;a href=&quot;http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation/&quot; title=&quot;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&quot;&gt;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&lt;/a&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円〜で好評発売中！ ===&lt;/p&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/ruby_pack8.png&quot; alt=&quot;pack8&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;
-&lt;a href=&quot;/books/&quot;&gt;
-  &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）</title>
-   <link href="http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation"/>
-   <updated>2014-02-17T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation</id>
-   <content type="html">&lt;p&gt;(追記：2014-2-26) 自動翻訳機能を追加しました。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2014/02/25/togglate-meets-mymemory/&quot; title=&quot;翻訳ドキュメント作成支援ツールTogglateで翻訳要らず？&quot;&gt;翻訳ドキュメント作成支援ツールTogglateで翻訳要らず？&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;少し前にオープンソースプロジェクトにおける翻訳ドキュメントの作成における問題点とその解決案について記事を書いたんだけど、要は翻訳ドキュメント内に原文をそのセンテンスごとに埋め込んで、原文と訳文の対応付けを保証しつつこれをトグル表示させることで原文が翻訳ドキュメントの表示上の邪魔にならないようにするといったもので、そのときに併せてこれをスクリプトで実現した&lt;code&gt;togglate&lt;/code&gt;というツールも作ってそのツールとgithub向けmarkdownのパーサーである&lt;code&gt;github-markdown&lt;/code&gt;を使ってmarkdownによるオリジナルドキュメントからhtmlによる翻訳ドキュメントを生成するプロセスについても解説したんだ。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;/2014/02/11/problem-and-proposal-for-tranlated-documents/&quot; title=&quot;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策&quot;&gt;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;それでそのときのtogglateのデフォルトの仕様としては原文をセンテンスごとに特別なコードブロック&lt;code&gt;```original&lt;/code&gt;, &lt;code&gt;```&lt;/code&gt;で囲み、そのブロックをトグル表示させるJavaScriptのコードをmarkdownに埋め込むものとなっていたんだけれど、これに対して&lt;code&gt;togglate&lt;/code&gt;のissueの方に&lt;code&gt;Pro Git&lt;/code&gt;の日本語訳をされている@harupongさんから、原文をコードブロックで囲むこともJavaScriptコードを埋め込むことも本家プロジェクト側では受け入れ難いだろうから原文をコードブロックではなくHTMLコメントタグで囲みJavaScriptコードを埋め込まないオプションがあったほうがいいという提案をもらって、提案を頂けただけでも嬉しかったんだけどその提案がまた正にその通りでまあ辛うじてオプションでできなくはなかったんだけど基本設計としてコードブロックどうなのよと思い至ったので、togglateの仕様を見直して上記点を反映させたversion0.03を公開したのでここであらためて紹介しますので今後ともどうぞよろしくお願いします。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate | RubyGems.org | your community gem host&quot;&gt;togglate | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/togglate&quot; title=&quot;melborne/togglate&quot;&gt;melborne/togglate&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;なお@harupongさんらによるPro Git日本語版電子書籍は以下より入手可能です。ほんと素晴らしい仕事です。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://progit-ja.github.io/&quot; title=&quot;Pro Git 日本語版電子書籍公開サイト&quot;&gt;Pro Git 日本語版電子書籍公開サイト&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;h2&gt;togglateの仕様&lt;/h2&gt;
-
-&lt;p&gt;togglateはRubyによるスクリプトですがターミナルで実行できる&lt;code&gt;togglate create&lt;/code&gt;コマンドを持っています。&lt;code&gt;togglate create&lt;/code&gt;コマンドにオリジナルドキュメントを渡すと、オリジナルドキュメント内の原文をセンテンスごとにHTMLコメント化し、文末にこれを表示させるためのJavaScriptのコードを埋め込んだものを出力します。表示方法としてはマウスオーバーツールチップによる方法(hover)とトグルによる方法(toggle)が&lt;code&gt;--method&lt;/code&gt;オプションで選べます。JavaScriptのコードは&lt;code&gt;--no-embed-code&lt;/code&gt;オプションで埋め込まない選択ができます。また原文におけるコードブロックをHTMLコメント化しないオプション&lt;code&gt;--no-code-block&lt;/code&gt;も選べます。&lt;code&gt;togglate help create&lt;/code&gt;を参照してください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate help create
-Usage:
-  togglate create FILE
-
-Options:
-  -m, [--method=METHOD]                   # Select a display method: &#39;hover&#39; or &#39;toggle&#39;
-                                          # Default: hover
-  -e, [--embed-code]                      # Enable code embeding to false
-                                          # Default: true
-      [--toggle-link-text=one two three]
-                                          # Default: [&quot;*&quot;, &quot;hide&quot;]
-  -c, [--code-block]                      # Enable code blocks not to be wrapped
-
-Create a base file for translation from a original file
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;チュートリアル&lt;/h2&gt;
-
-&lt;p&gt;翻訳ドキュメントの作成プロセスを、簡単な例で試してみます。&lt;/p&gt;
-
-&lt;h3&gt;準備&lt;/h3&gt;
-
-&lt;p&gt;ここではこの目的のために作成した&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate&quot;&gt;togglate&lt;/a&gt;というツールと、Github社謹製&lt;a href=&quot;https://rubygems.org/gems/github-markdown&quot; title=&quot;github-markdown&quot;&gt;github-markdown(gfm)&lt;/a&gt;というツールを使います。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;github-markdown&lt;/code&gt;は、Github向けMarkdown(GFM)ファイルをHTMLファイルに変換するツールです（ &lt;a href=&quot;https://help.github.com/articles/github-flavored-markdown&quot; title=&quot;GitHub Flavored Markdown · GitHub Help&quot;&gt;GitHub Flavored Markdown&lt;/a&gt;）。&lt;/p&gt;
-
-&lt;p&gt;翻訳ドキュメントの生成プロセスを図にすると以下のようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/02/togglate1.png&quot; alt=&quot;togglate noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;togglate&lt;/code&gt;、&lt;code&gt;github-markdown&lt;/code&gt;ともにgem化されているので、インストールは簡単です。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% gem install togglate
-% gem install github-markdown
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これにより&lt;code&gt;togglate&lt;/code&gt;というコマンドと&lt;code&gt;gfm&lt;/code&gt;というコマンドが使えるようになりますが、&lt;code&gt;gfm&lt;/code&gt;は以下のようにして手動でパスを通す必要があります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% ln -s .rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/github-markdown-0.6.4/bin/gfm /usr/local/bin
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3&gt;オリジナルドキュメント&lt;/h3&gt;
-
-&lt;p&gt;次のような英語で書かれたmarkdownファイル(README.md)があると仮定します。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## AwesomeTool
-
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
-
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
-
-install the gem:
-
-    gem install awesome_tool
-
-And run with:
-
-    awesome nhk &amp;#39;charlie&amp;#39;
-
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;翻訳ベースドキュメントの生成&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;togglate create&lt;/code&gt;コマンドで、&lt;code&gt;README.md&lt;/code&gt;から翻訳のベースとなるドキュメント(README.ja.md)を生成します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate create README.md &amp;gt; README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これにより次のような&lt;code&gt;README.ja.md&lt;/code&gt;が生成されます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;[translation here]
-
-&amp;lt;!--original
-## AwesomeTool
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-install the gem:
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-    gem install awesome_tool
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-And run with:
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-    awesome nhk &amp;#39;charlie&amp;#39;
---&amp;gt;
-
-[translation here]
-
-&amp;lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&amp;gt;
-
-&amp;lt;script src=&amp;quot;http://code.jquery.com/jquery-1.11.0.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script&amp;gt;
-$(function() {
-  $(&amp;quot;*&amp;quot;).contents().filter(function() {
-    return this.nodeType==8 &amp;amp;&amp;amp; this.nodeValue.match(/^original/);
-  }).each(function(i, e) {
-    var tooltips = e.nodeValue.replace(/^original *[\n\r]|[\n\r]$/g, &amp;#39;&amp;#39;);
-    $(this).prev().attr(&amp;#39;title&amp;#39;, tooltips);
-  });
-});
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;ポイントは次の２点です。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;ol&gt;
-&lt;li&gt;原文の各センテンスをHTMLコメントタグである&lt;code&gt;&amp;lt;!--original&lt;/code&gt;と&lt;code&gt;--&amp;gt;&lt;/code&gt;で囲み、直前に&lt;code&gt;[translation here]&lt;/code&gt;というマークを挿入&lt;/li&gt;
-&lt;li&gt;ドキュメント末尾にこの原文のコメントブロックを、その直前のDOM（訳文が書かれる場所）上でツールチップ表示させるためのJavaScriptコードを挿入&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;なお、version0.0.3以前ではデフォルトでコードブロックをタグで囲まない仕様となっていましたが、すべてを囲む仕様に変更しました。コードブロックを囲まないようにしたいときは&lt;code&gt;--no-code-block&lt;/code&gt;オプションを付けてください。&lt;/p&gt;
-
-&lt;p&gt;また、原文をツールチップ表示ではなく、トグル表示させたいときは&lt;code&gt;--method=toggle&lt;/code&gt;オプションを指定します。&lt;/p&gt;
-
-&lt;h3&gt;翻訳作業&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;[translation here]&lt;/code&gt;のマークの箇所に、その直下の原文に対応する訳文を入れます。訳が不要な箇所は原文のコメントブロックを削除します。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## AwesomeTool
-
-AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。
-
-&amp;lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&amp;gt;
-
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
-
-Gemをインストールします。
-
-&amp;lt;!--original
-install the gem:
---&amp;gt;
-
-    gem install awesome_tool
-
-そして、実行します。
-
-&amp;lt;!--original
-And run with:
---&amp;gt;
-
-    awesome nhk &amp;#39;charlie&amp;#39;
-
-テレビを付けて、NHKを選曲します。
-`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。
-
-&amp;lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&amp;gt;
-
-\ コードは省略
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;HTML変換&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;gfm&lt;/code&gt;コマンドを使って翻訳が済んだ&lt;code&gt;README.ja.md&lt;/code&gt;からHTMLファイル(README.ja.html)を生成します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% gfm README.ja.md &amp;gt; README.ja.html
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次の&lt;code&gt;README.ja.html&lt;/code&gt;ファイルが生成されます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;&amp;lt;h2&amp;gt;AwesomeTool&amp;lt;/h2&amp;gt;
-
-&amp;lt;p&amp;gt;AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&amp;lt;/p&amp;gt;
-
-&amp;lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&amp;gt;
-
-&amp;lt;pre lang=&amp;quot;ruby&amp;quot;&amp;gt;&amp;lt;code&amp;gt;# mytool.rb
-require &amp;amp;#39;awesome_tool&amp;amp;#39;
-
-awesome &amp;amp;#39;nhk&amp;amp;#39; do |name|
-  &amp;amp;#39;You are awesome, #{name}!&amp;amp;#39;
-end
-&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-
-&amp;lt;p&amp;gt;Gemをインストールします。&amp;lt;/p&amp;gt;
-
-&amp;lt;!--original
-install the gem:
---&amp;gt;
-
-&amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;gem install awesome_tool
-&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-
-&amp;lt;p&amp;gt;そして、実行します。&amp;lt;/p&amp;gt;
-
-&amp;lt;!--original
-And run with:
---&amp;gt;
-
-&amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;awesome nhk &amp;amp;#39;charlie&amp;amp;#39;
-&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-
-&amp;lt;p&amp;gt;テレビを付けて、NHKを選曲します。&amp;lt;br&amp;gt;
-&amp;lt;code&amp;gt;You are awesome, charlie!&amp;lt;/code&amp;gt;というメッセージをスクリーン上で確認できるでしょう。&amp;lt;/p&amp;gt;
-
-&amp;lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&amp;gt;
-
-&amp;lt;!-- コードは省略 --&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;これをブラウザで表示すると次のように見えます。各訳文の上にマウスカーソルを置いてみてください。原文が表示されます。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2&gt;AwesomeTool&lt;/h2&gt;
-
-
-
-
-&lt;p&gt;AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&gt;
-
-
-
-
-&lt;pre lang=&quot;ruby&quot;&gt;&lt;code&gt;# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;Gemをインストールします。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-install the gem:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;gem install awesome_tool
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;そして、実行します。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-And run with:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;awesome nhk &amp;#39;charlie&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;テレビを付けて、NHKを選曲します。&lt;br&gt;
-&lt;code&gt;You are awesome, charlie!&lt;/code&gt;というメッセージをスクリーン上で確認できるでしょう。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&gt;
-
-
-
-
-&lt;script src=&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;&gt;&lt;/script&gt;
-
-
-
-
-&lt;script&gt;
-$(function() {
-  $(&quot;*&quot;).contents().filter(function() {
-    return this.nodeType==8 &amp;&amp; this.nodeValue.match(/^original/);
-  }).each(function(i, e) {
-    var tips = e.nodeValue.replace(/^original *[\n\r]|[\n\r]$/g, &#39;&#39;);
-    $(this).prev().next().attr(&#39;title&#39;, tips);
-  });
-});
-&lt;/script&gt;
-
-
-&lt;hr /&gt;
-
-&lt;h3&gt;オリジナルドキュメントと翻訳ドキュメントの差分&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;diff&lt;/code&gt;を使って、オリジナルドキュメントと翻訳ドキュメントの差分を取ってみます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% diff -u README.md README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;&lt;span class=&quot;gd&quot;&gt;--- README.md   2014-02-16 10:20:08.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+++ README.ja.md   2014-02-16 10:39:13.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gu&quot;&gt;@@ -1,6 +1,10 @@&lt;/span&gt;
- ## AwesomeTool
- 
-&lt;span class=&quot;gi&quot;&gt;+AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
- ```ruby
- # mytool.rb
-&lt;span class=&quot;gu&quot;&gt;@@ -11,13 +15,39 @@&lt;/span&gt;
- end
- ```
- 
-&lt;span class=&quot;gi&quot;&gt;+Gemをインストールします。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- install the gem:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     gem install awesome_tool
- 
-&lt;span class=&quot;gi&quot;&gt;+そして、実行します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- And run with:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     awesome nhk &amp;#39;charlie&amp;#39;
- 
-&lt;span class=&quot;gi&quot;&gt;+テレビを付けて、NHKを選曲します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- Turn on the TV, select NHK.
- You will see `You are awesome, charlie!` message on the screen.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-[コードの差分は省略]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;オリジナルに対し追加操作だけが行われたことが分かります。&lt;/p&gt;
-
-&lt;h3&gt;オリジナルドキュメントの更新&lt;/h3&gt;
-
-&lt;p&gt;AwesomeToolのAPIが変わりオリジナルドキュメントが次のように更新されたとします。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;&lt;span class=&quot;gh&quot;&gt;diff --git a/README.md b/README.md&lt;/span&gt;
-&lt;span class=&quot;gh&quot;&gt;index 6872e9a..0481f7e 100644&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;--- a/README.md&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+++ b/README.md&lt;/span&gt;
-&lt;span class=&quot;gu&quot;&gt;@@ -9,6 +9,10 @@ require &amp;#39;awesome_tool&amp;#39;&lt;/span&gt;
- awesome &amp;#39;nhk&amp;#39; do |name|
-   &amp;#39;You are awesome, #{name}!&amp;#39;
- end
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+awesome do |name|&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+  call :nhk&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+end&lt;/span&gt;
- ```
- 
- install the gem:
-&lt;span class=&quot;gu&quot;&gt;@@ -21,3 +25,9 @@ And run with:&lt;/span&gt;
- 
- Turn on the TV, select NHK.
- You will see `You are awesome, charlie!` message on the screen.
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+Alternatively, you can say:&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+    awesome &amp;#39;charlie&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+Look at the sky, you will see the message with clouds.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;コードの一部改変と機能説明の追記が行われました。&lt;/p&gt;
-
-&lt;h3&gt;翻訳ドキュメントの更新&lt;/h3&gt;
-
-&lt;p&gt;翻訳ドキュメントがオリジナルに追随しているかみるために、更新後のオリジナルと翻訳ドキュメントの差分を取ります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% diff -u README.md README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;&lt;span class=&quot;gd&quot;&gt;--- README.md   2014-02-17 18:51:38.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+++ README.ja.md   2014-02-16 10:39:13.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gu&quot;&gt;@@ -1,6 +1,10 @@&lt;/span&gt;
- ## AwesomeTool
- 
-&lt;span class=&quot;gi&quot;&gt;+AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
- ```ruby
- # mytool.rb
-&lt;span class=&quot;gu&quot;&gt;@@ -9,25 +13,41 @@&lt;/span&gt;
- awesome &amp;#39;nhk&amp;#39; do |name|
-   &amp;#39;You are awesome, #{name}!&amp;#39;
- end
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-awesome do |name|&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-  call :nhk&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-end&lt;/span&gt;
- ```
- 
-&lt;span class=&quot;gi&quot;&gt;+Gemをインストールします。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- install the gem:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     gem install awesome_tool
- 
-&lt;span class=&quot;gi&quot;&gt;+そして、実行します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- And run with:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     awesome nhk &amp;#39;charlie&amp;#39;
- 
-&lt;span class=&quot;gi&quot;&gt;+テレビを付けて、NHKを選曲します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- Turn on the TV, select NHK.
- You will see `You are awesome, charlie!` message on the screen.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-&lt;span class=&quot;gd&quot;&gt;-Alternatively, you can say:&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-    awesome &amp;#39;charlie&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-Look at the sky, you will see the message with clouds.&lt;/span&gt;
-[コードの差分は省略]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;追随していない部分があることが分かりました（赤字部分）。&lt;/p&gt;
-
-&lt;p&gt;それらの箇所を翻訳ドキュメント側にコピーし、対応訳を書きます。結果をdiffで確認します。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;&lt;span class=&quot;gd&quot;&gt;--- README.md   2014-02-17 18:51:38.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+++ README.ja.md   2014-02-17 19:02:00.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gu&quot;&gt;@@ -1,6 +1,10 @@&lt;/span&gt;
- ## AwesomeTool
- 
-&lt;span class=&quot;gi&quot;&gt;+AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
- ```ruby
- # mytool.rb
-&lt;span class=&quot;gu&quot;&gt;@@ -15,19 +19,50 @@&lt;/span&gt;
- end
- ```
- 
-&lt;span class=&quot;gi&quot;&gt;+Gemをインストールします。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- install the gem:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     gem install awesome_tool
- 
-&lt;span class=&quot;gi&quot;&gt;+そして、実行します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- And run with:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     awesome nhk &amp;#39;charlie&amp;#39;
- 
-&lt;span class=&quot;gi&quot;&gt;+テレビを付けて、NHKを選曲します。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- Turn on the TV, select NHK.
- You will see `You are awesome, charlie!` message on the screen.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-&lt;span class=&quot;gi&quot;&gt;+代わりに、次のように言ってもいいです。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- Alternatively, you can say:
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
- 
-     awesome &amp;#39;charlie&amp;#39;
- 
-&lt;span class=&quot;gi&quot;&gt;+空を見上げれば、雲で作られた先のメッセージが見えるでしょう。&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&amp;lt;!--original&lt;/span&gt;
- Look at the sky, you will see the message with clouds.
-&lt;span class=&quot;gi&quot;&gt;+--&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+&lt;/span&gt;
-[コードの差分は省略]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;赤字が消え、翻訳ドキュメントがオリジナルに追随していることが分かります。&lt;/p&gt;
-
-&lt;p&gt;更新後の翻訳ドキュメントをWebに表示してみます。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2&gt;AwesomeTool&lt;/h2&gt;
-
-
-
-
-&lt;p&gt;AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&gt;
-
-
-
-
-&lt;pre lang=&quot;ruby&quot;&gt;&lt;code&gt;# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-
-awesome do |name|
-  call :nhk
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;Gemをインストールします。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-install the gem:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;gem install awesome_tool
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;そして、実行します。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-And run with:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;awesome nhk &amp;#39;charlie&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;テレビを付けて、NHKを選曲します。&lt;br&gt;
-&lt;code&gt;You are awesome, charlie!&lt;/code&gt;というメッセージをスクリーン上で確認できるでしょう。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&gt;
-
-
-
-
-&lt;p&gt;代わりに、次のように言ってもいいです。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-Alternatively, you can say:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;awesome &amp;#39;charlie&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;空を見上げれば、雲で作られた先のメッセージが見えるでしょう。&lt;/p&gt;
-
-
-
-
-&lt;!--original
-Look at the sky, you will see the message with clouds.
---&gt;
-
-
-&lt;hr /&gt;
-
-&lt;h3&gt;トグルによる原文の表示&lt;/h3&gt;
-
-&lt;p&gt;トグルで原文を表示する例も示しておきます。&lt;code&gt;--method&lt;/code&gt;オプションに&lt;code&gt;toggle&lt;/code&gt;を渡します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% toggle create -m=toggle README.md &amp;gt; README.ja.md
-% gfm README.ja.md &amp;gt; README.ja.html
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;README.ja.html&lt;/code&gt;をブラウザで表示すると次のように見えます。文末のアスタリスク*をクリックしてみてください。原文がトグル表示されます。&lt;/p&gt;
-
-&lt;h2&gt;AwesomeTool&lt;/h2&gt;
-
-
-
-
-&lt;p&gt;AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&gt;
-
-
-
-
-&lt;pre lang=&quot;ruby&quot;&gt;&lt;code&gt;# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-
-awesome do |name|
-  call :nhk
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;Gemをインストールします。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-install the gem:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;gem install awesome_tool
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;そして、実行します。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-And run with:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;awesome nhk &amp;#39;charlie&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;テレビを付けて、NHKを選曲します。&lt;br&gt;
-&lt;code&gt;You are awesome, charlie!&lt;/code&gt;というメッセージをスクリーン上で確認できるでしょう。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&gt;
-
-
-
-
-&lt;p&gt;代わりに、次のように言ってもいいです。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-Alternatively, you can say:
---&gt;
-
-
-
-
-&lt;pre&gt;&lt;code&gt;awesome &amp;#39;charlie&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-
-
-&lt;p&gt;空を見上げれば、雲で作られた先のメッセージが見えるでしょう。&lt;/p&gt;
-
-
-
-
-&lt;!--toggle_original
-Look at the sky, you will see the message with clouds.
---&gt;
-
-
-
-
-&lt;script&gt;
-$(function() {
-  $(&quot;*&quot;).contents().filter(function() {
-    return this.nodeType==8 &amp;&amp; this.nodeValue.match(/^toggle_original/);
-  }).each(function(i, e) {
-    var tooltips = e.nodeValue.replace(/^toggle_original *[\n\r]|[\n\r]$/g, &#39;&#39;);
-    var link = &quot;&lt;span&gt;&lt;a href=&#39;#&#39; onclick=&#39;javascript:return false;&#39; class=&#39;toggleLink&#39;&gt;&quot; + &quot;*&quot; + &quot;&lt;/a&gt;&lt;/span&gt;&quot;;
-    $(this).prev().next().append(link);
-    $(this).prev().next().after(&quot;&lt;pre style=&#39;display:none&#39;&gt;&quot;+ tooltips + &quot;&lt;/pre&gt;&quot;);
-  });
-
-  $(&#39;.toggleLink&#39;).click(
-    function() {
-      if ($(this).text()==&quot;*&quot;) {
-       $(this).parent().parent().next(&#39;pre&#39;).slideDown(200);
-       $(this).text(&quot;hide&quot;);
-      } else {
-        $(this).parent().parent().next(&#39;pre&#39;).slideUp(200);
-        $(this).text(&quot;*&quot;);
-      };
-    });
-});
-&lt;/script&gt;
-
-
-&lt;hr /&gt;
-
-&lt;p&gt;トグルのためのリンクを変更する場合は、&lt;code&gt;--toggle-link-text&lt;/code&gt;オプションに２つの文字列を渡します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate create README.md --toggle-link-text &#39;show&#39; &#39;close&#39; &amp;gt; README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;説明は以上です。何かご意見・ご要望ありましたら、このブログのコメントまたはgithubのissueに頂けると助かります。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/togglate&quot; title=&quot;melborne/togglate&quot;&gt;melborne/togglate&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
 
 &lt;hr /&gt;
 
