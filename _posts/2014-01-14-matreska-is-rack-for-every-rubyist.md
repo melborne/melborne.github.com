@@ -2,8 +2,8 @@
 layout: post
 title: "Rack以外でRackしたいRubyistのためのMatreska"
 description: ""
-category: 
-tags: 
+category:
+tags:
 date: 2014-01-14
 published: true
 ---
@@ -16,7 +16,7 @@ published: true
 で、そのときに書いたコードを手直しして「なんでもGem化プロジェクト{% fn_ref 1 %}」に則ってこの度Gem化しましたので、お知らせいたします。まあ、また小石（tiny gem）を一つ増やしただけですが。
 
 > [matreska | RubyGems.org | your community gem host](https://rubygems.org/gems/matreska "matreska | RubyGems.org | your community gem host")
-> 
+>
 > [melborne/matreska](https://github.com/melborne/matreska "melborne/matreska")
 
 ## Matreskaとは
@@ -28,7 +28,7 @@ published: true
 正直何に使えるのか作った本人もまだ良くわかってませんが、基本的には次の二通りの使い方ができます。
 
 > 1. 一つの入力に対してアダプタブルなフィルタにより多段的な処理を施す。
-> 
+>
 > 2. 通過させる各フィルタにおいて副産物を生成する。
 
 コードは60行ほどなのでここに貼っておきます。

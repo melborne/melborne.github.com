@@ -2,8 +2,8 @@
 layout: post
 title: "DRY重患者RubyistのためのNullObjectパターン"
 description: ""
-category: 
-tags: 
+category:
+tags:
 date: 2014-03-07
 published: true
 ---
@@ -109,4 +109,3 @@ liz.scores[:math] # => nil
 関連記事：
 
 > [Rubyに存在演算子は存在するの？](http://melborne.github.io/2012/10/29/existential-operator-in-ruby/ "Rubyに存在演算子は存在するの？")
-
