@@ -122,10 +122,10 @@ def dec
   10
 end
 
-decrement # => 10
-decrement # => 9
-decrement # => 8
-decrement # => 7
+dec # => 10
+dec # => 9
+dec # => 8
+dec # => 7
 {% endhighlight %}
 
 ほぅ。カウントダウンしている...。
