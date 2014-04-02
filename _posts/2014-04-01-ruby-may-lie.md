@@ -63,6 +63,29 @@ dec.next # => 8
 dec.next # => 7
 {% endhighlight %}
 
+それとも、`step`とか使いますか。
+
+{% highlight ruby %}
+def counter(n=1, by=1)
+  n.step(by:by)
+end
+
+inc = counter
+inc.next # => 1
+inc.next # => 2
+inc.next # => 3
+inc.next # => 4
+
+dec = counter(10, -1)
+
+dec.next # => 10
+dec.next # => 9
+dec.next # => 8
+dec.next # => 7
+{% endhighlight %}
+
+## 最新式カウンタ
+
 でも、どうやらそうじゃないらしいんですよ、最新のやり方は。
 
 こうやるらしいんです...。
@@ -240,4 +263,7 @@ end
 [Rubyでワンタイムメソッドを実装して「スパイ大作戦」を敢行せよ！]({{ BASE_PATH }}/2014/03/15/mission-impossible-in-ruby/ "Rubyでワンタイムメソッドを実装して「スパイ大作戦」を敢行せよ！")
 
 
+---
+
+(追記:2014-4-2) stepの例を追加しました。
 
