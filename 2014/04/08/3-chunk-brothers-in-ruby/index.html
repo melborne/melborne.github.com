@@ -1,0 +1,793 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら...</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <!--<a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>-->
+            <a href="/atom.xml" id="rss">
+              <img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />
+            </a>
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/users/54">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>08 April 2014</span></div>
+  <h1 class='page-title'><a href="/2014/04/08/3-chunk-brothers-in-ruby">行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら...</a> <small> それとtogglate0.1.4アップデートのお知らせ </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <p>Rubyにはアクセスログのような行指向ドキュメントなどを、任意の条件で複数の束にまとめ上げる便利なEnumerableのメソッドが３つあります。<code>group_by</code>, <code>chunk</code>, そして<code>slice_before</code>です。これらはRubyの「<strong>だんご化３兄弟</strong>」としてRubyistの間で広く知られています<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+
+<p>簡単に言えばこれらのメソッドは、行単位のデータに対し以下の処理を実現するものとして表現できます。</p>
+
+<blockquote><p><code>group_by</code>は、同一条件の行を総まとめするメソッド。</p>
+
+<p><code>chunk</code>は、同一条件の行を部分まとめするメソッド。</p>
+
+<p><code>slice_before</code>は、指定行を先頭に後続行を部分まとめするメソッド。</p></blockquote>
+
+<p>（もちろん、これらのメソッドは行単位データ以外のEnumerableなデータに適用できます。）</p>
+
+<h2>group_by</h2>
+
+<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/group_by.html" title="instance method Enumerable#group_by">instance method Enumerable#group_by</a></p></blockquote>
+
+<p>最も直感的なメソッドは<code>group_by</code>です。行単位データの並び順に拘らず、ブロックで渡された条件ごとにデータをまとめ上げます。group_byを使って、ランダムに並んだユーザのスコアーをユーザ単位にまとめてみます。</p>
+
+<h4>score.txt</h4>
+
+<pre><code>Alice,84.0,79.5
+Bob,20.0,56.5
+Jimmy,80.0,31.0
+Kent,90.5,15.5
+Ross,68.0,33.0
+Alice,24.0,15.5
+Bob,60.0,16.5
+Jimmy,85.0,42.0
+Kent,55.5,15.5
+Ross,22.0,33.5
+Alice,64.5,39.5
+Bob,25.0,50.5
+Jimmy,60.0,61.0
+Kent,70.5,25.0
+Ross,48.0,36.5
+</code></pre>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">score</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;score.txt&#39;</span><span class="p">)</span>
+
+<span class="n">pp</span> <span class="n">score</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A\w+/</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; {&quot;Alice&quot;=&gt;[&quot;Alice,84.0,79.5\n&quot;, &quot;Alice,24.0,15.5\n&quot;, &quot;Alice,64.5,39.5\n&quot;],</span>
+<span class="c1"># &gt;&gt;  &quot;Bob&quot;=&gt;[&quot;Bob,20.0,56.5\n&quot;, &quot;Bob,60.0,16.5\n&quot;, &quot;Bob,25.0,50.5\n&quot;],</span>
+<span class="c1"># &gt;&gt;  &quot;Jimmy&quot;=&gt;[&quot;Jimmy,80.0,31.0\n&quot;, &quot;Jimmy,85.0,42.0\n&quot;, &quot;Jimmy,60.0,61.0\n&quot;],</span>
+<span class="c1"># &gt;&gt;  &quot;Kent&quot;=&gt;[&quot;Kent,90.5,15.5\n&quot;, &quot;Kent,55.5,15.5\n&quot;, &quot;Kent,70.5,25.0\n&quot;],</span>
+<span class="c1"># &gt;&gt;  &quot;Ross&quot;=&gt;[&quot;Ross,68.0,33.0\n&quot;, &quot;Ross,22.0,33.5\n&quot;, &quot;Ross,48.0,36.5\n&quot;]}</span>
+</code></pre></div>
+
+
+<p>group_byのブロックで先頭ワード（ユーザ名）の一致を条件にします。</p>
+
+<p>今度は、HTTPステータスコードをコードセクションごとにグループ化してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;rack&quot;</span>
+
+<span class="n">pp</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Utils</span><span class="o">::</span><span class="no">HTTP_STATUS_CODES</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">100</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; {1=&gt;[[100, &quot;Continue&quot;], [101, &quot;Switching Protocols&quot;], [102, &quot;Processing&quot;]],</span>
+<span class="c1"># &gt;&gt;  2=&gt;</span>
+<span class="c1"># &gt;&gt;   [[200, &quot;OK&quot;],</span>
+<span class="c1"># &gt;&gt;    [201, &quot;Created&quot;],</span>
+<span class="c1"># &gt;&gt;    [202, &quot;Accepted&quot;],</span>
+<span class="c1"># &gt;&gt;    [203, &quot;Non-Authoritative Information&quot;],</span>
+<span class="c1"># &gt;&gt;    [204, &quot;No Content&quot;],</span>
+<span class="c1"># &gt;&gt;    [205, &quot;Reset Content&quot;],</span>
+<span class="c1"># &gt;&gt;    [206, &quot;Partial Content&quot;],</span>
+<span class="c1"># &gt;&gt;    [207, &quot;Multi-Status&quot;],</span>
+<span class="c1"># &gt;&gt;    [208, &quot;Already Reported&quot;],</span>
+<span class="c1"># &gt;&gt;    [226, &quot;IM Used&quot;]],</span>
+<span class="c1"># &gt;&gt;  3=&gt;</span>
+<span class="c1"># &gt;&gt;   [[300, &quot;Multiple Choices&quot;],</span>
+<span class="c1"># &gt;&gt;    [301, &quot;Moved Permanently&quot;],</span>
+<span class="c1"># &gt;&gt;    [302, &quot;Found&quot;],</span>
+<span class="c1"># &gt;&gt;    [303, &quot;See Other&quot;],</span>
+<span class="c1"># &gt;&gt;    [304, &quot;Not Modified&quot;],</span>
+<span class="c1"># &gt;&gt;    [305, &quot;Use Proxy&quot;],</span>
+<span class="c1"># &gt;&gt;    [306, &quot;Reserved&quot;],</span>
+<span class="c1"># &gt;&gt;    [307, &quot;Temporary Redirect&quot;],</span>
+<span class="c1"># &gt;&gt;    [308, &quot;Permanent Redirect&quot;]],</span>
+<span class="c1"># &gt;&gt;  4=&gt;</span>
+<span class="c1"># &gt;&gt;   [[400, &quot;Bad Request&quot;],</span>
+<span class="c1"># &gt;&gt;    [401, &quot;Unauthorized&quot;],</span>
+<span class="c1"># &gt;&gt;    [402, &quot;Payment Required&quot;],</span>
+<span class="c1"># &gt;&gt;    [403, &quot;Forbidden&quot;],</span>
+<span class="c1"># &gt;&gt;    [404, &quot;Not Found&quot;],</span>
+<span class="c1"># &gt;&gt;    [405, &quot;Method Not Allowed&quot;],</span>
+<span class="c1"># &gt;&gt;    [406, &quot;Not Acceptable&quot;],</span>
+<span class="c1"># &gt;&gt;    [407, &quot;Proxy Authentication Required&quot;],</span>
+<span class="c1"># &gt;&gt;    [408, &quot;Request Timeout&quot;],</span>
+<span class="c1"># &gt;&gt;    [409, &quot;Conflict&quot;],</span>
+<span class="c1"># &gt;&gt;    [410, &quot;Gone&quot;],</span>
+<span class="c1"># &gt;&gt;    [411, &quot;Length Required&quot;],</span>
+<span class="c1"># &gt;&gt;    [412, &quot;Precondition Failed&quot;],</span>
+<span class="c1"># &gt;&gt;    [413, &quot;Request Entity Too Large&quot;],</span>
+<span class="c1"># &gt;&gt;    [414, &quot;Request-URI Too Long&quot;],</span>
+<span class="c1"># &gt;&gt;    [415, &quot;Unsupported Media Type&quot;],</span>
+<span class="c1"># &gt;&gt;    [416, &quot;Requested Range Not Satisfiable&quot;],</span>
+<span class="c1"># &gt;&gt;    [417, &quot;Expectation Failed&quot;],</span>
+<span class="c1"># &gt;&gt;    [422, &quot;Unprocessable Entity&quot;],</span>
+<span class="c1"># &gt;&gt;    [423, &quot;Locked&quot;],</span>
+<span class="c1"># &gt;&gt;    [424, &quot;Failed Dependency&quot;],</span>
+<span class="c1"># &gt;&gt;    [425, &quot;Reserved for WebDAV advanced collections expired proposal&quot;],</span>
+<span class="c1"># &gt;&gt;    [426, &quot;Upgrade Required&quot;],</span>
+<span class="c1"># &gt;&gt;    [427, &quot;Unassigned&quot;],</span>
+<span class="c1"># &gt;&gt;    [428, &quot;Precondition Required&quot;],</span>
+<span class="c1"># &gt;&gt;    [429, &quot;Too Many Requests&quot;],</span>
+<span class="c1"># &gt;&gt;    [430, &quot;Unassigned&quot;],</span>
+<span class="c1"># &gt;&gt;    [431, &quot;Request Header Fields Too Large&quot;]],</span>
+<span class="c1"># &gt;&gt;  5=&gt;</span>
+<span class="c1"># &gt;&gt;   [[500, &quot;Internal Server Error&quot;],</span>
+<span class="c1"># &gt;&gt;    [501, &quot;Not Implemented&quot;],</span>
+<span class="c1"># &gt;&gt;    [502, &quot;Bad Gateway&quot;],</span>
+<span class="c1"># &gt;&gt;    [503, &quot;Service Unavailable&quot;],</span>
+<span class="c1"># &gt;&gt;    [504, &quot;Gateway Timeout&quot;],</span>
+<span class="c1"># &gt;&gt;    [505, &quot;HTTP Version Not Supported&quot;],</span>
+<span class="c1"># &gt;&gt;    [506, &quot;Variant Also Negotiates (Experimental)&quot;],</span>
+<span class="c1"># &gt;&gt;    [507, &quot;Insufficient Storage&quot;],</span>
+<span class="c1"># &gt;&gt;    [508, &quot;Loop Detected&quot;],</span>
+<span class="c1"># &gt;&gt;    [509, &quot;Unassigned&quot;],</span>
+<span class="c1"># &gt;&gt;    [510, &quot;Not Extended&quot;],</span>
+<span class="c1"># &gt;&gt;    [511, &quot;Network Authentication Required&quot;]]}</span>
+</code></pre></div>
+
+
+<h2>chunk</h2>
+
+<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/chunk.html" title="instance method Enumerable#chunk">instance method Enumerable#chunk</a></p></blockquote>
+
+<p>行単位データの並びに意味があるときに、その順位を崩さずに部分まとめ（チャンク）を生成するときは<code>chunk</code>が使えます。chunkはブロックで渡された条件の評価が切り替わるポイントでチャンクを切ります。chunkを使って、空行で別れた複数のセンテンスを持つ小説<code>novel.txt</code>を、センテンスごとに分けてみます。</p>
+
+<h4>novel.txt</h4>
+
+<pre><code>One morning, when Gregor Samsa woke from troubled dreams,
+he found himself transformed in his bed into a horrible vermin.
+
+He lay on his armour-like back,
+and if he lifted his head a little he could see his brown belly, 
+slightly domed and divided by arches into stiff sections.
+
+The bedding was hardly able to cover it and seemed ready to slide off any moment.
+
+His many legs,
+pitifully thin compared with the size of the rest of him,
+waved about helplessly as he looked.
+
+"What's happened to me?" he thought.
+"It wasn't a dream." 
+
+His room, a proper human room although a little too small, 
+lay peacefully between its four familiar walls.
+
+A collection of textile samples lay spread out on the table
+- Samsa was a travelling salesman - and above it there hung a picture
+that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.
+</code></pre>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">novel</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;novel.txt&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">data_line?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+  <span class="o">!!</span><span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A\s*\S+/</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">pp</span> <span class="n">novel</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">data_line?</span> <span class="n">line</span> <span class="p">}</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># &gt;&gt; [[true,</span>
+<span class="c1"># &gt;&gt;   [&quot;One morning, when Gregor Samsa woke from troubled dreams,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;he found himself transformed in his bed into a horrible vermin.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;He lay on his armour-like back,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;and if he lifted his head a little he could see his brown belly, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;slightly domed and divided by arches into stiff sections.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;The bedding was hardly able to cover it and seemed ready to slide off any moment.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His many legs,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;pitifully thin compared with the size of the rest of him,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;waved about helplessly as he looked.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true, [&quot;\&quot;What&#39;s happened to me?\&quot; he thought.\n&quot;, &quot;\&quot;It wasn&#39;t a dream.\&quot; \n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His room, a proper human room although a little too small, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;lay peacefully between its four familiar walls.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [false, [&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
+</code></pre></div>
+
+
+<p>チャンクが空行のところで切れているのが確認できます。</p>
+
+<h3>不要な行をチャンクから除く</h3>
+
+<p>この例において空行のチャンクは不要でしょう。この場合、ブロックで<code>false</code>に代えて<code>nil</code>（または:_separator）が返るようにすれば、次のような結果が得られます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">novel</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;novel.txt&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">data_line?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+  <span class="o">!!</span><span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A\s*\S+/</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="o">+</span> <span class="n">pp</span> <span class="n">novel</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">data_line?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">||</span> <span class="kp">nil</span> <span class="p">}</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># &gt;&gt; [[true,</span>
+<span class="c1"># &gt;&gt;   [&quot;One morning, when Gregor Samsa woke from troubled dreams,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;he found himself transformed in his bed into a horrible vermin.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;He lay on his armour-like back,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;and if he lifted his head a little he could see his brown belly, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;slightly domed and divided by arches into stiff sections.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;The bedding was hardly able to cover it and seemed ready to slide off any moment.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His many legs,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;pitifully thin compared with the size of the rest of him,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;waved about helplessly as he looked.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true, [&quot;\&quot;What&#39;s happened to me?\&quot; he thought.\n&quot;, &quot;\&quot;It wasn&#39;t a dream.\&quot; \n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His room, a proper human room although a little too small, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;lay peacefully between its four familiar walls.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
+</code></pre></div>
+
+
+<h3>単一行のチャンク</h3>
+
+<p>この小説のなかで<code>"</code>（double quatation mark）で始まる行を特別扱いし、しかもそれらを単一行でチャンクしたい場合は、その特別行に対し<code>:_alone</code>を返すようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">novel</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;novel.txt&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">data_line?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+  <span class="o">!!</span><span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A\s*\S+/</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">pp</span> <span class="n">novel</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="k">next</span> <span class="ss">:_alone</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A&quot;/</span><span class="p">)</span>
+  <span class="n">data_line?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">||</span> <span class="kp">nil</span>
+<span class="p">}</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># &gt;&gt; [[true,</span>
+<span class="c1"># &gt;&gt;   [&quot;One morning, when Gregor Samsa woke from troubled dreams,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;he found himself transformed in his bed into a horrible vermin.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;He lay on his armour-like back,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;and if he lifted his head a little he could see his brown belly, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;slightly domed and divided by arches into stiff sections.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;The bedding was hardly able to cover it and seemed ready to slide off any moment.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His many legs,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;pitifully thin compared with the size of the rest of him,\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;waved about helplessly as he looked.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [:_alone, [&quot;\&quot;What&#39;s happened to me?\&quot; he thought.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [:_alone, [&quot;\&quot;It wasn&#39;t a dream.\&quot;\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;His room, a proper human room although a little too small, \n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;lay peacefully between its four familiar walls.\n&quot;]],</span>
+<span class="c1"># &gt;&gt;  [true,</span>
+<span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
+</code></pre></div>
+
+
+<p>自分は翻訳支援ツール「<a href="https://rubygems.org/gems/togglate" title="togglate">togglate</a>」というものを作っています。このツールは訳文を作成するテキストに原文をそのセンテンスごとに埋め込むものです。つまり先のコードはtogglateの心臓部です。</p>
+
+<h2>slice_before</h2>
+
+<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/slice_before.html" title="instance method Enumerable#slice_before">instance method Enumerable#slice_before</a></p></blockquote>
+
+<p>見出し行とそれに続く複数の行を一まとめにしたチャンクを得たいときなど、次に同じ条件が現れるまでを一つのチャンクとしたいときは、<code>slice_before</code>が使えます。行をまとめる機能をもったものに<code>slice</code>という名前が付いているので、このメソッドに辿り着くのは難しいかもしれません（個人的には<code>chunk_from</code>のような名前のほうがしっくり来ます）。Markdownファイル<code>README.md</code>からその大見出し<code>#</code>ごとに区切られたチャンクを生成してみます。</p>
+
+<h4>README.md</h4>
+
+<pre><code># Goals
+
+* For every future Sinatra release, have at least one fully compatible release
+* High code quality, high test coverage
+* Include plugins people usually ask for a lot
+
+# TODO
+
+* Write documentation, integrate into Sinatra website
+* Finish imports and rewrites
+
+# Included extensions
+
+## Common Extensions
+
+These are common extension which will not add significant overhead or change any
+behavior of already existing APIs. They do not add any dependencies not already
+installed with this gem.
+
+# Usage
+
+## Classic Style
+
+A single extension (example: sinatra-content-for):
+</code></pre>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">readme</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;README.md&#39;</span><span class="p">)</span>
+
+<span class="n">pp</span> <span class="n">readme</span><span class="o">.</span><span class="n">slice_before</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\A#[^#]/</span><span class="p">)</span>
+<span class="p">}</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># &gt;&gt; [[&quot;# Goals\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* For every future Sinatra release, have at least one fully compatible release\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* High code quality, high test coverage\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Include plugins people usually ask for a lot\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# TODO\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Write documentation, integrate into Sinatra website\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Finish imports and rewrites\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# Included extensions\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;## Common Extensions\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;These are common extension which will not add significant overhead or change any\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;behavior of already existing APIs. They do not add any dependencies not already\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;installed with this gem.\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# Usage\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;## Classic Style\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;A single extension (example: sinatra-content-for):\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span>
+</code></pre></div>
+
+
+<p><code>slice_before</code>はパターンを引数として取ることもできるので、先のコードは次のようにより簡潔に書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="n">readme</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;README.md&#39;</span><span class="p">)</span>
+
+<span class="o">+</span> <span class="n">pp</span> <span class="n">readme</span><span class="o">.</span><span class="n">slice_before</span><span class="p">(</span><span class="sr">/\A#[^#]/</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+
+<span class="c1"># &gt;&gt; [[&quot;# Goals\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* For every future Sinatra release, have at least one fully compatible release\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* High code quality, high test coverage\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Include plugins people usually ask for a lot\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# TODO\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Write documentation, integrate into Sinatra website\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;* Finish imports and rewrites\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# Included extensions\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;## Common Extensions\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;These are common extension which will not add significant overhead or change any\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;behavior of already existing APIs. They do not add any dependencies not already\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;installed with this gem.\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;],</span>
+<span class="c1"># &gt;&gt;  [&quot;# Usage\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;## Classic Style\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;A single extension (example: sinatra-content-for):\n&quot;,</span>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span>
+</code></pre></div>
+
+
+<p><br/></p>
+
+<p>あなたもRubyの<strong>だんご化３兄弟</strong>と戯れてみませんか？</p>
+
+<hr />
+
+<p>最後に宣伝ですが、「<a href="https://rubygems.org/gems/togglate" title="togglate">togglate</a>」をversion0.1.4にアップデートしました。これにより、4スペースインデントによるコードブロックを適切にラップできるようになりました（しかしまだ他のバグが残っています）。</p>
+
+<hr />
+
+<p>関連記事：</p>
+
+<p><a href="http://melborne.github.io/2013/12/26/how-about-enumerable-chunky/" title="Rubyで不揃いのデータを集計する">Rubyで不揃いのデータを集計する</a></p>
+
+<p><a href="http://melborne.github.io/2014/04/01/togglate-now-have-reverse-action/" title="素晴らしいオープンソースプロジェクトにおける翻訳者たちの憂鬱とその緩和">素晴らしいオープンソースプロジェクトにおける翻訳者たちの憂鬱とその緩和</a></p>
+
+<hr />
+
+<p><a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B00000JD0Z"><img class="amazon" src="http://ecx.images-amazon.com/images/I/31RT4F3B26L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B00000JD0Z">だんご3兄弟</a> by 速水けんたろう, 茂森あゆみ, ひまわりキッズ, だんご合唱団, 佐藤雅彦, 内野真澄, and 堀江由朗</p>
+
+<hr />
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'>嘘です。 <a href='#fnref:1' rev='footnote'>↩</a></li>
+    </ol>
+</div>
+
+
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら..." data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" data-text="行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら..." data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2014/04/04/rubys-arguments-are-so-deep" title="Rubyのメソッド引数は奥が深い">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <!--<img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />-->
+        <img src="/assets/images/books/ruby_pack8.png" alt="ruby_pack8" style="width:200px" />
+      </a>
+      <p id="comment">100円〜で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら..." data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" data-text="行指向ドキュメント処理で活躍するRubyのだんご化３兄弟といったら..." data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/04/08/3-chunk-brothers-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+
