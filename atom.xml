@@ -4,13 +4,140 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-04-09T21:57:52+09:00</updated>
+ <updated>2014-04-12T22:33:07+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Jekyllのコードシンタックスハイライトで言語ごとに色を変える</title>
+   <link href="http://melborne.github.io/2014/04/12/change-bgcolor-of-code-syntax-for-jekyll"/>
+   <updated>2014-04-12T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/04/12/change-bgcolor-of-code-syntax-for-jekyll</id>
+   <content type="html">&lt;p&gt;Twitterで@igaiga555さんと、Jekyllのコードシンタックスハイライトで言語ごとに色を変えられないかという話をしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/04/jekyll_code01.png&quot; alt=&quot;jekyll noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;で、僕が指定した変更先がちょっと間違っていて、それを訂正すると共に改めてもう少しマシな方法を考えましたので、ここに書き残しておきます。&lt;/p&gt;
+
+&lt;h2&gt;ひな形を用意&lt;/h2&gt;
+
+&lt;p&gt;ここでは&lt;code&gt;jekyll new&lt;/code&gt;コマンドでひな形を作ります。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% jekyll new myblog
+New jekyll site installed in /Users/keyes/Dropbox/playground/myblog.
+
+% &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;myblog
+% tree
+.
+├── _config.yml
+├── _layouts
+│   ├── default.html
+│   └── post.html
+├── _posts
+│   └── 2014-04-12-welcome-to-jekyll.markdown
+├── css
+│   ├── main.css
+│   └── syntax.css
+└── index.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;highlight.rbを_pluginsにコピー&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;_plugins&lt;/code&gt;ディレクトリを作り、Jekyllのソースに組み込まれている&lt;code&gt;highlight.rb&lt;/code&gt;をここにコピーします。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% mkdir _plugins
+myblog% cp ~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jekyll/tags/highlight.rb _plugins
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;highlight.rbを編集&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;highlight.rb&lt;/code&gt;の66〜79行の以下の2箇所における&lt;code&gt;pre&lt;/code&gt;タグに言語を指定した&lt;code&gt;class&lt;/code&gt;属性を追加します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;render_codehighlighter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;#The div is required because RDiscount blows ass&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTML&lt;/span&gt;
+&lt;span class=&quot;sh&quot;&gt;  &amp;lt;div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;sh&quot;&gt;+    &amp;lt;pre class=&amp;#39;#{@lang}&amp;#39;&amp;gt;&amp;lt;code class=&amp;#39;#{@lang}&amp;#39;&amp;gt;#{h(code).strip}&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;sh&quot;&gt;  &amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;        HTML&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add_code_tags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Add nested &amp;lt;code&amp;gt; tags to code blocks&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&amp;lt;pre&amp;gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;lt;pre class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;lt;code class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&amp;lt;\/pre&amp;gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;言語ごとのCSSを設定&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;main.css&lt;/code&gt;において、言語ごとに&lt;code&gt;background-color&lt;/code&gt;属性を指定します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;css&quot;&gt;&lt;span class=&quot;nc&quot;&gt;.post&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;.post&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.ruby&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;background-color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;#ffe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;.post&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.bash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;.post&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.bash&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;background-color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;#cfc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;結果をテストするため、&lt;code&gt;2014-04-12-welcome-to-jekyll.markdown&lt;/code&gt;にshell用のコードを追加します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;Shell code
+
+{% highlight bash  %}
+% jekyll new myblog
+New jekyll site installed in /Users/keyes/Dropbox/playground/myblog.
+
+% cd myblog
+% tree
+.
+├── _config.yml
+├── _layouts
+│   ├── default.html
+│   └── post.html
+├── _posts
+│   └── 2014-04-12-welcome-to-jekyll.markdown
+├── css
+│   ├── main.css
+│   └── syntax.css
+└── index.html
+{% endhighlight  %}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;jekyll serve&lt;/code&gt;でサーバを起動します。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% jekyll serve
+Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
+/Users/keyes/Dropbox/playground/myblog/_plugins/highlight.rb:12: warning: already initialized constant Jekyll::Tags::HighlightBlock::SYNTAX
+/Users/keyes/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jekyll/tags/highlight.rb:12: warning: previous definition of SYNTAX was here
+            Source: /Users/keyes/Dropbox/playground/myblog
+       Destination: /Users/keyes/Dropbox/playground/myblog/_site
+      Generating... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;.
+    Server address: http://0.0.0.0:4000
+  Server running... press ctrl-c to stop.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;同名のプラグインを２度呼んでいるのでwarningがでています。これを回避したい場合はコピーしたプラグイン側のモジュール名を変えればいいかと思います。&lt;/p&gt;
+
+&lt;p&gt;出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/04/jekyll_code02.png&quot; alt=&quot;jekyll noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;いいようですね！&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>togglateをHTMLタグに暫定対応しましたのお知らせ</title>
@@ -1267,52 +1394,6 @@ Atom&#39;s behavior. The basic package layout is as follows:
 &lt;a href=&quot;/books/&quot;&gt;
   &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
 &lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>松浦亜弥とRubyと私</title>
-   <link href="http://melborne.github.io/2014/03/16/aya-matsuura-is-a-real-singer"/>
-   <updated>2014-03-16T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/03/16/aya-matsuura-is-a-real-singer</id>
-   <content type="html">&lt;p&gt;「&lt;a href=&quot;https://www.google.co.jp/search?hl=ja&amp;amp;q=%E6%9D%BE%E6%B5%A6%E4%BA%9C%E5%BC%A5&quot; title=&quot;松浦亜弥 - Google 検索&quot;&gt;松浦亜弥&lt;/a&gt;」という人がいて僕の記憶の中でこの人はこの１０年間はるな愛のものまねに代表されるキュートなアイドルだったんだけどふとしたキッカケからYOUTUBEで彼女が松たか子の「&lt;a href=&quot;https://www.youtube.com/watch?v=LAj7NTjBCE8&quot; title=&quot; 松たか子　みんなひとり - YouTube&quot;&gt;みんなひとり&lt;/a&gt;」を歌っているのを聴いてその歌の巧さに驚愕して他の歌もいろいろ聴いてみてその結論として彼女が「本物のシンガー」であることを確信するに至った。彼女の紡ぎだすひとつひとつの音が繊細さと力強さの間で絶妙に丁寧にコントロールされていてそれが全体として日本語の歌を説得力のある表現に昇華させる力につながって本当に素晴らしいと思った。興味を持って彼女のことを調べるともう１０年も前から聴かせる歌を歌うようになっていて一方でここ数年はメディアの露出も大分減って２７歳になって結婚もしてこの３月でファンクラブも終わるということを知った。彼女の歌の素晴らしさを今更知ったことを悔しく思うけどその一方で今それを知ることができて本当に良かったと思った。僕は今2010年にリリースされた「&lt;a href=&quot;http://ja.wikipedia.org/wiki/Click_you_Link_me&quot; title=&quot;Click you Link me - Wikipedia&quot;&gt;Click you Link me&lt;/a&gt;」というアルバムを聴きながらこれを書いている。このアルバム最高だよ。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;松たか子の「みんなひとり」のカバー&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/ktva8pnSj9g?color=white&amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-
-&lt;p&gt;「横浜ロンド」&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/F0KiggmJa0Y?color=white&amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-
-&lt;p&gt;「想いあふれて」&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/J9LJq3W3PFc?color=white&amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-
-&lt;p&gt;さだまさしの「道化師のソネット」のカバー&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/zQ8nykjiKfg?color=white&amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-
-&lt;p&gt;平松愛理の「部屋とＹシャツと私」のカバー&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/J0bbiYsgczk?color=white&amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-
-&lt;hr /&gt;
-
-&lt;p&gt;Rubyは今日はお休みです。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.amazon.co.jp/Click-you-Link-me-松浦亜弥/dp/B0043C3F1M?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B0043C3F1M&quot;&gt;&lt;img class=&quot;amazon&quot; src=&quot;http://ecx.images-amazon.com/images/I/51FOLpNcyaL._SL160_.jpg&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.amazon.co.jp/Click-you-Link-me-松浦亜弥/dp/B0043C3F1M?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B0043C3F1M&quot;&gt;Click you Link me&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
