@@ -49,23 +49,30 @@ myblog% cp ~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jek
 
 ## highlight.rbを編集
 
-`highlight.rb`の66〜79行の以下の2箇所における`pre`タグに言語を指定した`class`属性を追加します。
+`render_codehighlighter`と`add_code_tags`メソッドをオーバーライドするよう`highlight.rb`を次のように修正します。各メソッドではembedされるコードにおける`pre`タグに言語を指定した`class`属性を追加します。
 
 {% highlight ruby %}
+module Jekyll
+  module Tags
+    class HighlightBlock < Liquid::Block
       def render_codehighlighter(context, code)
         #The div is required because RDiscount blows ass
         <<-HTML
   <div>
-+    <pre class='#{@lang}'><code class='#{@lang}'>#{h(code).strip}</code></pre>
+    <pre class='#{@lang}'><code class='#{@lang}'>#{h(code).strip}</code></pre>
   </div>
         HTML
       end
 
       def add_code_tags(code, lang)
         # Add nested <code> tags to code blocks
-+        code = code.sub(/<pre>/,'<pre class="' + lang + '"><code class="' + lang + '">')
+        code = code.sub(/<pre>/,'<pre class="' + lang + '"><code class="' + lang + '">')
         code = code.sub(/<\/pre>/,"</code></pre>")
       end
+
+    end
+  end
+end
 {% endhighlight %}
 
 ## 言語ごとのCSSを設定
@@ -115,8 +122,6 @@ New jekyll site installed in /Users/keyes/Dropbox/playground/myblog.
 {% highlight bash %}
 % jekyll serve
 Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
-/Users/keyes/Dropbox/playground/myblog/_plugins/highlight.rb:12: warning: already initialized constant Jekyll::Tags::HighlightBlock::SYNTAX
-/Users/keyes/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jekyll/tags/highlight.rb:12: warning: previous definition of SYNTAX was here
             Source: /Users/keyes/Dropbox/playground/myblog
        Destination: /Users/keyes/Dropbox/playground/myblog/_site
       Generating... done.
@@ -124,7 +129,6 @@ Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
   Server running... press ctrl-c to stop.
 {% endhighlight %}
 
-同名のプラグインを２度呼んでいるのでwarningがでています。これを回避したい場合はコピーしたプラグイン側のモジュール名を変えればいいかと思います。
 
 出力です。
 
@@ -132,4 +136,11 @@ Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
 
 いいようですね！
 
+---
+
+(追記：2014-04-13) @igaiga555さんのアイデアに従って、「highlight.rbを編集」の項を修正しました。
+
+> [Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...](https://twitter.com/igaiga555/status/455155507544604672 "Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...")
+> 
+> [jekyll highlight](https://gist.github.com/igaiga/10564659 "jekyll highlight")
 
