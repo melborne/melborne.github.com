@@ -16,8 +16,8 @@
 
     <!-- Le styles -->
     <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
     <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
     <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
     <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
     <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
@@ -219,22 +219,29 @@ myblog% cp ~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jek
 
 <h2>highlight.rbを編集</h2>
 
-<p><code>highlight.rb</code>の66〜79行の以下の2箇所における<code>pre</code>タグに言語を指定した<code>class</code>属性を追加します。</p>
+<p><code>render_codehighlighter</code>と<code>add_code_tags</code>メソッドをオーバーライドするよう<code>highlight.rb</code>を次のように修正します。各メソッドではembedされるコードにおける<code>pre</code>タグに言語を指定した<code>class</code>属性を追加します。</p>
 
-<div class="highlight"><pre><code class="ruby">      <span class="k">def</span> <span class="nf">render_codehighlighter</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Jekyll</span>
+  <span class="k">module</span> <span class="nn">Tags</span>
+    <span class="k">class</span> <span class="nc">HighlightBlock</span> <span class="o">&lt;</span> <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Block</span>
+      <span class="k">def</span> <span class="nf">render_codehighlighter</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
         <span class="c1">#The div is required because RDiscount blows ass</span>
         <span class="o">&lt;&lt;-</span><span class="no">HTML</span>
 <span class="sh">  &lt;div&gt;</span>
-<span class="sh">+    &lt;pre class=&#39;#{@lang}&#39;&gt;&lt;code class=&#39;#{@lang}&#39;&gt;#{h(code).strip}&lt;/code&gt;&lt;/pre&gt;</span>
+<span class="sh">    &lt;pre class=&#39;#{@lang}&#39;&gt;&lt;code class=&#39;#{@lang}&#39;&gt;#{h(code).strip}&lt;/code&gt;&lt;/pre&gt;</span>
 <span class="sh">  &lt;/div&gt;</span>
 <span class="no">        HTML</span>
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="nf">add_code_tags</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">lang</span><span class="p">)</span>
         <span class="c1"># Add nested &lt;code&gt; tags to code blocks</span>
-<span class="o">+</span>        <span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/&lt;pre&gt;/</span><span class="p">,</span><span class="s1">&#39;&lt;pre class=&quot;&#39;</span> <span class="o">+</span> <span class="n">lang</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;code class=&quot;&#39;</span> <span class="o">+</span> <span class="n">lang</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/&lt;pre&gt;/</span><span class="p">,</span><span class="s1">&#39;&lt;pre class=&quot;&#39;</span> <span class="o">+</span> <span class="n">lang</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;code class=&quot;&#39;</span> <span class="o">+</span> <span class="n">lang</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span><span class="p">)</span>
         <span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/&lt;\/pre&gt;/</span><span class="p">,</span><span class="s2">&quot;&lt;/code&gt;&lt;/pre&gt;&quot;</span><span class="p">)</span>
       <span class="k">end</span>
+
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 </code></pre></div>
 
 
@@ -283,8 +290,6 @@ New jekyll site installed in /Users/keyes/Dropbox/playground/myblog.
 
 <div class="highlight"><pre><code class="bash">% jekyll serve
 Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
-/Users/keyes/Dropbox/playground/myblog/_plugins/highlight.rb:12: warning: already initialized constant Jekyll::Tags::HighlightBlock::SYNTAX
-/Users/keyes/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jekyll/tags/highlight.rb:12: warning: previous definition of SYNTAX was here
             Source: /Users/keyes/Dropbox/playground/myblog
        Destination: /Users/keyes/Dropbox/playground/myblog/_site
       Generating... <span class="k">done</span>.
@@ -293,13 +298,19 @@ Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
 </code></pre></div>
 
 
-<p>同名のプラグインを２度呼んでいるのでwarningがでています。これを回避したい場合はコピーしたプラグイン側のモジュール名を変えればいいかと思います。</p>
-
 <p>出力です。</p>
 
 <p><img src="/assets/images/2014/04/jekyll_code02.png" alt="jekyll noshadow" /></p>
 
 <p>いいようですね！</p>
+
+<hr />
+
+<p>(追記：2014-04-13) @igaiga555さんのアイデアに従って、「highlight.rbを編集」の項を修正しました。</p>
+
+<blockquote><p><a href="https://twitter.com/igaiga555/status/455155507544604672" title="Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...">Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...</a></p>
+
+<p><a href="https://gist.github.com/igaiga/10564659" title="jekyll highlight">jekyll highlight</a></p></blockquote>
 
 
     <div class="ad" id="topAdsense">

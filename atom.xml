@@ -4,7 +4,7 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-04-12T22:40:07+09:00</updated>
+ <updated>2014-04-13T18:24:37+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
@@ -57,22 +57,29 @@ myblog% cp ~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jek
 
 &lt;h2&gt;highlight.rbを編集&lt;/h2&gt;
 
-&lt;p&gt;&lt;code&gt;highlight.rb&lt;/code&gt;の66〜79行の以下の2箇所における&lt;code&gt;pre&lt;/code&gt;タグに言語を指定した&lt;code&gt;class&lt;/code&gt;属性を追加します。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;render_codehighlighter&lt;/code&gt;と&lt;code&gt;add_code_tags&lt;/code&gt;メソッドをオーバーライドするよう&lt;code&gt;highlight.rb&lt;/code&gt;を次のように修正します。各メソッドではembedされるコードにおける&lt;code&gt;pre&lt;/code&gt;タグに言語を指定した&lt;code&gt;class&lt;/code&gt;属性を追加します。&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;render_codehighlighter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Jekyll&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Tags&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HighlightBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;Liquid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:Block&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;render_codehighlighter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;c1&quot;&gt;#The div is required because RDiscount blows ass&lt;/span&gt;
         &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTML&lt;/span&gt;
 &lt;span class=&quot;sh&quot;&gt;  &amp;lt;div&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;sh&quot;&gt;+    &amp;lt;pre class=&amp;#39;#{@lang}&amp;#39;&amp;gt;&amp;lt;code class=&amp;#39;#{@lang}&amp;#39;&amp;gt;#{h(code).strip}&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;sh&quot;&gt;    &amp;lt;pre class=&amp;#39;#{@lang}&amp;#39;&amp;gt;&amp;lt;code class=&amp;#39;#{@lang}&amp;#39;&amp;gt;#{h(code).strip}&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;sh&quot;&gt;  &amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;no&quot;&gt;        HTML&lt;/span&gt;
       &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
       &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add_code_tags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;c1&quot;&gt;# Add nested &amp;lt;code&amp;gt; tags to code blocks&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&amp;lt;pre&amp;gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;lt;pre class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;lt;code class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&amp;lt;pre&amp;gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;lt;pre class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;lt;code class=&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;quot;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&amp;lt;\/pre&amp;gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
       &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -121,8 +128,6 @@ New jekyll site installed in /Users/keyes/Dropbox/playground/myblog.
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;% jekyll serve
 Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
-/Users/keyes/Dropbox/playground/myblog/_plugins/highlight.rb:12: warning: already initialized constant Jekyll::Tags::HighlightBlock::SYNTAX
-/Users/keyes/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/jekyll-1.5.1/lib/jekyll/tags/highlight.rb:12: warning: previous definition of SYNTAX was here
             Source: /Users/keyes/Dropbox/playground/myblog
        Destination: /Users/keyes/Dropbox/playground/myblog/_site
       Generating... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;.
@@ -131,13 +136,19 @@ Configuration file: /Users/keyes/Dropbox/playground/myblog/_config.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;同名のプラグインを２度呼んでいるのでwarningがでています。これを回避したい場合はコピーしたプラグイン側のモジュール名を変えればいいかと思います。&lt;/p&gt;
-
 &lt;p&gt;出力です。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/2014/04/jekyll_code02.png&quot; alt=&quot;jekyll noshadow&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;いいようですね！&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;(追記：2014-04-13) @igaiga555さんのアイデアに従って、「highlight.rbを編集」の項を修正しました。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://twitter.com/igaiga555/status/455155507544604672&quot; title=&quot;Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...&quot;&gt;Twitter / igaiga555: @merborne わー！わざわざ記事まで書いていただいてあ ...&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/igaiga/10564659&quot; title=&quot;jekyll highlight&quot;&gt;jekyll highlight&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
 </content>
  </entry>
  
