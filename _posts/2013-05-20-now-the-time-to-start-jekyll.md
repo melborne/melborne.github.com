@@ -331,12 +331,14 @@ html内の`{{ "{{ "}} }}`はLiquidテンプレートによる埋め込み指定�
 {% endhighlight %}
 
 エディタで次のようにMarkdownで記事を書きます。Front-Matterを忘れずに。
+
     ---
     ---
     ##Jekyll Tutorial
     Jekyll is a simple, blog aware, static site generator.
 
 `jekyll build`コマンドを実行してから`tree`します。
+
 {% highlight bash %}
 % jekyll build
 % tree
