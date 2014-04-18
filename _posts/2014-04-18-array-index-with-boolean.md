@@ -15,34 +15,34 @@ published: true
 animal = 'hippopotamus'
 
 if animal.size > 10
-  puts "You must idiot!"
+  puts "You must be an idiot!"
 else
   puts "You are good in size."
 end
-# >> You must idiot!
+# >> You must be an idiot!
 {% endhighlight %}
 
 しかし、たかがメッセージの出力にこんなに行数を消費したくはない、と思うのが平均的なRubyistの思考です。そしてRuby唯一の三項演算子を使います。
 
 {% highlight ruby %}
-puts animal.size > 10 ? "You must idiot!" : "You are good in size."
-# >> You must idiot!
+puts animal.size > 10 ? "You must be an idiot!" : "You are good in size."
+# >> You must be an idiot!
 {% endhighlight %}
 
 短くなりましたが、もう一つ問題があります。それは、手続きブロックとしての結合優先順位が低いということです。
 
 {% highlight ruby %}
-puts (animal.size > 10 ? "You must idiot!" : "You are good in size.").upcase
-# >> YOU MUST IDIOT!
+puts (animal.size > 10 ? "You must be an idiot!" : "You are good in size.").upcase
+# >> YOU MUST BE AN IDIOT!
 
 puts begin
   if animal.size > 10
-    "You must idiot!"
+    "You must be an idiot!"
   else
     "You are good in size."
   end
 end.upcase
-# >> YOU MUST IDIOT!
+# >> YOU MUST BE AN IDIOT!
 {% endhighlight %}
 
 このようにその返り値をputsする場合、括弧や**begin-end**で括るか一時変数に代入する必要があります。
@@ -69,8 +69,8 @@ using CoreExt
 
 animal = 'hippopotamus'
 
-puts ["You must idiot!", "You are good in size."][animal.size > 10].upcase
-# >> YOU MUST IDIOT!
+puts ["You must be an idiot!", "You are good in size."][animal.size > 10].upcase
+# >> YOU MUST BE AN IDIOT!
 
 result = false
 %w(success fail)[result] # => "fail"
@@ -89,4 +89,6 @@ result = false
 ---
 
 (追記：2014-4-19) k-shogoさんのコメントを受けて記述を一部訂正しました。
+
+(追記：2014-4-19) acさんのコメントを受けて記述を一部訂正しました。
 
