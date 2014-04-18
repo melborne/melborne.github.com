@@ -29,7 +29,7 @@ puts animal.size > 10 ? "You must idiot!" : "You are good in size."
 # >> You must idiot!
 {% endhighlight %}
 
-短くなりましたが、もう一つ問題があります。それは、条件分岐はメソッドチェーンに載せづらいということです。
+短くなりましたが、もう一つ問題があります。それは、手続きブロックとしての結合優先順位が低いということです。
 
 {% highlight ruby %}
 puts (animal.size > 10 ? "You must idiot!" : "You are good in size.").upcase
@@ -45,7 +45,7 @@ end.upcase
 # >> YOU MUST IDIOT!
 {% endhighlight %}
 
-このように括弧や**begin-end**で括るか一時変数に代入する必要があります。
+このようにその返り値をputsする場合、括弧や**begin-end**で括るか一時変数に代入する必要があります。
 
 そんなわけで...
 
@@ -85,4 +85,8 @@ result = false
 関連記事：
 
 > [Rubyの条件分岐をメソッド化する]({{ BASE_PATH }}/2013/04/01/methodize-a-conditional-operator/ "Rubyの条件分岐をメソッド化する")
+
+---
+
+(追記：2014-4-19) k-shogoさんのコメントを受けて記述を一部訂正しました。
 
