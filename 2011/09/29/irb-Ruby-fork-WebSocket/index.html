@@ -217,7 +217,7 @@
 <p>このコードを保存して(gepl.rb)、実行してみよう。</p>
 
 <div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ruby gepl.rb
-%w<span class="o">(</span>ruby lisp haskell<span class="o">)</span>.map<span class="o">(</span>&amp;:upcase<span class="o">)</span>
+%w<span class="o">(</span>ruby lisp haskell<span class="o">)</span>.map<span class="o">(</span><span class="p">&amp;</span>:upcase<span class="o">)</span>
 RUBY
 LISP
 HASKELL       
@@ -379,7 +379,7 @@ Escape character is <span class="s1">&#39;^]&#39;</span>.
 
 <p>念のためこの状況で複数のプロセスが立ってるか確認してみるよ。</p>
 
-<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ps aux | grep repl_server
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ps aux <span class="p">|</span> grep repl_server
 keyes     1335   0.3  0.1  2448356   1176 s001  R+    3:01PM   0:00.90 ruby repl_server.rb
 keyes     1303   0.3  0.0  2448356   1040 s001  S+    2:59PM   0:01.30 ruby repl_server.rb
 keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl_server.rb
@@ -420,7 +420,7 @@ keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl
 <div class="highlight"><pre><code class="sh">Trying 127.0.0.1...
 Connected to localhost.
 Escape character is <span class="s1">&#39;^]&#39;</span>.
-<span class="o">[</span>*1..10<span class="o">]</span>.select<span class="o">{</span>|i| i.even? <span class="o">}</span>
+<span class="o">[</span>*1..10<span class="o">]</span>.select<span class="o">{</span><span class="p">|</span>i<span class="p">|</span> i.even? <span class="o">}</span>
 2
 4
 6
@@ -436,7 +436,7 @@ Object
 Kernel
 BasicObject
 -------------------------------
-<span class="nv">$ </span>ps aux |grep repl_server
+<span class="nv">$ </span>ps aux <span class="p">|</span>grep repl_server
 keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl_server.rb
 </code></pre></div>
 
@@ -532,7 +532,7 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;eventmachine&quot;</span>
 <span class="k">module</span> <span class="nn">Chat</span>
-  <span class="vc">@@channel</span> <span class="o">=</span> <span class="ss">EM</span><span class="p">:</span><span class="ss">:Channel</span><span class="o">.</span><span class="n">new</span>
+  <span class="vc">@@channel</span> <span class="o">=</span> <span class="no">EM</span><span class="o">::</span><span class="no">Channel</span><span class="o">.</span><span class="n">new</span>
   <span class="k">def</span> <span class="nf">post_init</span>
     <span class="nb">puts</span> <span class="s2">&quot;-- someone connected&quot;</span>
     <span class="vi">@sid</span> <span class="o">=</span> <span class="vc">@@channel</span><span class="o">.</span><span class="n">subscribe</span> <span class="p">{</span> <span class="o">|</span><span class="n">data</span><span class="o">|</span> <span class="n">send_data</span> <span class="s2">&quot;&gt;&gt; </span><span class="si">#{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
@@ -568,8 +568,8 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;em-websocket&#39;</span>
 <span class="no">EM</span><span class="o">.</span><span class="n">run</span> <span class="p">{</span>
-  <span class="vi">@channel</span> <span class="o">=</span> <span class="ss">EM</span><span class="p">:</span><span class="ss">:Channel</span><span class="o">.</span><span class="n">new</span>
-  <span class="ss">EM</span><span class="p">:</span><span class="ss">:WebSocket</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="mi">60000</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ws</span><span class="o">|</span>
+  <span class="vi">@channel</span> <span class="o">=</span> <span class="no">EM</span><span class="o">::</span><span class="no">Channel</span><span class="o">.</span><span class="n">new</span>
+  <span class="no">EM</span><span class="o">::</span><span class="no">WebSocket</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="mi">60000</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ws</span><span class="o">|</span>
     <span class="n">sid</span> <span class="o">=</span> <span class="kp">nil</span>
     <span class="n">ws</span><span class="o">.</span><span class="n">onopen</span> <span class="p">{</span> <span class="n">sid</span> <span class="o">=</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">subscribe</span> <span class="p">{</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span> <span class="n">ws</span><span class="o">.</span><span class="n">send</span> <span class="n">msg</span> <span class="p">}</span> <span class="p">}</span>
     <span class="n">ws</span><span class="o">.</span><span class="n">onmessage</span> <span class="p">{</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">push</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sid</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>

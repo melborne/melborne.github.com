@@ -279,13 +279,13 @@
 <p>そうすると想像できるのはsinatraのrequireによってObjectクラスに別のモジュールがインクルードされたということだ。確かめてみよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">032</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Object</span><span class="o">.</span><span class="n">included_modules</span>
-<span class="o">=&gt;</span> <span class="o">[</span><span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Delegator</span><span class="p">,</span> <span class="no">Kernel</span><span class="o">]</span>
+<span class="o">=&gt;</span> <span class="o">[</span><span class="no">Sinatra</span><span class="o">::</span><span class="no">Delegator</span><span class="p">,</span> <span class="no">Kernel</span><span class="o">]</span>
 </code></pre></div>
 
 
 <p>Sinatra::Delegatorというモジュールがインクルードされていた。じゃあここにgetメソッドが定義されているんだろう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">061</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Delegator</span><span class="o">.</span><span class="n">private_instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">061</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Delegator</span><span class="o">.</span><span class="n">private_instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
 <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:get</span><span class="o">]</span>
 </code></pre></div>
 
@@ -320,28 +320,28 @@
 
 <p>irbで直接これを呼んで確かめてみよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">037</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Application</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;hello, world&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">037</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;hello, world&quot;</span> <span class="p">}</span>
 <span class="o">=&gt;</span> <span class="o">[</span><span class="sr">/^\/$/</span><span class="p">,</span> <span class="o">[]</span><span class="p">,</span> <span class="o">[]</span><span class="p">,</span> <span class="c1">#&lt;Proc:0x0000010131a9f0@/Users/keyes/.rvm/gems/ruby-1.9.2-p180/gems/sinatra-1.2.6/lib/sinatra/base.rb:1152&gt;]</span>
 </code></pre></div>
 
 
 <p>期待通りの結果が返ってきた。じゃあその定義があるか確認してみよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">051</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Application</span><span class="o">.</span><span class="n">singleton_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">051</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">singleton_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
 <span class="o">=&gt;</span> <span class="o">[]</span>
 </code></pre></div>
 
 
 <p>無い...Sinatra::Applicationにはスーパークラスがあるのかな？</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">053</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Application</span><span class="o">.</span><span class="n">superclass</span>
-<span class="o">=&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Base</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">053</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">superclass</span>
+<span class="o">=&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Base</span>
 </code></pre></div>
 
 
 <p>Sinatra::BaseというのがSinatra::Applicationのスーパークラスだった</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">055</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="ss">Sinatra</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">singleton_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">055</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">singleton_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span><span class="o">.</span><span class="n">grep</span> <span class="sr">/^get/</span>
 <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:get</span><span class="o">]</span>
 </code></pre></div>
 

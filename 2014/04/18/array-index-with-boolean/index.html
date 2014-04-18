@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     
-      <title>Ruby1.9でもEND HELLを解消したい！</title>
+      <title>Rubyの条件分岐をもっと簡潔に</title>
     
-    
+    <meta name="description" content="" />
     <meta name="author" content="kyoendo" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -159,8 +159,8 @@
       <div class="content">
         
 <div class="page-header span8">
-  <div class="date"><span>19 July 2011</span></div>
-  <h1 class='page-title'><a href="/2011/07/19/Ruby1-9-END-HELL">Ruby1.9でもEND HELLを解消したい！</a> <small>  </small></h1>
+  <div class="date"><span>18 April 2014</span></div>
+  <h1 class='page-title'><a href="/2014/04/18/array-index-with-boolean">Rubyの条件分岐をもっと簡潔に</a> <small>  </small></h1>
 </div>
 
 <div class="row">
@@ -179,110 +179,82 @@
       </script>
     </div>
 
-    <p>RubyKaigi2011において現行Rubyの構文上の欠点である、END HELLを解消するEnd Rubyがあんどうやすし氏(id:technohippy)により提唱されました。</p>
+    <p>条件分岐の構文としてRubyには「<strong>if-else</strong>」があります。</p>
 
-<p><a href="http://www.ustream.tv/recorded/16077046">parse.yの歩き方</a></p>
+<div class="highlight"><pre><code class="ruby"><span class="n">animal</span> <span class="o">=</span> <span class="s1">&#39;hippopotamus&#39;</span>
 
-<p>END HELLとは要するに以下のような醜いendの連なりのことです。</p>
+<span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
+  <span class="nb">puts</span> <span class="s2">&quot;You must idiot!&quot;</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">&quot;You are good in size.&quot;</span>
+<span class="k">end</span>
+<span class="c1"># &gt;&gt; You must idiot!</span>
+</code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
-  <span class="k">class</span> <span class="nc">MyClass</span>
-    <span class="k">def</span> <span class="nf">my_method</span>
-      <span class="mi">10</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="nb">rand</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span>
-          <span class="nb">p</span> <span class="ss">:small</span>
-        <span class="k">else</span>
-          <span class="nb">p</span> <span class="ss">:large</span>
-        <span class="k">end</span>
-      <span class="k">end</span> 
-    <span class="k">end</span>      <span class="o">&lt;-</span> <span class="err">ここ</span>
+
+<p>しかし、たかがメッセージの出力にこんなに行数を消費したくはない、と思うのが平均的なRubyistの思考です。そしてRuby唯一の三項演算子を使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">?</span> <span class="s2">&quot;You must idiot!&quot;</span> <span class="p">:</span> <span class="s2">&quot;You are good in size.&quot;</span>
+<span class="c1"># &gt;&gt; You must idiot!</span>
+</code></pre></div>
+
+
+<p>短くなりましたが、もう一つ問題があります。それは、条件分岐はメソッドチェーンに載せづらいということです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="p">(</span><span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">?</span> <span class="s2">&quot;You must idiot!&quot;</span> <span class="p">:</span> <span class="s2">&quot;You are good in size.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span>
+<span class="c1"># &gt;&gt; YOU MUST IDIOT!</span>
+
+<span class="nb">puts</span> <span class="k">begin</span>
+  <span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
+    <span class="s2">&quot;You must idiot!&quot;</span>
+  <span class="k">else</span>
+    <span class="s2">&quot;You are good in size.&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span><span class="o">.</span><span class="n">upcase</span>
+<span class="c1"># &gt;&gt; YOU MUST IDIOT!</span>
+</code></pre></div>
+
+
+<p>このように括弧や<strong>begin-end</strong>で括るか一時変数に代入する必要があります。</p>
+
+<p>そんなわけで...</p>
+
+<p>こんなのどうですか？</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">CoreExt</span>
+  <span class="n">refine</span> <span class="nb">Array</span> <span class="k">do</span>
+    <span class="k">def</span> <span class="nf">[]</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span>
+         <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">nil</span><span class="o">].</span><span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span> <span class="o">==</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span> <span class="p">}</span>
+        <span class="k">super</span><span class="p">(</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span> <span class="p">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">)</span>
+      <span class="k">else</span>
+        <span class="k">super</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
+
+<span class="n">using</span> <span class="no">CoreExt</span>
+
+<span class="n">animal</span> <span class="o">=</span> <span class="s1">&#39;hippopotamus&#39;</span>
+
+<span class="nb">puts</span> <span class="o">[</span><span class="s2">&quot;You must idiot!&quot;</span><span class="p">,</span> <span class="s2">&quot;You are good in size.&quot;</span><span class="o">][</span><span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">].</span><span class="n">upcase</span>
+<span class="c1"># &gt;&gt; YOU MUST IDIOT!</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="sx">%w(success fail)</span><span class="o">[</span><span class="n">result</span><span class="o">]</span> <span class="c1"># =&gt; &quot;fail&quot;</span>
 </code></pre></div>
 
 
-<p>氏はLispのcddddrに倣ってRubyへのennnnndキーワードの導入を提唱します。ennnnndを使えば先のコードは次のように書けます。</p>
+<p>つまりArray#[]を弄って、引数にtrueが渡されたらindex 0の要素を返し、falseなら1の要素を返すようにします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
-  <span class="k">class</span> <span class="nc">MyClass</span>
-    <span class="k">def</span> <span class="nf">my_method</span>
-      <span class="mi">10</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="nb">rand</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span>
-          <span class="nb">p</span> <span class="ss">:small</span>
-        <span class="k">else</span>
-          <span class="nb">p</span> <span class="ss">:large</span>
-        <span class="n">ennnnnd</span>
-</code></pre></div>
+<p>みんな一度はこんなこと考えたんじゃないですかねー。でも、まあ..いらないですかね..</p>
 
+<hr />
 
-<p>変態ですね！</p>
+<p>関連記事：</p>
 
-<p>Rubyコミッターらによる実装も完了したようなので、Ruby2.0で正式採用となるのも間違いなさそうです..</p>
-
-<p><a href="http://d.hatena.ne.jp/ku-ma-me/20110718/p1">http://d.hatena.ne.jp/ku-ma-me/20110718/p1</a></p>
-
-<p>そこで気がはやい人のためにRuby1.9でもennnnndを可能とする、<code>ennnd</code>ライブラリを作りました:)</p>
-
-<p>以下のように使います。まずはあなたのコードを用意します。</p>
-
-<div class="highlight"><pre><code class="ruby"><span class="c1"># mycode.rb</span>
-<span class="k">module</span> <span class="nn">MyModule</span>
-  <span class="k">class</span> <span class="nc">MyClass</span>
-    <span class="k">def</span> <span class="nf">my_method</span>
-      <span class="mi">10</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="nb">rand</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span>
-          <span class="nb">p</span> <span class="ss">:small</span>
-        <span class="k">else</span>
-          <span class="nb">p</span> <span class="ss">:large</span>
-        <span class="n">ennnnnd</span>
-</code></pre></div>
-
-
-<p>ennndライブラリとあなたのコードをrequireして、実行する実行コードを用意します。</p>
-
-<div class="highlight"><pre><code class="ruby"><span class="c1">#req.rb </span>
-<span class="nb">require</span> <span class="s1">&#39;./ennnd&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;mycode&#39;</span>
-<span class="no">MyModule</span><span class="o">::</span><span class="no">MyClass</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">my_method</span>
-</code></pre></div>
-
-
-<p>つまりennndキーワードを含むあなたのコードをライブラリとして読み込みます。</p>
-
-<p>これを現行Rubyで実行します。</p>
-
-<div class="highlight"><pre><code class="sh">% ruby req.rb 
-:small
-:small
-:large
-:small
-:small
-:large
-:small
-:large
-:small
-:small
-</code></pre></div>
-
-
-<p>やっぱりRubyは楽しいですね！</p>
-
-<p>関連記事：<a href="/2011/06/05/Sinatra/">Sinatraに別構文があってもいいじゃないか！</a></p>
-
-<div><script src='https://gist.github.com/1091353.js?file=ennnd.rb'></script>
-<noscript><pre><code>module Kernel
-  alias :_require :require
-  def require(feature)
-    _require feature
-  rescue LoadError
-    f = open(feature) rescue open(feature+&#39;.rb&#39;)
-    eval f.read.gsub(/\be(n{2,})d\b/) { &#39;end;&#39;*$1.size }
-  end
-end
-</code></pre></noscript></div>
-
-
-
+<blockquote><p><a href="/2013/04/01/methodize-a-conditional-operator/" title="Rubyの条件分岐をメソッド化する">Rubyの条件分岐をメソッド化する</a></p></blockquote>
 
 
     <div class="ad" id="topAdsense">
@@ -302,15 +274,15 @@ end
     <hr>
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby1.9でもEND HELLを解消したい！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/04/18/array-index-with-boolean/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyの条件分岐をもっと簡潔に" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" data-text="Ruby1.9でもEND HELLを解消したい！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/04/18/array-index-with-boolean/" data-text="Rubyの条件分岐をもっと簡潔に" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" />
+  <link rel="canonical" href="http://melborne.github.io/2014/04/18/array-index-with-boolean/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -325,7 +297,7 @@ end
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2014/04/18/array-index-with-boolean/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
@@ -337,12 +309,12 @@ end
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2011/07/11/Heroku-Sinatra-memcached" title="HerokuでSinatraでmemcachedしようよ!">&larr; Previous</a></li>
+        <li class="prev"><a href="/2014/04/12/change-bgcolor-of-code-syntax-for-jekyll" title="Jekyllのコードシンタックスハイライトで言語ごとに色を変える">&larr; Previous</a></li>
       
         <li><a href="/">Archive</a></li>
         <!--<li><a href="/archive.html">Archive</a></li>-->
       
-        <li class="next"><a href="/2011/07/25/Ruby-Interpreter" title="RubyのメタプログラミングでInterpreterパターンを実装しよう！">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -387,36 +359,18 @@ end
 
     <hr />
     
-      <ul class="tag_box inline">
-      
-      
-
-
-  
-     
-    	<li><a href="/tags.html#ruby-ref">ruby <span>117</span></a></li>
-     
-    	<li><a href="/tags.html#gem-ref">gem <span>13</span></a></li>
-    
-  
-
-
-
-      </ul>
-      <hr />
-    
 
     <ul class="social_button inline">
       <li id="hatena">
-  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" class="hatena-bookmark-button" data-hatena-bookmark-title="Ruby1.9でもEND HELLを解消したい！" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/04/18/array-index-with-boolean/" class="hatena-bookmark-button" data-hatena-bookmark-title="Rubyの条件分岐をもっと簡潔に" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 </li>
 
 <li id="twitter">
-  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" data-text="Ruby1.9でもEND HELLを解消したい！" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/04/18/array-index-with-boolean/" data-text="Rubyの条件分岐をもっと簡潔に" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </li>
 
 <li id="google">
-  <link rel="canonical" href="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" />
+  <link rel="canonical" href="http://melborne.github.io/2014/04/18/array-index-with-boolean/" />
   <g:plusone size="medium"></g:plusone>
   
   <script type="text/javascript">
@@ -431,7 +385,7 @@ end
 </li>
 
 <li id="facebook">
-  <div class="fb-like" data-href="http://melborne.github.io/2011/07/19/Ruby1-9-END-HELL/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+  <div class="fb-like" data-href="http://melborne.github.io/2014/04/18/array-index-with-boolean/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
 </li>
 
 <li></li>
