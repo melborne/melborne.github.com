@@ -4,13 +4,96 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-04-20T13:12:08+09:00</updated>
+ <updated>2014-04-26T20:21:57+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>RubyにおけるYet Another関数合成</title>
+   <link href="http://melborne.github.io/2014/04/26/yet-another-proc-composer-in-ruby"/>
+   <updated>2014-04-26T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/04/26/yet-another-proc-composer-in-ruby</id>
+   <content type="html">&lt;p&gt;Rubyにおける本格的な関数合成については、既に@yuroyoroさんの&lt;a href=&quot;https://rubygems.org/gems/lambda_driver&quot; title=&quot;lambda_driver&quot;&gt;lambda_driver.gem&lt;/a&gt; があるので、僕の出番はありませんが。まあいつもの様にふざけたものなら出せますよ、ということで...。&lt;/p&gt;
+
+&lt;h2&gt;ProcCompressor&lt;/h2&gt;
+
+&lt;p&gt;こういった実装です。&lt;/p&gt;
+
+&lt;div&gt;&lt;script src=&#39;https://gist.github.com/11316775.js?file=proc_compressor.rb&#39;&gt;&lt;/script&gt;
+&lt;noscript&gt;&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/noscript&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;使い方はこうです。&lt;/p&gt;
+
+&lt;p&gt;最初に圧縮するProcの数を決めてインスタンスを生成し、これに&lt;code&gt;ProcCompressor#&amp;lt;&amp;lt;&lt;/code&gt;でProcオブジェクトを順次圧縮していきます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ProcCompressor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で、最後に値を同じく&lt;code&gt;#&amp;lt;&amp;lt;&lt;/code&gt;を使って投げれば、結果が得られます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 11&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Procのセットも結果の取得も同じ&lt;code&gt;#&amp;lt;&amp;lt;&lt;/code&gt;メソッドで達成できるところがアピールポイントです（何の価値があるかわかりませんが）。これはinjectでProcを畳み込んで、&lt;code&gt;Proc#curry&lt;/code&gt;に引数を渡すことでこれが駆動するようにして実現しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;#to_proc&lt;/code&gt;も定義してあるので、引数&amp;amp;に渡すこともできます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ProcCompressor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [7, 9, 11, 13, 15]&lt;/span&gt;
+
+
+&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ProcCompressor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:to_s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_proc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ist&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:upcase&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_proc&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:violin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:novel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [&amp;quot;RUBYIST&amp;quot;, &amp;quot;VIOLINIST&amp;quot;, &amp;quot;NOVELIST&amp;quot;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ちょっとユニークでしょ？&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;参考記事：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://yuroyoro.hatenablog.com/entry/2013/03/27/190640&quot; title=&quot;Rubyで関数合成とかしたいので lambda_driver.gem というのを作った - ( ꒪⌓꒪) ゆるよろ日記&quot;&gt;Rubyで関数合成とかしたいので lambda_driver.gem というのを作った - ( ꒪⌓꒪) ゆるよろ日記&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;関連記事：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/04/20/extend-ampersand-magic-with-methop/&quot; title=&quot;落ちていくRubyistのためのMethopオブジェクト&quot;&gt;落ちていくRubyistのためのMethopオブジェクト&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p style=&#39;color:red&#39;&gt;=== Ruby関連電子書籍100円〜で好評発売中！ ===&lt;/p&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot; title=&quot;M&#39;ELBORNE BOOKS&quot;&gt;M&#39;ELBORNE BOOKS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_pack8.png&quot; alt=&quot;pack8&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/rack_cover.png&quot; alt=&quot;rack&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;/books/&quot;&gt;
+  &lt;img src=&quot;/assets/images/books/ruby_parallel_cover.png&quot; alt=&quot;ruby_parallel&quot; style=&quot;width:200px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>落ちていくRubyistのためのMethopオブジェクト</title>
@@ -988,256 +1071,6 @@ A single extension (example: sinatra-content-for):
 &lt;p&gt;1.については「Refinementsをモジュール内で使ってみたかった」という理由だけだったのでその使用を止めました。ただ、2.0から導入されたキーワード引数を随所で使っていたので1.9への対応は諦めました。2.についてはこれによりLiquidタグで囲まれた箇所は、他のブロック同様、一つのコメントタグで囲まれるようになりました。ただ、現状、togglateは4スペースで字下げされたコードブロックには対応できていません（実装方法を検討中です）。&lt;/p&gt;
 
 &lt;p&gt;検証で挙がっている他の事項についてもこれから検討し、対応できるものはしていくつもりですので、togglateを今後ともよろしくお願いします。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate | RubyGems.org | your community gem host&quot;&gt;togglate | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/melborne/togglate&quot; title=&quot;melborne/togglate&quot;&gt;melborne/togglate&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>素晴らしいオープンソースプロジェクトにおける翻訳者たちの憂鬱とその緩和</title>
-   <link href="http://melborne.github.io/2014/04/01/togglate-now-have-reverse-action"/>
-   <updated>2014-04-01T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/04/01/togglate-now-have-reverse-action</id>
-   <content type="html">&lt;p&gt;素晴らしいプロジェクトには素晴らしいドキュメントが付き物です。この素晴らしいプロジェクトの素晴らしいドキュメントを、我らが素晴らしい母国語で読めたらなんと素晴らしいことかと願う開発者は少なくないでしょう。そしてそこにはその願いを叶える素晴らしい翻訳者たちが多数いるのです。なんと素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;素晴らしいプロジェクトには素晴らしいコントリビューターが多数いて素晴らしい新機能が次々と追加されます。そしてその機能の追加の度に素晴らしいドキュメントにはそれらの素晴らしい機能の解説が次々と追加されていくことになります。なるほど素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;しかしこれがドキュメントの素晴らしい翻訳者たちを苦しめるのです。ほぅ素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;彼らを苦しめる最大の要因は、オリジナルと翻訳ドキュメントとの対応関係が保証されていないことに起因します。オリジナルが複数回改訂されたとき、現在の翻訳ドキュメントがどのオリジナルに対応するのか、神もGitも誰も知らないのです。へぇ素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;こんな状況から翻訳者たちをなんとか救いたい...私にできることはないのか...。&lt;/p&gt;
-
-&lt;p&gt;そんな想いから素晴らしい翻訳者たちのために、この素晴らしい私が、この素晴らしい翻訳ドキュメント作成支援ツール「&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate&quot;&gt;togglate&lt;/a&gt;」を作ったのです。いやっ素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;そうではなく。&lt;/p&gt;
-
-&lt;p&gt;これは自己中心な私が自分勝手に自分の用に供するために作ったのですよ！おまっ素晴らしい！&lt;/p&gt;
-
-&lt;p&gt;...。&lt;/p&gt;
-
-&lt;p&gt;それで本題ですが、今回togglateに&lt;code&gt;commentout&lt;/code&gt;というコマンドを追加したので紹介したいのです。&lt;/p&gt;
-
-&lt;h2&gt;togglateとは&lt;/h2&gt;
-
-&lt;p&gt;「&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate&quot;&gt;togglate&lt;/a&gt;」は、翻訳ドキュメント内に原文をそのセンテンスごとにコメントとして埋め込んで、翻訳ドキュメントを作るためのベースとなるものを出力するミニツールです。togglateの基本的な使い方については以下に書いています。&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/02/11/problem-and-proposal-for-tranlated-documents/&quot; title=&quot;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策&quot;&gt;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation/&quot; title=&quot;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&quot;&gt;英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/02/25/togglate-meets-mymemory/&quot; title=&quot;翻訳ドキュメント作成支援ツールTogglateで翻訳要らず？&quot;&gt;翻訳ドキュメント作成支援ツールTogglateで翻訳要らず？&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
-
-&lt;p&gt;このツールは「オープンソースプロジェクトなどの翻訳ドキュメントに原文を埋め込んだらどうか」という提案を含んでいます。理由はこうです。原文を埋め込むことにより、&lt;/p&gt;
-
-&lt;blockquote&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;翻訳ドキュメントの利用者が簡単に原文を確認できるようになる。&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;オリジナルがアップデートされたとき、翻訳ドキュメントがそれに追随しているかの判断が容易になる。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;ここで、２の点についてはアップデートされたオリジナルと翻訳ドキュメントの差分(diff)を取ることで変更箇所がわかるということでした。しかしオリジナルがアップデートされていなくても（訳文があるので）差分が出力されてしまい、オリジナルにおける変更点を把握しづらいという問題がありました。&lt;/p&gt;
-
-&lt;p&gt;そこで、この問題を解消するため、togglateに翻訳ドキュメントからコメント化された原文を抽出する&lt;code&gt;commentout&lt;/code&gt;コマンドを用意したのです(version 0.1.2)。&lt;/p&gt;
-
-&lt;h2&gt;commentoutコマンドの使い方&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;commentout&lt;/code&gt;コマンドは&lt;code&gt;togglate create&lt;/code&gt;コマンドで翻訳ドキュメントに埋め込まれたコメントを抽出し、元の原文を復元します。具体的には、&lt;code&gt;original&lt;/code&gt;(default)の名前が付いたコメントタグ&lt;code&gt;&amp;lt;!--original .. --&amp;gt;&lt;/code&gt;に囲まれた文章を抽出します。ヘルプを見ます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate help commentout
-Usage:
-  togglate commentout FILE
-
-Options:
-  -r, [--remains]  # Output remaining text after extraction of comments
-  -t, [--tag=TAG]  # Specify comment tag name
-                   # Default: original
-
-Extract commented contents from a FILE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;今、&lt;code&gt;togglate create&lt;/code&gt;コマンドで生成され、翻訳文を追加された次のようなドキュメントがあるとします。このドキュメントには、すべての原文がそのセンテンスごとに埋め込まれています。&lt;/p&gt;
-
-&lt;h4&gt;README.ja.md&lt;/h4&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## AwesomeTool
-
-&amp;lt;!--original
-## AwesomeTool
---&amp;gt;
-
-AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。
-
-&amp;lt;!--original
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
---&amp;gt;
-
-
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
-
-&amp;lt;!--original
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
---&amp;gt;
-
-Gemをインストールします。
-
-&amp;lt;!--original
-install the gem:
---&amp;gt;
-
-    gem install awesome_tool
-
-&amp;lt;!--original
-    gem install awesome_tool
---&amp;gt;
-
-そして、実行します。
-
-&amp;lt;!--original
-And run with:
---&amp;gt;
-
-    awesome nhk &amp;#39;charlie&amp;#39;
-
-&amp;lt;!--original
-    awesome nhk &amp;#39;charlie&amp;#39;
---&amp;gt;
-
-テレビを付けて、NHKを選曲します。
-`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。
-
-&amp;lt;!--original
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
---&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;このドキュメントに対し&lt;code&gt;commentout&lt;/code&gt;コマンドを実行します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate commentout README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;以下の出力が得られます。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## AwesomeTool
-
-AwesomeTools is a DSL for quickly creating awesome tools in Ruby.
-
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
-
-install the gem:
-
-    gem install awesome_tool
-
-And run with:
-
-    awesome nhk &amp;#39;charlie&amp;#39;
-
-Turn on the TV, select NHK.
-You will see `You are awesome, charlie!` message on the screen.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;これはオリジナルのREADME.mdとほぼ同じものになります。従って、オリジナルがアップデートされた場合は、この出力とオリジナルの差分を見れば変更点が分かります。アップデートされたREADME.mdとの差分は&lt;code&gt;diff&lt;/code&gt;を使って以下の方法により抽出できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% diff -u README.md &amp;lt;(togglate commentout README.ja.md)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;出力です。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;&lt;span class=&quot;gd&quot;&gt;--- README.md   2014-03-31 21:05:20.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+++ /dev/fd/11  2014-03-31 21:09:13.000000000 +0900&lt;/span&gt;
-&lt;span class=&quot;gu&quot;&gt;@@ -7,11 +7,7 @@&lt;/span&gt;
- require &amp;#39;awesome_tool&amp;#39;
-
- awesome &amp;#39;nhk&amp;#39; do |name|
-&lt;span class=&quot;gd&quot;&gt;-  &amp;#39;You are AWESOME, #{name}!!!&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-end&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-awesome do |name|&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-  call :nhk&lt;/span&gt;
-&lt;span class=&quot;gi&quot;&gt;+  &amp;#39;You are awesome, #{name}!&amp;#39;&lt;/span&gt;
- end
- ```
-
-&lt;span class=&quot;gu&quot;&gt;@@ -25,9 +21,3 @@&lt;/span&gt;
-
- Turn on the TV, select NHK.
- You will see `You are awesome, charlie!` message on the screen.
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-Alternatively, you can say:&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-    awesome &amp;#39;charlie&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-&lt;/span&gt;
-&lt;span class=&quot;gd&quot;&gt;-Look at the sky, you will see the message with clouds.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;--remainsオプション&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;commentout&lt;/code&gt;コマンドには&lt;code&gt;--remains&lt;/code&gt;オプションというのがあります。これは抽出されたコメントを出力する代わりに、コメント抽出後のドキュメントを出力します。つまり訳文のみのドキュメントを出力します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% togglate commentout --remains README.ja.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;以下のような出力になります。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;## AwesomeTool
-
-AwesomeToolは、Rubyで手早くすごいツールを作るためのDSLです。
-
-
-```ruby
-# mytool.rb
-require &amp;#39;awesome_tool&amp;#39;
-
-awesome &amp;#39;nhk&amp;#39; do |name|
-  &amp;#39;You are awesome, #{name}!&amp;#39;
-end
-```
-
-Gemをインストールします。
-
-    gem install awesome_tool
-
-そして、実行します。
-
-    awesome nhk &amp;#39;charlie&amp;#39;
-
-テレビを付けて、NHKを選曲します。
-`You are awesome, charlie!`というメッセージをスクリーン上で確認できるでしょう。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;これはコメント原文を見ながら訳文を作成し、後からコメント原文を除去した訳文を作るといった場合に使えるかもしれません。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;commentout&lt;/code&gt;コマンドの説明は以上です。なお、このコマンドで原文を復元するためには、&lt;code&gt;togglate create&lt;/code&gt;で埋め込まれたコメント原文を、そのまま残すようにして翻訳を行う点に留意が必要です。&lt;/p&gt;
-
-&lt;hr /&gt;
 
 &lt;blockquote&gt;&lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/togglate&quot; title=&quot;togglate | RubyGems.org | your community gem host&quot;&gt;togglate | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
 
