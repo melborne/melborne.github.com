@@ -207,9 +207,9 @@
 </code></pre></div>
 
 
-<p>Procのセットも結果の取得も同じ<code>#&lt;&lt;</code>メソッドで達成できるところがアピールポイントです（何の価値があるかわかりませんが）。これはinjectでProcを畳み込んで、<code>Proc#curry</code>に引数を渡すことでこれが駆動するようにして実現しています。</p>
+<p>Procのセットも結果の取得も、同じ<code>#&lt;&lt;</code>メソッドで達成できるところがアピールポイントです（何の価値があるかわかりませんが）。同じ入口に計算要素をどんどんpushしていくと最後に結果がpopするというイメージです。これはinjectでProcを畳み込んで、<code>Proc#curry</code>に引数を渡すことでこれが駆動するようにして実現しています。</p>
 
-<p><code>#to_proc</code>も定義してあるので、引数&amp;に渡すこともできます。</p>
+<p><code>#to_proc</code>も定義してあるので、&amp;引数として渡すこともできます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">pc</span> <span class="o">=</span> <span class="no">ProcCompressor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
@@ -223,6 +223,15 @@
 <span class="n">pc</span> <span class="o">&lt;&lt;</span> <span class="ss">:to_s</span><span class="o">.</span><span class="n">to_proc</span> <span class="o">&lt;&lt;</span> <span class="o">-&gt;</span><span class="n">s</span><span class="p">{</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;ist&#39;</span> <span class="p">}</span> <span class="o">&lt;&lt;</span> <span class="ss">:upcase</span><span class="o">.</span><span class="n">to_proc</span>
 
 <span class="o">[</span><span class="ss">:ruby</span><span class="p">,</span> <span class="ss">:violin</span><span class="p">,</span> <span class="ss">:novel</span><span class="o">].</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pc</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;RUBYIST&quot;, &quot;VIOLINIST&quot;, &quot;NOVELIST&quot;]</span>
+
+
+<span class="n">pc</span> <span class="o">=</span> <span class="no">ProcCompressor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">between5to10</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="n">n</span><span class="o">.</span><span class="n">between?</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span> <span class="p">}</span>
+
+<span class="n">pc</span> <span class="o">&lt;&lt;</span> <span class="n">between5to10</span>
+
+<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">15</span><span class="o">].</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pc</span><span class="p">)</span> <span class="c1"># =&gt; [5, 6, 7, 8, 9, 10]</span>
 </code></pre></div>
 
 
@@ -237,6 +246,10 @@
 <p>関連記事：</p>
 
 <blockquote><p><a href="http://melborne.github.io/2014/04/20/extend-ampersand-magic-with-methop/" title="落ちていくRubyistのためのMethopオブジェクト">落ちていくRubyistのためのMethopオブジェクト</a></p></blockquote>
+
+<hr />
+
+<p>(追記：2014-4-27) 説明とコードを少し追加しました。</p>
 
 <hr />
 
