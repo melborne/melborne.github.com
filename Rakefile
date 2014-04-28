@@ -45,7 +45,7 @@ task :deploy, :repo do |t, args|
   repo_url = args.repo ? args.repo : "git@github.com:melborne/melborne.github.com.git"
   cd "_site/" do
     system "git init"
-    system "git add ."
+    system "git add --ignore-removal ."
     system "git commit -m 'set static files for github deploy'"
     system "git remote add origin #{repo_url}"
     system "git push origin master --force"
