@@ -363,7 +363,7 @@
 </code></pre></div>
 
 
-<p><code>print_func</code>メソッドにおける違いに注目してください。違いはメソッド引数における<code>&amp;</code>だけです。そしてこの差異から、「メソッドに付けられたブロックは、&amp;仮引数に渡されるとここでProcオブジェクトに変換されているのではないか」という推測が生まれます。確かめて見ましょう。</p>
+<p>メソッド定義における違いに注目してください。違いはメソッド引数における<code>&amp;</code>だけです。そしてこの差異から、「メソッドに付けられたブロックは、&amp;仮引数に渡されるとここでProcオブジェクトに変換されているのではないか」という推測が生まれます。確かめて見ましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
 <span class="o">+</span> <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">class</span>
@@ -437,7 +437,7 @@
 
 <span class="nb">require</span> <span class="s2">&quot;prime&quot;</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
 </code></pre></div>
 
 
@@ -445,7 +445,7 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="sx">%w(charlie liz george)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">name</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;Charlie&quot;, &quot;Liz&quot;, &quot;George&quot;]</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">prime?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">prime?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
 </code></pre></div>
 
 
@@ -529,7 +529,7 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <span class="nb">require</span> <span class="s2">&quot;prime&quot;</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="o">].</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">&#39;prime?&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">&#39;prime?&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span>
 </code></pre></div>
 
 
@@ -608,7 +608,7 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <h2>Procの特徴その２: カリー化</h2>
 
-<p>Procオブジェクトはカリー化することができます。カリー化というのは、複数の引数を取るようなProcオブジェクトがある場合に、それをその一部の引数だけを受けとれるようなものに変えることを言います。そしてカリー化されたProcオブジェクトに一部の引数だけを渡すことを部分適用と言います。カリー化には<code>Proc#curry</code>を呼びます。例を見たほうがいいでしょう。</p>
+<p>Procオブジェクトはカリー化することができます。カリー化というのは、複数の引数を取るようなProcオブジェクトがある場合に、それをその一部の引数だけを受けとれるようなものに変えることを言います。そしてカリー化されたProcオブジェクトに一部の引数だけを渡すことを部分適用と言います。例を見たほうがいいでしょう。</p>
 
 <p>まずは、文字列に３種類の接尾語<code>ist</code>, <code>er</code>, <code>ian</code>を付ける３つのメソッドを考えます。こんな感じでしょうか。</p>
 
@@ -654,9 +654,13 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 </code></pre></div>
 
 
-<p>おなじことをProcのカリー化を使って書いてみます。</p>
+<p>おなじことをProcのカリー化を使って書いてみます。カリー化には<code>Proc#curry</code>を呼びます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">join</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">suffix</span><span class="p">,</span><span class="n">body</span><span class="p">{</span> <span class="n">body</span> <span class="o">+</span> <span class="n">suffix</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span> <span class="c1">#Procオブジェクトをカリー化する</span>
+
+<span class="c1"># カリー化されたProcオブジェクトに一部の引数を部分適用する。</span>
+<span class="c1"># これにより残りの引数を受けるProcオブジェクトが生成される。</span>
+<span class="n">join</span><span class="o">[</span><span class="s1">&#39;ist&#39;</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x007fdf011ce1b0 (lambda)&gt;</span>
 
 <span class="sx">%w(real social ruby)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">&#39;ist&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;realist&quot;, &quot;socialist&quot;, &quot;rubyist&quot;]</span>
 <span class="sx">%w(sell climb haskell)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">&#39;er&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;seller&quot;, &quot;climber&quot;, &quot;haskeller&quot;]</span>
