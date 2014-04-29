@@ -193,7 +193,7 @@ print_func(4) { |n| n * n }
 # >> 16
 {% endhighlight %}
 
-`print_func`メソッドにおける違いに注目してください。違いはメソッド引数における`&`だけです。そしてこの差異から、「メソッドに付けられたブロックは、&仮引数に渡されるとここでProcオブジェクトに変換されているのではないか」という推測が生まれます。確かめて見ましょう。
+メソッド定義における違いに注目してください。違いはメソッド引数における`&`だけです。そしてこの差異から、「メソッドに付けられたブロックは、&仮引数に渡されるとここでProcオブジェクトに変換されているのではないか」という推測が生まれます。確かめて見ましょう。
 
 {% highlight ruby %}
 def print_func(arg, &fun)
@@ -268,7 +268,7 @@ Rubyではメソッドにブロックを付する代わりに、`& + Symbolオ�
 
 require "prime"
 
-[*1..50].select(&:prime?) # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+(1..50).select(&:prime?) # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 {% endhighlight %}
 
 これらは次のショートカットです。
@@ -276,7 +276,7 @@ require "prime"
 {% highlight ruby %}
 %w(charlie liz george).map { |name| name.capitalize } # => ["Charlie", "Liz", "George"]
 
-[*1..50].select { |i| i.prime? } # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+(1..50).select { |i| i.prime? } # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 {% endhighlight %}
 
 なぜこのようなことができるのでしょうか。ここまでの説明が正しいのなら、次のような推測ができるはずです。
@@ -360,7 +360,7 @@ end
 
 require "prime"
 
-[*1..50].select(&'prime?') # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+(1..50).select(&'prime?') # => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 {% endhighlight %}
 
 いいですね。
@@ -438,7 +438,7 @@ x2.c # => 18
 
 ## Procの特徴その２: カリー化
 
-Procオブジェクトはカリー化することができます。カリー化というのは、複数の引数を取るようなProcオブジェクトがある場合に、それをその一部の引数だけを受けとれるようなものに変えることを言います。そしてカリー化されたProcオブジェクトに一部の引数だけを渡すことを部分適用と言います。カリー化には`Proc#curry`を呼びます。例を見たほうがいいでしょう。
+Procオブジェクトはカリー化することができます。カリー化というのは、複数の引数を取るようなProcオブジェクトがある場合に、それをその一部の引数だけを受けとれるようなものに変えることを言います。そしてカリー化されたProcオブジェクトに一部の引数だけを渡すことを部分適用と言います。例を見たほうがいいでしょう。
 
 まずは、文字列に３種類の接尾語`ist`, `er`, `ian`を付ける３つのメソッドを考えます。こんな感じでしょうか。
 
@@ -484,10 +484,14 @@ end
 %w(music physic Janis).map(&method(:join_ian)) # => ["musician", "physician", "Janisian"]
 {% endhighlight %}
 
-おなじことをProcのカリー化を使って書いてみます。
+おなじことをProcのカリー化を使って書いてみます。カリー化には`Proc#curry`を呼びます。
 
 {% highlight ruby %}
 join = ->suffix,body{ body + suffix }.curry #Procオブジェクトをカリー化する
+
+# カリー化されたProcオブジェクトに一部の引数を部分適用する。
+# これにより残りの引数を受けるProcオブジェクトが生成される。
+join['ist'] # => #<Proc:0x007fdf011ce1b0 (lambda)>
 
 %w(real social ruby).map(&join['ist']) # => ["realist", "socialist", "rubyist"]
 %w(sell climb haskell).map(&join['er']) # => ["seller", "climber", "haskeller"]
@@ -525,7 +529,15 @@ Procオブジェクトに関する僕からの説明は以上です。この記�
 
 関連記事：
 
+> [落ちていくRubyistのためのMethopオブジェクト]({{ BASE_PATH }}/2014/04/20/extend-ampersand-magic-with-methop/ "落ちていくRubyistのためのMethopオブジェクト")
+>
+> [RubyにおけるYet Another関数合成]({{ BASE_PATH }}/2014/04/26/yet-another-proc-composer-in-ruby/ "RubyにおけるYet Another関数合成")
+>
 > [RubyのSymbol#to_procを考えた人になってみる]({{ BASE_PATH }}/2008/09/17/Ruby-Symbol-to_proc/ "RubyのSymbol#to_procを考えた人になってみる")
+
+---
+
+(追記：2014-4-29) 一部記述を修正しました。
 
 ---
 
