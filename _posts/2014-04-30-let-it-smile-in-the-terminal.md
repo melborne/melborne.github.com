@@ -25,7 +25,7 @@ published: true
 
 > [「Macのターミナルで雪が降る」をカラー化した。翻訳した。]({{ BASE_PATH }}/2013/12/13/translate-let-it-snow-in-the-terminal/ "「Macのターミナルで雪が降る」をカラー化した。翻訳した。")
 
-> [Rubyのワンライナーで顔文字すると...]({{ BASE_PATH }}/2014/04/29/emoji-with-ruby-oneliner/ "Rubyのワンライナーで顔文字すると...")
+> [Macのターミナルで顔が変わると...]({{ BASE_PATH }}/2014/04/29/emoji-with-ruby-oneliner/ "Rubyのワンライナーで顔文字すると...")
 
 ---
 

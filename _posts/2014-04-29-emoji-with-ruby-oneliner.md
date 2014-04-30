@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Rubyのワンライナーで顔文字すると..."
+title: "Macのターミナルで顔が変わると..."
 description: ""
 category: 
 tags: 
@@ -16,7 +16,7 @@ published: true
 
 ![emoji noshadow](http://gifzo.net/7N6JmQxbDL.gif)
 
-Hosted by [Gifzo](http://gifzo.net/ "Gifzo - 宇宙一簡単なスクリーンキャスト共有")
+> [7N6JmQxbDL.gif - Gifzo](http://gifzo.net/7N6JmQxbDL "7N6JmQxbDL.gif - Gifzo")
 
 ---
 
@@ -30,4 +30,9 @@ Hosted by [Gifzo](http://gifzo.net/ "Gifzo - 宇宙一簡単なスクリーン�
 
  [単語が目に飛び込んできてすごい速度で文章を読めるようになる「Spritz」 - GIGAZINE](http://gigazine.net/news/20140228-spritz/ "単語が目に飛び込んできてすごい速度で文章を読めるようになる「Spritz」 - GIGAZINE")
 
+---
+
+(追記: 2014-4-30) 
+
+翌日に書いた「[Macのターミナルで顔が降る]({{ BASE_PATH }}/2014/04/30/let-it-smile-in-the-terminal/ "Macのターミナルで顔が降る")」の評判が異常に良いので、便乗できないかとタイトルを**改ざん**しました:-)
 
