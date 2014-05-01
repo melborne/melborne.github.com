@@ -34,7 +34,10 @@ Macのターミナルを開いて、`gem install let_it_fall`と打ってイン�
 
     $ let_it_fall help
 
-で使えるコマンドが表示されます。お腹が空いたら`food`してください。`perl`, `python`はありますが、残念ながら`ruby`はありません。代わりに`gem`してください。個人的には`moon`が好きです。
+で使えるコマンドが表示されます。お腹が空いたら`food`してください。`perl`, `python`はありますが、残念ながら`ruby`はありません。代わりに`gem`してください。個人的には`moon`, `kanji`が好きです。
+
+任意の**何か**を降らせたいときは`rand`してください(version0.0.3~)。
+
 
 スピード調整用のオプション`--speed`があります（ex -s=3）。レンジは0.1〜10くらいでしょうか。
 
@@ -47,9 +50,12 @@ Macのターミナルを開いて、`gem install let_it_fall`と打ってイン�
 
     $ let_it_fall code 0x2660 0x2666 -r
 
+以下のサイトでunicodeと対応キャラクタの一覧（一部）が確認できます。
+
+> [Emoji unicode characters for use on the web](http://apps.timwhitlock.info/emoji/tables/unicode "Emoji unicode characters for use on the web")
+
 
 辛いことがあったときに、どうぞ。
-
 
 ---
 
@@ -62,6 +68,10 @@ Macのターミナルを開いて、`gem install let_it_fall`と打ってイン�
 > [Macのターミナルで顔が降る](http://melborne.github.io/2014/04/30/let-it-smile-in-the-terminal/ "Macのターミナルで顔が降る")
 
 > [Macのターミナルでビールが降る | SOTA](http://deeeet.com/writing/2014/04/30/beer-on-terminal/ "Macのターミナルでビールが降る | SOTA")
+
+---
+
+(追記:2014-5-2) `rand`コマンドについて追記しました。
 
 ---
 
