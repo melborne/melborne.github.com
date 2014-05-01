@@ -9,6 +9,12 @@ published: true
 ---
 {% include JB/setup %}
 
+(追記:2014-5-1) 本機能をgem化しました。詳しくは以下の記事で。
+
+> [Macのターミナルで〇〇が降る]({{ BASE_PATH }}/2014/05/01/let-it-fall-in-the-mac-terminal/ "Macのターミナルで〇〇が降る")
+
+---
+
 辛いことがあったときに、どうぞ。
 
     ruby -e 'C=`stty size`.scan(/\d+/)[1].to_i;S=[*0x1F600..0x1F640];a={};puts "\033[2J";loop{a[rand(C)]=0;a.each{|x,o|;a[x]+=1;print "\033[#{o};#{x}H \033[#{a[x]};#{x}H#{S.sample.chr("utf-8")} \033[0;0H"};$stdout.flush;sleep 0.2}'
