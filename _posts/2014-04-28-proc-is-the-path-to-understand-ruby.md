@@ -508,7 +508,7 @@ Proc#callのエイリアスとして`Proc#===`が定義されています。こ�
 is_escape = ->chr{ chr.ord == 27 }
 is_back = ->chr{ [127, 8].include?(chr.ord) }
 
-chr = 27
+chr = "\e"
 
 case chr
 when is_escape then puts :escape
@@ -538,6 +538,8 @@ Procオブジェクトに関する僕からの説明は以上です。この記�
 ---
 
 (追記：2014-4-29) 一部記述を修正しました。
+
+(追記：2014-5-5) コードの間違いを修正しました。
 
 ---
 
