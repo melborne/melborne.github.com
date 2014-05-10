@@ -16,7 +16,7 @@
 #      <p>this is test.</p>
 #
 require "liquid"
-require "rdiscount"
+require "kramdown"
 require "nokogiri"
 
 module Jekyll
@@ -31,7 +31,7 @@ module Jekyll
       _SIG_REG_ = /(\w+)\s*=\s*(?:["']([\w ]*)?["']|(\w+))/
       signs = signs.join(' ').scan(_SIG_REG_).map(&:compact)
       
-      html = Nokogiri::HTML.fragment RDiscount.new(super).to_html
+      html = Nokogiri::HTML.fragment Kramdown::Document.new(super).to_html
       if target = html.at_css(tag)
         signs.each { |attr, val| target[attr] = val }
       end  
