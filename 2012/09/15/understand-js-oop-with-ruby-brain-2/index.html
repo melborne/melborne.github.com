@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,26 +179,26 @@
       </script>
     </div>
 
-    <p>「<a href="http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" title="Ruby脳が理解するJavaScriptのオブジェクト指向">Ruby脳が理解するJavaScriptのオブジェクト指向</a><a href="http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" target="_blank"> </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" alt="error" class="http-bookmark"></a>」の続きです。</p>
+    
+<p>「<a href="http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" title="Ruby脳が理解するJavaScriptのオブジェクト指向">Ruby脳が理解するJavaScriptのオブジェクト指向</a><a href="http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" target="_blank"> </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2012/09/09/understand-js-oop-with-ruby-brain/" alt="error" class="http-bookmark" /></a>」の続きです。</p>
 
 <hr />
 
 <p>引き続きJavaScriptのオブジェクト指向における<strong>「継承」</strong>について学んだので、自分の理解を書いてみます。当然に、間違いが含まれています。ご指摘助かります。</p>
 
-<h2>前回のまとめ</h2>
-
+<h2 id="section">前回のまとめ</h2>
 <p>前回の記事では、JavaScriptの「オブジェクトの生成」、「プロトタイプチェーン」、「オブジェクトコンストラクタ」、「new演算子」の各概念について順にみました。これらを通したJavaScriptのオブジェクト指向に対する僕の理解は概ね次のようなものです。</p>
 
-<blockquote><ol>
-<li>すべてのオブジェクトは__proto__プロパティ（非標準）を持っていて、プロパティ探索に関し、ここにセットされたオブジェクトを順次たどりこれを解決する（プロトタイプチェーン）。__proto__にはデフォルトで空オブジェクトがセットされている。</li>
-<li>同種オブジェクト（属性値だけが異なるオブジェクト）を複数作るには、コンストラクタ関数を使うのが便利である。JavaScriptにはその目的のために、（クラスっぽい）専用記法によるコンストラクタ関数とnew演算子が用意されている。</li>
-<li>new演算子は、（１）コンストラクタの引数をプロパティとしたオブジェクトを生成して返し、（２）その際に、この生成オブジェクトの__proto__プロパティが、コンストラクタのprototypeプロパティにセットした唯一のオブジェクトを参照するようにリンクする、という処理を実行する。</li>
-<li>専用記法コンストラクタはnewを忘れるとバグを生むので、「newは良くない部品」とする意見がある。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>すべてのオブジェクトは__proto__プロパティ（非標準）を持っていて、プロパティ探索に関し、ここにセットされたオブジェクトを順次たどりこれを解決する（プロトタイプチェーン）。__proto__にはデフォルトで空オブジェクトがセットされている。</li>
+    <li>同種オブジェクト（属性値だけが異なるオブジェクト）を複数作るには、コンストラクタ関数を使うのが便利である。JavaScriptにはその目的のために、（クラスっぽい）専用記法によるコンストラクタ関数とnew演算子が用意されている。</li>
+    <li>new演算子は、（１）コンストラクタの引数をプロパティとしたオブジェクトを生成して返し、（２）その際に、この生成オブジェクトの__proto__プロパティが、コンストラクタのprototypeプロパティにセットした唯一のオブジェクトを参照するようにリンクする、という処理を実行する。</li>
+    <li>専用記法コンストラクタはnewを忘れるとバグを生むので、「newは良くない部品」とする意見がある。</li>
+  </ol>
 </blockquote>
 
-<h2>new 演算子を使う</h2>
-
+<h2 id="new-">new 演算子を使う</h2>
 <p>同種のオブジェクトを多数作るためには差し当たり、関数コンストラクタ + <code>new</code>演算子が便利だということがわかりました。もう一度これらを使ってオブジェクトを生成してみます。諸般の事情によりiPhone5が買えないので（泣）、ここでiPhone5コンストラクタを作って独自ルートからiPhone5をゲットしようと思います。</p>
 
 <p>iPhone5コンストラクタから生成されるiPhone5オブジェクトは固有の<code>id</code>を持ちます。それからマックユーザが、購入したデバイスに名前をつける習慣にならって（嘘です）、<code>name</code>プロパティを用意します。<code>id</code>は本来は自動生成されるべきですが、ここでは手打ちとします。</p>
@@ -206,9 +206,7 @@
 <div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">iPhone5</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
+<span class="p">};</span></code></pre></div>
 
 <p>iPhone5は、電話を掛ける<code>call</code>、音楽を聞く<code>iTunes</code>、写真を撮る<code>camera</code>、およびパノラマを撮る<code>panorama</code>の４つの機能を持っているので、これらのプロパティを持ったオブジェクトを、コンストラクタの<code>prototype</code>プロパティにセットします。</p>
 
@@ -225,9 +223,7 @@
   <span class="nx">panorama</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
+<span class="p">};</span></code></pre></div>
 
 <p>さあiPhone5生成器ができました。早速newして、誰よりも早くiPhone5を手に入れます。</p>
 
@@ -244,14 +240,11 @@
 <span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
 <span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
 <span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
-<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
-</code></pre></div>
-
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span></code></pre></div>
 
 <p>いいですね！とりわけ<code>new</code>っていうのが、新品ができる感じで。</p>
 
-<h2>オブジェクト関係図</h2>
-
+<h2 id="section-1">オブジェクト関係図</h2>
 <p>ここで上記コードに係るオブジェクトの関係を図にしたので見てみます。グラフは<a href="https://rubygems.org/gems/ruby-graphviz" title="ruby-graphviz">ruby-graphviz</a>をラップした拙作<a href="https://github.com/melborne/graphaz" title="melborne/graphaz">graphaz</a>で作りました。</p>
 
 <p><img src="/assets/images/js_proto01.png" alt="JS prototype chain noshadow" /></p>
@@ -260,7 +253,7 @@
 
 <p>今、jonathanオブジェクトで<code>call</code>プロパティが呼ばれると、Jonathanオブジェクト自身はそれを持っていないので、iPhone5の<code>prototype</code>プロパティにセットされたプロトタイプオブジェクトの<code>call</code>が参照され、その結果が返されます。つまり、iPhone5コンストラクタは、Jonathanオブジェクトとプロトタイプオブジェクトとを繋ぐ導管の役割をしているのです。</p>
 
-<h2>継承</h2>
+<h2 id="section-2">継承</h2>
 
 <p>さて、Apple社内でも同種の方法でiPhone5を生産していると予想されますが、仮に僕がSteve JobsもといTim Cookだとしたら、上記コードには口を挟まざるを得ません。</p>
 
@@ -289,11 +282,9 @@
 <span class="nx">phil</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Phil&#39;</span>
 <span class="nx">phil</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;408-974-5050&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 408-974-5050 ...&#39;</span>
 <span class="nx">phil</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Valentine&#39;</span><span class="p">,</span> <span class="s1">&#39;Fiona Apple&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Valentine` of Fiona Apple&#39;</span>
-<span class="nx">phil</span><span class="p">.</span><span class="nx">camera</span><span class="p">();</span> <span class="c1">// &#39;Phil Take a Photo!&#39;</span>
-</code></pre></div>
+<span class="nx">phil</span><span class="p">.</span><span class="nx">camera</span><span class="p">();</span> <span class="c1">// &#39;Phil Take a Photo!&#39;</span></code></pre></div>
 
-
-<p>iPhone5は基本的にiPhone4に<code>panorama</code>機能を付加しただけのものですから<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>、これを活用しない手はありません。</p>
+<p>iPhone5は基本的にiPhone4に<code>panorama</code>機能を付加しただけのものですから<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>、これを活用しない手はありません。</p>
 
 <p>iPhone5コンストラクタをこの資産を継承した形に書き換えます。</p>
 
@@ -305,9 +296,7 @@
 <span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone4</span><span class="p">;</span>
 <span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">panorama</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
+<span class="p">};</span></code></pre></div>
 
 <p><code>iPhone5.prototype = new iPhone4</code>としている点がポイントです。つまりiPhone5のprototypeプロパティに、iPhone4コンストラクタから生成されるオブジェクトをそのプロトタイプオブジェクトとしてセットしています。そしてそのプロトタイプオブジェクトに、iPhone5の独自機能である<code>panorama</code>を追加しました。</p>
 
@@ -326,14 +315,11 @@
 <span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
 <span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
 <span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
-<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
-</code></pre></div>
-
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span></code></pre></div>
 
 <p>うまくいったようですね。</p>
 
-<h2>オブジェクト関係図</h2>
-
+<h2 id="section-3">オブジェクト関係図</h2>
 <p>さて、先の例と同様に新たなiPhone5生産システムにおけるオブジェクトの関係図も見てみます。</p>
 
 <p><img src="/assets/images/js_proto02.png" alt="JS prototype chain noshadow" /></p>
@@ -342,8 +328,7 @@
 
 <p>今、jonathanオブジェクトで<code>call</code>プロパティが呼ばれると、Jonathanオブジェクト自身はそれを持っていないので、iPhone5の<code>prototype</code>プロパティにセットされたプロトタイプオブジェクトのプロパティを参照します。ところが、このオブジェクトも<code>call</code>プロパティを持っていないので、iPhone4の<code>prototype</code>プロパティにセットされたオブジェクトを参照します。そしてこのオブジェクトにおける<code>call</code>が参照され、その結果が返されることになります。つまり、iPhone5およびiPhone4コンストラクタは、プロトタイプチェーンを形成する導管の役割をしています。</p>
 
-<h2>更に継承</h2>
-
+<h2 id="section-4">更に継承</h2>
 <p>僕自身は上記生産システムに不満はありませんが、超効率主義のあなたは納得しないでしょうね。</p>
 
 <p>あなた「iPadはどうなってんのよ。別に作れってか」</p>
@@ -387,9 +372,7 @@
   <span class="k">this</span><span class="p">.</span><span class="nx">call</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;not implemented yet&#39;</span><span class="p">};</span>
 <span class="p">};</span>
 
-<span class="nx">iPad</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iOS</span><span class="p">;</span>
-</code></pre></div>
-
+<span class="nx">iPad</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iOS</span><span class="p">;</span></code></pre></div>
 
 <p>このコードのポイントは、iOSコンストラクタで生成したオブジェクトをiPhone4の<code>prototype</code>プロパティと、iPadの<code>prototype</code>プロパティにセットしている点です。またiOSコンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトは、<code>call</code>と<code>iTunes</code>プロパティを持っていますが、iPadコンストラクタでは同名の<code>call</code>プロパティを定義してこれを無効化しています。</p>
 
@@ -415,21 +398,18 @@
 <span class="nx">tim</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 8765</span>
 <span class="nx">tim</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Tim&#39;</span>
 <span class="nx">tim</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Black Hourse And The Cherry Tree&#39;</span><span class="p">,</span> <span class="s1">&#39;KT Tunstall&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Black Hourse And The Cherry Tree` of KT Tunstall&#39;</span>
-<span class="nx">tim</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-694-7466&#39;</span><span class="p">);</span> <span class="c1">// &#39;not implemented yet&#39;</span>
-</code></pre></div>
-
+<span class="nx">tim</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-694-7466&#39;</span><span class="p">);</span> <span class="c1">// &#39;not implemented yet&#39;</span></code></pre></div>
 
 <p>いいですね！</p>
 
-<h2>オブジェクト関係図</h2>
-
+<h2 id="section-5">オブジェクト関係図</h2>
 <p>新たなiPhone5およびiPad生産システムにおけるオブジェクトの関係図を見てみます。</p>
 
 <p><img src="/assets/images/js_proto03.png" alt="JS prototype chain noshadow" /></p>
 
 <p>iPhone4コンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトには<code>camera</code>プロパティがセットされる一方で、iPadコンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトには対応プロパティは無いので、このコンストラクタで生成されるiPadにはカメラ機能はないということになります。</p>
 
-<p>また、iPadコンストラクタで生成されるiPadオブジェクトは、<code>call</code>プロパティを持ちます（このcallは'not implemented yet'を返します）。このためiPadオブジェクトから<code>call</code>プロパティを呼ぶと、iOSコンストラクタのprototypeプロパティにおける<code>call</code>プロパティではなくiPadオブジェクトに実装された<code>call</code>プロパティが呼ばれることになります。</p>
+<p>また、iPadコンストラクタで生成されるiPadオブジェクトは、<code>call</code>プロパティを持ちます（このcallは’not implemented yet’を返します）。このためiPadオブジェクトから<code>call</code>プロパティを呼ぶと、iOSコンストラクタのprototypeプロパティにおける<code>call</code>プロパティではなくiPadオブジェクトに実装された<code>call</code>プロパティが呼ばれることになります。</p>
 
 <p>以上のようにして、私は誰よりも早くiPhone5を手に入れたのでした^ ^;</p>
 
@@ -441,15 +421,13 @@
 
 <p>(追記：2012-09-16) 以下を追記しました。</p>
 
-<h2>Rubyにおける継承</h2>
+<h2 id="ruby">Rubyにおける継承</h2>
 
 <p>対比のためRubyにおける対応コードを貼っておきます。Rubyにはクラスと似たしかしインスタンスを生成しないモジュールというエンティティがあります。IOSはこれを使って実装し、IPhone4クラスおよびIPadクラスにincludeすることで、その機能を各クラスに付与するようにしています。</p>
 
 <script src="https://gist.github.com/3727490.js?file=iphone5.rb"></script>
 
-
-<h2>オブジェクト関係図</h2>
-
+<h2 id="section-6">オブジェクト関係図</h2>
 <p>上記コードに対応する図は次のようになります。</p>
 
 <p><img src="/assets/images/rb_proto01.png" alt="Ruby class inheritance noshadow" /></p>
@@ -478,18 +456,16 @@
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/よくわかるiPhoneアプリ開発の教科書【iOS-5-Xcode-4-2対応版】-巧尚/dp/4839941734?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4839941734"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51xePZLKY3L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/よくわかるiPhoneアプリ開発の教科書【iOS-5-Xcode-4-2対応版】-巧尚/dp/4839941734?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4839941734">よくわかるiPhoneアプリ開発の教科書【iOS 5&amp;Xcode 4.2対応版】</a> by 森 巧尚</p>
+<p><a href="http://www.amazon.co.jp/よくわかるiPhoneアプリ開発の教科書【iOS-5-Xcode-4-2対応版】-巧尚/dp/4839941734?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4839941734"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51xePZLKY3L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/よくわかるiPhoneアプリ開発の教科書【iOS-5-Xcode-4-2対応版】-巧尚/dp/4839941734?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4839941734">よくわかるiPhoneアプリ開発の教科書【iOS 5&amp;Xcode 4.2対応版】</a> by 森 巧尚</p>
 
 <hr />
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>冗談に怒らないように! <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">冗談に怒らないように! <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

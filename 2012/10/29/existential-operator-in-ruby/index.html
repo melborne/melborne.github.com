@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,7 +179,8 @@
       </script>
     </div>
 
-    <p>CoffeeScriptには<code>存在演算子（Existential Operator）</code>なるものがあるそうだよ。これは変数が存在するかをチェックするものなんだ。</p>
+    
+<p>CoffeeScriptには<code>存在演算子（Existential Operator）</code>なるものがあるそうだよ。これは変数が存在するかをチェックするものなんだ。</p>
 
 <div class="highlight"><pre><code class="coffeescript"><span class="c1"># coffee</span>
 <span class="nv">charlie = </span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s">&#39;Charlie&#39;</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">50</span><span class="p">}</span>
@@ -193,9 +194,7 @@
 
 <span class="nx">charlie</span><span class="p">.</span><span class="nx">hobby</span> <span class="o">?=</span> <span class="s">&#39;programming&#39;</span>
 
-<span class="nx">charlie</span><span class="p">.</span><span class="nx">hobby</span> <span class="c1"># =&gt;  programming</span>
-</code></pre></div>
-
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">hobby</span> <span class="c1"># =&gt;  programming</span></code></pre></div>
 
 <p>Rubyにはそのような演算子は無いけれども、<code>nil?</code>とか<code>defined?</code>とか<code>||=</code>とかを使えば同等のことができるよね。</p>
 
@@ -211,9 +210,7 @@
 <span class="n">charlie</span><span class="o">.</span><span class="n">age</span> <span class="c1"># =&gt; 20</span>
 
 <span class="n">charlie</span><span class="o">.</span><span class="n">hobby</span> <span class="o">||=</span> <span class="s1">&#39;programming&#39;</span>
-<span class="n">charlie</span><span class="o">.</span><span class="n">hobby</span> <span class="c1"># =&gt; &quot;programming&quot;</span>
-</code></pre></div>
-
+<span class="n">charlie</span><span class="o">.</span><span class="n">hobby</span> <span class="c1"># =&gt; &quot;programming&quot;</span></code></pre></div>
 
 <p>でもね、CoffeeScriptの存在演算子はもう一歩先を行ってるんだよ。なんてったってプロパティチェーンの中でも使えちゃうんだから。</p>
 
@@ -225,9 +222,7 @@
 <span class="nv">liz = </span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s">&#39;Liz&#39;</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">17</span><span class="p">}</span>
 
 <span class="nx">liz</span><span class="p">.</span><span class="nx">scores</span><span class="p">.</span><span class="nx">math</span> <span class="c1"># =&gt; TypeError: Cannot read property &#39;math&#39; of undefined</span>
-<span class="nx">liz</span><span class="p">.</span><span class="nx">scores</span><span class="o">?</span><span class="p">.</span><span class="nx">math</span> <span class="c1"># =&gt; undefined</span>
-</code></pre></div>
-
+<span class="nx">liz</span><span class="p">.</span><span class="nx">scores</span><span class="o">?</span><span class="p">.</span><span class="nx">math</span> <span class="c1"># =&gt; undefined</span></code></pre></div>
 
 <p>lizの結果を見てもらえばわかると思うけど、存在演算子を使えば<code>scores</code>が未定義でもエラーを吐かずに、出力を一つ前（scores）の返り値に戻せるんだ。</p>
 
@@ -247,15 +242,13 @@
 <span class="c1"># ~&gt; -:17:in `&lt;main&gt;&#39;: undefined method `[]&#39; for nil:NilClass (NoMethodError)</span>
 
 <span class="n">liz_scores</span> <span class="o">=</span> <span class="n">liz</span><span class="o">.</span><span class="n">scores</span>
-<span class="n">liz_scores</span> <span class="p">?</span> <span class="n">liz_scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">:</span> <span class="kp">nil</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">liz_scores</span> <span class="p">?</span> <span class="n">liz_scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">:</span> <span class="kp">nil</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>でも、それってスマートじゃないよね？悲しいよね？</p>
 
-<h2>Rubyに存在メソッドを定義する</h2>
+<h2 id="ruby">Rubyに存在メソッドを定義する</h2>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>CoffeeScriptの存在演算子に対抗すべく、Rubyで存在メソッド<code>Object#al?</code>っていうのを考えてみたよ。<code>all?</code>じゃないからね。</p>
 
@@ -270,9 +263,7 @@
 <span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="p">{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="n">sco</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
 
 <span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; true</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; false</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; false</span></code></pre></div>
 
 <p><code>al?</code>はブロックを取るよ。で、receiverがnilならnilを返すけど、そうでなければreceiverを引数にとってブロックの実行結果を返すんだ。ブロックがなければブール値を返すよ。</p>
 
@@ -282,16 +273,13 @@
 <span class="k">alias</span> <span class="p">:</span><span class="err">ある</span><span class="p">?</span> <span class="ss">:al?</span>
 
 <span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="err">ある</span><span class="sc">?{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="n">sco</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; 35</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="err">ある</span><span class="p">?</span> <span class="p">{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="n">sco</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="err">ある</span><span class="p">?</span> <span class="p">{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="n">sco</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>日本人のみんなはこっちを使えばいいと思うよ。</p>
 
 <p>Ruby2.0で採用間違いなし！と思うんだけど、みんなはどう思う？</p>
 
-<h2>Object#tapを使う</h2>
-
+<h2 id="objecttap">Object#tapを使う</h2>
 <p>って、これじゃネタ止まりだよね..僕らにはもっと現実的な解決策が必要だよ。</p>
 
 <p>で、いい方法を思いついたんだよ。</p>
@@ -299,9 +287,7 @@
 <p><code>Object#tap</code>を使うんだ。そう僕らには<code>tap</code>があるんだよ！</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="k">break</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="k">if</span> <span class="n">s</span> <span class="p">}</span> <span class="c1"># =&gt; 35</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="k">break</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="k">if</span> <span class="n">s</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="k">break</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="k">if</span> <span class="n">s</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>scoresがあるときはbreakでブロックの結果を返すけど、scoresがnilのときはtapの挙動通りブロックの結果は無視されてsocoresつまりnilが返るよ。ブロック中の<code>break</code>がミソだよ。</p>
 
@@ -310,9 +296,7 @@
 <p>もちろん<code>tap+break</code>は、存在確認以外のことにも使えるよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">charlie</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="k">break</span> <span class="n">n</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="k">break</span> <span class="n">n</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;***LIZ****&quot;</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="k">break</span> <span class="n">n</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;***LIZ****&quot;</span></code></pre></div>
 
 <p>この例では名前の長さを分岐の条件にしてるよ。</p>
 
@@ -329,9 +313,7 @@
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;active_support/all&quot;</span>
 
 <span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; 35</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>折角だから実装も見てみるね。</p>
 
@@ -349,18 +331,14 @@
   <span class="k">def</span> <span class="nf">try</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
     <span class="kp">nil</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>NilClass#nilの実装がなんとも言えないねー。</p>
 
 <p><code>Object#try</code>では引数渡しもできるようになってるんだね。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="ss">:[]</span><span class="p">,</span> <span class="ss">:math</span><span class="p">)</span> <span class="c1"># =&gt; 35</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="ss">:[]</span><span class="p">,</span> <span class="ss">:math</span><span class="p">)</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="ss">:[]</span><span class="p">,</span> <span class="ss">:math</span><span class="p">)</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>その場合は<code>send</code>に移譲するから引数は必須だよ。</p>
 
@@ -377,16 +355,15 @@
 <span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="p">{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="n">sco</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
 
 <span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; true</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; false</span>
-</code></pre></div>
-
+<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">al?</span> <span class="c1"># =&gt; false</span></code></pre></div>
 
 <p><code>try</code>にもこの機能があっていいように思うんだけどどうなのかな。</p>
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/進化の存在証明-リチャード・ドーキンス/dp/4152090901?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4152090901"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41X-OKewywL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/進化の存在証明-リチャード・ドーキンス/dp/4152090901?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4152090901">進化の存在証明</a> by リチャード・ドーキンス and Richard Dawkins</p>
+<p><a href="http://www.amazon.co.jp/進化の存在証明-リチャード・ドーキンス/dp/4152090901?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4152090901"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41X-OKewywL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/進化の存在証明-リチャード・ドーキンス/dp/4152090901?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4152090901">進化の存在証明</a> by リチャード・ドーキンス and Richard Dawkins</p>
+
 
 
     <div class="ad" id="topAdsense">

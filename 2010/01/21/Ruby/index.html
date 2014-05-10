@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,25 +179,24 @@
       </script>
     </div>
 
-    <p><a href="http://okajima.air-nifty.com/b/2010/01/post-abc6.html">人生を書き換える者すらいた。: 人材獲得作戦・４　試験問題ほか</a>
-次に同じ質問がきたときに
-「1時間いらないっしょ、こんなの」
-と是非ともほざくために
-今から勉強します</p>
+    <p><a href="http://okajima.air-nifty.com/b/2010/01/post-abc6.html">人生を書き換える者すらいた。: 人材獲得作戦・４　試験問題ほか</a></p>
 
-<h2>ダイクストラ法による最短経路探索</h2>
+<p>次に同じ質問がきたときに、</p>
+
+<p>「1時間いらないっしょ、こんなの」</p>
+
+<p>と是非ともほざくために、今から勉強します。</p>
+
+<h2 id="section">ダイクストラ法による最短経路探索</h2>
 
 <p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100202/20100202222812.gif" alt="image" /></p>
 
-<p>図におけるＳ点からＧ点に到達するための最短経路を求めたい
-各ノードを結ぶエッジを糸としてＳ点をゆっくりと持ち上げた場合
-緊張する糸が変移しながら最終的にＳ－Ｂ－Ｄ－Ｇを結ぶ糸が緊張して
-これが最短経路と分かる<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>
-計算機上でこの現象をシミュレートしたものを
-ダイクストラ法というらしい</p>
+<p>図におけるＳ点からＧ点に到達するための最短経路を求めたい。各ノードを結ぶエッジを糸としてＳ点をゆっくりと持ち上げた場合、緊張する糸が変移しながら最終的にＳ－Ｂ－Ｄ－Ｇを結ぶ糸が緊張して、
+これが最短経路と分かる<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<p>今各ノードとそこから伸びるエッジの情報(コストと接続先)を渡して
-その最短経路および総コストを出力するプログラムを考えてみよう</p>
+<p>計算機上でこの現象をシミュレートしたものを、ダイクストラ法というらしい。</p>
+
+<p>今各ノードとそこから伸びるエッジの情報(コストと接続先)を渡して、その最短経路および総コストを出力するプログラムを考えてみよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
  <span class="ss">:s</span> <span class="o">=&gt;</span> <span class="o">[[</span><span class="mi">5</span><span class="p">,</span> <span class="ss">:a</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">4</span><span class="p">,</span> <span class="ss">:b</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">2</span><span class="p">,</span> <span class="ss">:c</span><span class="o">]]</span><span class="p">,</span>
@@ -208,15 +207,11 @@
  <span class="ss">:g</span> <span class="o">=&gt;</span> <span class="o">[[</span><span class="mi">6</span><span class="p">,</span> <span class="ss">:a</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">4</span><span class="p">,</span> <span class="ss">:d</span><span class="o">]]</span>
  <span class="p">}</span>
 <span class="n">g</span> <span class="o">=</span> <span class="no">Graph</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="n">g</span><span class="o">.</span><span class="n">print_route</span><span class="p">(</span><span class="ss">:s</span><span class="p">,</span> <span class="ss">:g</span><span class="p">)</span> <span class="c1"># =&gt; s(0) -&gt; b(4) -&gt; d(6) -&gt; g(10)</span>
-</code></pre></div>
+<span class="n">g</span><span class="o">.</span><span class="n">print_route</span><span class="p">(</span><span class="ss">:s</span><span class="p">,</span> <span class="ss">:g</span><span class="p">)</span> <span class="c1"># =&gt; s(0) -&gt; b(4) -&gt; d(6) -&gt; g(10)</span></code></pre></div>
 
+<p>各ノードをエッジ情報を備えたNodeクラスのオブジェクトとし、エッジ情報をEdgeクラスのオブジェクトとしてそれぞれ表現し、Graphクラス内で生成するようにしよう。</p>
 
-<p>各ノードをエッジ情報を備えたNodeクラスのオブジェクトとし
-エッジ情報をEdgeクラスのオブジェクトとしてそれぞれ表現し
-Graphクラス内で生成するようにしよう
-各ノードオブジェクトには経路探索の経過および結果を保持するため
-cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
+<p>各ノードオブジェクトには経路探索の経過および結果を保持するため、cost, done(確定ノードフラグ), from(直前ノードid)を用意する。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="kp">attr_accessor</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:edges</span><span class="p">,</span> <span class="ss">:cost</span><span class="p">,</span> <span class="ss">:done</span><span class="p">,</span> <span class="ss">:from</span>
@@ -238,12 +233,9 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
         <span class="no">Node</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
       <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>スタートsidからゴールgidまでの最短経路を求めるrouteメソッドと
-その印刷用のprint_routeを定義しよう</p>
+<p>スタートsidからゴールgidまでの最短経路を求めるrouteメソッドと、その印刷用のprint_routeを定義しよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Graph</span>
   <span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">gid</span><span class="p">)</span>
@@ -259,22 +251,18 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
     <span class="n">route</span><span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">gid</span><span class="p">)</span>
     <span class="nb">puts</span> <span class="vi">@res</span><span class="o">.</span><span class="n">reverse</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">node</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">(</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">cost</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>任意点nidのコストを求めるcostメソッドも定義しよう</p>
+<p>任意点nidのコストを求めるcostメソッドも定義しよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Graph</span>
   <span class="k">def</span> <span class="nf">cost</span><span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">sid</span><span class="p">)</span>
     <span class="n">dijkstra</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
-    <span class="vi">@nodes</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span> <span class="o">|</span><span class="n">node</span><span class="o">|</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">nid</span> <span class="p">}</span><span class="o">.</span><span class="n">cost</span>        
+    <span class="vi">@nodes</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span> <span class="o">|</span><span class="n">node</span><span class="o">|</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">nid</span> <span class="p">}</span><span class="o">.</span><span class="n">cost</span>		
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>そして探索アルゴリズムの核心であるdijkstraメソッドを定義しよう</p>
+<p>そして探索アルゴリズムの核心であるdijkstraメソッドを定義しよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Graph</span>
   <span class="kp">private</span>
@@ -303,15 +291,16 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
+<p>dijkstraメソッドでは次の処理をする。</p>
 
-<p>dijkstraメソッドでは次の処理をする
-(1)スタートノードにコスト0をセットする
-(2)確定ノードdone_nodeに最少コストのノードをセットする
-(3)確定ノードのエッジの中からその接続先への総コストが最小となるよう接続先のコストを更新する
-(4)未確定ノードがなくなるまで(2)(3)を繰り返す</p>
+<ol>
+  <li>スタートノードにコスト0をセットする</li>
+  <li>確定ノードdone_nodeに最少コストのノードをセットする</li>
+  <li>確定ノードのエッジの中からその接続先への総コストが最小となるよう接続先のコストを更新する</li>
+  <li>未確定ノードがなくなるまで(2)(3)を繰り返す</li>
+</ol>
 
 <p>じゃあデータを入れてみよう！</p>
 
@@ -329,21 +318,20 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
 <span class="n">g</span><span class="o">.</span><span class="n">print_route</span><span class="p">(</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:c</span><span class="p">)</span>
 <span class="c1"># &gt;&gt; s(0) -&gt; b(4) -&gt; d(6) -&gt; g(10)</span>
 <span class="c1"># &gt;&gt; 6</span>
-<span class="c1"># &gt;&gt; a(0) -&gt; b(2) -&gt; c(5)</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt; a(0) -&gt; b(2) -&gt; c(5)</span></code></pre></div>
 
+<p>いいみたいだ。</p>
 
-<p>いいみたいだ</p>
+<h2 id="section-1">試験問題</h2>
+<p>Graphクラスがあればあの試験問題が解けるはずだ。まずは方針を考えよう。</p>
 
-<h2>試験問題</h2>
+<ol>
+  <li>迷路データを二次元配列として読み込む</li>
+  <li>迷路上の各マス(スペースの箇所)をその座標がidである<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>ノードオブジェクトとしてノードデータを生成しGraphオブジェクトを生成する</li>
+  <li>最短ルートを求め該当ノードを＄マークに置き換えた迷路を出力する</li>
+</ol>
 
-<p>Graphクラスがあればあの試験問題が解けるはずだ
-まずは方針を考えよう
-(1)迷路データを二次元配列として読み込む
-(2)迷路上の各マス(スペースの箇所)をその座標がidである<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>ノードオブジェクトとしてノードデータを生成しGraphオブジェクトを生成する
-(3)最短ルートを求め該当ノードを＄マークに置き換えた迷路を出力する</p>
-
-<p>まずは迷路を読み込もう</p>
+<p>まずは迷路を読み込もう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">maze</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">readlines</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="p">}</span>
 <span class="cp">__END__</span>
@@ -359,13 +347,11 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
 <span class="cp">*  *      *********** *  *</span>
 <span class="cp">*    *        ******* *  *</span>
 <span class="cp">*       *                *</span>
-<span class="cp">###************************</span>
-</code></pre></div>
+<span class="cp">###************************</span></code></pre></div>
 
+<p>次にその座標がidになるようにノードデータを作り、それをGraphクラスに渡そう。</p>
 
-<p>次にその座標がidになるようにノードデータを作り
-それをGraphクラスに渡そう
-隣接するノードのデータedgesを作るのにちょっと工夫がいる</p>
+<p>隣接するノードのデータedgesを作るのにちょっと工夫がいる。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">maze</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">y</span><span class="o">|</span>
@@ -384,12 +370,9 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
     <span class="n">nodes</span><span class="o">[</span><span class="nb">id</span><span class="o">]</span> <span class="o">=</span> <span class="n">edges</span>
   <span class="k">end</span>
 <span class="k">end</span>
-<span class="n">g</span> <span class="o">=</span> <span class="no">Graph</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-</code></pre></div>
+<span class="n">g</span> <span class="o">=</span> <span class="no">Graph</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span></code></pre></div>
 
-
-<p>最後に最短経路を求めて
-元の迷路データ上に＄マークをマッピングしよう</p>
+<p>最後に最短経路を求めて、元の迷路データ上に＄マークをマッピングしよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">route</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">)</span>
 <span class="n">maze</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="p">,</span> <span class="n">y</span><span class="o">|</span>
@@ -397,11 +380,7 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
     <span class="nb">print</span> <span class="n">route</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span> <span class="o">|</span><span class="n">pos</span><span class="o">|</span> <span class="n">pos</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">#{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="p">?</span> <span class="s1">&#39;$&#39;</span> <span class="p">:</span> <span class="n">data</span>
   <span class="k">end</span>
   <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="k">end</span>
-</code></pre></div>
-
-
-
+<span class="k">end</span></code></pre></div>
 
 <div class="highlight"><pre><code class="bash"><span class="c">###************************</span>
 *S* *<span class="nv">$$$$$ </span>              *
@@ -415,25 +394,22 @@ cost, done(確定ノードフラグ), from(直前ノードid)を用意する</p>
 *  *  <span class="nv">$$$ </span>*********** *  *
 *    *        ******* *  *
 *       *                *
-<span class="c">###************************</span>
-</code></pre></div>
+<span class="c">###************************</span></code></pre></div>
 
-
-<p>なんかよさげだ</p>
+<p>なんかよさげだ。</p>
 
 <p><a href="http://gist.github.com/282664">http://gist.github.com/282664</a></p>
 
-<p>参考：
-<a href="http://www.deqnotes.net/acmicpc/dijkstra/">ダイクストラ法（最短経路問題）</a>
+<p>参考：</p>
+
+<p><a href="http://www.deqnotes.net/acmicpc/dijkstra/">ダイクストラ法（最短経路問題）</a>
 <a href="http://ja.wikipedia.org/wiki/%E3%83%80%E3%82%A4%E3%82%AF%E3%82%B9%E3%83%88%E3%83%A9%E6%B3%95">ダイクストラ法 - Wikipedia</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>http://ja.wikipedia.org/wiki/%E3%83%80%E3%82%A4%E3%82%AF%E3%82%B9%E3%83%88%E3%83%A9%E6%B3%95 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>スタートとゴールはその文字 <a href='#fnref:2' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">http://ja.wikipedia.org/wiki/%E3%83%80%E3%82%A4%E3%82%AF%E3%82%B9%E3%83%88%E3%83%A9%E6%B3%95 <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">スタートとゴールはその文字 <a href="#fnref:2" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

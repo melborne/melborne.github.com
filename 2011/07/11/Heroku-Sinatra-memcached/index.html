@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,39 +181,33 @@
 
     <p>「NoSQL データベースファーストガイド」(著：佐々木達也)という本を読んでるよ。各種NoSQLのひと通りの説明とそれぞれにRubyを使ったサンプルがあって、僕のようなNoSQL知識ゼロ(NoKnowledge)の人にとってはとてもためになるよ。特にサンプルは各NoSQLの利用状況を想定して作られているから、実用的でうれしいよね。</p>
 
-<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4798029599"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41eQ1UKh7JL._SL160_.jpg" /></a></p>
+<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4798029599"><img class="amazon" src="http://ecx.images-amazon.com/images/I/41eQ1UKh7JL._SL160_.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4798029599">NoSQLデータベースファーストガイド</a> by 佐々木 達也</p>
+<p><a href="http://www.amazon.co.jp/NoSQLデータベースファーストガイド-佐々木-達也/dp/4798029599?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4798029599">NoSQLデータベースファーストガイド</a> by 佐々木 達也</p>
 
 <p>その中に音楽視聴ランキングサイトの楽しいサンプルがあるんだよ。それはGyaoの音楽ランキングに基づいて、YouTubeから対応動画を取ってきてリスト表示するというものだよ。一度アクセスしたデータはmemcachedを使ってサイト側で保持することで、サイトのレスポンスを良くすると共に、他サイトへの負荷を下げるという例だよ。</p>
 
 <p>早速僕も同じようなサイトを作ってmemcachedの使い方を学ぶよ。本の例はRailsをベースにしてるんだけど、僕はRailsをよく知らないのでここではSinatraを使うよ。そして折角だからHerokuにpushもしてみるね。</p>
 
-<h2>memcached</h2>
-
+<h2 id="memcached">memcached</h2>
 <p>環境はOSX Snow Leopardだよ。ローカルでmemcachedを使うには、<code>brew install memcached</code>すればいいよ。very verboseモードでの起動はこうだよ。</p>
 
-<div class="highlight"><pre><code class="bash"> <span class="nv">$ </span>memcached -vv
-</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="nv">$ </span>memcached -vv</code></pre></div>
 
+<p>Herokuでmemcachedを使う場合はadd-onするだけでいいみたいなんだ<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<p>Herokuでmemcachedを使う場合はadd-onするだけでいいみたいなんだ<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<div class="highlight"><pre><code class="bash"><span class="nv">$ </span>heroku addons:add memcache</code></pre></div>
 
-<div class="highlight"><pre><code class="bash"> <span class="nv">$ </span>heroku addons:add memcache
-</code></pre></div>
-
-
-<p>5MBまでは無料だけど<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>add-onを利用するには、クレジットカード情報などによる登録が必要だよ。登録しないで上のコマンドを実行すると、登録サイトを教えてくれるからそれに従ってね。</p>
+<p>5MBまでは無料だけど<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>add-onを利用するには、クレジットカード情報などによる登録が必要だよ。登録しないで上のコマンドを実行すると、登録サイトを教えてくれるからそれに従ってね。</p>
 
 <p>最初にmemcachedは何かということなんだけれども、僕はこれをリクエスト間の共有メモリ空間と理解したんだ。普通Webサーバはステートレスつまり、ユーザからの各リクエストは別々のメモリ空間で処理されるんだけど、memcachedを使うと多数のリクエストが一つの共有メモリ空間を利用できるようになる。つまりmemcachedはWebサーバをステートフルにする、こう理解したんだけどあってるかな？</p>
 
-<h2>GyaoRankサイト</h2>
-
+<h2 id="gyaorank">GyaoRankサイト</h2>
 <p>さて最終的にでき上がったものは以下にあるよ。</p>
 
 <p><a href="http://gyaorank.heroku.com/">http://gyaorank.heroku.com/</a></p>
 
-<p>まあ見た目がちゃちいけど、サンプルだから許してね..調べたらGyaoでは音楽以外のランキングデータも配信していたので<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>、ここではそれらにも対応してみたよ。ヒット率がかなり悪いけど..</p>
+<p>まあ見た目がちゃちいけど、サンプルだから許してね..調べたらGyaoでは音楽以外のランキングデータも配信していたので<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>、ここではそれらにも対応してみたよ。ヒット率がかなり悪いけど..</p>
 
 <p>ファイル構成をまず示すよ。</p>
 
@@ -225,9 +219,7 @@
 └── views
     ├── index.haml
     ├── layout.haml
-    └── style.scss
-</code></pre></div>
-
+    └── style.scss</code></pre></div>
 
 <p>Gemfileの中身は以下のとおりだよ。</p>
 
@@ -236,11 +228,9 @@
 <span class="n">gem</span> <span class="s1">&#39;haml&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;sass&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;dalli&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;nokogiri&#39;</span>
-</code></pre></div>
+<span class="n">gem</span> <span class="s1">&#39;nokogiri&#39;</span></code></pre></div>
 
-
-<p>本の例ではmemcachedのRubyインタフェースにmemcache-clientというのを使ってるんだけど、HerokuではSASL<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>というセキュリティ上の認証ができるgemしか使えないようなんだ。だからSASLに対応したDalliという変わった名前のgemを使っているよ。余談だけどdalliとnokogiriを並べて書くと、僕にはdankogaiに見えてしょうがないんだよ!</p>
+<p>本の例ではmemcachedのRubyインタフェースにmemcache-clientというのを使ってるんだけど、HerokuではSASL<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup>というセキュリティ上の認証ができるgemしか使えないようなんだ。だからSASLに対応したDalliという変わった名前のgemを使っているよ。余談だけどdalliとnokogiriを並べて書くと、僕にはdankogaiに見えてしょうがないんだよ!</p>
 
 <p>SinatraでDalliを使うときは例えば以下のようにするよ。</p>
 
@@ -249,9 +239,7 @@
                     <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_PASSWORD&#39;</span><span class="o">]</span><span class="p">,</span>
                     <span class="ss">:expires_in</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-<span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">)</span></code></pre></div>
 
 <p>つまりDalli::Clientオブジェクトをcacheという変数にセットして、getでkeyに対応するデータの取得をし、setでkeyにdataを保存する。データの保持期間はオブジェクト生成時のoptionで指定できる。optionを指定しないならmemcache serverの指定を含めて引数は不要だよ。</p>
 
@@ -262,9 +250,7 @@
   <span class="vi">@videos</span> <span class="o">=</span> <span class="n">videos</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="vi">@date</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
   <span class="vi">@urls</span> <span class="o">=</span> <span class="sx">%w(daily weekly newly)</span><span class="o">.</span><span class="n">product</span> <span class="sx">%w(music movie drama anime owarai variety all)</span>
   <span class="n">haml</span> <span class="ss">:index</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Gyaoではmusic movie drama anime owarai variety allの各カテゴリデータにつき、daily weekly newlyという期間データを用意しているんだ。だからgetではそれらをパラメータとして取って、これに応じたビデオのリストをvideosメソッドで取得するようにしている。また@urlsはプルダウンメニューで使っているよ。</p>
 
@@ -283,9 +269,7 @@
   <span class="k">rescue</span>
     <span class="n">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ここではmemcachedにアクセスするためのkeyとして渡された引数term, category, dateを / で連結したものを使っているよ。最初にmemcachedに同じキーのデータがあるか見てなければget_videosメソッドでGyaoとYouTubeにアクセスして、データを取得しmemcachedにセットする。rescueでmemcachedが死んでる場合にも一応対応したよ。</p>
 
@@ -296,9 +280,7 @@
     <span class="n">ranking</span> <span class="o">=</span> <span class="n">rank_data</span><span class="p">(</span><span class="n">term_category_date</span><span class="o">.</span><span class="n">first</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">video_data</span><span class="p">(</span><span class="n">ranking</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ここではrank_dataメソッドでGyaoにアクセスし、内容を解析してランキングデータを取得し、video_dataメソッドでそのデータに対応する動画をYouTubeから取得しているよ。</p>
 
@@ -327,9 +309,7 @@
     <span class="p">{</span> <span class="ss">video</span><span class="p">:</span> <span class="s1">&#39;http://gdata.youtube.com/feeds/api/videos&#39;</span><span class="p">,</span>
       <span class="ss">rank</span><span class="p">:</span>  <span class="s1">&#39;http://gyao.yahoo.co.jp/rss/ranking/c/&#39;</span> <span class="p">}</span><span class="o">[</span><span class="n">code</span><span class="o">]</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ただここではビデオの取得にスレッドを使っているよ。折角だからここでは<a href="/2011/06/29/notitle/">この間作った</a> Enumerable#thread_withを使ってみたよ。これはsystem_extensions.rbというファイルに置いてあるよ。</p>
 
@@ -357,9 +337,7 @@
   <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="o">*</span><span class="n">features</span><span class="p">)</span>
     <span class="n">features</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Fixnum#dayとKernel#requiresは
 app.rbでつかってるんだけどまあおまけだよ。</p>
@@ -368,18 +346,15 @@ app.rbでつかってるんだけどまあおまけだよ。</p>
 
 <p>NoSQLってなんかもっと難しいものをイメージしてたけど、全然そんなこと無いんだね。</p>
 
-<p>(追記：2011-7-11)Dalli::Client.newの引数を修正しました。<sup id='fnref:5'><a href='#fn:5' rel='footnote'>5</a></sup></p>
+<p>(追記：2011-7-11)Dalli::Client.newの引数を修正しました。<sup id="fnref:5"><a href="#fn:5" rel="footnote">5</a></sup></p>
 
 <script src="https://gist.github.com/1075425.js"> </script>
 
-
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>http://devcenter.heroku.com/articles/memcache <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>http://addons.heroku.com/memcache <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>http://www.redcruise.com/search.php?srcstr=GyaO <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>Simple Authentication and Security Layer <a href='#fnref:4' rev='footnote'>↩</a></li><li id='fn:5'>https://github.com/mperham/dalli/wiki/Heroku-Configuration <a href='#fnref:5' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">http://devcenter.heroku.com/articles/memcache <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">http://addons.heroku.com/memcache <a href="#fnref:2" rev="footnote">↩</a></li><li id="fn:3">http://www.redcruise.com/search.php?srcstr=GyaO <a href="#fnref:3" rev="footnote">↩</a></li><li id="fn:4">Simple Authentication and Security Layer <a href="#fnref:4" rev="footnote">↩</a></li><li id="fn:5">https://github.com/mperham/dalli/wiki/Heroku-Configuration <a href="#fnref:5" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

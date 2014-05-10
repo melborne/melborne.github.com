@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,7 +181,7 @@
 
     <p>RubyではSchemeなどとは異なって、末尾再帰の最適化を勝手にしてはくれません。</p>
 
-<p><a href="/2009/03/18/notitle/">再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！</a></p>
+<p><a href="/2009/03/18/notitle/">再帰は再帰なんかじゃない！末尾再帰こそが真の再帰なんだ！</a> </p>
 
 <p>でもid:athosさんが、Rubyで末尾再帰最適化を実現するコードを書いてくれました。</p>
 
@@ -189,7 +189,7 @@
 
 <p>自分の実力だと一見しただけでは何をしているか理解できなかったので、少し自分用にコードを整理してその処理を追ってみます。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Module</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Module</span>
    <span class="k">def</span> <span class="nf">tco</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
      <span class="n">called</span> <span class="o">=</span> <span class="kp">false</span>
      <span class="n">tmp</span> <span class="o">=</span> <span class="kp">nil</span>
@@ -226,32 +226,29 @@
  <span class="n">s</span> <span class="o">=</span> <span class="no">Sum</span><span class="o">.</span><span class="n">new</span>
  <span class="n">s</span><span class="o">.</span><span class="n">sum2</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span> <span class="c1"># =&gt; 5000050000</span>
  <span class="n">s</span><span class="o">.</span><span class="n">sum1</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span> <span class="c1"># =&gt; </span>
- <span class="c1"># ~&gt; -:25: stack level too deep (SystemStackError)</span>
-</code></pre></div>
-
+ <span class="c1"># ~&gt; -:25: stack level too deep (SystemStackError)</span></code></pre></div>
 
 <p>tcoクラスメソッドに対象のメソッドを渡せばその最適化がなされます。tcoメソッドでは具体的には以下の処理をしています。</p>
 
 <ol>
-<li>元メソッド(sum2)の別名(orig_sum2)を定義する(alias_method)。</li>
-<li>元メソッド名を持った新メソッドを定義する(define_method)。</li>
-<li>新メソッドにおいて別名定義した元メソッドを反復的に呼び出す。</li>
+  <li>元メソッド(sum2)の別名(orig_sum2)を定義する(alias_method)。</li>
+  <li>元メソッド名を持った新メソッドを定義する(define_method)。</li>
+  <li>新メソッドにおいて別名定義した元メソッドを反復的に呼び出す。</li>
 </ol>
-
 
 <p>これによってsum2が呼ばれると以下の処理がなされます。</p>
 
 <ol>
-<li>新メソッドが呼ばれ、その中で元メソッドが呼ばれる(unless節)。</li>
-<li>元メソッドの呼び出しは、その引数nが0(resultが有意な値)になるまでここで反復的に繰り返される。</li>
-<li>元メソッドの再度の呼び出しにより、今度は新メソッドのelse節が実行される(called=true)。</li>
-<li>ここでその引数argsが次の元メソッドの反復呼び出しに渡されるよう保持する。</li>
-<li>元メソッドの呼び出しにおいて引数nが0になると、accが返りresultに渡される。</li>
-<li>これによってuntilループを抜けて、このメソッドの返り値としてresultが得られることとなる。</li>
+  <li>新メソッドが呼ばれ、その中で元メソッドが呼ばれる(unless節)。</li>
+  <li>元メソッドの呼び出しは、その引数nが0(resultが有意な値)になるまでここで反復的に繰り返される。</li>
+  <li>元メソッドの再度の呼び出しにより、今度は新メソッドのelse節が実行される(called=true)。</li>
+  <li>ここでその引数argsが次の元メソッドの反復呼び出しに渡されるよう保持する。</li>
+  <li>元メソッドの呼び出しにおいて引数nが0になると、accが返りresultに渡される。</li>
+  <li>これによってuntilループを抜けて、このメソッドの返り値としてresultが得られることとなる。</li>
 </ol>
 
-
 <p>なるほど！</p>
+
 
 
     <div class="ad" id="topAdsense">

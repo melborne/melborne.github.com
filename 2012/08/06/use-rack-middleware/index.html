@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,15 +179,18 @@
       </script>
     </div>
 
-    <p>前回の記事「<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack最初の一歩">エラーメッセージから学ぶRack - 最初の一歩</a>」の続きです。</p>
+    
+<p>前回の記事「<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack最初の一歩">エラーメッセージから学ぶRack - 最初の一歩</a>」の続きです。</p>
 
 <hr />
 
 <p>噂によるとRackにはMiddlewareなる魔法があるそうです。そしてRack古文書にはMiddlewareについて次のようにあります。</p>
 
-<blockquote><p><code>use</code>の呪文を唱えよ。さすれば扉は開かれん</p></blockquote>
+<blockquote>
+  <p><code>use</code>の呪文を唱えよ。さすれば扉は開かれん</p>
+</blockquote>
 
-<h2>準備</h2>
+<h2 id="section">準備</h2>
 
 <p>前回作った、なんちゃってWebフレームワーク「draque」を継続して使います。<code>config.ru</code>が少し長くなったので、Webアプリの本体を別ファイル<code>draque.rb</code>に移します。</p>
 
@@ -234,20 +237,16 @@
 
 <span class="k">def</span> <span class="nf">not_found</span>
   <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p><code>config.ru</code>は次のようになります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-
-<h2>useの呪文</h2>
+<h2 id="use">useの呪文</h2>
 
 <p>さて早速、<code>use</code>の呪文を試してみます。<code>config.ru</code>にuseを追加します。</p>
 
@@ -256,17 +255,13 @@
 
 <span class="n">use</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p><code>rackup</code>します。</p>
 
 <div class="highlight"><pre><code class="bash">% rackup
 ~/.rbenv/.../rack/builder.rb:77:in <span class="sb">`</span>use<span class="s1">&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
-<span class="s1">        from config.ru:4:in `block in &lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="s1">        from config.ru:4:in `block in &lt;main&gt;&#39;</span></code></pre></div>
 
 <p>引数が足りないと言われました。おそらくmiddlewareを渡すものと思われます。しかしmiddlewareが何なのかわからないので、例によってまずは<code>1</code>を渡してrackupしてみます。</p>
 
@@ -275,18 +270,14 @@
 
 <span class="n">use</span> <span class="mi">1</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
 <div class="highlight"><pre><code class="bash">% rackup
-~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>block in use<span class="s1">&#39;: undefined method `new&#39;</span> <span class="k">for </span>1:Fixnum <span class="o">(</span>NoMethodError<span class="o">)</span>
-</code></pre></div>
+~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>block in use<span class="s1">&#39;: undefined method `new&#39;</span> <span class="k">for </span>1:Fixnum <span class="o">(</span>NoMethodError<span class="o">)</span></code></pre></div>
 
-
-<p>1にはnewメソッドが無いと言われました。これでクラスが期待されている、つまり<strong>middlewareはクラスである</strong>ということが分かりました<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。それでは、差し当たりUpDownというクラスを作って渡してみます。</p>
+<p>1にはnewメソッドが無いと言われました。これでクラスが期待されている、つまり<strong>middlewareはクラスである</strong>ということが分かりました<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。それでは、差し当たりUpDownというクラスを作って渡してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
@@ -297,16 +288,12 @@
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
 <div class="highlight"><pre><code class="bash">% rackup
-~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>initialize<span class="err">&#39;</span>: wrong number of arguments<span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span> <span class="o">(</span>ArgumentError<span class="o">)</span>
-</code></pre></div>
-
+~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>initialize<span class="err">&#39;</span>: wrong number of arguments<span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span> <span class="o">(</span>ArgumentError<span class="o">)</span></code></pre></div>
 
 <p>今度はinitializeの引数が足りないと言われました。では１引数のinitializeを定義します。</p>
 
@@ -321,27 +308,21 @@
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
 <div class="highlight"><pre><code class="bash">% rackup
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</code></pre></div>
-
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>ポート9292でThin Webサーバが立ち上がりました。</p>
 
 <p>Browserでhttp://localhost:9292 にアクセスしてみます。</p>
 
 <div class="highlight"><pre><code class="bash">&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for</span> <span class="c">#&lt;UpDown:0x00000101053fc8&gt;</span>
-</code></pre></div>
-
+NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for</span> <span class="c">#&lt;UpDown:0x00000101053fc8&gt;</span></code></pre></div>
 
 <p>UpDownオブジェクトに<code>call</code>メソッドがないと言われました。では、UpDown#callを定義してみます。</p>
 
@@ -360,16 +341,12 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>今度はどうでしょう。</p>
 
 <div class="highlight"><pre><code class="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
-        config.ru:10:in <span class="sb">`</span>call<span class="err">&#39;</span>
-</code></pre></div>
-
+        config.ru:10:in <span class="sb">`</span>call<span class="err">&#39;</span></code></pre></div>
 
 <p>引数がないと言われました。ん？</p>
 
@@ -390,17 +367,13 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer
-</code></pre></div>
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer</code></pre></div>
 
-
-<p>Statusは100以上の数でなければならないとのRack::Lint::LintErrorが吐かれました。これって...</p>
+<p>Statusは100以上の数でなければならないとのRack::Lint::LintErrorが吐かれました。これって…</p>
 
 <p>いつかきた道..ですよね？</p>
 
@@ -419,17 +392,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-
-
-
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span>
-</code></pre></div>
-
-
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span></code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
@@ -446,17 +411,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-
-
-
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found
-</code></pre></div>
-
-
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found</code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
@@ -473,16 +430,10 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
-
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <div class="highlight"><pre><code class="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
-127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:03:10<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010
-</code></pre></div>
-
+127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:03:10<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010</code></pre></div>
 
 <p>ほら！</p>
 
@@ -503,19 +454,17 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p><img src="/assets/images/draque6.png" alt="draque6" /></p>
 
 <p>いいですね！</p>
 
-<p>  ・ ・ ・</p>
+<p>・ ・ ・</p>
 
-<p>って、良くないです。runした<code>draque</code>がレンダリングされないじゃないですか...</p>
+<p>って、良くないです。runした<code>draque</code>がレンダリングされないじゃないですか…</p>
 
-<h2>draqueを探す</h2>
+<h2 id="draque">draqueを探す</h2>
 
 <p>さて、どうしますか。</p>
 
@@ -536,9 +485,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -548,9 +495,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
 &gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
 127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:14:13<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0012
-127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:14:14<span class="o">]</span> <span class="s2">&quot;GET /favicon.ico HTTP/1.1&quot;</span> 200 - 0.0009
-</code></pre></div>
-
+127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:14:14<span class="o">]</span> <span class="s2">&quot;GET /favicon.ico HTTP/1.1&quot;</span> 200 - 0.0009</code></pre></div>
 
 <p>なんとinitializeには<code>draque</code>が渡っていました。驚愕の事実。</p>
 
@@ -571,9 +516,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -581,8 +524,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <p>うまくいきました。</p>
 
-<h2>middlewareを書く</h2>
-
+<h2 id="middleware">middlewareを書く</h2>
 <p>現状middleware <code>UpDown</code>は、何もしないダメウェアですが、callのところでゴニョゴニョすれば何かできると想像できます。やってみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
@@ -601,9 +543,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -613,25 +553,22 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <p>以上のことをまとめます。</p>
 
-<blockquote><ol>
-<li>middlewareは#callメソッドを持ったクラスである。</li>
-<li>middleware#initializeにはrunに渡したWebアプリオブジェクトが渡される。</li>
-<li>middlewareの#callでWebアプリの#callを呼んで、ゴニョゴニョする。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>middlewareは#callメソッドを持ったクラスである。</li>
+    <li>middleware#initializeにはrunに渡したWebアプリオブジェクトが渡される。</li>
+    <li>middlewareの#callでWebアプリの#callを呼んで、ゴニョゴニョする。</li>
+  </ol>
 </blockquote>
 
-<p>従って、リクエストーレスポンスの流れは次のようになります。</p>
+<p>従って、リクエストーレスポンスの流れは次のようになります。
+&gt; 1. Rack(Webサーバ)はBrowserからリクエストが来ると、useされたmiddleware(UpDwon)の#callを呼ぶ。
+&gt; 1. middlewareの#callはWebアプリ(draque)の#callを呼ぶ。
+&gt; 1. Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。
+&gt; 1. middlewareは#callでゴニョゴニョして、[status, headers, body]を返す。
+&gt; 1. Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</p>
 
-<blockquote><ol>
-<li>Rack(Webサーバ)はBrowserからリクエストが来ると、useされたmiddleware(UpDwon)の#callを呼ぶ。</li>
-<li>middlewareの#callはWebアプリ(draque)の#callを呼ぶ。</li>
-<li>Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。</li>
-<li>middlewareは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
-<li>Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</li>
-</ol>
-</blockquote>
-
-<h2>２つ目のmiddlewareを書く</h2>
+<h2 id="middleware-1">２つ目のmiddlewareを書く</h2>
 
 <p>さて、もう一つmiddlewareを書いてみます。名前をFireとします。</p>
 
@@ -665,9 +602,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>#callの中でゴニョゴニョしてるの分かりますか？</p>
 
@@ -677,7 +612,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <p>天地反転の呪文と炎の呪文が適用されました。</p>
 
-<p>さて、ここで気になることが一つあります。Fireに渡されたappはWebアプリなのでしょうか、それとも...。<code>p</code>で見てみます。</p>
+<p>さて、ここで気になることが一つあります。Fireに渡されたappはWebアプリなのでしょうか、それとも…。<code>p</code>で見てみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">&quot;./draque&quot;</span>
@@ -711,9 +646,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -722,35 +655,35 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 <span class="s2">&quot;#&lt;UpDown:0x000001008ee738&gt; in Fire&quot;</span>
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</code></pre></div>
-
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>UpDownにdraqueが渡されていることが分かります。そして、果たしてFireにはUpDownが渡されていました。</p>
 
 <p>つまりこういうことです。</p>
 
-<blockquote><ol>
-<li>最初にuseされたmiddleware(Fire)のinitializeには、次にuseされたmiddleware(UpDown)のオブジェクトが渡される。つまりUpDownオブジェクトはFireオブジェクトでラップされる。</li>
-<li>最後にuseされたmiddleware(UpDown)には、Webアプリオブジェクト(draque)が渡される。つまりdraqueオブジェクトはUpDownオブジェクトでラップされる。</li>
-<li>つまりRackというのは、棚ではなくて、マトリョーシカである。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>最初にuseされたmiddleware(Fire)のinitializeには、次にuseされたmiddleware(UpDown)のオブジェクトが渡される。つまりUpDownオブジェクトはFireオブジェクトでラップされる。</li>
+    <li>最後にuseされたmiddleware(UpDown)には、Webアプリオブジェクト(draque)が渡される。つまりdraqueオブジェクトはUpDownオブジェクトでラップされる。</li>
+    <li>つまりRackというのは、棚ではなくて、マトリョーシカである。</li>
+  </ol>
 </blockquote>
 
 <p>従って、リクエストーレスポンスの流れは次のようになります。</p>
 
-<blockquote><ol>
-<li>Rack(Webサーバ)はBrowserからリクエストが来ると、最初にuseされたFireの#callを呼ぶ。</li>
-<li>Fireの#callは次にuseされたUpDownの#callを呼ぶ。</li>
-<li>UpDownの#callはWebアプリ(draque)の#callを呼ぶ。</li>
-<li>Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。</li>
-<li>UpDownは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
-<li>Fireは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
-<li>Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>Rack(Webサーバ)はBrowserからリクエストが来ると、最初にuseされたFireの#callを呼ぶ。</li>
+    <li>Fireの#callは次にuseされたUpDownの#callを呼ぶ。</li>
+    <li>UpDownの#callはWebアプリ(draque)の#callを呼ぶ。</li>
+    <li>Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。</li>
+    <li>UpDownは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
+    <li>Fireは#callでゴニョゴニョして、[status, headers, body]を返す。</li>
+    <li>Rack(Webサーバ)はBrowserにHTTPレスポンスを返す。</li>
+  </ol>
 </blockquote>
 
-<h2>Fireを改良する</h2>
+<h2 id="fire">Fireを改良する</h2>
 
 <p>さてFireの呪文は強力過ぎます。これを一部の文字列にだけ適用するよう改良します。</p>
 
@@ -771,9 +704,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">Fire</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -781,9 +712,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 <span class="s2">&quot;hello&quot;</span>
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</code></pre></div>
-
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>受け渡しができているようです。ついでにブロックもイケるか見てみます。</p>
 
@@ -807,20 +736,14 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
-
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <div class="highlight"><pre><code class="bash">% rackup
 <span class="s2">&quot;hello&quot;</span>
 <span class="s2">&quot;hello from a block!&quot;</span>
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</code></pre></div>
-
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>ブロックも受けてくれるようです。</p>
 
@@ -860,9 +783,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <span class="n">use</span> <span class="no">UpDown</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>出力を見てみます。</p>
 
@@ -874,7 +795,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <p>今回の結論：</p>
 
-<blockquote><p>Rackは実はマトリョーシカだった！</p></blockquote>
+<blockquote>
+  <p>Rackは実はマトリョーシカだった！</p>
+</blockquote>
 
 <p><a href="https://gist.github.com/3243357" title="Joke Rack Web framework `Draque` — Gist">Joke Rack Web framework <code>Draque</code> — Gist</a></p>
 
@@ -894,25 +817,25 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&
 
 <p>詳細は以下を参照して下さい。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p>
+</blockquote>
 
 <p>購入ご検討のほどよろしくお願いしますm(__)m</p>
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B002R8TFUO"><img class="amazon" src="http://ecx.images-amazon.com/images/I/516I4QARmtL._SL160_.jpg" /></a></p>
+<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B002R8TFUO"><img class="amazon" src="http://ecx.images-amazon.com/images/I/516I4QARmtL._SL160_.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B002R8TFUO">いちごマトリョーシカ　5人姉妹　レッド×ピンク　【マトリョーシカ】</a></p>
+<p><a href="http://www.amazon.co.jp/株式会社-アールジェイ-コミュニケーションズ-いちごマトリョーシカ-5人姉妹-レッド×ピンク-【マトリョーシカ】/dp/B002R8TFUO?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B002R8TFUO">いちごマトリョーシカ　5人姉妹　レッド×ピンク　【マトリョーシカ】</a></p>
 
 <hr />
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>#newが定義されていれば、もしかしたらクラスでなくてもいいのかもしれません <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">#newが定義されていれば、もしかしたらクラスでなくてもいいのかもしれません <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

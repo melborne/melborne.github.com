@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,14 +179,16 @@
       </script>
     </div>
 
-    <p>「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」の第10章に、Haskellを使って「ヒースロー空港からロンドンへの最適経路(optimal path)」を算出する例が出ていました。例ではその実現に畳み込み演算が使われていたので、<a href="http://melborne.github.com/2012/06/19/rpn-with-inject/" title="Rubyのinjectで逆ポーランド記法電卓を書くYO!">前回</a>同様、Rubyでもinjectを使ってこの問題を解いてみたいと思います。アヒル脳じゃなかなかHaskellの世界に入っていけませんよー。</p>
+    
+<p>「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」の第10章に、Haskellを使って「ヒースロー空港からロンドンへの最適経路(optimal path)」を算出する例が出ていました。例ではその実現に畳み込み演算が使われていたので、<a href="http://melborne.github.com/2012/06/19/rpn-with-inject/" title="Rubyのinjectで逆ポーランド記法電卓を書くYO!">前回</a>同様、Rubyでもinjectを使ってこの問題を解いてみたいと思います。アヒル脳じゃなかなかHaskellの世界に入っていけませんよー。</p>
 
 <p>オリジナルの解説（英語）とHaskellによる解法は、以下にあります。</p>
 
-<blockquote><p><a href="http://learnyouahaskell.com/functionally-solving-problems#heathrow-to-london" title="Functionally Solving Problems - Learn You a Haskell for Great Good!">Functionally Solving Problems - Learn You a Haskell for Great Good!</a></p></blockquote>
+<blockquote>
+  <p><a href="http://learnyouahaskell.com/functionally-solving-problems#heathrow-to-london" title="Functionally Solving Problems - Learn You a Haskell for Great Good!">Functionally Solving Problems - Learn You a Haskell for Great Good!</a></p>
+</blockquote>
 
-<h2>問題</h2>
-
+<h2 id="section">問題</h2>
 <p>問題設定は次のようなものです。</p>
 
 <pre><code>1. 成田空港（NRT）から東京（Tokyo）に向かう２本の幹線道路A,Bがある。
@@ -197,9 +199,8 @@
 
 <p><img src="/assets/images/road_to_tokyo.png" alt="Alt road to tokyo noshadow" /></p>
 
-<h2>方針</h2>
-
-<p>基本的な考え方は「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」から頂戴しまして（^ ^;）、これをオブジェクト指向的に解いていきます。</p>
+<h2 id="section-1">方針</h2>
+<p>基本的な考え方は「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」から頂戴しまして（^ ^;）、これをオブジェクト指向的に解いていきます。</p>
 
 <p>解法は再帰的手法を使います。つまり直近の交差点に到達する最適経路を求め、同じ処理を順次先の交差点に適用して最終地点に至るという方法です。具体的には次のようになります。</p>
 
@@ -209,16 +210,13 @@
 4. A1またはB1から出発して`B2`に至る最短経路を決める。 =&gt; A1 -&gt; A2 -&gt; B2 ( 5 + 20 = 25 min)
 </code></pre>
 
-<p>上記３において、その基点であるA1に至る最短経路は、１において<code>B0 -&gt; B1 -&gt; A1</code>(40 min)と決まっているので、出発点からA2に至る最短経路は、<code>B0 -&gt; B1 -&gt; A1 -&gt; A2</code>(40 + 5 = 45 min)と決まることになります。また、上記４においても同様に、A1までの最短経路が決まっているので、出発点からB2に至る最短経路は、<code>B0 -&gt; B1 -&gt; A1 -&gt; A2 -&gt; B2</code>(40 + 25 = 65 min)と決まることになります。これを繰り返せば目的地であるA4およびB4への最短経路がわかることになります。そして、最後にA4とB4の何れか短い経路を選択することによって、回答が得られます。</p>
+<p>上記３において、その基点であるA1に至る最短経路は、１において<code>B0 -&gt; B1 -&gt; A1</code>(40 min)と決まっているので、出発点からA2に至る最短経路は、<code>B0 -&gt; B1 -&gt; A1 -&gt; A2</code>(40 + 5 = 45 min)と決まることになります。また、上記４においても同様に、A1までの最短経路が決まっているので、出発点からB2に至る最短経路は、<code>B0 -&gt; B1 -&gt; A1 -&gt; A2 -&gt; B2 </code>(40 + 25 = 65 min)と決まることになります。これを繰り返せば目的地であるA4およびB4への最短経路がわかることになります。そして、最後にA4とB4の何れか短い経路を選択することによって、回答が得られます。</p>
 
-<h2>出力イメージ</h2>
-
+<h2 id="section-2">出力イメージ</h2>
 <p>最初に、最終的な出力をイメージします。OptimalPathクラスを用意して設定条件を渡し、solveメソッドを実行すると最短経路が出力される、そんなイメージでいきます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">op</span> <span class="o">=</span> <span class="no">OptimalPath</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nrt_to_tokyo</span><span class="p">)</span>
-<span class="n">op</span><span class="o">.</span><span class="n">solve</span> <span class="c1"># =&gt; [(B, 10), (C, 30), (A, 5), (C, 20), (B, 2), (B, 8)]</span>
-</code></pre></div>
-
+<span class="n">op</span><span class="o">.</span><span class="n">solve</span> <span class="c1"># =&gt; [(B, 10), (C, 30), (A, 5), (C, 20), (B, 2), (B, 8)]</span></code></pre></div>
 
 <p>出力の<code>[(B, 10), (C, 30)...]</code>というのは、「Bを10分走って、Cを30分走って..」という感じです。</p>
 
@@ -236,12 +234,9 @@
 <span class="n">nrt_to_tokyo</span> <span class="c1"># =&gt; [#&lt;struct Section a=50, b=10, c=30&gt;, #&lt;struct Section a=5, b=90, c=20&gt;, #&lt;struct Section a=40, b=2, c=25&gt;, #&lt;struct Section a=10, b=8, c=0&gt;]</span>
 
 <span class="n">op</span> <span class="o">=</span> <span class="no">OptimalPath</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nrt_to_tokyo</span><span class="p">)</span>
-<span class="n">op</span><span class="o">.</span><span class="n">solve</span> <span class="c1"># =&gt; [(B, 10), (C, 30), (A, 5), (C, 20), (B, 2), (B, 8), (C, 0)]</span>
-</code></pre></div>
+<span class="n">op</span><span class="o">.</span><span class="n">solve</span> <span class="c1"># =&gt; [(B, 10), (C, 30), (A, 5), (C, 20), (B, 2), (B, 8), (C, 0)]</span></code></pre></div>
 
-
-<h2>OptimalPath</h2>
-
+<h2 id="optimalpath">OptimalPath</h2>
 <p>OptimalPathクラスを実装します。設定条件road_systemを受け取って、solveメソッドで最適経路を出力するのでしたね。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
@@ -259,14 +254,11 @@
 
   <span class="k">def</span> <span class="nf">road_step</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>solveにおいては、Enumerable#injectを使って各セッションを順次処理していきます。ここで、A4とB4までの最短経路を管理するために2つのPathオブジェクトを用意します。injectにおけるイテレーションが繰り返されて最終的に、A4とB4に至る最短経路が出力されるので、そのより短いものを選択します。</p>
 
-<h2>Segmentクラス</h2>
-
+<h2 id="segment">Segmentクラス</h2>
 <p>road_stepの実装は後にして、次にSegmentクラスを実装します。Segmentクラスは個々の道路セグメントを表すクラスです。各SegmentオブジェクトはA~Cのラベル（label）と通過時間（length）を持ちます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
@@ -289,14 +281,11 @@
   <span class="n">seg_c30</span> <span class="o">=</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="o">]</span> <span class="c1"># =&gt; (C, 30)</span>
   <span class="n">seg_a10</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 10</span>
   <span class="n">seg_c30</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 30</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Segment.[]クラスメソッドを定義して、オブジェクトの生成をArrayライクにできるようにします。</p>
 
-<h2>Pathクラス</h2>
-
+<h2 id="path">Pathクラス</h2>
 <p>次に、最適経路を管理するためのPathクラスを実装します。Pathクラスは、複数のSegmentオブジェクト管理する配列のようなクラスです。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
@@ -322,14 +311,11 @@
   <span class="n">path</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 0</span>
   <span class="n">path1</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="o">[</span><span class="no">Segment</span><span class="o">[</span><span class="ss">:B</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
   <span class="n">path1</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 40</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Path#+は新たなSegmentを追加した新たなPathオブジェクトを生成します。Path#lengthはPath内のSegmentの通過時間の合計を返します。</p>
 
-<h2>road_stepの実装</h2>
-
+<h2 id="roadstep">road_stepの実装</h2>
 <p>さて下準備ができたので、OptimalPathクラスに戻って、実装のコアであるroad_stepメソッドを実装します。先に示したようにroad_stepは、solveメソッドのinject内において、各セクションを受け取ってそのセクションまでの２つの最適経路を計算して返します。実装は次にようになります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
@@ -356,16 +342,13 @@
     <span class="n">pathB</span> <span class="o">=</span> <span class="n">candidatesB</span><span class="o">.</span><span class="n">min_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span> <span class="n">path</span><span class="o">.</span><span class="n">length</span> <span class="p">}</span>
     <span class="o">[</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="o">]</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>道路A側の交差点(例えばA2)における最適経路は、直前のA側の点(A1)までの最適経路pathAにそこからの道路セグメント[(:A, 5)]を足したものか、直前のB側の点(B1)までの最適経路pathBにそこからの道路セグメント[(:B, 90)(:C, 20)]を足したもの、のいずれかです(candidatesA)。そして、そこからその総経過時間の短い方をmin_byで取得すれば、道路A側の最適経路が求まります。道路B側も同様です。</p>
 
 <p>さあこれで実装が終わりました。全コードを再掲します。</p>
 
 <script src="https://gist.github.com/2958297.js?file=nrt2tokyo.rb"></script>
-
 
 <p>いいですね！</p>
 
@@ -380,9 +363,8 @@
 <p><a href="http://melborne.github.com/2012/06/19/rpn-with-inject/" title="Rubyのinjectで逆ポーランド記法電卓を書くYO!">Rubyのinjectで逆ポーランド記法電卓を書くYO!</a></p>
 
 <hr />
-
-<p><a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51P6NdS4IGL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a> by Miran Lipovača</p>
+<p><a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51P6NdS4IGL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a> by Miran Lipovača</p>
 
 
     <div class="ad" id="topAdsense">

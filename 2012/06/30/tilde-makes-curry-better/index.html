@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,7 +179,8 @@
       </script>
     </div>
 
-    <p><code>Proc#curry</code>は関数（正確にはProcオブジェクト）をカリー化するためのメソッドです。「<strong>カリー化</strong>」とは、複数の引数を取る関数に対して、一度にその一部ずつ引数を取れるようにすることです。関数に一部の引数を渡すことを部分適用といいます。</p>
+    
+<p><code>Proc#curry</code>は関数（正確にはProcオブジェクト）をカリー化するためのメソッドです。「<strong>カリー化</strong>」とは、複数の引数を取る関数に対して、一度にその一部ずつ引数を取れるようにすることです。関数に一部の引数を渡すことを部分適用といいます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109ae00 (lambda)&gt;</span>
 
@@ -187,9 +188,7 @@
 <span class="n">multi_by5</span> <span class="o">=</span> <span class="n">multi</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109a478 (lambda)&gt;</span>
 
 <span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</span>
-<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by5</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span>
-</code></pre></div>
-
+<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by5</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span></code></pre></div>
 
 <p>この例ではカリー化したmultiオブジェクトに2を部分適用して<code>multi_by2</code>を、5を部分適用して<code>multi_by5</code>をそれぞれ生成しています。つまり関数をカリー化すると、一つの関数から複数の関数を生成できるようになるのです。ステキです。DRYです。</p>
 
@@ -199,19 +198,15 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Proc</span>
   <span class="k">alias</span> <span class="ss">:~</span> <span class="ss">:curry</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>以上。</p>
 
-<p>...</p>
+<p>…</p>
 
 <p>これにより先のmultiは次のように書けます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">~-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">~-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}</span></code></pre></div>
 
 <p>これでRubyでも関数がもともとカリー化されていたように見えますね！</p>
 
@@ -227,9 +222,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">fizzbuzzize</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, &quot;Fizz&quot;, 4, &quot;Buzz&quot;, &quot;Fizz&quot;, 7, 8, &quot;Fizz&quot;, &quot;Buzz&quot;, 11, &quot;Fizz&quot;, 13, 14, &quot;FizzBuzz&quot;, 16, 17, &quot;Fizz&quot;, 19, &quot;Buzz&quot;, &quot;Fizz&quot;, 22, 23, &quot;Fizz&quot;, &quot;Buzz&quot;, 26, &quot;Fizz&quot;, 28, 29, &quot;FizzBuzz&quot;, 31, 32, &quot;Fizz&quot;, 34, &quot;Buzz&quot;, &quot;Fizz&quot;, 37, 38, &quot;Fizz&quot;, &quot;Buzz&quot;, 41, &quot;Fizz&quot;, 43, 44, &quot;FizzBuzz&quot;, 46, 47, &quot;Fizz&quot;, 49, &quot;Buzz&quot;, &quot;Fizz&quot;, 52, 53, &quot;Fizz&quot;, &quot;Buzz&quot;, 56, &quot;Fizz&quot;, 58, 59, &quot;FizzBuzz&quot;, 61, 62, &quot;Fizz&quot;, 64, &quot;Buzz&quot;, &quot;Fizz&quot;, 67, 68, &quot;Fizz&quot;, &quot;Buzz&quot;, 71, &quot;Fizz&quot;, 73, 74, &quot;FizzBuzz&quot;, 76, 77, &quot;Fizz&quot;, 79, &quot;Buzz&quot;, &quot;Fizz&quot;, 82, 83, &quot;Fizz&quot;, &quot;Buzz&quot;, 86, &quot;Fizz&quot;, 88, 89, &quot;FizzBuzz&quot;, 91, 92, &quot;Fizz&quot;, 94, &quot;Buzz&quot;, &quot;Fizz&quot;, 97, 98, &quot;Fizz&quot;, &quot;Buzz&quot;]</span>
-</code></pre></div>
-
+<span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">fizzbuzzize</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, &quot;Fizz&quot;, 4, &quot;Buzz&quot;, &quot;Fizz&quot;, 7, 8, &quot;Fizz&quot;, &quot;Buzz&quot;, 11, &quot;Fizz&quot;, 13, 14, &quot;FizzBuzz&quot;, 16, 17, &quot;Fizz&quot;, 19, &quot;Buzz&quot;, &quot;Fizz&quot;, 22, 23, &quot;Fizz&quot;, &quot;Buzz&quot;, 26, &quot;Fizz&quot;, 28, 29, &quot;FizzBuzz&quot;, 31, 32, &quot;Fizz&quot;, 34, &quot;Buzz&quot;, &quot;Fizz&quot;, 37, 38, &quot;Fizz&quot;, &quot;Buzz&quot;, 41, &quot;Fizz&quot;, 43, 44, &quot;FizzBuzz&quot;, 46, 47, &quot;Fizz&quot;, 49, &quot;Buzz&quot;, &quot;Fizz&quot;, 52, 53, &quot;Fizz&quot;, &quot;Buzz&quot;, 56, &quot;Fizz&quot;, 58, 59, &quot;FizzBuzz&quot;, 61, 62, &quot;Fizz&quot;, 64, &quot;Buzz&quot;, &quot;Fizz&quot;, 67, 68, &quot;Fizz&quot;, &quot;Buzz&quot;, 71, &quot;Fizz&quot;, 73, 74, &quot;FizzBuzz&quot;, 76, 77, &quot;Fizz&quot;, 79, &quot;Buzz&quot;, &quot;Fizz&quot;, 82, 83, &quot;Fizz&quot;, &quot;Buzz&quot;, 86, &quot;Fizz&quot;, 88, 89, &quot;FizzBuzz&quot;, 91, 92, &quot;Fizz&quot;, 94, &quot;Buzz&quot;, &quot;Fizz&quot;, 97, 98, &quot;Fizz&quot;, &quot;Buzz&quot;]</span></code></pre></div>
 
 <p>Melborne the Sticker of Tilde</p>
 
@@ -240,9 +233,9 @@
 <p><a href="http://melborne.github.com/2012/04/27/ruby-heredoc-without-leading-whitespace/" title="チルダがRubyのヒアドキュメントをもっと良くする">チルダがRubyのヒアドキュメントをもっと良くする</a></p>
 
 <hr />
+<p><a href="http://www.amazon.co.jp/うまい、カレー。-香取-薫/dp/481634523X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=481634523X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51yYShLYDFL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/うまい、カレー。-香取-薫/dp/481634523X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=481634523X">うまい、カレー。</a> by 香取 薫</p>
 
-<p><a href="http://www.amazon.co.jp/うまい、カレー。-香取-薫/dp/481634523X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=481634523X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51yYShLYDFL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/うまい、カレー。-香取-薫/dp/481634523X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=481634523X">うまい、カレー。</a> by 香取 薫</p>
 
 
     <div class="ad" id="topAdsense">

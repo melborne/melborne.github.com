@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,45 +179,47 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
 <p>antlaboさんが世界の国旗の類似度を可視化した作品を公開しています。</p>
 
-<blockquote><p><a href="http://infanimation.antlabo.jp/kokki/index.html" title="国旗の類似度を可視化">国旗の類似度を可視化</a></p>
+<blockquote>
+  <p><a href="http://infanimation.antlabo.jp/kokki/index.html" title="国旗の類似度を可視化">国旗の類似度を可視化</a></p>
 
-<p><a href="http://d.hatena.ne.jp/antlabo/20130421/1366526239" title="世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）">世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）</a></p></blockquote>
+  <p><a href="http://d.hatena.ne.jp/antlabo/20130421/1366526239" title="世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）">世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）</a></p>
+</blockquote>
 
-<p>これは<a href="http://www.lire-project.net/" title="LIRE – Lucene Image Retrieval | The Java visual information retrieval library">LIRE（Lucene Image Retrieval）</a>というJAVAの画像類似検索向けライブラリを使って、204の国旗の類似度を計算したデータに基いて作られているそうです。国旗画像下の緑の十字をクリックするとその国旗を中心にした類似国旗が順に辿れるようになっています。やあ、スバラシイ。</p>
+<p>これは<a href="http://www.lire-project.net/" title="LIRE – Lucene Image Retrieval \| The Java visual information retrieval library">LIRE（Lucene Image Retrieval）</a>というJAVAの画像類似検索向けライブラリを使って、204の国旗の類似度を計算したデータに基いて作られているそうです。国旗画像下の緑の十字をクリックするとその国旗を中心にした類似国旗が順に辿れるようになっています。やあ、スバラシイ。</p>
 
 <p>ちなみに画像自体の特徴量（色、形状、テクスチャなど）をベースに類似検索をする方式をCBIR（Content-Based Image Retrieval）というそうですが、LIREはその方式で画像を比較します。</p>
 
 <p>加えて、antlaboさんはこの国旗の類似度データも公開してくれています。当然、Graphviz-er（Graphviz-ist?）としてはこれを見過ごすことはできません:-)</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
-<p>ここでは、<a href="https://rubygems.org/gems/gviz" title="gviz | RubyGems.org | your community gem host">Gviz（RubyによるGraphvizのインタフェースライブラリ）</a>を使った簡単な国旗の類似度可視化をやってみたいと思います。意味ある出力が得られればいいんですが...</p>
+<p>ここでは、<a href="https://rubygems.org/gems/gviz" title="gviz \| RubyGems.org \| your community gem host">Gviz（RubyによるGraphvizのインタフェースライブラリ）</a>を使った簡単な国旗の類似度可視化をやってみたいと思います。意味ある出力が得られればいいんですが…</p>
 
-<h2>CSVデータの読み込み</h2>
-
+<h2 id="csv">CSVデータの読み込み</h2>
 <p>提供されているデータは次のフォーマットを持ったCSVデータです（ヘッダー名は加工しています）。</p>
 
 <div class="highlight"><pre><code class="text">id,sim,name1,path1,name2,path2
 10736941,99.3,Indonesia,images/Indonesia.jpg,Monaco,images/Monaco.jpg
 10736713,89.0,Honduras,images/Honduras.jpg,Nicaragua,images/Nicaragua.jpg
 10719944,87.1,El_Salvador,images/El_Salvador.jpg,Nicaragua,images/Nicaragua.jpg
-...
-</code></pre></div>
-
+...</code></pre></div>
 
 <p>id, 類似度（sim）に続き、対比する国の国名と画像パスが並びます。</p>
 
 <p>データを展開したフォルダにおいて<code>graph.ru</code>のファイル名でデータを読み出します。</p>
 
-<h4>graph.ru</h4>
+<h4 id="graphru">graph.ru</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
 
@@ -228,17 +230,14 @@
 <span class="n">d</span> <span class="c1"># =&gt; #&lt;CSV::Row id:10736941 sim:99.3 name1:&quot;Indonesia&quot; path1:&quot;images/Indonesia.jpg&quot; name2:&quot;Monaco&quot; path2:&quot;images/Monaco.jpg&quot;&gt;</span>
 <span class="n">d</span><span class="o">[</span><span class="ss">:sim</span><span class="o">]</span> <span class="c1"># =&gt; 99.3</span>
 <span class="n">d</span><span class="o">[</span><span class="ss">:name1</span><span class="o">]</span> <span class="c1"># =&gt; &quot;Indonesia&quot;</span>
-<span class="n">d</span><span class="o">[</span><span class="ss">:name2</span><span class="o">]</span> <span class="c1"># =&gt; &quot;Monaco&quot;</span>
-</code></pre></div>
+<span class="n">d</span><span class="o">[</span><span class="ss">:name2</span><span class="o">]</span> <span class="c1"># =&gt; &quot;Monaco&quot;</span></code></pre></div>
 
-
-<h2>グラフの描画</h2>
-
+<h2 id="section">グラフの描画</h2>
 <p>では、graphviz上に画像を読み込んで表示してみましょう。</p>
 
 <p>データにおける国旗の類似度は10.0〜99.3まで幅がありますが、まずは何も考えずにすべての対比される国旗をエッジで結んだグラフを書いてみます。グラフのレイアウトには<strong>fdp</strong>を使ってみます。</p>
 
-<h4>graph.ru</h4>
+<h4 id="graphru-1">graph.ru</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
 
@@ -255,18 +254,14 @@
   <span class="n">route</span> <span class="n">id1</span> <span class="o">=&gt;</span> <span class="n">id2</span>
 <span class="k">end</span>
 
-<span class="n">save</span> <span class="ss">:flag</span><span class="p">,</span> <span class="ss">:png</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:flag</span><span class="p">,</span> <span class="ss">:png</span></code></pre></div>
 
 <p>Graphvizではimage属性を使うことでノードに画像を貼ることができます。</p>
 
 <p>そして<code>gviz</code>コマンドを実行し、生成された<code>flag.png</code>を開きます。</p>
 
 <div class="highlight"><pre><code class="bash">% gviz
-% open flag.png
-</code></pre></div>
-
+% open flag.png</code></pre></div>
 
 <p><a href="/assets/images/2013/04/flag1.png" rel="lightbox" title="title"><img src="/assets/images/2013/04/flag1.png" alt="alt noshadow" /></a>
 （クリックで拡大します）</p>
@@ -275,7 +270,7 @@
 
 <p>国旗の画像は貼られましたが、なんか意味不明です。当然といえば当然の結果ですが。</p>
 
-<h2>グラフの描画２</h2>
+<h2 id="section-1">グラフの描画２</h2>
 
 <p>こんどは、エッジで結ぶ国旗を限定してみます。類似度が40.0より高い国旗だけをリンクするようにします。</p>
 
@@ -294,9 +289,7 @@
 <span class="o">+</span>  <span class="n">route</span> <span class="n">id1</span> <span class="o">=&gt;</span> <span class="n">id2</span> <span class="k">if</span> <span class="n">r</span><span class="o">[</span><span class="ss">:sim</span><span class="o">]</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="o">.</span><span class="mi">0</span>
 <span class="k">end</span>
 
-<span class="n">save</span> <span class="ss">:flag</span><span class="p">,</span> <span class="ss">:png</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:flag</span><span class="p">,</span> <span class="ss">:png</span></code></pre></div>
 
 <p>さあ、どうでしょう。</p>
 
@@ -307,7 +300,7 @@
 
 <p>なんとなく北米大陸にも似た形のマップが描画されました。日本のポジションがいいじゃないですか。</p>
 
-<p>グラフをよく見ると、青系の国旗が左上に集合し、赤系は右上、黄色が入ったものがその下に、さらにその下に黒が入った国旗が集合しているのが分かります。類似度に応じたエッジの重み付け（エッジの長さを類似度に応じて調整するなど）をすることなく、単に類似度40.0以下のエッジを外しただけで、画像の集まりに傾向が見られるようになりました<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<p>グラフをよく見ると、青系の国旗が左上に集合し、赤系は右上、黄色が入ったものがその下に、さらにその下に黒が入った国旗が集合しているのが分かります。類似度に応じたエッジの重み付け（エッジの長さを類似度に応じて調整するなど）をすることなく、単に類似度40.0以下のエッジを外しただけで、画像の集まりに傾向が見られるようになりました<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
 <p>中央に円図形を持ったバングラデシュ（Bangladesh）やパラオ（Palau）と日本の国旗の類似度が低いことなどからみて、LIERでは色の特徴量に対する比重が大きい気がします。</p>
 
@@ -320,12 +313,10 @@
 <p>参考記事： <a href="http://aidiary.hatenablog.com/entry/20091003/1254574041" title="類似画像検索システムを作ろう - 人工知能に関する断創録">類似画像検索システムを作ろう - 人工知能に関する断創録</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>エッジの長さや太さで類似度の重み付けをしてみましたが、面白い結果は得られませんでした。 <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">エッジの長さや太さで類似度の重み付けをしてみましたが、面白い結果は得られませんでした。 <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

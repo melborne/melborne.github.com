@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -187,50 +187,38 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="s2">&quot;1 2 3&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;1-3.&quot;</span>
 <span class="s2">&quot;1 2 3 5 7 8&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;1-3, 5, 7-8.&quot;</span>
-<span class="s2">&quot;1 3 4 5 7&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;1, 3-5, 7.&quot;</span>
-</code></pre></div>
-
+<span class="s2">&quot;1 3 4 5 7&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;1, 3-5, 7.&quot;</span></code></pre></div>
 
 <p>解答例が出てたけどなんかしっくり来なかったので、自分なりの違う方法を考えてみたよ。</p>
 
 <p>まず数字文字列を数字の配列に変換するよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="s2">&quot;1 3 4 5 7&quot;</span>
-<span class="n">nums</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\d+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 4, 5, 7]</span>
-</code></pre></div>
-
+<span class="n">nums</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\d+/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 4, 5, 7]</span></code></pre></div>
 
 <p>次にこれを配列のインデックスに対応付けて配置し直すよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="n">arr</span> <span class="p">}</span> <span class="c1"># =&gt; [1, nil, 3, 4, 5, nil, 7]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="n">arr</span> <span class="p">}</span> <span class="c1"># =&gt; [1, nil, 3, 4, 5, nil, 7]</span></code></pre></div>
 
 <p>これで数字が連続しないところにはnilが入るよ。</p>
 
 <p>次にnilのところで配列を分けるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">!</span><span class="n">n</span><span class="o">.</span><span class="n">nil?</span> <span class="o">||</span> <span class="kp">nil</span> <span class="p">}</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[true, [1]], [true, [3, 4, 5]], [true, [7]]]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">!</span><span class="n">n</span><span class="o">.</span><span class="n">nil?</span> <span class="o">||</span> <span class="kp">nil</span> <span class="p">}</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[true, [1]], [true, [3, 4, 5]], [true, [7]]]</span></code></pre></div>
 
 <p>Enumerable#chunkを使うよ。そのブロックでは要素がnilの場合はnilを返すようにして、その要素を捨てるよ。</p>
 
 <p>次に各要素の長さに応じた加工を施して文字列にするよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">gr</span><span class="o">|</span> <span class="n">gr</span><span class="o">.</span><span class="n">size</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">?</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;1&quot;, &quot;3-5&quot;, &quot;7&quot;]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">gr</span><span class="o">|</span> <span class="n">gr</span><span class="o">.</span><span class="n">size</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">?</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gr</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;1&quot;, &quot;3-5&quot;, &quot;7&quot;]</span></code></pre></div>
 
 <p>最後にこれをつないで完成だよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="c1"># =&gt; &quot;1, 3-5, 7.&quot;</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="c1"># =&gt; &quot;1, 3-5, 7.&quot;</span></code></pre></div>
 
 <p>まとめると次のようになるよ。</p>
 
-<div><script src='https://gist.github.com/1573258.js?file=hyphenize.rb'></script>
+<div><script src="https://gist.github.com/1573258.js?file=hyphenize.rb"></script>
 <noscript><pre><code>def hyphenize(str)
   nums = str.scan(/\d+/).map(&amp;:to_i)
   nums.inject([]) { |arr, n| arr[n-1] = n; arr }
@@ -260,7 +248,6 @@ describe do
 end
 </code></pre></noscript></div>
 
-
 <p>やっぱりRubyは便利だね!</p>
 
 <p>id:smilerubyさんから
@@ -273,21 +260,19 @@ Enumerable#slice_beforeを使った例を頂いたので、併せて載せてお
    <span class="n">prevprev</span><span class="o">.</span><span class="n">succ</span> <span class="o">!=</span> <span class="n">prev</span><span class="o">[</span><span class="ss">:num</span><span class="o">]</span>
  <span class="p">}</span><span class="o">.</span><span class="n">map</span><span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">minmax</span><span class="o">.</span><span class="n">uniq</span> <span class="o">*</span> <span class="s1">&#39;-&#39;</span> <span class="p">}</span> <span class="o">*</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span>
 <span class="k">end</span>
-<span class="n">hyphenize</span><span class="p">(</span><span class="s2">&quot;1 3 4 5 7&quot;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1, 3-5, 7.&quot;</span>
-</code></pre></div>
+<span class="n">hyphenize</span><span class="p">(</span><span class="s2">&quot;1 3 4 5 7&quot;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1, 3-5, 7.&quot;</span></code></pre></div>
 
-
-<p>e.minmax.uniq*'-'がステキだよね!</p>
+<p>e.minmax.uniq*’-‘がステキだよね!</p>
 
 <p>(追記:2012-1-7) id:smilerubyさんの案を参考に一部を訂正、追記しました。</p>
 
-<p>(comment)</p>
+<p>(comment)
+&gt;Enumerable#slice_beforeも<br /><br />def hyphenize(str)<br />  nums = str.scan(/\d+/).map(&amp;:to_i).sort<br />  nums.slice_before(num: nums.first) { |e, prev|<br />    prev[:num], prevprev = e, prev[:num]<br />    prevprev.succ != prev[:num]<br />  }.map{ |e| e.minmax.uniq * ‘-‘ } * ‘, ‘ + ‘.’<br />end<br /><br />同じような例題がEnumerable#slice_beforeのヘルプの例になってますねw<br />http://rurema.clear-code.com/1.9.3/method/Enumerable/i/slice_before.html
+»smilerubyさん<br />コメントどうもです! slice_beforeなんて技があったのですね. それにしてもe.mimmax.uniq*’-‘はステキすぎます. それとstr.scan(/\d+/)が正しいですね. 訂正しておきます.</p>
 
-<blockquote><p>Enumerable#slice_beforeも<br><br>def hyphenize(str)<br>  nums = str.scan(/\d+/).map(&amp;:to_i).sort<br>  nums.slice_before(num: nums.first) { |e, prev|<br>    prev[:num], prevprev = e, prev[:num]<br>    prevprev.succ != prev[:num]<br>  }.map{ |e| e.minmax.uniq * '-' } * ', ' + '.'<br>end<br><br>同じような例題がEnumerable#slice_beforeのヘルプの例になってますねw<br>http://rurema.clear-code.com/1.9.3/method/Enumerable/i/slice_before.html</p>
-
-<blockquote><p>smilerubyさん<br>コメントどうもです! slice_beforeなんて技があったのですね. それにしてもe.mimmax.uniq*'-'はステキすぎます. それとstr.scan(/\d+/)が正しいですね. 訂正しておきます.</p></blockquote>
-
-<p>追記ありがとうございます。<br>slice_beforeは前に同じような例題（日付バージョン）をやった時に覚えましたが、このパターンの処理の時にしか使ったことがありませんｗ<br>とはいえ、1.9で導入されたchunkやslice_before等のメソッドを使わずに実装するのは面倒なので、この手のメソッドが用意されているRubyは便利ですよね！</p></blockquote>
+<blockquote>
+  <p>追記ありがとうございます。<br />slice_beforeは前に同じような例題（日付バージョン）をやった時に覚えましたが、このパターンの処理の時にしか使ったことがありませんｗ<br />とはいえ、1.9で導入されたchunkやslice_before等のメソッドを使わずに実装するのは面倒なので、この手のメソッドが用意されているRubyは便利ですよね！</p>
+</blockquote>
 
 
     <div class="ad" id="topAdsense">

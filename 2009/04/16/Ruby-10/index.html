@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,13 +179,12 @@
       </script>
     </div>
 
-    <p>なかなかいいですね。さてこれでもう完成でしょうか...</p>
+    <p>なかなかいいですね。さてこれでもう完成でしょうか…</p>
 
 <p>いいえ！問題が発生しました！先のコードはDRY原則に反します！！</p>
 
-<h2>DRY原則</h2>
-
-<p>「DON'T REPEAT YOURSELF!」<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+<h2 id="dry">DRY原則</h2>
+<p>「DON’T REPEAT YOURSELF!」<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
 
 <p>達人プログラマは言いました。</p>
 
@@ -199,7 +198,7 @@
 
 <p>もう一度コードを見てみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
     <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="o">-</span><span class="n">val</span> <span class="p">}</span>
     <span class="k">end</span>
@@ -207,17 +206,14 @@
     <span class="k">def</span> <span class="nf">bottom_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span>
     <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
+ <span class="k">end</span></code></pre></div>
 
+<p>「-」記号１つの差はありますが…確かに…そっくりです。Yes, I repeat myself…</p>
 
-<p>「-」記号１つの差はありますが...確かに...そっくりです。Yes, I repeat myself...</p>
-
-<h2>Version10</h2>
-
+<h2 id="version10">Version10</h2>
 <p>Hashクラスにtake_by_valueというメソッドを作って、上のコードを1ヶ所に集約します。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
    <span class="k">end</span>
@@ -230,13 +226,11 @@
    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>差し当たりtake_by_valueはクラスの中から呼ぶだけなので、その可視性をprivateにします。</p>
 
-<p>take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、{|v| -v}または{|v| v}をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。</p>
+<p>take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、<code>{|v| -v}</code>または<code>{|v| v}</code>をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。</p>
 
 <p>またtop_by_valueおよびbottom_by_valueでは、受け取るブロックをtake_by_valueに引き渡すために、&amp;blkでブロックを一旦オブジェクト化する必要があります。</p>
 
@@ -248,26 +242,19 @@
 
 <p>あっ！ちょっと問題を発見しました。top_by_valueにブロックを与えないで渡すとエラーがでます。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
-
-
-
-<div class="highlight"><pre><code class="ruby"> <span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="mi">11</span><span class="o">.</span><span class="n">txt</span> <span class="mi">1342</span><span class="o">.</span><span class="n">txt</span> <span class="mi">18503</span><span class="o">.</span><span class="n">txt</span> 
- <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">109</span><span class="ss">:in</span> <span class="sb">`block in take_by_value&#39;: no block given (yield)</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="mi">11</span><span class="o">.</span><span class="n">txt</span> <span class="mi">1342</span><span class="o">.</span><span class="n">txt</span> <span class="mi">18503</span><span class="o">.</span><span class="n">txt</span> 
+ <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">109</span><span class="ss">:in</span> <span class="sb">`block in take_by_value&#39;: no block given (yield)</span></code></pre></div>
 
 <p>ブロックを渡さない場合は、範囲を限定しない結果を返すべきです。</p>
 
-<h2>Version11</h2>
-
+<h2 id="version11">Version11</h2>
 <p>ブロックがあるか無いかを判定するメソッドとしてblock_given?があります。それを使ってブロックがない場合、代わりのブロックをtake_by_valueに渡してあげます。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
      <span class="n">blk</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span> <span class="p">}</span> <span class="k">unless</span> <span class="nb">block_given?</span>
      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
@@ -282,9 +269,7 @@
    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>上の例ではblock_given?の代わりに引数blkを使ってもいいです。これで問題はなくなりました。</p>
 
@@ -292,7 +277,7 @@
 
 <p>また恐ろしいことが起こりました。Hashクラスを見てください。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
      <span class="n">blk</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span> <span class="p">}</span> <span class="k">unless</span> <span class="nb">block_given?</span>
      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
@@ -307,20 +292,17 @@
    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
+ <span class="k">end</span></code></pre></div>
 
+<p><code>lambda {|v| v }</code>が4回も！
+Don’t Repeat Yourself! Yes, I repeat myself!!</p>
 
-<p>lambda {|v| v }が4回も！
-Don't Repeat Yourself! Yes, I repeat myself!!</p>
+<p>達人…大至急直しますから…</p>
 
-<p>達人...大至急直しますから...</p>
+<h2 id="version12">Version12</h2>
+<p><code>lambda {|v| v }</code>という手続きを返すoptというメソッドを定義しましょう。</p>
 
-<h2>Version12</h2>
-
-<p>lambda {|v| v }という手続きを返すoptというメソッドを定義しましょう。</p>
-
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
      <span class="n">blk</span> <span class="o">=</span> <span class="n">opt</span> <span class="k">unless</span> <span class="n">blk</span>
      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">opt</span><span class="p">(</span><span class="kp">false</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
@@ -339,19 +321,17 @@ Don't Repeat Yourself! Yes, I repeat myself!!</p>
    <span class="k">def</span> <span class="nf">opt</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
      <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">flag</span> <span class="p">?</span> <span class="n">v</span> <span class="p">:</span> <span class="o">-</span><span class="n">v</span> <span class="p">}</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>optメソッドのflag引数にデフォルトでtrueをセットしておきます。そうすればvalueがマイナスのときだけfalseを渡せばいいのです。</p>
 
 <p>果たしてこれでコードが読みやすくなったのか、わたしにはわかりません。これはちょっとやり過ぎかもしれませんが、達人に怒られないということがここでは重要なのです。</p>
 
-<p>と...ここまでやってミスに気が付きました。Version11のところでblock_given?の判定を、top_by_valueとbottom_by_valueのところでしました。でもこれをtake_by_valueのところでやればいいんです。そうすれば上のような手間は不要です。Version12はこんなやり方もあるんだという、ご理解でお願いします...</p>
+<p>と…ここまでやってミスに気が付きました。Version11のところでblock_given?の判定を、top_by_valueとbottom_by_valueのところでしました。でもこれをtake_by_valueのところでやればいいんです。そうすれば上のような手間は不要です。Version12はこんなやり方もあるんだという、ご理解でお願いします…</p>
 
-<h2>Version13</h2>
+<h2 id="version13">Version13</h2>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
      <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
    <span class="k">end</span>
@@ -362,21 +342,17 @@ Don't Repeat Yourself! Yes, I repeat myself!!</p>
    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
      <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>take_by_value内で条件演算子(条件 ? 真 : 偽)を使って、ブロックの有無でyieldするかしないか分けています。</p>
 
 <p>（<a href="/2009/04/17/Ruby-11/">次回に続く</a>)</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>[Don't repeat yourself - Wikipedia](http://ja.wikipedia.org/wiki/Don't_repeat_yourself <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">[Don't repeat yourself - Wikipedia](http://ja.wikipedia.org/wiki/Don't_repeat_yourself <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

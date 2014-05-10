@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,63 +181,67 @@
 
     <p>先のスクリプトにわたしは何の不満もありません。でもリファクタリングはクセになります。3行目のsortのブロックが気になる人には気になります。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span></code></pre></div>
 
-
-<h2>Version04</h2>
-
+<h2 id="version04">Version04</h2>
 <p>少し直しましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></code></pre></div>
 
 <p>sortに代えてsort_byを使いました。辞書の要素数が多ければこちらのほうが速度的に有利です。これは好みの問題かもしれませんが。[]に代えてsliceを使いました。sort_byが昇順ソートになっているので、sliceの範囲オブジェクトは最後尾(-1)から指定しています。</p>
 
-<h2>Version05</h2>
-
+<h2 id="version05">Version05</h2>
 <p>でも次の方がもっとすっきりします。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="o">-</span><span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="o">-</span><span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
 <p>valを負数にすれば降順ソートになります。takeメソッドは先頭から30要素を取ります。</p>
 
-<h2>TMTOWTDI</h2>
-
-<p>「同じことをやるのに複数のやり方があっていい」というのがPerlの流れを汲むRubyの流儀です。<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>ですからRubyではこのように同じ処理を複数の方法で実現できます。</p>
+<h2 id="tmtowtdi">TMTOWTDI</h2>
+<p>「同じことをやるのに複数のやり方があっていい」というのがPerlの流れを汲むRubyの流儀です。<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>ですからRubyではこのように同じ処理を複数の方法で実現できます。</p>
 
 <p>この「同じことをやるのに複数のやり方があっていい」という考え方は、英語では -TMTOWTDI- といいます。</p>
 
-<blockquote><p>There's More Than One Way To Do It</p></blockquote>
+<blockquote>
+  <p>There’s More Than One Way To Do It</p>
+</blockquote>
 
 <p>だそうです。最初に見たとき、</p>
 
-<blockquote><p>TiMe TO WheTher Die or Ill</p></blockquote>
+<blockquote>
+  <p>TiMe TO WheTher Die or Ill</p>
+</blockquote>
 
 <p>かと思いました。</p>
 
 <p>でもいま、本当の答えに気が付きました。 -TMTOWTDI- は正規表現だったんです。</p>
 
-<blockquote><p>/Today's (Mon|Tue) Or (Wed|Thu) Day/I</p></blockquote>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>/Today’s (Mon</td>
+        <td>Tue) Or (Wed</td>
+        <td>Thu) Day/I</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
 
-<h2>Version06</h2>
-
+<h2 id="version06">Version06</h2>
 <p>やり方が複数あることに最初は戸惑うかもしれません。でもジブンノカタチニコダワル派には麻薬になります。</p>
 
-<p>ではもう少しコダワッテ...</p>
+<p>ではもう少しコダワッテ…</p>
 
 <p>この「ハッシュをソートして端からいくつか取る」というのは、汎用性がありそうです。標準メソッドに似たようなtake_whileというのはあるのですが、目的のものはありません。</p>
 
 <p>では、これをtake_byメソッドとしてHashクラスに作りましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Hash</span>
    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="k">end</span>
@@ -249,9 +253,7 @@
  <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span>
  
  <span class="c1"># &gt;[[&quot;the&quot;, 16077], [&quot;of&quot;, 9823], [&quot;and&quot;, 7482], [&quot;to&quot;, 7098], [&quot;in&quot;, 4456], [&quot;a&quot;, 3841], [&quot;that&quot;, 3161], [&quot;was&quot;, 3040], [&quot;it&quot;, 2919], [&quot;i&quot;, 2881], [&quot;her&quot;, 2550], [&quot;she&quot;, 2313], [&quot;as&quot;, 2134], [&quot;you&quot;, 2071], [&quot;not&quot;, 2057], [&quot;be&quot;, 2044], [&quot;is&quot;, 2033], [&quot;his&quot;, 2009], [&quot;he&quot;, 1940], [&quot;for&quot;, 1927], [&quot;with&quot;, 1875], [&quot;on&quot;, 1638], [&quot;had&quot;, 1567], [&quot;but&quot;, 1519], [&quot;s&quot;, 1495], [&quot;all&quot;, 1363], [&quot;at&quot;, 1344], [&quot;by&quot;, 1308], [&quot;this&quot;, 1249], [&quot;have&quot;, 1201]]</span>
- <span class="o">[[</span><span class="s2">&quot;rained&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;grows&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;pearly&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hinder&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;overturn&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;interpose&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;infuse&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;prescribes&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;escaping&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;guinness&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;belch&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;humbling&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;appropriately&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;luminous&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;frailty&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rightful&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;nods&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;sepulcher&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hollow&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rivaled&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;pearls&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;eyed&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;judaizing&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;fulton&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;taylor&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;coincidence&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;apocalypticae&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;clime&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;atoning&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]]</span>
-</code></pre></div>
-
+ <span class="o">[[</span><span class="s2">&quot;rained&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;grows&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;pearly&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hinder&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;overturn&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;interpose&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;infuse&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;prescribes&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;escaping&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;guinness&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;belch&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;humbling&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;appropriately&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;luminous&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;frailty&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rightful&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;nods&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;sepulcher&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hollow&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rivaled&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;pearls&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;eyed&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;judaizing&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;fulton&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;taylor&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;coincidence&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;apocalypticae&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;clime&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;atoning&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">]]</span></code></pre></div>
 
 <p>これでDICTIONARYに対するメソッド呼び出しが１つで済むようになりました。</p>
 
@@ -262,12 +264,10 @@
 <p>(<a href="/2009/04/15/Ruby-9/">次回に続く</a>)</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>[Perl - Wikipedia](http://ja.wikipedia.org/wiki/Perl <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">[Perl - Wikipedia](http://ja.wikipedia.org/wiki/Perl <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

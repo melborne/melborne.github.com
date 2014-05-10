@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,23 +179,26 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
 <p>全国の駅情報を提供する<a href="http://www.ekidata.jp/index.html" title="『駅データ．ｊｐ』">『駅データ．ｊｐ』</a>という素晴らしいサイトがあります。無料でダウンロードできるCSV形式の駅データには各駅の管理鉄道会社や路線の情報だけでなく、駅の経度・緯度情報までもが含まれています。マコトニスバラシイ。イママデシラナカッタノガハズカシイ。</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
-<p>今回は<a href="https://rubygems.org/gems/gviz" title="gviz | RubyGems.org | your community gem host">Gviz</a>を使って、東京の地下鉄、すなわち東京メトロ＋都営（東京都交通局）の路線図に挑戦してみます。</p>
+<p>今回は<a href="https://rubygems.org/gems/gviz" title="gviz \| RubyGems.org \| your community gem host">Gviz</a>を使って、東京の地下鉄、すなわち東京メトロ＋都営（東京都交通局）の路線図に挑戦してみます。</p>
 
-<h2>駅データの取得</h2>
+<h2 id="section">駅データの取得</h2>
 
 <p>まずは駅データを取得します。先のサイトのダウンロード頁からマスターデータ（m_station.csv）をDLします。サイトの仕様書頁にあるように、各駅情報は次の14フィールドで構成されています。</p>
 
-<h4>データ仕様</h4>
+<h4 id="section-1">データ仕様</h4>
 
 <pre><code> 1. 鉄道概要コード
  2. 路線コード
@@ -213,11 +216,10 @@
 14. 表示フラグ
 </code></pre>
 
-<h2>地下鉄データの抽出</h2>
-
+<h2 id="section-2">地下鉄データの抽出</h2>
 <p>次にこのデータをRubyで読み出して、東京の地下鉄の駅情報だけを抽出します。ファイル名は<code>metro.rb</code>とします。</p>
 
-<h4>#metro.rb</h4>
+<h4 id="metrorb">#metro.rb</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
@@ -227,12 +229,9 @@
 <span class="n">metrodata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">7</span><span class="o">].</span><span class="n">match</span><span class="p">(</span><span class="sr">/東京メトロ|東京都交通局/</span><span class="p">)</span> <span class="p">}</span>
                 <span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">8</span><span class="o">]</span> <span class="p">}</span>
 
-<span class="n">metrodata</span> <span class="c1"># =&gt;  {&quot;東京メトロ銀座線&quot;=&gt;[[&quot;28&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;2100201&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;浅草&quot;, &quot;13&quot;, &quot;139.797592&quot;, &quot;35.710733&quot;, &quot;1&quot;], [&quot;28&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;2800102&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;田原町&quot;, &quot;13&quot;, &quot;139.790897&quot;, &quot;35.709897&quot;, &quot;1&quot;], ... 中略 ... &quot;日暮里・舎人ライナー&quot;=&gt;[[&quot;99&quot;, &quot;99342&quot;, &quot;9934201&quot;, &quot;99305&quot;, &quot;9934201&quot;, &quot;1130218&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;日暮里&quot;, &quot;13&quot;, &quot;139.771287&quot;, &quot;35.727908&quot;, &quot;1&quot;], [&quot;99&quot;, &quot;99342&quot;, &quot;9934202&quot;, &quot;99305&quot;, &quot;9934202&quot;, &quot;1130217&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;西日暮里&quot;, &quot;13&quot;, &quot;139.766857&quot;, &quot;35.731954&quot;, &quot;1&quot;] ... ]}</span>
-</code></pre></div>
+<span class="n">metrodata</span> <span class="c1"># =&gt;  {&quot;東京メトロ銀座線&quot;=&gt;[[&quot;28&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;28001&quot;, &quot;2800101&quot;, &quot;2100201&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;浅草&quot;, &quot;13&quot;, &quot;139.797592&quot;, &quot;35.710733&quot;, &quot;1&quot;], [&quot;28&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;28001&quot;, &quot;2800102&quot;, &quot;2800102&quot;, &quot;2&quot;, &quot;東京メトロ&quot;, &quot;東京メトロ銀座線&quot;, &quot;田原町&quot;, &quot;13&quot;, &quot;139.790897&quot;, &quot;35.709897&quot;, &quot;1&quot;], ... 中略 ... &quot;日暮里・舎人ライナー&quot;=&gt;[[&quot;99&quot;, &quot;99342&quot;, &quot;9934201&quot;, &quot;99305&quot;, &quot;9934201&quot;, &quot;1130218&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;日暮里&quot;, &quot;13&quot;, &quot;139.771287&quot;, &quot;35.727908&quot;, &quot;1&quot;], [&quot;99&quot;, &quot;99342&quot;, &quot;9934202&quot;, &quot;99305&quot;, &quot;9934202&quot;, &quot;1130217&quot;, &quot;1&quot;, &quot;東京都交通局&quot;, &quot;日暮里・舎人ライナー&quot;, &quot;西日暮里&quot;, &quot;13&quot;, &quot;139.766857&quot;, &quot;35.731954&quot;, &quot;1&quot;] ... ]}</span></code></pre></div>
 
-
-<h2>地下鉄路線一覧</h2>
-
+<h2 id="section-3">地下鉄路線一覧</h2>
 <p>さて下準備が整ったので、Gvizで路線図を直ぐにでも描きたいところですが、感じをつかむためまずは路線一覧というのを作ってみます。</p>
 
 <p>コードは以下のようになります。</p>
@@ -257,9 +256,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ここではグラフの生成に<code>Graph</code>メソッド（ver.0.0.4で導入）というショートカットを使っています。これは、<code>Gviz.new(:Metro).graph</code>と等価です。</p>
 
@@ -272,17 +269,16 @@
 
 <p>簡単なコードでなかなか綺麗な一覧ができました。</p>
 
-<h3>色を付ける</h3>
-
+<h3 id="section-4">色を付ける</h3>
 <p>でもやっぱり地下鉄グラフに色がないのは悲しすぎます。地下鉄のシンボルカラーを次のサイトから取得して、色を付けます。</p>
 
-<blockquote><p><a href="http://www.colordic.org/m/" title="地下鉄のシンボルカラー メトロカラー - Metro Color">地下鉄のシンボルカラー メトロカラー - Metro Color</a></p></blockquote>
+<blockquote>
+  <p><a href="http://www.colordic.org/m/" title="地下鉄のシンボルカラー メトロカラー - Metro Color">地下鉄のシンボルカラー メトロカラー - Metro Color</a></p>
+</blockquote>
 
 <p>足りないものは補って取得した色情報を配列で保持します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">colors</span> <span class="o">=</span> <span class="o">[[</span><span class="s2">&quot;銀座線&quot;</span><span class="p">,</span> <span class="s2">&quot;#f39700&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;丸ノ内線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e60012&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;日比谷線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9caeb7&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;東西線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00a7db&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;千代田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#009944&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;有楽町線&quot;</span><span class="p">,</span> <span class="s2">&quot;#d7c447&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;半蔵門線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9b7cb6&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;南北線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00ada9&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;副都心線&quot;</span><span class="p">,</span> <span class="s2">&quot;#bb641d&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;浅草線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e85298&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;三田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#0079c2&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;新宿線&quot;</span><span class="p">,</span> <span class="s2">&quot;#6cbb5a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;大江戸線&quot;</span><span class="p">,</span> <span class="s2">&quot;#b6007a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;荒川線&quot;</span><span class="p">,</span> <span class="s2">&quot;#7aaa16&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;舎人ライナー&quot;</span><span class="p">,</span> <span class="s2">&quot;#999999&quot;</span><span class="o">]]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">colors</span> <span class="o">=</span> <span class="o">[[</span><span class="s2">&quot;銀座線&quot;</span><span class="p">,</span> <span class="s2">&quot;#f39700&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;丸ノ内線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e60012&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;日比谷線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9caeb7&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;東西線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00a7db&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;千代田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#009944&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;有楽町線&quot;</span><span class="p">,</span> <span class="s2">&quot;#d7c447&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;半蔵門線&quot;</span><span class="p">,</span> <span class="s2">&quot;#9b7cb6&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;南北線&quot;</span><span class="p">,</span> <span class="s2">&quot;#00ada9&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;副都心線&quot;</span><span class="p">,</span> <span class="s2">&quot;#bb641d&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;浅草線&quot;</span><span class="p">,</span> <span class="s2">&quot;#e85298&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;三田線&quot;</span><span class="p">,</span> <span class="s2">&quot;#0079c2&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;新宿線&quot;</span><span class="p">,</span> <span class="s2">&quot;#6cbb5a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;大江戸線&quot;</span><span class="p">,</span> <span class="s2">&quot;#b6007a&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;荒川線&quot;</span><span class="p">,</span> <span class="s2">&quot;#7aaa16&quot;</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;舎人ライナー&quot;</span><span class="p">,</span> <span class="s2">&quot;#999999&quot;</span><span class="o">]]</span></code></pre></div>
 
 <p>そしてグラフをカラー化します。</p>
 
@@ -306,9 +302,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>結果を見てみます。</p>
 
@@ -349,9 +343,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>結果です。
 <a href="/assets/images/2012/metro3.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro3.png" alt="metro noshadow" /></a></p>
@@ -360,8 +352,7 @@
 
 <p>いいですね！</p>
 
-<h2>地下鉄路線図</h2>
-
+<h2 id="section-5">地下鉄路線図</h2>
 <p>さあここからが本番です。先のコードを生かしつつ、各駅の経度・緯度情報を使って地下鉄路線図を作ります。</p>
 
 <p>Graphvizの各ノードは<code>pos</code>という属性を使ってその絶対座標を指定することができます。subgraphを外しlayoutを<code>neato</code>とし、最初はダメ元で各駅の経度・緯度情報をそのまま<code>pos</code>に渡してみます。最後の<code>!</code>を忘れずに。</p>
@@ -396,20 +387,17 @@
 <span class="o">-</span>   <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>結果は如何に！</p>
 
 <p><a href="/assets/images/2012/metro4.png" rel="lightbox" title="Metro List"><img src="/assets/images/2012/metro4.png" alt="metro noshadow" /></a></p>
 
-<p>Onz...</p>
+<p>Onz…</p>
 
-<p>甘くはありませんでした...</p>
+<p>甘くはありませんでした…</p>
 
-<h3>座標の正規化</h3>
-
+<h3 id="section-6">座標の正規化</h3>
 <p>つまり駅座標情報を正規化して出力サイズに合わせて調整する必要があります。</p>
 
 <p>Gviz ver0.0.4では正規化のために<code>Numeric#norm</code>というメソッドを用意しました。このメソッドは、任意の範囲内の特定の数値を0.0〜1.0の範囲の対応位置にマッピングします。第１引数にその任意の範囲をRangeオブジェクトで渡します。また、第２引数に所定のRangeオブジェクトを与えると、正規化する範囲を0.0〜1.0以外にすることができます。</p>
@@ -426,9 +414,7 @@
 <span class="mi">139</span><span class="o">.</span><span class="mi">812935</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">)</span> <span class="c1"># =&gt; 0.5785830125412325</span>
 <span class="mi">139</span><span class="o">.</span><span class="mi">812935</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lon_range</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span> <span class="c1"># =&gt; 620.7247112871092</span>
 <span class="mi">35</span><span class="o">.</span><span class="mi">710702</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">)</span> <span class="c1"># =&gt; 0.5439225245404847</span>
-<span class="mi">35</span><span class="o">.</span><span class="mi">710702</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span> <span class="c1"># =&gt; 589.5302720864363</span>
-</code></pre></div>
-
+<span class="mi">35</span><span class="o">.</span><span class="mi">710702</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lat_range</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span> <span class="c1"># =&gt; 589.5302720864363</span></code></pre></div>
 
 <p>さてこれを使って各駅の経度・緯度を正規化し、もう一度トライします。</p>
 
@@ -460,9 +446,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:svg</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>さあどうだ！</p>
 
@@ -503,9 +487,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">save</span><span class="p">(</span><span class="ss">:metro</span><span class="p">,</span> <span class="ss">:svg</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>出力です。</p>
 
@@ -531,8 +513,9 @@
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B007OVX460"><img class="amazon" src="http://ecx.images-amazon.com/images/I/61v2Un0e17L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B007OVX460">東京メトロだいすき (「鉄おも！」別冊)</a></p>
+<p><a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B007OVX460"><img class="amazon" src="http://ecx.images-amazon.com/images/I/61v2Un0e17L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/東京メトロだいすき-「鉄おも！」別冊/dp/B007OVX460?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B007OVX460">東京メトロだいすき (「鉄おも！」別冊)</a></p>
+
 
 
     <div class="ad" id="topAdsense">

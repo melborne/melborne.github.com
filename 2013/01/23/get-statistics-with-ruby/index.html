@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,9 +179,12 @@
       </script>
     </div>
 
-    <h2>─　問題　─</h2>
+    
+<h2 id="section">─　問題　─</h2>
 
-<blockquote><p>５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ<strong>data</strong>がある。</p></blockquote>
+<blockquote>
+  <p>５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ<strong>data</strong>がある。</p>
+</blockquote>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span>
 <span class="sh">player gameA gameB</span>
@@ -200,11 +203,11 @@
 <span class="sh">Alice  56    92</span>
 <span class="sh">Jimmy  33    88</span>
 <span class="sh">Jimmy  11    87</span>
-<span class="no">EOS</span>
-</code></pre></div>
+<span class="no">EOS</span></code></pre></div>
 
-
-<blockquote><p>結果を集計し以下の標準出力を得よ（totalで降順）。</p></blockquote>
+<blockquote>
+  <p>結果を集計し以下の標準出力を得よ（totalで降順）。</p>
+</blockquote>
 
 <div class="highlight"><pre><code class="bash">% ruby game_score.rb
 player  gameA gameB total
@@ -212,38 +215,29 @@ Alice   230   203   433
 Jimmy   124   206   330
 Kent    190   91    281
 Ross    145   125   270
-Bob     110   147   257
-</code></pre></div>
-
+Bob     110   147   257</code></pre></div>
 
 <p><br /></p>
 
 <p><br /></p>
 
-<p>簡単そうで意外と手こずったので...</p>
+<p>簡単そうで意外と手こずったので…</p>
 
-<h2>─　僕のやり方　─</h2>
+<h2 id="section-1">─　僕のやり方　─</h2>
 
-<h3>Step1. ヘッダーとスコアを分離し配列で管理する</h3>
-
+<h3 id="step1-">Step1. ヘッダーとスコアを分離し配列で管理する</h3>
 <p>まあ普通に。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:split</span><span class="p">)</span>
 <span class="n">headers</span> <span class="c1"># =&gt; [&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;]</span>
-<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Bob&quot;, &quot;20&quot;, &quot;56&quot;], [&quot;Ross&quot;, &quot;68&quot;, &quot;33&quot;], [&quot;Bob&quot;, &quot;78&quot;, &quot;55&quot;], [&quot;Kent&quot;, &quot;90&quot;, &quot;15&quot;], [&quot;Alice&quot;, &quot;84&quot;, &quot;79&quot;], [&quot;Ross&quot;, &quot;10&quot;, &quot;15&quot;], [&quot;Jimmy&quot;, &quot;80&quot;, &quot;31&quot;], [&quot;Bob&quot;, &quot;12&quot;, &quot;36&quot;], [&quot;Kent&quot;, &quot;88&quot;, &quot;43&quot;], [&quot;Kent&quot;, &quot;12&quot;, &quot;33&quot;], [&quot;Alice&quot;, &quot;90&quot;, &quot;32&quot;], [&quot;Ross&quot;, &quot;67&quot;, &quot;77&quot;], [&quot;Alice&quot;, &quot;56&quot;, &quot;92&quot;], [&quot;Jimmy&quot;, &quot;33&quot;, &quot;88&quot;], [&quot;Jimmy&quot;, &quot;11&quot;, &quot;87&quot;]]</span>
-</code></pre></div>
+<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Bob&quot;, &quot;20&quot;, &quot;56&quot;], [&quot;Ross&quot;, &quot;68&quot;, &quot;33&quot;], [&quot;Bob&quot;, &quot;78&quot;, &quot;55&quot;], [&quot;Kent&quot;, &quot;90&quot;, &quot;15&quot;], [&quot;Alice&quot;, &quot;84&quot;, &quot;79&quot;], [&quot;Ross&quot;, &quot;10&quot;, &quot;15&quot;], [&quot;Jimmy&quot;, &quot;80&quot;, &quot;31&quot;], [&quot;Bob&quot;, &quot;12&quot;, &quot;36&quot;], [&quot;Kent&quot;, &quot;88&quot;, &quot;43&quot;], [&quot;Kent&quot;, &quot;12&quot;, &quot;33&quot;], [&quot;Alice&quot;, &quot;90&quot;, &quot;32&quot;], [&quot;Ross&quot;, &quot;67&quot;, &quot;77&quot;], [&quot;Alice&quot;, &quot;56&quot;, &quot;92&quot;], [&quot;Jimmy&quot;, &quot;33&quot;, &quot;88&quot;], [&quot;Jimmy&quot;, &quot;11&quot;, &quot;87&quot;]]</span></code></pre></div>
 
-
-<h3>Step2. プレイヤー毎に集計する</h3>
-
+<h3 id="step2-">Step2. プレイヤー毎に集計する</h3>
 <p>Enumerable#group_byを使う。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {&quot;Bob&quot;=&gt;[[&quot;Bob&quot;, &quot;20&quot;, &quot;56&quot;], [&quot;Bob&quot;, &quot;78&quot;, &quot;55&quot;], [&quot;Bob&quot;, &quot;12&quot;, &quot;36&quot;]], &quot;Ross&quot;=&gt;[[&quot;Ross&quot;, &quot;68&quot;, &quot;33&quot;], [&quot;Ross&quot;, &quot;10&quot;, &quot;15&quot;], [&quot;Ross&quot;, &quot;67&quot;, &quot;77&quot;]], &quot;Kent&quot;=&gt;[[&quot;Kent&quot;, &quot;90&quot;, &quot;15&quot;], [&quot;Kent&quot;, &quot;88&quot;, &quot;43&quot;], [&quot;Kent&quot;, &quot;12&quot;, &quot;33&quot;]], &quot;Alice&quot;=&gt;[[&quot;Alice&quot;, &quot;84&quot;, &quot;79&quot;], [&quot;Alice&quot;, &quot;90&quot;, &quot;32&quot;], [&quot;Alice&quot;, &quot;56&quot;, &quot;92&quot;]], &quot;Jimmy&quot;=&gt;[[&quot;Jimmy&quot;, &quot;80&quot;, &quot;31&quot;], [&quot;Jimmy&quot;, &quot;33&quot;, &quot;88&quot;], [&quot;Jimmy&quot;, &quot;11&quot;, &quot;87&quot;]]}</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {&quot;Bob&quot;=&gt;[[&quot;Bob&quot;, &quot;20&quot;, &quot;56&quot;], [&quot;Bob&quot;, &quot;78&quot;, &quot;55&quot;], [&quot;Bob&quot;, &quot;12&quot;, &quot;36&quot;]], &quot;Ross&quot;=&gt;[[&quot;Ross&quot;, &quot;68&quot;, &quot;33&quot;], [&quot;Ross&quot;, &quot;10&quot;, &quot;15&quot;], [&quot;Ross&quot;, &quot;67&quot;, &quot;77&quot;]], &quot;Kent&quot;=&gt;[[&quot;Kent&quot;, &quot;90&quot;, &quot;15&quot;], [&quot;Kent&quot;, &quot;88&quot;, &quot;43&quot;], [&quot;Kent&quot;, &quot;12&quot;, &quot;33&quot;]], &quot;Alice&quot;=&gt;[[&quot;Alice&quot;, &quot;84&quot;, &quot;79&quot;], [&quot;Alice&quot;, &quot;90&quot;, &quot;32&quot;], [&quot;Alice&quot;, &quot;56&quot;, &quot;92&quot;]], &quot;Jimmy&quot;=&gt;[[&quot;Jimmy&quot;, &quot;80&quot;, &quot;31&quot;], [&quot;Jimmy&quot;, &quot;33&quot;, &quot;88&quot;], [&quot;Jimmy&quot;, &quot;11&quot;, &quot;87&quot;]]}</span></code></pre></div>
 
-
-<h3>Step3. プレイヤー毎のデータを計算する</h3>
-
+<h3 id="step3-">Step3. プレイヤー毎のデータを計算する</h3>
 <p>Array#transposeがいいんじゃないかと。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">player</span><span class="p">,</span> <span class="n">values</span><span class="o">|</span>
@@ -251,11 +245,9 @@ Bob     110   147   257
   <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Bob&quot;, 110, 147, 257], [&quot;Ross&quot;, 145, 125, 270], [&quot;Kent&quot;, 190, 91, 281], [&quot;Alice&quot;, 230, 203, 433], [&quot;Jimmy&quot;, 124, 206, 330]]</span>
-</code></pre></div>
+<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Bob&quot;, 110, 147, 257], [&quot;Ross&quot;, 145, 125, 270], [&quot;Kent&quot;, 190, 91, 281], [&quot;Alice&quot;, 230, 203, 433], [&quot;Jimmy&quot;, 124, 206, 330]]</span></code></pre></div>
 
-
-<h3>Step4. 結果を標準出力する</h3>
+<h3 id="step4-">Step4. 結果を標準出力する</h3>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total&quot;</span> <span class="o">%</span> <span class="n">headers</span>
 <span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">sort_by</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="o">-</span><span class="n">s</span><span class="o">.</span><span class="n">last</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d&quot;</span> <span class="o">%</span> <span class="n">line</span> <span class="p">}</span>
@@ -265,9 +257,7 @@ Bob     110   147   257
 <span class="c1"># &gt;&gt; Jimmy  124   206   330</span>
 <span class="c1"># &gt;&gt; Kent   190   91    281</span>
 <span class="c1"># &gt;&gt; Ross   145   125   270</span>
-<span class="c1"># &gt;&gt; Bob    110   147   257</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Bob    110   147   257</span></code></pre></div>
 
 <p>あなたはどうしてますか？</p>
 
@@ -279,7 +269,7 @@ Bob     110   147   257
 
 <hr />
 
-<div><script src='https://gist.github.com/4604530.js?file=game_scores.rb'></script>
+<div><script src="https://gist.github.com/4604530.js?file=game_scores.rb"></script>
 <noscript><pre><code>data =&lt;&lt;EOS
 player gameA gameB
 Bob    20    56
@@ -312,11 +302,11 @@ puts &quot;%s\t%s\t%s\ttotal&quot; % headers
 puts stat.sort_by{ |s| -s.last }.map { |line| &quot;%s\t%d\t%d\t%d&quot; % line }
 </code></pre></noscript></div>
 
-
 <hr />
 
-<p><a href="http://www.amazon.co.jp/プログラミングのための確率統計-平岡-和幸/dp/4274067750?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274067750"><img class="amazon" src="http://ecx.images-amazon.com/images/I/412Ufa2CI%2BL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/プログラミングのための確率統計-平岡-和幸/dp/4274067750?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274067750">プログラミングのための確率統計</a> by 平岡 和幸 and 堀 玄</p>
+<p><a href="http://www.amazon.co.jp/プログラミングのための確率統計-平岡-和幸/dp/4274067750?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274067750"><img class="amazon" src="http://ecx.images-amazon.com/images/I/412Ufa2CI%2BL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/プログラミングのための確率統計-平岡-和幸/dp/4274067750?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274067750">プログラミングのための確率統計</a> by 平岡 和幸 and 堀 玄</p>
+
 
 
     <div class="ad" id="topAdsense">

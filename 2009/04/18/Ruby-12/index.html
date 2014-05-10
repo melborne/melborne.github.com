@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,13 +179,13 @@
       </script>
     </div>
 
-    <p>でも待ってください。そこまで汎用性がある汎用性があるって言うのなら...</p>
+    <p>でも待ってください。そこまで汎用性がある汎用性があるって言うのなら…</p>
 
 <p>クラスにでもしたらどうですか？それならArrayクラスにも迷惑は掛かりませんし、なるほどいい考えかもしれません。</p>
 
 <p>ではテキストファイルを受け取ると、英単語頻度辞書を生成するWordDictionaryクラスを作りましょう。まず現在のスクリプト全体を掲載します。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="k">end</span>
@@ -220,17 +220,14 @@
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">make_freq_dic</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
-
-<h2>Version16</h2>
-
+<h2 id="version16">Version16</h2>
 <p>これらのコードにおける各メソッドをWordDictionaryクラスに実装します。このクラスはARGFオブジェクトを引数に取って、そこからワード辞書オブジェクトを生成します。Enumerableのtake_byはWordDictionary以外でも使えそうなのでこのまま残します。</p>
 
 <p>上のスクリプトは次のように生まれ変わりました。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="k">end</span>
@@ -264,21 +261,18 @@
  
  <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
  <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
- <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">bottom_by_frequency</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">}</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">bottom_by_frequency</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">}</span></code></pre></div>
 
 <p>ざっと眺めてみると先のコードが大体そのまま移管されているのが分かると思います。top_by_valueとbottom_by_valueは、目的を分かりやすくするために名前をそれぞれ、top_by_frequencyとbottom_by_frequencyに変えました。</p>
 
 <p>変わったところを列挙してみます。</p>
 
 <ol>
-<li>WordDictionaryクラス</li>
-<li>include Enumerable</li>
-<li>initializeメソッド</li>
-<li>eachメソッド</li>
+  <li>WordDictionaryクラス</li>
+  <li>include Enumerable</li>
+  <li>initializeメソッド</li>
+  <li>eachメソッド</li>
 </ol>
-
 
 <p>クラス定義はキーワードclassに続き、大文字で始まるクラス名を指定して行います。スクリプトが実行されたとき、このクラス定義からそのクラス名で参照可能なクラスオブジェクトが生成されます。</p>
 
@@ -300,13 +294,11 @@
 
 <p>さて、eachメソッドのマジックを１つ見せます。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
  <span class="n">wdic</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span><span class="o">.</span><span class="n">length</span> <span class="p">}</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">len</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">len</span> <span class="o">&gt;</span> <span class="mi">14</span> <span class="p">}</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">len</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">len</span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">#{</span><span class="n">word</span><span class="o">.</span><span class="n">transpose</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">}</span>
  <span class="c1">#&gt; 15 =&gt; [&quot;representations&quot;, &quot;merchantibility&quot;, &quot;accomplishments&quot;, &quot;acknowledgments&quot;, &quot;inconsistencies&quot;, &quot;conscientiously&quot;, &quot;superintendence&quot;, &quot;congratulations&quot;, &quot;thoughtlessness&quot;, &quot;recommendations&quot;, &quot;uncompanionable&quot;, &quot;disappointments&quot;, &quot;condescendingly&quot;, &quot;transformations&quot;, &quot;transfiguration&quot;, &quot;ecclesiasticism&quot;, &quot;notwithstanding&quot;, &quot;representatives&quot;, &quot;appropriateness&quot;, &quot;characteristics&quot;, &quot;contemporaneous&quot;, &quot;unrighteousness&quot;, &quot;remorselessness&quot;, &quot;comprehensively&quot;]</span>
  <span class="mi">16</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;unenforceability&quot;</span><span class="p">,</span> <span class="s2">&quot;superciliousness&quot;</span><span class="p">,</span> <span class="s2">&quot;incomprehensible&quot;</span><span class="p">,</span> <span class="s2">&quot;discontentedness&quot;</span><span class="p">,</span> <span class="s2">&quot;inextinguishable&quot;</span><span class="p">,</span> <span class="s2">&quot;internationalism&quot;</span><span class="o">]</span>
- <span class="mi">17</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;disinterestedness&quot;</span><span class="p">,</span> <span class="s2">&quot;misrepresentation&quot;</span><span class="p">,</span> <span class="s2">&quot;communicativeness&quot;</span><span class="p">,</span> <span class="s2">&quot;congregationalist&quot;</span><span class="p">,</span> <span class="s2">&quot;indestructibility&quot;</span><span class="o">]</span>
-</code></pre></div>
-
+ <span class="mi">17</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;disinterestedness&quot;</span><span class="p">,</span> <span class="s2">&quot;misrepresentation&quot;</span><span class="p">,</span> <span class="s2">&quot;communicativeness&quot;</span><span class="p">,</span> <span class="s2">&quot;congregationalist&quot;</span><span class="p">,</span> <span class="s2">&quot;indestructibility&quot;</span><span class="o">]</span></code></pre></div>
 
 <p>Enumerableモジュールに定義されているgroup_byメソッドを、WordDictionaryクラスのオブジェクトで使った例です。ワード長が15以上のものをグループ別に表示させています。自作のクラスがこれでずっと高級になりました。Enumerableモジュールが持っているメソッドは以下で調べられます。</p>
 

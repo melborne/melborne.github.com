@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,8 +179,8 @@
       </script>
     </div>
 
-    <h2>nil?すべきか</h2>
-
+    
+<h2 id="nil">nil?すべきか</h2>
 <p>Rubyを使っているとコードをより簡潔により美しくしたいという欲求、つまりDRY欲が加速します。</p>
 
 <p>例えば次のようなコードがあります。ここでの関心はprocess_userメソッドです。</p>
@@ -202,9 +202,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>Rubyistはこのコードを見てムズムズします。</p>
 
@@ -219,9 +217,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>いえいえ、<code>OR演算子</code>の短絡を利用して、こんな風にリファクタします。</p>
 
@@ -234,9 +230,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>いやいや、自己代入演算子でこんな風にリファクタします。</p>
 
@@ -249,11 +243,9 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
-
-<h2>empty?すべきか</h2>
+<h2 id="empty">empty?すべきか</h2>
 
 <p>@userが<code>nil</code>でなく<code>空文字</code>を受ける場合はどうでしょう。<code>String#empty?</code>を使った最初のコードは次のようになります。</p>
 
@@ -268,9 +260,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>ムズムズするので、<code>if修飾子</code>を使ってリファクタします。</p>
 
@@ -283,9 +273,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>まだムズムズするので、<code>OR演算子</code>を使ってリファクタします。</p>
 
@@ -300,23 +288,18 @@
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
 <span class="n">process_user</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:9:in `process_user&#39;: undefined method `some_process&#39; for true:TrueClass (NoMethodError)</span>
-<span class="c1"># ~&gt;    from -:16:in `&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:16:in `&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>ところがこれはエラーになります。@userが空文字でなければ、@userに<code>true</code>がセットされてしまうからです。</p>
 
-<h2>それが問題だ</h2>
-
+<h2 id="section">それが問題だ</h2>
 <p>そこでこんな対策を考えました。空文字のときはnilを返しそうでないときはselfを返す<code>String#to_nil</code>を定義するのです。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">to_nil</span>
     <span class="nb">self</span> <span class="k">unless</span> <span class="n">empty?</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>そしてString#empty?の代わりに使います。</p>
 
@@ -329,11 +312,9 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
-
-<p>良いアイディアだと思ったのですが、そんなものはRails界隈でとうの昔にありました。そう、<code>Object#presence</code>です。Railsを知らない人は困ります > 私^ ^;</p>
+<p>良いアイディアだと思ったのですが、そんなものはRails界隈でとうの昔にありました。そう、<code>Object#presence</code>です。Railsを知らない人は困ります &gt; 私^ ^;</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;active_support/all&quot;</span>
 
@@ -346,9 +327,7 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
-
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
 <p>因みに実装は次のとおりです。</p>
 
@@ -364,9 +343,7 @@
   <span class="k">def</span> <span class="nf">blank?</span>
     <span class="nb">respond_to?</span><span class="p">(</span><span class="ss">:empty?</span><span class="p">)</span> <span class="p">?</span> <span class="n">empty?</span> <span class="p">:</span> <span class="o">!</span><span class="nb">self</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>これに倣って、私のString#to_nilも<code>Object#to_nil</code>に昇格させます。こんな感じでしょうか。</p>
 
@@ -374,9 +351,7 @@
   <span class="k">def</span> <span class="nf">to_nil</span>
     <span class="nb">self</span> <span class="k">if</span> <span class="nb">respond_to?</span><span class="p">(</span><span class="ss">:empty?</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">empty?</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ここまで来ると、DRY浴が止まりません。</p>
 
@@ -393,9 +368,7 @@
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
 <span class="n">process_user</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:15:in `process_user&#39;: undefined method `to_nil=&#39; for &quot;&quot;:String (NoMethodError)</span>
-<span class="c1"># ~&gt;    from -:20:in `&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:20:in `&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>当然エラーになります。でも<code>to_nil=</code>が無いと言っていますので、これを定義してみます。</p>
 
@@ -418,11 +391,9 @@
 <span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for anonymous&quot;</span>
 
 <span class="vi">@user</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
-<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span>
-</code></pre></div>
+<span class="n">process_user</span> <span class="c1"># =&gt; &quot;Process_completed for Charlie&quot;</span></code></pre></div>
 
-
-<p>うまくいきました。自己代入では最初に<code>to_nil</code>が呼ばれてselfか'anonymous'が返り、次に<code>to_nil=</code>がこの返り値とともに呼ばれてselfをその値でreplaceします。</p>
+<p>うまくいきました。自己代入では最初に<code>to_nil</code>が呼ばれてselfか’anonymous’が返り、次に<code>to_nil=</code>がこの返り値とともに呼ばれてselfをその値でreplaceします。</p>
 
 <p>他のオブジェクトに対しても試してみます。</p>
 
@@ -442,9 +413,7 @@
 <span class="n">arr2</span> <span class="c1"># =&gt; [:default]</span>
 <span class="n">hash1</span> <span class="c1"># =&gt; {:a=&gt;1, :b=&gt;2}</span>
 <span class="n">hash2</span> <span class="c1"># =&gt; {:default=&gt;1}</span>
-<span class="n">nil1</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">nil1</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>当然ながら、nil1の結果だけは期待通りになりません。nilをreplaceできたら面白いかもしれません。</p>
 
@@ -452,8 +421,9 @@
 
 <p>そんなわけで、楽しいＧＷを！</p>
 
-<p><a href="http://www.amazon.co.jp/ハムレット-新潮文庫-ウィリアム-シェイクスピア/dp/4102020039?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4102020039"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51dbOfPzHpL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/ハムレット-新潮文庫-ウィリアム-シェイクスピア/dp/4102020039?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4102020039">ハムレット (新潮文庫)</a> by ウィリアム シェイクスピア</p>
+<p><a href="http://www.amazon.co.jp/ハムレット-新潮文庫-ウィリアム-シェイクスピア/dp/4102020039?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4102020039"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51dbOfPzHpL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/ハムレット-新潮文庫-ウィリアム-シェイクスピア/dp/4102020039?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4102020039">ハムレット (新潮文庫)</a> by ウィリアム シェイクスピア</p>
+
 
 
     <div class="ad" id="topAdsense">

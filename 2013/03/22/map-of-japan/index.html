@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,31 +179,38 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
 <p>antlaboさんがGraphvizを使って、北海道の市町村の隣接を可視化したものを公開されています。</p>
 
-<blockquote><p><a href="http://d.hatena.ne.jp/antlabo/20130320/1363796474" title="Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）">Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）</a></p></blockquote>
+<blockquote>
+  <p><a href="http://d.hatena.ne.jp/antlabo/20130320/1363796474" title="Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）">Graphvizで北海道の市区町村の隣接を可視化してみました。 - 蟻の実験工房（別館ラボ）</a></p>
+</blockquote>
 
 <p>この可視化の元データはwikipediaの情報を元にantlaboさんが作られたそうです。スバラシイ。</p>
 
-<blockquote><p><a href="http://d.hatena.ne.jp/antlabo/20121029/1351520444" title="wikipediaの隣接市区町村の記載をデータベース化したものをcsvで公開 - 蟻の実験工房（別館ラボ）">wikipediaの隣接市区町村の記載をデータベース化したものをcsvで公開 - 蟻の実験工房（別館ラボ）</a></p></blockquote>
+<blockquote>
+  <p><a href="http://d.hatena.ne.jp/antlabo/20121029/1351520444" title="wikipediaの隣接市区町村の記載をデータベース化したものをcsvで公開 - 蟻の実験工房（別館ラボ）">wikipediaの隣接市区町村の記載をデータベース化したものをcsvで公開 - 蟻の実験工房（別館ラボ）</a></p>
+</blockquote>
 
 <p>で、記事の中で全国可視化はデータ量が多くて上手くいかなかった旨が書かれていたので、自分も試してみたところ、無事出力できましたのでここに公開したいと思います。</p>
 
-<h2>日本全国を可視化する</h2>
+<h2 id="section">日本全国を可視化する</h2>
+<p>ここではGraphvizのRubyラッパーである拙作「<a href="https://rubygems.org/gems/gviz" title="gviz \| RubyGems.org \| your community gem host">gviz</a>」を使います。</p>
 
-<p>ここではGraphvizのRubyラッパーである拙作「<a href="https://rubygems.org/gems/gviz" title="gviz | RubyGems.org | your community gem host">gviz</a>」を使います。</p>
+<h3 id="section-1">隣接データの読み出し</h3>
+<p>まずは先のサイトから全国市町村隣接データ[city_rinsetsu_utf8.csv](http://spnene.antlabo.jp/data/city_rinsetsu_utf8.csv ““)を取得します。このデータのフォーマットは以下のようになっています。</p>
 
-<h3>隣接データの読み出し</h3>
-
-<p>まずは先のサイトから全国市町村隣接データ<a href="http://spnene.antlabo.jp/data/city_rinsetsu_utf8.csv">city_rinsetsu_utf8.csv</a>を取得します。このデータのフォーマットは以下のようになっています。</p>
-
-<blockquote><p>ID(元),県名(元),市区町村名(元),ID(先),県名(先),市区町村名(先)</p></blockquote>
+<blockquote>
+  <p>ID(元),県名(元),市区町村名(元),ID(先),県名(先),市区町村名(先)</p>
+</blockquote>
 
 <div class="highlight"><pre><code class="text">673,三重県,いなべ市,626,岐阜県,大垣市
 673,三重県,いなべ市,662,岐阜県,養老町
@@ -218,9 +225,7 @@
 796,三重県,亀山市,773,三重県,鈴鹿市
   .
   .
-  .
-</code></pre></div>
-
+  .</code></pre></div>
 
 <p>このデータをRubyで読み出して扱いやすいように前処理します。具体的には、最初にデータを各県ごとにグループ化し、それを市町村IDで更にグループ化します。</p>
 
@@ -231,15 +236,12 @@
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
 
-<span class="c1"># &gt;&gt; [[&quot;三重県&quot;, {&quot;673&quot;=&gt;[[&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;626&quot;, &quot;岐阜県&quot;, &quot;大垣市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;662&quot;, &quot;岐阜県&quot;, &quot;養老町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;663&quot;, &quot;滋賀県&quot;, &quot;多賀町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;721&quot;, &quot;三重県&quot;, &quot;東員町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;722&quot;, &quot;三重県&quot;, &quot;桑名市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;723&quot;, &quot;三重県&quot;, &quot;菰野町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;712&quot;, &quot;滋賀県&quot;, &quot;東近江市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;724&quot;, &quot;三重県&quot;, &quot;四日市市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;675&quot;, &quot;岐阜県&quot;, &quot;海津市&quot;]], &quot;796&quot;=&gt;[[&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;749&quot;, &quot;滋賀県&quot;, &quot;甲賀市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;773&quot;, &quot;三重県&quot;, &quot;鈴鹿市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;816&quot;, &quot;三重県&quot;, &quot;津市&quot;]], &quot;977&quot;=&gt;[[&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;915&quot;, &quot;三重県&quot;, &quot;明和町_(三重県)&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;979&quot;, &quot;三重県&quot;, &quot;度会町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1039&quot;, &quot;三重県&quot;, &quot;鳥羽市&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;978&quot;, &quot;三重県&quot;, &quot;玉城町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1041&quot;, &quot;三重県&quot;, &quot;志摩市&quot;]], &quot;793&quot;=&gt;[[&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;749&quot;, &quot;滋賀県&quot;, &quot;甲賀市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;816&quot;, &quot;三重県&quot;, &quot;津市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;837&quot;, &quot;奈良県&quot;, &quot;山添村&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;795&quot;, &quot;京都府&quot;, &quot;南山城村&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;835&quot;, &quot;三重県&quot;, &quot;名張市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;836&quot;, &quot;奈良県&quot;, &quot;奈良市&quot;]], &quot;1040&quot;=&gt;[[&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;979&quot;, &quot;三重県&quot;, &quot;度会町&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;981&quot;, &quot;三重県&quot;, &quot;大紀町&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;1041&quot;, &quot;三重県&quot;, &quot;志摩市&quot;]], &quot;835&quot;=&gt;[[&quot;835&quot;, &quot;三重県&quot;, &quot;名張市&quot;, &quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;], ... ]]}]]</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt; [[&quot;三重県&quot;, {&quot;673&quot;=&gt;[[&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;626&quot;, &quot;岐阜県&quot;, &quot;大垣市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;662&quot;, &quot;岐阜県&quot;, &quot;養老町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;663&quot;, &quot;滋賀県&quot;, &quot;多賀町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;721&quot;, &quot;三重県&quot;, &quot;東員町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;722&quot;, &quot;三重県&quot;, &quot;桑名市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;723&quot;, &quot;三重県&quot;, &quot;菰野町&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;712&quot;, &quot;滋賀県&quot;, &quot;東近江市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;724&quot;, &quot;三重県&quot;, &quot;四日市市&quot;], [&quot;673&quot;, &quot;三重県&quot;, &quot;いなべ市&quot;, &quot;675&quot;, &quot;岐阜県&quot;, &quot;海津市&quot;]], &quot;796&quot;=&gt;[[&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;749&quot;, &quot;滋賀県&quot;, &quot;甲賀市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;773&quot;, &quot;三重県&quot;, &quot;鈴鹿市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;], [&quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;, &quot;816&quot;, &quot;三重県&quot;, &quot;津市&quot;]], &quot;977&quot;=&gt;[[&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;915&quot;, &quot;三重県&quot;, &quot;明和町_(三重県)&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;979&quot;, &quot;三重県&quot;, &quot;度会町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1039&quot;, &quot;三重県&quot;, &quot;鳥羽市&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;978&quot;, &quot;三重県&quot;, &quot;玉城町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;], [&quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;, &quot;1041&quot;, &quot;三重県&quot;, &quot;志摩市&quot;]], &quot;793&quot;=&gt;[[&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;749&quot;, &quot;滋賀県&quot;, &quot;甲賀市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;816&quot;, &quot;三重県&quot;, &quot;津市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;837&quot;, &quot;奈良県&quot;, &quot;山添村&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;795&quot;, &quot;京都府&quot;, &quot;南山城村&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;796&quot;, &quot;三重県&quot;, &quot;亀山市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;835&quot;, &quot;三重県&quot;, &quot;名張市&quot;], [&quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;, &quot;836&quot;, &quot;奈良県&quot;, &quot;奈良市&quot;]], &quot;1040&quot;=&gt;[[&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;977&quot;, &quot;三重県&quot;, &quot;伊勢市&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;979&quot;, &quot;三重県&quot;, &quot;度会町&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;981&quot;, &quot;三重県&quot;, &quot;大紀町&quot;], [&quot;1040&quot;, &quot;三重県&quot;, &quot;南伊勢町&quot;, &quot;1041&quot;, &quot;三重県&quot;, &quot;志摩市&quot;]], &quot;835&quot;=&gt;[[&quot;835&quot;, &quot;三重県&quot;, &quot;名張市&quot;, &quot;793&quot;, &quot;三重県&quot;, &quot;伊賀市&quot;], ... ]]}]]</span></code></pre></div>
 
-
-<h3>Graphvizで描画</h3>
-
+<h3 id="graphviz">Graphvizで描画</h3>
 <p>下準備ができたので、Gvizを使ってGraphvizのDOTデータを生成します。各市町村をノードとし、隣接データに基いてノード同士を接続します。コードは次のようになります。</p>
 
-<h4>map_japan.rb</h4>
+<h4 id="mapjapanrb">map_japan.rb</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
@@ -263,17 +265,13 @@
   <span class="k">end</span>
 
   <span class="n">save</span> <span class="ss">:japan</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Graphのブロックの中で、グラフを生成します。globalでグラフ全体、nodesでノードの属性、edgesでエッジの属性をそれぞれ設定します。eachでdataの中の情報にアクセスして、その情報に基づきrouteでノードの繋がりを作り、nodeで各ノードの属性をセットします。</p>
 
 <p>コードを実行します。</p>
 
-<div class="highlight"><pre><code class="bash">%ruby map_japan.rb
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">%ruby map_japan.rb</code></pre></div>
 
 <p>これで、同ディレクトリに<code>japan.dot</code>ファイルが生成されます。自分の環境でDOT生成には1分20秒くらい掛かりました。</p>
 
@@ -289,9 +287,9 @@
 
 <p>ちなみに、ノードの<code>shape:'circle'</code>を指定しないでDOTを生成したときファイルを開けなかったので、antlaboさんの環境でうまくいかなかったのはこれが原因かもしれません（circle指定でgraphviz側の配置演算が簡単になるから？）。</p>
 
-<h3>カラー化</h3>
+<h3 id="section-2">カラー化</h3>
 
-<p>さて、やっぱりモノクログラフは寂しいので、県ごとに色付けしてみます。ここではカラー化に拙作「<a href="https://rubygems.org/gems/colorable" title="colorable | RubyGems.org | your community gem host">colorable</a>」を使います。colorableでは<code>Color.new</code>で色を生成して、<code>Color#next</code>で順次次の色を出力できるのでこれを使って、県ごとにノードの色を作ります。出力フォーマットとしてSVGも指定しましょう。</p>
+<p>さて、やっぱりモノクログラフは寂しいので、県ごとに色付けしてみます。ここではカラー化に拙作「<a href="https://rubygems.org/gems/colorable" title="colorable \| RubyGems.org \| your community gem host">colorable</a>」を使います。colorableでは<code>Color.new</code>で色を生成して、<code>Color#next</code>で順次次の色を出力できるのでこれを使って、県ごとにノードの色を作ります。出力フォーマットとしてSVGも指定しましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
@@ -320,9 +318,7 @@
   <span class="k">end</span>
 
 <span class="o">+</span>  <span class="n">save</span> <span class="ss">:japan</span><span class="p">,</span> <span class="ss">:svg</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>出力です。</p>
 
@@ -338,10 +334,9 @@
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" style="width:200px" />
@@ -352,6 +347,7 @@
 <a href="/books/">
   <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="trivia" style="width:200px" />
 </a></p>
+
 
 
     <div class="ad" id="topAdsense">

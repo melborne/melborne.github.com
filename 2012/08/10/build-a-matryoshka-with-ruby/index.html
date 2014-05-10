@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,30 +179,32 @@
       </script>
     </div>
 
-    <p>前３回(<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack - 最初の一歩">１回</a><a href="http://melborne.github.com/2012/08/06/use-rack-middleware/" title="エラーメッセージから学ぶRack - Middlewareの魔法">２回</a><a href="http://melborne.github.com/2012/08/08/learn-rack-with-lack/" title="Rackをminifyした僅か100行のLackで学ぶRackの中身">３回</a>)の投稿を通して、僕は「<strong>Rackは棚ではなく、マトリョーシカである</strong>」ということを悟りました。つまりRackにおいて、Webアプリは一または複数のmiddlewareに多層的にラップされ、１つの#call呼び出しに対して内側から外側に向けて順に#callの実行を伝搬させるのだと知りました。そして僕はこのような呼び出し伝搬を「<strong>マトリョーシカ呼び出し</strong>」と名付けました。</p>
+    
+<p>前３回(<a href="http://melborne.github.com/2012/08/02/build-your-own-web-framework-with-rack/" title="エラーメッセージから学ぶRack - 最初の一歩">１回</a><a href="http://melborne.github.com/2012/08/06/use-rack-middleware/" title="エラーメッセージから学ぶRack - Middlewareの魔法">２回</a><a href="http://melborne.github.com/2012/08/08/learn-rack-with-lack/" title="Rackをminifyした僅か100行のLackで学ぶRackの中身">３回</a>)の投稿を通して、僕は「<strong>Rackは棚ではなく、マトリョーシカである</strong>」ということを悟りました。つまりRackにおいて、Webアプリは一または複数のmiddlewareに多層的にラップされ、１つの#call呼び出しに対して内側から外側に向けて順に#callの実行を伝搬させるのだと知りました。そして僕はこのような呼び出し伝搬を「<strong>マトリョーシカ呼び出し</strong>」と名付けました。</p>
 
 <p><strong>マトリョーシカ呼び出し</strong>は、僕に惑星からの巨大エネルギー放出を連想させます。</p>
 
-<blockquote><p>巨大な惑星の外縁に与えた小さな力が、それを構成する各層の外側から内側に順に伝搬していき、そのコアに到達する。コアに到達した小さな力はそこで小さな爆発を誘引し、今度は内側から外側に向けてその各層において連鎖的な爆発を順に誘引し、最後には巨大な爆発エネルギーを惑星外に放出するのです。</p></blockquote>
+<blockquote>
+  <p>巨大な惑星の外縁に与えた小さな力が、それを構成する各層の外側から内側に順に伝搬していき、そのコアに到達する。コアに到達した小さな力はそこで小さな爆発を誘引し、今度は内側から外側に向けてその各層において連鎖的な爆発を順に誘引し、最後には巨大な爆発エネルギーを惑星外に放出するのです。</p>
+</blockquote>
 
 <p>僕はすっかりこの<strong>マトリョーシカ呼び出し</strong>の虜になりました。そしてマトリョーシカ呼び出しが、Rackだけではなく、Rubyで広く利用されればいいと願いました。</p>
 
-<blockquote><p>Rubyの世界がマトリョーシカ呼び出しで埋まればいいのに..</p></blockquote>
+<blockquote>
+  <p>Rubyの世界がマトリョーシカ呼び出しで埋まればいいのに..</p>
+</blockquote>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>Rubyにおいてマトリョーシカの生成を支援する<code>Matryoshka</code>クラスを書きました^ ^;</p>
 
 <script src="https://gist.github.com/3312632.js?file=matryoshka.rb"></script>
 
-
-<h2>使い方</h2>
-
+<h2 id="section">使い方</h2>
 <p>Rackの使い方を知っていれば、Matryoshkaの使い方は簡単です。MatryoshkaではRackのWebアプリに相当するものを<code>core</code>と呼び、middlewareに相当するものを<code>figure</code>または<code>doll</code>と呼びます。つまり<code>core</code>は#callを持ったオブジェクト、<code>figure</code>は#callを持ち、#initializeの引数にcoreを取るクラスです。</p>
 
-<h3>文字列操作の例</h3>
-
-<p>次の例は、"Hello, World"の文字列をMatoryoshkaを使って、Reverse, Upcaseする例です。</p>
+<h3 id="section-1">文字列操作の例</h3>
+<p>次の例は、”Hello, World”の文字列をMatoryoshkaを使って、Reverse, Upcaseする例です。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;./matryoshka&quot;</span>
 
@@ -237,23 +239,22 @@
 
 <span class="c1"># &gt;&gt; &quot;Hello, World&quot;</span>
 <span class="c1"># &gt;&gt; &quot;dlroW ,olleH&quot;</span>
-<span class="c1"># &gt;&gt; &quot;DLROW ,OLLEH&quot;</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; &quot;DLROW ,OLLEH&quot;</span></code></pre></div>
 
 <p>手順は次の通りです。</p>
 
-<blockquote><ol>
-<li>coreおよびfigureを用意する。</li>
-<li>coreを引数にMatryoshkaオブジェクトを生成する。</li>
-<li>Matryoshka#setでfigureをセットする（Rackのuseに相当）。</li>
-<li>Matryoshka#callで処理を実行する（Rackのrunに相当）。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>coreおよびfigureを用意する。</li>
+    <li>coreを引数にMatryoshkaオブジェクトを生成する。</li>
+    <li>Matryoshka#setでfigureをセットする（Rackのuseに相当）。</li>
+    <li>Matryoshka#callで処理を実行する（Rackのrunに相当）。</li>
+  </ol>
 </blockquote>
 
 <p>ここではtapで途中経過を出力するようにしています。Rackとの相違点は、figureの呼び出し順位が逆という点です。つまりMatryoshkaでは先に#setにセットしたものの#callが先に実行されます。</p>
 
-<h3>Matryoshka.figure</h3>
+<h3 id="matryoshkafigure">Matryoshka.figure</h3>
 
 <p>Matryoshkaには、figureというfigureの生成を支援するクラスメソッドがあります。これを使って先の例を書き換えると次のようになります。</p>
 
@@ -272,13 +273,11 @@
 
 <span class="c1"># &gt;&gt; &quot;Hello, World&quot;</span>
 <span class="c1"># &gt;&gt; &quot;dlroW ,olleH&quot;</span>
-<span class="c1"># &gt;&gt; &quot;DLROW ,OLLEH&quot;</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; &quot;DLROW ,OLLEH&quot;</span></code></pre></div>
 
 <p>シンプルになりましたね！ここではMatryoshkaの別名M8aを使っています。</p>
 
-<h3>FizzBuzzの例</h3>
+<h3 id="fizzbuzz">FizzBuzzの例</h3>
 
 <p>ではFizzBuzzブーム再来に便乗して、MatryoshkaでFizzBuzzしてみます。</p>
 
@@ -305,15 +304,13 @@
   <span class="nb">print</span> <span class="n">m</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="s2">&quot; &quot;</span>
 <span class="k">end</span>
 
-<span class="c1"># &gt;&gt; 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz </span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz</span></code></pre></div>
 
 <p>ここではfigureの別名<code>doll</code>を使っています。dollを使ってFizz, Buzz, FizzBuzzクラスを定義しています。doll(figure)はブロックを取ることができ、ここに#callメソッドの手続きを書きます。ブロック引数には、前のfigureまたはcoreの#callのレスポンス（n）と#callの引数として渡される環境変数env（e）が渡されます。</p>
 
 <p>ここでのcoreは<code>-&gt;e{ e }</code>です。これはcallの引数をそのまま返します。Matryoshkaオブジェクトの#callつまり一番外側のcallには1〜100を順番に渡していきます。</p>
 
-<h2>配列操作の例</h2>
+<h2 id="section-2">配列操作の例</h2>
 
 <p>次に、配列の値に対する演算をやってみます。</p>
 
@@ -342,9 +339,7 @@
 <span class="c1"># &gt;&gt; [11, 14, 19, 26, 35, 46, 59, 74, 91, 110] :Plus10</span>
 <span class="c1"># &gt;&gt; [121, 196, 361, 676, 1225, 2116, 3481, 5476, 8281, 12100] :Square</span>
 <span class="c1"># &gt;&gt; [60, 98, 180, 338, 612, 1058, 1740, 2738, 4140, 6050] :Div2</span>
-<span class="c1"># &gt;&gt; [70, 108, 190, 348, 622, 1068, 1750, 2748, 4150, 6060] :Plus10</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; [70, 108, 190, 348, 622, 1068, 1750, 2748, 4150, 6060] :Plus10</span></code></pre></div>
 
 <p>この例では生成した演算figureを複数回使っています。各figureは使い回しができるアダプタブルなものということです。</p>
 
@@ -352,7 +347,7 @@
 
 <p>で、何が面白いの？</p>
 
-<p>ええ、それが僕にもさっぱりわからないのです...m(__)m</p>
+<p>ええ、それが僕にもさっぱりわからないのです…m(__)m</p>
 
 <hr />
 
@@ -374,14 +369,17 @@
 
 <p>詳細は以下を参照して下さい。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p>
+</blockquote>
 
 <p>購入ご検討のほどよろしくお願いしますm(__)m</p>
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/マトリョーシカちゃん-こどものとも絵本-ヴェ-ヴィクトロフ/dp/4834011887?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4834011887"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51Ayl%2BC2AeL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/マトリョーシカちゃん-こどものとも絵本-ヴェ-ヴィクトロフ/dp/4834011887?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4834011887">マトリョーシカちゃん(こどものとも絵本)</a> by ヴェ ヴィクトロフ, イ ベロポーリスカヤ, and 加古 里子</p>
+<p><a href="http://www.amazon.co.jp/マトリョーシカちゃん-こどものとも絵本-ヴェ-ヴィクトロフ/dp/4834011887?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4834011887"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51Ayl%2BC2AeL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/マトリョーシカちゃん-こどものとも絵本-ヴェ-ヴィクトロフ/dp/4834011887?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4834011887">マトリョーシカちゃん(こどものとも絵本)</a> by ヴェ ヴィクトロフ, イ ベロポーリスカヤ, and 加古 里子</p>
+
 
 
     <div class="ad" id="topAdsense">

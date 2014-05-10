@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,14 +179,13 @@
       </script>
     </div>
 
-    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
-SchemeとRubyでリストの接続インタフェース<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>
+    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
+SchemeとRubyでリストの接続インタフェース<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>
 としての使用について見ていこうと思います
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です</p>
 
-<h2>リストの接続インタフェースとしての使用</h2>
-
+<h2 id="section">リストの接続インタフェースとしての使用</h2>
 <p>いま構造的に大きく異なった2つの手続きをみていく
 １つは引数としてtreeを取り
 それが奇数である葉の二乗の和を計算する手続きであり
@@ -204,9 +203,7 @@ SchemeとRubyでリストの接続インタフェース<sup id='fnref:1'><a href
  
  <span class="p">(</span><span class="k">define </span><span class="nv">tree</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="p">(</span><span class="nb">list </span><span class="mi">2</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">)</span> <span class="mi">5</span> <span class="p">(</span><span class="nb">list </span><span class="mi">6</span> <span class="mi">7</span><span class="p">))))</span>
  <span class="p">(</span><span class="nf">sum_odd_squares</span> <span class="nv">tree</span><span class="p">)</span>
- <span class="mi">84</span>
-</code></pre></div>
-
+ <span class="mi">84</span></code></pre></div>
 
 <p>treeをcarダウンおよびcdrダウンしていき
 その葉が奇数であるときにその二乗を取り加算する</p>
@@ -224,24 +221,24 @@ SchemeとRubyでリストの接続インタフェース<sup id='fnref:1'><a href
         <span class="p">(</span><span class="nf">next</span> <span class="mi">0</span><span class="p">))</span>
  
  <span class="p">(</span><span class="nf">even_fibs</span> <span class="mi">20</span><span class="p">)</span>
- <span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">34</span> <span class="mi">144</span> <span class="mi">610</span> <span class="mi">2584</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">34</span> <span class="mi">144</span> <span class="mi">610</span> <span class="mi">2584</span><span class="p">)</span></code></pre></div>
 
 <p>k番目のフィボナッチ数を求める手続きをfib(k)とし
 その結果が偶数であるときにconsで
 選択されたフィボナッチ数の列を構築していく</p>
 
-<h2>手続きの部品化</h2>
-
+<h2 id="section-1">手続きの部品化</h2>
 <p>これらの手続きは構造的には大きく異なっているが
 それらの計算のより抽象的なレベルでは類似性がある</p>
 
-<p>つまり
--葉を数え上げる <-> 整数をnまで数え上げる(enumarate)
--奇数のものを選ぶ <-> 偶数のものを選ぶ(filter)
--選ばれたものを二乗する <-> 各整数のフィボナッチ数を計算する(map)
--結果を足し合わせていく <-> 結果をconsしていく(accumurate)</p>
+<p>つまり</p>
+
+<ul>
+  <li>葉を数え上げる &lt;-&gt; 整数をnまで数え上げる(enumarate)</li>
+  <li>奇数のものを選ぶ &lt;-&gt; 偶数のものを選ぶ(filter)</li>
+  <li>選ばれたものを二乗する &lt;-&gt; 各整数のフィボナッチ数を計算する(map)</li>
+  <li>結果を足し合わせていく &lt;-&gt; 結果をconsしていく(accumurate)</li>
+</ul>
 
 <p>これら各手続きを抽象化された部品として構築し
 リストをこれらの接続インタフェースとして使用することによって
@@ -252,25 +249,21 @@ SchemeとRubyでリストの接続インタフェース<sup id='fnref:1'><a href
 <p>このことをこれから示そう
 まず最初の標準化部品としてmap手続きを書こう</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">items</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">items</span><span class="p">)</span>
         <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
              <span class="o">`</span><span class="p">()</span>
          <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">proc</span> <span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">))</span>
-                    <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span>
-</code></pre></div>
-
+                    <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span></code></pre></div>
 
 <p>これはリストの二乗計算にも
 フィボナッチ数演算にも使え
 結果はリストで返される</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nb">map </span><span class="nv">square</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="nb">map </span><span class="nv">square</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">))</span>
  <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span> <span class="mi">25</span><span class="p">)</span>
  
  <span class="p">(</span><span class="nb">map </span><span class="nv">fib</span> <span class="p">(</span><span class="nb">list </span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span><span class="p">))</span>
- <span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">8</span> <span class="mi">13</span> <span class="mi">21</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">8</span> <span class="mi">13</span> <span class="mi">21</span><span class="p">)</span></code></pre></div>
 
 <p>次に条件を満たした要素だけを選び出す
 filter手続きを書こう</p>
@@ -285,9 +278,7 @@ filter手続きを書こう</p>
  <span class="p">(</span><span class="nf">p</span> <span class="p">(</span><span class="nf">filter</span> <span class="nv">odd?</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
  <span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
  <span class="p">(</span><span class="nf">p</span> <span class="p">(</span><span class="nf">filter</span> <span class="nv">even?</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
- <span class="p">(</span><span class="mi">2</span> <span class="mi">4</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">2</span> <span class="mi">4</span><span class="p">)</span></code></pre></div>
 
 <p>predicateの条件を満たした要素だけの
 新たなリストをconsで作成していく</p>
@@ -295,7 +286,7 @@ filter手続きを書こう</p>
 <p>結果を順次継ぎ足していく
 accumurate手続きは以下のようになる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">op</span> <span class="nv">initial</span> <span class="nv">sequence</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">op</span> <span class="nv">initial</span> <span class="nv">sequence</span><span class="p">)</span>
          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">sequence</span><span class="p">)</span>
                <span class="nv">initial</span>
               <span class="p">(</span><span class="nf">op</span> <span class="p">(</span><span class="nb">car </span><span class="nv">sequence</span><span class="p">)</span>
@@ -306,9 +297,7 @@ accumurate手続きは以下のようになる</p>
  <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">*</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">))</span>
  <span class="mi">120</span>
  <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">cons</span> <span class="o">`</span><span class="p">()</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">))</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)</span></code></pre></div>
 
 <p>引数opに目的の演算を渡すことによって
 それに沿った継ぎ足しが行われる</p>
@@ -323,30 +312,25 @@ accumurate手続きは以下のようになる</p>
                                           <span class="p">(</span><span class="nf">enumerate_tree</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">tree</span><span class="p">))))))</span>
  
  <span class="p">(</span><span class="nf">enumerate_tree</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="p">(</span><span class="nb">list </span><span class="mi">2</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span> <span class="mi">5</span><span class="p">))</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)</span></code></pre></div>
 
 <p>整数をnまで数え上げるenumarate_intervalは以下のようになる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">enumerate_interval</span> <span class="nv">low</span> <span class="nv">high</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">enumerate_interval</span> <span class="nv">low</span> <span class="nv">high</span><span class="p">)</span>
          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">low</span> <span class="nv">high</span><span class="p">)</span>
               <span class="o">`</span><span class="p">()</span>
               <span class="p">(</span><span class="nb">cons </span><span class="nv">low</span> <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">low</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">high</span><span class="p">))))</span>
  
  <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">2</span> <span class="mi">7</span><span class="p">)</span>
- <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span><span class="p">)</span>
-</code></pre></div>
+ <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span><span class="p">)</span></code></pre></div>
 
-
-<h2>部品の接続</h2>
-
+<h2 id="section-2">部品の接続</h2>
 <p>これで標準化部品が揃ったので
 これらを使って
 最初のsum_odd_squaresとeven_fibを
 定義し直そう</p>
 
-<div class="highlight"><pre><code class="scheme">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum_odd_squares</span> <span class="nv">tree</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum_odd_squares</span> <span class="nv">tree</span><span class="p">)</span>
         <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">+</span>
              <span class="mi">0</span>
              <span class="p">(</span><span class="nb">map </span><span class="nv">square</span>
@@ -365,29 +349,24 @@ accumurate手続きは以下のようになる</p>
                     <span class="p">(</span><span class="nb">map </span><span class="nv">fib</span>
                            <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">0</span> <span class="nv">n</span><span class="p">)))))</span>
   <span class="p">(</span><span class="nf">even_fibs</span> <span class="mi">20</span><span class="p">)</span>
-  <span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">34</span> <span class="mi">144</span> <span class="mi">610</span> <span class="mi">2584</span><span class="p">)</span>
-</code></pre></div>
-
+  <span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">34</span> <span class="mi">144</span> <span class="mi">610</span> <span class="mi">2584</span><span class="p">)</span></code></pre></div>
 
 <p>このような標準化部品のライブラリがあれば
 例えば個人レコードから最高収入のプログラマの給料を抽出する
 といった処理のプログラムを簡単に書くことができる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">salary_of_highest_paid_programmer</span> <span class="nv">records</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">salary_of_highest_paid_programmer</span> <span class="nv">records</span><span class="p">)</span>
          <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">max</span>
                   <span class="mi">0</span>
                   <span class="p">(</span><span class="nb">map </span><span class="nv">salary</span>
-                          <span class="p">(</span><span class="nf">filter</span> <span class="nv">programmer?</span> <span class="nv">records</span><span class="p">))))</span>
-</code></pre></div>
+                          <span class="p">(</span><span class="nf">filter</span> <span class="nv">programmer?</span> <span class="nv">records</span><span class="p">))))</span></code></pre></div>
 
-
-<h2>Rubyでの実装</h2>
-
+<h2 id="ruby">Rubyでの実装</h2>
 <p>最初に検討される2つの手続き
 sum_odd_squaresとeven_fibsをRubyで書いてみる
-なおconsおよびlistの定義は前回を参照のこと<sup id='fnref:8'><a href='#fn:8' rel='footnote'>8</a></sup></p>
+なおconsおよびlistの定義は前回を参照のこと<sup id="fnref:8"><a href="#fn:8" rel="footnote">8</a></sup></p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">sum_odd_squares</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">sum_odd_squares</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
    <span class="k">case</span>
    <span class="k">when</span> <span class="n">tree</span><span class="o">.</span><span class="n">nil?</span> <span class="k">then</span> <span class="mi">0</span>
    <span class="k">when</span> <span class="o">!</span><span class="n">pair?</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
@@ -429,13 +408,11 @@ sum_odd_squaresとeven_fibsをRubyで書いてみる
    <span class="n">_next</span><span class="o">.</span><span class="n">call</span> <span class="mi">0</span>
  <span class="k">end</span>
  
- <span class="nb">p</span> <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; &quot;0 2 8 34 144 610 2584&quot;</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; &quot;0 2 8 34 144 610 2584&quot;</span></code></pre></div>
 
 <p>Rubyではmapメソッドは以下のようになる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">items</span><span class="o">.</span><span class="n">nil?</span>
      <span class="kp">nil</span>
    <span class="k">else</span>
@@ -444,16 +421,14 @@ sum_odd_squaresとeven_fibsをRubyで書いてみる
  <span class="k">end</span>
  
  <span class="n">tree</span> <span class="o">=</span> <span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span>
- <span class="nb">p</span> <span class="n">map</span><span class="p">(</span><span class="ss">:square</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1 4 9 16 25&quot;</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">map</span><span class="p">(</span><span class="ss">:square</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1 4 9 16 25&quot;</span></code></pre></div>
 
 <p>procへの手続きの引き渡しはシンボルで行い
 これをsendメソッドに渡すことによって呼び出す</p>
 
 <p>filterメソッドは以下のようになる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span>
    <span class="k">case</span>
    <span class="k">when</span> <span class="n">sequence</span><span class="o">.</span><span class="n">nil?</span> <span class="k">then</span> <span class="kp">nil</span>
    <span class="k">when</span> <span class="p">(</span><span class="n">car</span> <span class="n">sequence</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">predicate</span><span class="p">)</span>
@@ -463,13 +438,11 @@ sum_odd_squaresとeven_fibsをRubyで書いてみる
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="nb">p</span> <span class="n">filter</span><span class="p">(</span><span class="ss">:odd?</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; &quot;1 3 5&quot;</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">filter</span><span class="p">(</span><span class="ss">:odd?</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; &quot;1 3 5&quot;</span></code></pre></div>
 
 <p>accumurateメソッドは以下のようになる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">accumulate</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">accumulate</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">sequence</span><span class="o">.</span><span class="n">nil?</span>
      <span class="n">initial</span>
    <span class="k">else</span>
@@ -485,9 +458,7 @@ sum_odd_squaresとeven_fibsをRubyで書いてみる
  
  <span class="n">accumulate</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; 15</span>
  <span class="n">accumulate</span><span class="p">(</span><span class="ss">:*</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; 120</span>
- <span class="nb">p</span> <span class="n">accumulate</span><span class="p">(</span><span class="ss">:cons</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; &quot;1 2 3 4 5&quot;</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">accumulate</span><span class="p">(</span><span class="ss">:cons</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="c1"># =&gt; &quot;1 2 3 4 5&quot;</span></code></pre></div>
 
 <p>ここではcons手続きを
  +や*メソッドと同様に扱えるようにするため
@@ -495,7 +466,7 @@ Integerクラスのインスタンスメソッドとして定義している</p>
 
 <p>次にenumarate_treeとenumarate_intervalをそれぞれ定義する</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">list1</span><span class="o">.</span><span class="n">nil?</span>
      <span class="n">list2</span>
    <span class="k">else</span>
@@ -522,14 +493,12 @@ Integerクラスのインスタンスメソッドとして定義している</p>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="nb">p</span> <span class="n">enumerate_interval</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span> <span class="c1"># =&gt; &quot;2 3 4 5 6 7&quot;</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="n">enumerate_interval</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span> <span class="c1"># =&gt; &quot;2 3 4 5 6 7&quot;</span></code></pre></div>
 
 <p>これで標準化部品が揃ったので
 これらを使って先のsum_odd_squaresとeven_fibsを書いてみる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">sum_odd_squares</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">sum_odd_squares</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
    <span class="n">accumulate</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="ss">:square</span><span class="p">,</span> <span class="n">filter</span><span class="p">(</span><span class="ss">:odd?</span><span class="p">,</span> <span class="n">enumarate_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">))))</span>
  <span class="k">end</span>
  
@@ -540,17 +509,14 @@ Integerクラスのインスタンスメソッドとして定義している</p>
    <span class="n">accumulate</span><span class="p">(</span><span class="ss">:cons</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">filter</span><span class="p">(</span><span class="ss">:even?</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="ss">:fib</span><span class="p">,</span> <span class="p">(</span><span class="n">enumerate_interval</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)))))</span>
  <span class="k">end</span>
  
- <span class="nb">p</span> <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; &quot;0 2 8 34 144 610 2584&quot;</span>
-</code></pre></div>
+ <span class="nb">p</span> <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; &quot;0 2 8 34 144 610 2584&quot;</span></code></pre></div>
 
-
-<h2>RubyでArrayオブジェクトを接続インタフェースとした実装</h2>
-
+<h2 id="rubyarray">RubyでArrayオブジェクトを接続インタフェースとした実装</h2>
 <p>Rubyには上記の各手続きを規定したEnumerableモジュールがあり
 リストの実装に適したArrayクラスで利用できるようになっているので
 これを継承した例を最後にかいてみる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
  <span class="k">end</span>
  
  <span class="n">tree</span> <span class="o">=</span> <span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5]</span>
@@ -587,9 +553,7 @@ Integerクラスのインスタンスメソッドとして定義している</p>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; [0, 2, 8, 34, 144, 610, 2584]</span>
-</code></pre></div>
-
+ <span class="n">even_fibs</span> <span class="mi">20</span> <span class="c1"># =&gt; [0, 2, 8, 34, 144, 610, 2584]</span></code></pre></div>
 
 <p>Schemeにおける接続インタフェースでは処理の流れは
 括弧でカスケードされて右から左へいくのに対し
@@ -597,19 +561,17 @@ Rubyのオブジェクトを使った接続インタフェースでは
 左から右へ順次流れていくので
 より構造の把握がしやすい</p>
 
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
 
 <p>ジェラルド・ジェイ サスマン, ジュリー サスマン, and ハロルド エイブルソン</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>conventional interface:訳書では公認インタフェースとなっています <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>pはdef p(x); x.join(" ").chop endで定義している <a href='#fnref:2' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">conventional interface:訳書では公認インタフェースとなっています <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">pはdef p(x); x.join(" ").chop endで定義している <a href="#fnref:2" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

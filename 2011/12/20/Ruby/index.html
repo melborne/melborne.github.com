@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -185,12 +185,13 @@
 
 <p>内容は次のようなデータがあって、</p>
 
-<table border=1>
+<div>
+<table border="1">
 <tr>
   <th>code</th>
   <th>name</th>
   <th>value</th>
-</th>
+</tr>
 <tr>
   <td>A01</td>
   <td>hoge</td>
@@ -217,15 +218,16 @@
   <td>500</td>
 </tr>
 </table>
-
+</div>
 
 <p>次のような集計の結果を得たいというものだよ。</p>
 
-<table border=1>
+<div>
+<table border="1">
 <tr>
   <th>code</th>
   <th>value</th>
-</th>
+</tr>
 <tr>
   <td>A01</td>
   <td>300</td>
@@ -239,7 +241,7 @@
   <td>900</td>
 </tr>
 </table>
-
+</div>
 
 <p>僕はRubyしか知らないからRubyでやってみるけど、RubyにはEnumerable#injectがあるから集計処理は簡単にできるよ。ここではデータの読み込みからやってみることにするよ。先のデータがテキストファイルにあると仮定するよ。</p>
 
@@ -249,42 +251,35 @@
   <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:strip</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/^[\d,]+$/</span><span class="p">)</span> <span class="p">?</span> <span class="n">d</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span> <span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">intern</span> <span class="p">}</span>
 <span class="k">end</span>
 <span class="n">label</span> <span class="c1"># =&gt; [:code, :name, :value]</span>
-<span class="n">data</span> <span class="c1"># =&gt; [[:A01, :hoge, 100], [:A01, :piyo, 200], [:A02, :hoge, 300], [:A03, :hoge, 400], [:A03, :piyo, 500]]</span>
-</code></pre></div>
-
+<span class="n">data</span> <span class="c1"># =&gt; [[:A01, :hoge, 100], [:A01, :piyo, 200], [:A02, :hoge, 300], [:A03, :hoge, 400], [:A03, :piyo, 500]]</span></code></pre></div>
 
 <p>ここでは次のような処理をしているよ。</p>
 
 <ol>
-<li>引数として渡されるデータファイルをARGFに読み込む。</li>
-<li>データの各ラインに対して、splitでデータを分ける。</li>
-<li>データが数値文字なら数値に変換し、それ以外ならシンボルに変換する。</li>
-<li>先頭行の結果をlabelに、残りをdataに代入する。</li>
+  <li>引数として渡されるデータファイルをARGFに読み込む。</li>
+  <li>データの各ラインに対して、splitでデータを分ける。</li>
+  <li>データが数値文字なら数値に変換し、それ以外ならシンボルに変換する。</li>
+  <li>先頭行の結果をlabelに、残りをdataに代入する。</li>
 </ol>
-
 
 <p>次にこの配列データをオブジェクト化するよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="no">Product</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">label</span><span class="p">)</span>
 <span class="n">products</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="no">Product</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">products</span> <span class="c1"># =&gt; [#&lt;struct Product code=:A01, name=:hoge, value=100&gt;, #&lt;struct Product code=:A01, name=:piyo, value=200&gt;, #&lt;struct Product code=:A02, name=:hoge, value=300&gt;, #&lt;struct Product code=:A03, name=:hoge, value=400&gt;, #&lt;struct Product code=:A03, name=:piyo, value=500&gt;]</span>
-</code></pre></div>
-
+<span class="n">products</span> <span class="c1"># =&gt; [#&lt;struct Product code=:A01, name=:hoge, value=100&gt;, #&lt;struct Product code=:A01, name=:piyo, value=200&gt;, #&lt;struct Product code=:A02, name=:hoge, value=300&gt;, #&lt;struct Product code=:A03, name=:hoge, value=400&gt;, #&lt;struct Product code=:A03, name=:piyo, value=500&gt;]</span></code></pre></div>
 
 <p>属性だけのオブジェクトを作るのはStructが便利だね。</p>
 
 <p>そして集計するよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">products</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">pr</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">pr</span><span class="o">.</span><span class="n">code</span><span class="o">]</span> <span class="o">+=</span> <span class="n">pr</span><span class="o">.</span><span class="n">value</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
-<span class="c1"># &gt;&gt; {:A01=&gt;300, :A02=&gt;300, :A03=&gt;900}</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; {:A01=&gt;300, :A02=&gt;300, :A03=&gt;900}</span></code></pre></div>
 
 <p>これはもう見慣れたコードだよね。ハッシュは0で初期化されるようにして、それからinjectはハッシュhを返すように。</p>
 
 <p>コードをまとめると次のようになるよ。</p>
 
-<div><script src='https://gist.github.com/1499895.js?file=account.rb'></script>
+<div><script src="https://gist.github.com/1499895.js?file=account.rb"></script>
 <noscript><pre><code># encoding: UTF-8
 
 label, *data = ARGF.map do |line|
@@ -301,17 +296,17 @@ __END__
 % ruby account.rb data
 
 --data--
-code    name    value
-A01 hoge    100
-A01 piyo    200
-A02 hoge    300
-A03 hoge    400
-A03 piyo    500</code></pre></noscript></div>
-
+code	name	value
+A01	hoge	100
+A01	piyo	200
+A02	hoge	300
+A03	hoge	400
+A03	piyo	500</code></pre></noscript></div>
 
 <p>このコードはわりと汎用性があるんだよ。たとえば次のようなデータに適用する場合、</p>
 
-<table border=1>
+<div>
+<table border="1">
   <tr><th>date</th><th>category</th><th>sub</th><th>expense</th></tr>
   <tr><td>2011/1</td><td>食費</td><td>肉類</td><td>4,289</td></tr>
   <tr><td>2011/1</td><td>食費</td><td>魚介類</td><td>4,036</td></tr>
@@ -342,23 +337,20 @@ A03 piyo    500</code></pre></noscript></div>
   <tr><td>2011/2</td><td>医療費</td><td>治療代</td><td>1,988</td></tr>
   <tr><td>2011/2</td><td>医療費</td><td>薬代</td><td>650</td></tr>
 </table>
-
+</div>
 
 <p>集計コードのラベルだけを変えればいいんだ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">products</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">pr</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">pr</span><span class="o">.</span><span class="n">category</span><span class="o">]</span> <span class="o">+=</span> <span class="n">pr</span><span class="o">.</span><span class="n">expense</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
-<span class="c1"># &gt;&gt; {:食費=&gt;14954, :光熱費=&gt;30451, :娯楽費=&gt;15814, :交通費=&gt;5642, :医療費=&gt;4496}</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; {:食費=&gt;14954, :光熱費=&gt;30451, :娯楽費=&gt;15814, :交通費=&gt;5642, :医療費=&gt;4496}</span></code></pre></div>
 
 <p>月毎の支出を見たい場合はこうするよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">products</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">pr</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">pr</span><span class="o">.</span><span class="n">date</span><span class="o">]</span> <span class="o">+=</span> <span class="n">pr</span><span class="o">.</span><span class="n">expense</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
-<span class="c1"># &gt;&gt; {:&quot;2011/1&quot;=&gt;37872, :&quot;2011/2&quot;=&gt;33485}</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; {:&quot;2011/1&quot;=&gt;37872, :&quot;2011/2&quot;=&gt;33485}</span></code></pre></div>
 
 <p>Rubyは便利だね!</p>
+
 
 
     <div class="ad" id="topAdsense">

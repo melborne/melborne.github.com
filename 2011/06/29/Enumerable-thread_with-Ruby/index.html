@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -183,11 +183,11 @@
 
 <p><a href="/2011/06/28/sleep-sort-running-sort/">sleep sortに対抗してrunning sortだ！（失敗に終わる編）</a></p>
 
-<p>それらのアルゴリズムではRubyのThreadを使ったけど、Threadってなんか毎回書き方を忘れるよ。引数の受け渡し方とかjoinとか、もっと簡単にスレッディングしたいのにねぇ...</p>
+<p>それらのアルゴリズムではRubyのThreadを使ったけど、Threadってなんか毎回書き方を忘れるよ。引数の受け渡し方とかjoinとか、もっと簡単にスレッディングしたいのにねぇ…</p>
 
 <p>それでEnumerableなオブジェクトに対して、渡したブロックを並列処理してくれるメソッドがあれば便利かなと考えたんだよ。それならスレッドの実装のことを忘れて、対象の処理のことだけ考えればいいからね。</p>
 
-<p>で、Enumerable#thread_withというメソッドを書いてみたよ<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<p>で、Enumerable#thread_withというメソッドを書いてみたよ<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">thread_with</span>
@@ -199,23 +199,17 @@
     <span class="k">end</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
     <span class="n">mem</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Enumerable#thread_withがあればsleep sortは簡単だよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
-</code></pre></div>
-
+<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
 
 <p>効率を良くしたければ、次のようにすればいいし。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="no">Math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
-</code></pre></div>
-
+<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="no">Math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
 
 <p>もう少し真面目な例を挙げるね。</p>
 
@@ -236,19 +230,15 @@
 <span class="c1"># &gt;&gt; </span>
 <span class="c1"># &gt;&gt;        user     system      total        real</span>
 <span class="c1"># &gt;&gt;    0.040000   0.010000   0.050000 (  0.756259)</span>
-<span class="c1"># &gt;&gt;    0.020000   0.010000   0.030000 (  0.242218)</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;    0.020000   0.010000   0.030000 (  0.242218)</span></code></pre></div>
 
 <p>なんかThreadが身近になった感じがしない？</p>
 
-<p>ただ先の実装には１つ問題があるよ。それはもとの配列の順位がthread_withの返り値として保証されないことだよ<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+<p>ただ先の実装には１つ問題があるよ。それはもとの配列の順位がthread_withの返り値として保証されないことだよ<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; false</span>
-</code></pre></div>
-
+<span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; false</span></code></pre></div>
 
 <p>でも以下のようにすれば一応もとの順位は保証できるんだ。</p>
 
@@ -266,21 +256,17 @@
 
 <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; true</span>
-</code></pre></div>
-
+<span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p>つまりthread_withが引数を取るようにしてtrueを渡せば、最後にもとの配列の順位にソートしてくれる。</p>
 
 <p>まあ、たいしたネタじゃなかったね..</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>まあThreadの使い方そのまんまなんだけど.. <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>まあそれがスレッドなんだけど <a href='#fnref:2' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">まあThreadの使い方そのまんまなんだけど.. <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">まあそれがスレッドなんだけど <a href="#fnref:2" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

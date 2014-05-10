@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -185,11 +185,10 @@
 
 <p>Procオブジェクトに関し試してみたことを書いてみます。きっと勘違いがあるので指摘してくれるとうれしいです。</p>
 
-<h2>あるときはSingletonメソッド・ジェネレータになる</h2>
-
+<h2 id="singleton">あるときはSingletonメソッド・ジェネレータになる</h2>
 <p>Rubyのブロックはメソッドと同じように手続きの塊を作り、それはlambdaでオブジェクト(Procオブジェクト)化できる。このときProcオブジェクトは外側の変数の参照を自身の状態として取りこめる。ブロック内の手続きは、Proc#callメソッドを呼ぶことによって実行される。こんな感じだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
  <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
@@ -209,15 +208,13 @@
  
  <span class="c1"># &gt;&gt; yukio</span>
  <span class="c1"># &gt;&gt; minshu</span>
- <span class="c1"># &gt;&gt; Hello, I&#39;m yukio of minshu</span>
-</code></pre></div>
-
+ <span class="c1"># &gt;&gt; Hello, I&#39;m yukio of minshu</span></code></pre></div>
 
 <p>外側の変数(name,party)の参照先が変わると、それに合わせてProcオブジェクト(pm)の状態も変わる。</p>
 
 <p>pmはオブジェクトだからユーザがメソッドを追加してもいい。こんなときsingletonクラス(特異クラス)が使える。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
  <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
@@ -244,15 +241,13 @@
  <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
  <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
  <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span>
-</code></pre></div>
-
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span></code></pre></div>
 
 <p>例では先の例のブロック内の各文をメソッドで呼べるようにしている。singletonクラスの参照オブジェクトをpmとしメソッドを定義して、Proc#callでinitメソッドが実行されるようにする。</p>
 
 <p>ただ上のコードはブロックの内部で変数pmを参照しているので、pmの参照先が変わると問題が起きる。ブロックの引数として対象のオブジェクトを渡して問題を解決しよう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
  <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="o">|</span>
@@ -279,15 +274,13 @@
  <span class="n">pm</span><span class="o">[</span><span class="n">pm</span><span class="o">]</span>
  <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
  <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span>
-</code></pre></div>
-
+ <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span></code></pre></div>
 
 <p>ブロックを実行するpm[pm]（これはpm.call(pm)と等価）のところがちょっと変な感じがする。</p>
 
 <p>別のオブジェクトをブロック引数として渡したらどうなるんだろう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Person</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
  <span class="k">end</span>
  <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
  <span class="nb">name</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
@@ -296,15 +289,13 @@
  <span class="n">pm</span><span class="o">[</span><span class="n">me</span><span class="o">]</span>
  <span class="n">me</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
  <span class="n">me</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;N/A&quot;</span>
- <span class="n">me</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m Charlie of N/A&quot;</span>
-</code></pre></div>
-
+ <span class="n">me</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m Charlie of N/A&quot;</span></code></pre></div>
 
 <p>Personクラスのオブジェクトmeに先のメソッドが追加された。</p>
 
 <p>そうか、pmオブジェクトは任意のオブジェクトにsingletonメソッドを追加するジェネレータとして機能するんだ。じゃあもっとそれっぽく作ってみよう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">singleton_generator</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">singleton_generator</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="o">|</span>
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
      <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
        <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
@@ -330,15 +321,13 @@
  
  <span class="nb">puts</span> <span class="s2">&quot;44th President of the United States is </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">mname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">lname</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">party</span><span class="si">}</span><span class="s2"> party.&quot;</span>
  
-  <span class="c1">#&gt;&gt; 44th President of the United States is Barack Hussein Obama of Democratic party.</span>
-</code></pre></div>
-
+  <span class="c1">#&gt;&gt; 44th President of the United States is Barack Hussein Obama of Democratic party.</span></code></pre></div>
 
 <p>singletonメソッドを生成するsingleton_generatorオブジェクトにブロック引数として対象のオブジェクトと、任意のプロパティをハッシュで渡せるようにした。この例ではPersonクラスのオブジェクトuspに対してmnameとpartyメソッドを追加する例を示した。これでsingletonメソッド・ジェネレーターの完成だ！</p>
 
 <p>もっとも同じことは別にメソッドでもできるので、意味はなさそうだけど…</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">singleton_generator</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">singleton_generator</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
      <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
        <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
@@ -350,19 +339,16 @@
      <span class="k">end</span>
    <span class="k">end</span>
    <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
- <span class="k">end</span>
-</code></pre></div>
+ <span class="k">end</span></code></pre></div>
 
-
-<h2>あるときは再帰オブジェクトになる</h2>
-
+<h2 id="section">あるときは再帰オブジェクトになる</h2>
 <p>以下のブログでY-Combinatorを使って再帰的な関数を手続きオブジェクトにするやり方が書かれている。</p>
 
 <p><a href="http://rubyist.g.hatena.ne.jp/muscovyduck/20060524/p1">「再帰的な関数」を手続きオブジェクトにする - バリケンのRuby日記 - Rubyist</a></p>
 
 <p>解説はとても丁寧になされていてとてもためになる。でもY-Combinatorについてはどうにも僕の頭がついていってくれないので、別の方法がないか考えてみた。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -370,13 +356,11 @@
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>ここでブロック内の変数を無くすために、手続きオブジェクトをブロック引数として渡すようにする。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -384,9 +368,7 @@
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>うまくいった。でもfactを呼ぶときfactを引数で渡すのは格好悪い。</p>
 
@@ -394,7 +376,7 @@
 
 <p>これが使えるかもしれない。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -403,15 +385,13 @@
  <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
- <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>factオブジェクトをカリー化し、最初にブロック引数としてfactオブジェクトだけを渡してfact_makerオブジェクトを作る。こうすればfact_makerに対する引数は1つだけになって目的は達成できる。</p>
 
 <p>でもまだブロック内のelse節でProcオブジェクトを渡してる。これも消したい。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -420,15 +400,13 @@
  <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
- <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; TypeError:Proc can&#39;t be coerced into Fixnum</span>
-</code></pre></div>
-
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; TypeError:Proc can&#39;t be coerced into Fixnum</span></code></pre></div>
 
 <p>もちろんエラーが出る。エラーがでないようにするためにはブロックに渡す引数は、factオブジェクトじゃなくて既にfactを渡して生成したProcオブジェクトつまりfact_makerじゃなくちゃいけない。</p>
 
 <p>そこでバリケンさんにあったアイディアをもらって、fact_makerを次のようにしてみる。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -440,13 +418,11 @@
    <span class="n">fact</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
  <span class="k">end</span>
  
- <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>うまくいった。さらにfactにつけたcurryをfact_maker内に移動する。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
@@ -458,26 +434,22 @@
    <span class="n">fact</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
  <span class="k">end</span>
  
- <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>fact_makerをY-Combinatorのようにメソッドにしてみる。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span>
  
  <span class="k">def</span> <span class="nf">my_combinator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
    <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
  <span class="k">end</span>
  
  <span class="n">fact</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
- <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span>
-</code></pre></div>
-
+ <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>フィボナッチでも試してみる。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">fib</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fib</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
    <span class="k">case</span> <span class="n">n</span>
    <span class="k">when</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">0</span>
    <span class="k">when</span> <span class="mi">1</span> <span class="k">then</span> <span class="mi">1</span>
@@ -490,13 +462,11 @@
  <span class="k">end</span>
  
  <span class="n">fib</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fib</span><span class="p">)</span>
- <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span>
-</code></pre></div>
-
+ <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span></code></pre></div>
 
 <p>ここまで来たらProcのメソッドにもしてみる。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Proc</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Proc</span>
    <span class="k">def</span> <span class="nf">recur</span>
      <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
@@ -504,19 +474,16 @@
  <span class="n">fact</span> <span class="o">=</span> <span class="n">fact</span><span class="o">.</span><span class="n">recur</span>
  <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800 </span>
  <span class="n">fib</span> <span class="o">=</span> <span class="n">fib</span><span class="o">.</span><span class="n">recur</span>
- <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span>
-</code></pre></div>
-
+ <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span></code></pre></div>
 
 <p>トンチンカンなことやってないか心配だ…</p>
 
-<h2>あるときはcaseの判定ラベルになる</h2>
-
+<h2 id="case">あるときはcaseの判定ラベルになる</h2>
 <p>Ruby1.9ではProc#callの別名としてProc#===が用意されている。それを用いた楽しいサンプルをDave Thomasさんのブログで見つけた。</p>
 
 <p><a href="http://pragdave.blogs.pragprog.com/pragdave/2008/09/fun-with-procs.html">PragDave: Fun with Procs in Ruby 1.9</a></p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">is_weekday</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">day_of_week</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="n">time</span><span class="o">.</span><span class="n">wday</span> <span class="o">==</span> <span class="n">day_of_week</span><span class="p">}</span><span class="o">.</span><span class="n">curry</span>  
+<div class="highlight"><pre><code class="ruby"><span class="n">is_weekday</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">day_of_week</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="n">time</span><span class="o">.</span><span class="n">wday</span> <span class="o">==</span> <span class="n">day_of_week</span><span class="p">}</span><span class="o">.</span><span class="n">curry</span>  
    
  <span class="n">sunday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>  
  <span class="n">monday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>  
@@ -533,15 +500,13 @@
    <span class="nb">puts</span> <span class="s2">&quot;Work&quot;</span>  
  <span class="k">when</span> <span class="n">saturday</span>  
    <span class="nb">puts</span> <span class="s2">&quot;chores&quot;</span>  
- <span class="k">end</span>  
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>sunday, monday..はis_weekdayに曜日数値だけを適用して生成されたProcオブジェクトだ。これをcaseの条件におくと、Proc#===つまりcallメソッドが呼ばれて、Time.nowを引数としてis_weekdayのブロックが評価される。そしてブロックの評価結果はcaseの条件になる。</p>
 
 <p>case式において比較条件の詳細が隠ぺいされていて簡潔だ。自分でも何か書いてみよう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:height</span><span class="p">,</span> <span class="ss">:weight</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:height</span><span class="p">,</span> <span class="ss">:weight</span><span class="p">)</span>
  
  <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;ichiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">75</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
  <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;jiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">65</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
@@ -574,9 +539,7 @@
  
  <span class="c1">#&gt;&gt; {&quot;ichiro&quot;=&gt;&quot;You are in lower&quot;}</span>
  <span class="c1">#&gt;&gt; {&quot;jiro&quot;=&gt;&quot;Problem!&quot;}</span>
- <span class="c1">#&gt;&gt; {&quot;saburo&quot;=&gt;&quot;You are great!&quot;}</span>
-</code></pre></div>
-
+ <span class="c1">#&gt;&gt; {&quot;saburo&quot;=&gt;&quot;You are great!&quot;}</span></code></pre></div>
 
 <p>upper,middle,lowerはBMIオブジェクトにそれぞれの許容範囲の最大値、最小値を部分適用したProcオブジェクトだ。それらはcase式において各testeeの身長と体重を参照して各許容範囲と比較し結果を返す。</p>
 
@@ -585,6 +548,7 @@
 <p>こんなふうにProcオブジェクトはその使い方によってさまざまな形に化ける。</p>
 
 <p>そう、RubyのProcオブジェクトは状況に応じて七変化するキューティーハニーだったんだ!</p>
+
 
 
     <div class="ad" id="topAdsense">

@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -185,12 +185,10 @@
 
 <p>もしあなたがRubyを使っていて、JavaScriptのことはよく知らないけれども、HTML5のCanvasに興味がでてきて、その成果物をネットで簡単に公開できればうれしいかも、と考えているのなら、以下の記事を読む価値があるかもしれません。もちろん何の保証もありませんが..</p>
 
-<h2>Canvasを使ったWebアプリケーションの構築</h2>
-
+<h2 id="canvasweb">Canvasを使ったWebアプリケーションの構築</h2>
 <p>この記事は先のリンクで示した、接近する時計のWebアプリケーションを構築する手順を書いています。HTMLはhamlとscssを使って、JavaScriptはjQueryを使って記述しています。WebフレームワークSinatraを使ってHerokuにデプロイしています。OSはMac OSX Tiger..です</p>
 
-<h2>ディレクトリ構成</h2>
-
+<h2 id="section">ディレクトリ構成</h2>
 <p>最終的なファイル構成は以下のようになります。</p>
 
 <div class="highlight"><pre><code class="bash">.
@@ -204,9 +202,7 @@
 └── views
     ├── index.haml
     ├── layout.haml
-    └── style.scss
-</code></pre></div>
-
+    └── style.scss</code></pre></div>
 
 <p>Sinatraのためにclock.rb layout.haml index.haml style.scssが必要になります。時計を描画するJavaScriptはclock.jsに記述します。Herokuにデプロイするために更にconfig.ru Gemfileが必要になります。Gemfile.lockはbundler installコマンドで自動生成されます。</p>
 
@@ -216,8 +212,7 @@
 
 <p>カレントディレクトリでWebApp::ease_sinatraすれば、Sinatraのテンプレートファイルが得られます。かなりいい加減な作りであることをご了承下さい..</p>
 
-<h2>clock.rb</h2>
-
+<h2 id="clockrb">clock.rb</h2>
 <p>まずWebフレームワークのコントローラとなるclock.rbを書きます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;sinatra&#39;</span>
@@ -232,14 +227,11 @@
 <span class="k">end</span>
 <span class="n">get</span> <span class="s1">&#39;/style.css&#39;</span> <span class="k">do</span>
   <span class="n">scss</span> <span class="ss">:style</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
+<p>configureブロックはアプリ立ち上げ時に一度だけ呼ばれます。get ‘/’でルートが呼ばれた(GETされた)ときの挙動を記述します。ここでは、hamlで記述されたviews/index.hamlが返されるよう指定しています。get ‘/style.css’でlink属性でstyle.cssが呼ばれたときに、scssで記述されたvews/style.scssが返されるよう指定しています。</p>
 
-<p>configureブロックはアプリ立ち上げ時に一度だけ呼ばれます。get '/'でルートが呼ばれた(GETされた)ときの挙動を記述します。ここでは、hamlで記述されたviews/index.hamlが返されるよう指定しています。get '/style.css'でlink属性でstyle.cssが呼ばれたときに、scssで記述されたvews/style.scssが返されるよう指定しています。</p>
-
-<h2>layout.haml</h2>
-
+<h2 id="layouthaml">layout.haml</h2>
 <p>次にlayout.hamlを記述します。Sinatraではlayoutという名のテンプレートが存在する場合、各テンプレートの読み出しに先立ってそれが自動で読み出されます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="o">!!!</span> <span class="mi">5</span>
@@ -251,28 +243,22 @@
     <span class="o">%</span><span class="n">script</span><span class="p">{</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span> <span class="ss">:src</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js&quot;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">}</span>
     <span class="o">%</span><span class="n">script</span><span class="p">{</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span> <span class="ss">:src</span> <span class="o">=&gt;</span> <span class="s2">&quot;/javascripts/clock.js&quot;</span><span class="p">,</span> <span class="ss">:charset</span> <span class="o">=&gt;</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">}</span>
   <span class="o">%</span><span class="n">body</span>
-    <span class="o">=</span> <span class="k">yield</span>
-</code></pre></div>
-
+    <span class="o">=</span> <span class="k">yield</span></code></pre></div>
 
 <p>titleタグに先ほどのconfigureで定義したAPP_TITLEを指定します。hamlでは=(イコール)以降をRubyのコードとして評価します。jQueryはGoogleが提供するものを使っています。時計を記述するclock.jsを指定します。bodyタグの中身はyieldで実体ファイル(index.haml)に委ねます。</p>
 
-<h2>index.haml</h2>
-
+<h2 id="indexhaml">index.haml</h2>
 <p>次にindex.hamlを記述します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="o">%</span><span class="n">header</span>
 <span class="c1">#main</span>
   <span class="o">%</span><span class="n">canvas</span><span class="c1">#clock{:width =&gt; &#39;1000px&#39;, :height =&gt; &#39;500px&#39;}Only for HTML5 adapted browsers</span>
 <span class="o">%</span><span class="n">footer</span>
-  <span class="o">%</span><span class="n">a</span><span class="p">{</span><span class="ss">:href</span> <span class="o">=&gt;</span> <span class="no">CREDIT</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">=</span> <span class="no">CREDIT</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</code></pre></div>
-
+  <span class="o">%</span><span class="n">a</span><span class="p">{</span><span class="ss">:href</span> <span class="o">=&gt;</span> <span class="no">CREDIT</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">=</span> <span class="no">CREDIT</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span></code></pre></div>
 
 <p>mainのcanvasタグにclockというid名を付けサイズを指定します。HTML5非対応ブラウザのためのメッセージを記述します。footerタグにCREDITのリンクを貼ります。</p>
 
-<h2>style.scss</h2>
-
+<h2 id="stylescss">style.scss</h2>
 <p>次にstyle.scssを記述します。scssはsassy css(sassライクなcss)を意味するcssの拡張言語です。scssを使用することによりcssの文法に沿って、sassの拡張を取り入れることができます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="vg">$font_color</span><span class="p">:</span> <span class="c1">#D0FFD0;</span>
@@ -315,14 +301,11 @@
       <span class="ss">color</span><span class="p">:</span> <span class="vg">$font_color</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<span class="p">}</span></code></pre></div>
 
 <p>$varnameでグローバル変数を定義できます。セレクタをネストできます。@mixin-@includeでセレクタブロックを関数ライクに使えます。ここではrounded()で角丸にミックスインを使っています。</p>
 
-<h2>clock.js</h2>
-
+<h2 id="clockjs">clock.js</h2>
 <p>メインとなるclock.jsを記述します。JavaScript初学者なので書き方に問題があるかもしれません。間違いをご指摘頂けるとうれしいです。少し長いので分けて説明します。</p>
 
 <div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="p">{};</span>
@@ -346,13 +329,11 @@
     <span class="p">},</span>
     <span class="mi">500</span>
   <span class="p">);</span>
-<span class="p">})</span>
-</code></pre></div>
-
+<span class="p">})</span></code></pre></div>
 
 <p>グローバルに参照できるcanvasオブジェクトを定義します。$(document).ready..はHTMLドキュメントの読み込みの完了を待って、その引数の関数が実行されることを保証します。そのなかで最初にcanvasオブジェクトにcanvasの情報をオブジェクト・プロパティとしてセットします。JavaScriptではオブジェクト・プロパティは先行する宣言が不要です。</p>
 
-<p>canvasへの描画はcanvasオブジェクトの2Dコンテキストに対し行います。そのためgetContext('2d')しますが、jQueryではcanvasオブジェクトはArrayを返すので注意が必要です。</p>
+<p>canvasへの描画はcanvasオブジェクトの2Dコンテキストに対し行います。そのためgetContext(‘2d’)しますが、jQueryではcanvasオブジェクトはArrayを返すので注意が必要です。</p>
 
 <p>時計の描画は中心点を基準に行うほうがやり易いので、ctx.translateで座標軸をcanvasの中心に移動します。</p>
 
@@ -370,11 +351,9 @@
   <span class="nx">drawHand</span><span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="nx">radius</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="nx">unit</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="nx">unit</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">);</span>
   <span class="nx">drawHand</span><span class="p">(</span><span class="s1">&#39;sec&#39;</span><span class="p">,</span> <span class="nx">radius</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="nx">unit</span><span class="p">,</span> <span class="nx">unit</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">);</span>
   <span class="nx">canvas</span><span class="p">.</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
-
-<p>ctx.clearRectでキャンバスをクリアします。drawFrame関数で時計の文字盤を描画し、drawHand関数で針を描画します。針の描画はctx.rotateでキャンバスの座標系を回転させながら行うので、最初に初期位置を12時の位置に合わせています。ctx.save() ctx.restore()は動かした座標系を元に戻すために使います<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。saveでそれ以前の状態を保存し座標系を動かして描画を行った後、restoreで元に戻します。各描画サイズはclockに渡されるサイズxに対する比で規定することによって、時計のサイズが変わってもそのバランスが崩れないようにします。</p>
+<p>ctx.clearRectでキャンバスをクリアします。drawFrame関数で時計の文字盤を描画し、drawHand関数で針を描画します。針の描画はctx.rotateでキャンバスの座標系を回転させながら行うので、最初に初期位置を12時の位置に合わせています。ctx.save() ctx.restore()は動かした座標系を元に戻すために使います<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。saveでそれ以前の状態を保存し座標系を動かして描画を行った後、restoreで元に戻します。各描画サイズはclockに渡されるサイズxに対する比で規定することによって、時計のサイズが変わってもそのバランスが崩れないようにします。</p>
 
 <p>次にdrawFrame関数の中身をみます。</p>
 
@@ -418,9 +397,7 @@
     <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillText</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="o">-</span><span class="nx">size</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">size</span><span class="o">/</span><span class="mi">3</span><span class="p">);</span>
     <span class="nx">ctx</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
   <span class="p">};</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<span class="p">}</span></code></pre></div>
 
 <p>drawFrame関数では外円とインデックスバーと数字を描画するdrawCircle drawPitchLines drawNumbersを呼びます。線の描画はbeginPathで開始宣言し、moveToで開始点lineToで終了点を決めて、strokeで実際に描画します。円はarcで描画します。引数には中心座標　半径　描画角始点終点、および描画方向を指定します。数字の描画はfillTextで行います。</p>
 
@@ -449,25 +426,20 @@
   <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">length</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
   <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
   <span class="nx">ctx</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<span class="p">}</span></code></pre></div>
 
 <p>Dateオブジェクトを使って現在の時・分・秒を取得します。針の種類によって一度に進む量angleが異なるので場合分けします。ここでは時針は時刻の進行で少しずつ移動しますが、分針は60秒ごとに一気に１つ進むようにしています。</p>
 
 <p>clock.jsは以上です。</p>
 
-<h2>ローカルでの起動</h2>
-
+<h2 id="section-1">ローカルでの起動</h2>
 <p>これでローカルで実行する環境が整いました。早々立ち上げてみましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="sr">/Users/</span><span class="n">keyes</span><span class="o">/</span><span class="n">aclock</span><span class="o">%</span> <span class="n">ruby</span> <span class="n">clock</span><span class="o">.</span><span class="n">rb</span>
 <span class="o">==</span> <span class="no">Sinatra</span><span class="o">/</span><span class="mi">1</span><span class="o">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">2</span> <span class="n">has</span> <span class="n">taken</span> <span class="n">the</span> <span class="n">stage</span> <span class="n">on</span> <span class="mi">4567</span> <span class="k">for</span> <span class="n">development</span> <span class="n">with</span> <span class="n">backup</span> <span class="n">from</span> <span class="no">Thin</span>
 <span class="o">&gt;&gt;</span> <span class="no">Thin</span> <span class="n">web</span> <span class="n">server</span> <span class="p">(</span><span class="n">v1</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">7</span> <span class="n">codename</span> <span class="no">No</span> <span class="no">Hup</span><span class="p">)</span>
 <span class="o">&gt;&gt;</span> <span class="no">Maximum</span> <span class="n">connections</span> <span class="n">set</span> <span class="n">to</span> <span class="mi">1024</span>
-<span class="o">&gt;&gt;</span> <span class="no">Listening</span> <span class="n">on</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">:</span><span class="mi">4567</span><span class="p">,</span> <span class="no">CTRL</span><span class="o">+</span><span class="n">C</span> <span class="n">to</span> <span class="n">stop</span>
-</code></pre></div>
-
+<span class="o">&gt;&gt;</span> <span class="no">Listening</span> <span class="n">on</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">:</span><span class="mi">4567</span><span class="p">,</span> <span class="no">CTRL</span><span class="o">+</span><span class="n">C</span> <span class="n">to</span> <span class="n">stop</span></code></pre></div>
 
 <p>Ruby1.9.2でshotgunを利用する場合、カレントパスをロードする必要があるかもしれません。</p>
 
@@ -475,12 +447,9 @@
 <span class="o">==</span> <span class="no">Shotgun</span><span class="o">/</span><span class="no">WEBrick</span> <span class="n">on</span> <span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">9393</span><span class="o">/</span>
 <span class="o">[</span><span class="mi">2011</span><span class="o">-</span><span class="mo">02</span><span class="o">-</span><span class="mi">18</span> <span class="mi">18</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">47</span><span class="o">]</span> <span class="no">INFO</span>  <span class="no">WEBrick</span> <span class="mi">1</span><span class="o">.</span><span class="mi">3</span><span class="o">.</span><span class="mi">1</span>
 <span class="o">[</span><span class="mi">2011</span><span class="o">-</span><span class="mo">02</span><span class="o">-</span><span class="mi">18</span> <span class="mi">18</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">47</span><span class="o">]</span> <span class="no">INFO</span>  <span class="n">ruby</span> <span class="mi">1</span><span class="o">.</span><span class="mi">9</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">25</span><span class="p">)</span> <span class="o">[</span><span class="n">i386</span><span class="o">-</span><span class="n">darwin8</span><span class="o">.</span><span class="mi">11</span><span class="o">.</span><span class="mi">1</span><span class="o">]</span>
-<span class="o">[</span><span class="mi">2011</span><span class="o">-</span><span class="mo">02</span><span class="o">-</span><span class="mi">18</span> <span class="mi">18</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">47</span><span class="o">]</span> <span class="no">INFO</span>  <span class="no">WEBrick</span><span class="o">::</span><span class="no">HTTPServer</span><span class="c1">#start: pid=1613 port=9393</span>
-</code></pre></div>
+<span class="o">[</span><span class="mi">2011</span><span class="o">-</span><span class="mo">02</span><span class="o">-</span><span class="mi">18</span> <span class="mi">18</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">47</span><span class="o">]</span> <span class="no">INFO</span>  <span class="no">WEBrick</span><span class="o">::</span><span class="no">HTTPServer</span><span class="c1">#start: pid=1613 port=9393</span></code></pre></div>
 
-
-<h2>Herokuへのデプロイ</h2>
-
+<h2 id="heroku">Herokuへのデプロイ</h2>
 <p>http://localhost:4567で問題なくアプリケーションが起動したら、Herokuにデプロイするためにconfig.ruとGemfileを用意します。</p>
 
 <p>config.ru</p>
@@ -489,55 +458,41 @@
 <span class="no">Bundler</span><span class="o">.</span><span class="n">require</span>
 <span class="vg">$LOAD_PATH</span> <span class="o">&lt;&lt;</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">))</span>
 <span class="nb">require</span> <span class="s1">&#39;clock&#39;</span>
-<span class="n">run</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span></code></pre></div>
 
 <p>Gemfile</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">source</span> <span class="ss">:rubygems</span>
 <span class="n">gem</span> <span class="s2">&quot;sinatra&quot;</span>
-<span class="n">gem</span> <span class="s2">&quot;haml&quot;</span>
-</code></pre></div>
-
+<span class="n">gem</span> <span class="s2">&quot;haml&quot;</span></code></pre></div>
 
 <p>Herokuに必要なgemsをインストールするために、BundlerというGem管理ツールを使います。Gemfileに必要なgemsを羅列し、config.ruではbundlerをrequireしてこれらを読み込むよう指定します。</p>
 
 <p>Bundlerをインストールしてinstallコマンドを実行します。</p>
 
 <div class="highlight"><pre><code class="bash">/Users/keyes/aclock% gem install bundler
-/Users/keyes/aclock% bundle install
-</code></pre></div>
+/Users/keyes/aclock% bundle install</code></pre></div>
 
+<p>これでGemfileに記述したgemsがアプリケーションで使えるようになります。同時にGemfile.lockが生成され、ローカルとHerokuで使われるgemsのバージョンの一致が保証されます<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>。</p>
 
-<p>これでGemfileに記述したgemsがアプリケーションで使えるようになります。同時にGemfile.lockが生成され、ローカルとHerokuで使われるgemsのバージョンの一致が保証されます<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。</p>
-
-<p>HerokuへのデプロイはgitとHeroku gemを使います。初回はSSHキーのセットアップなどが必要になりますが、説明は他サイトに譲ります<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>。</p>
+<p>HerokuへのデプロイはgitとHeroku gemを使います。初回はSSHキーのセットアップなどが必要になりますが、説明は他サイトに譲ります<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup>。</p>
 
 <div class="highlight"><pre><code class="bash">/Users/keyes/aclock% git init
 /Users/keyes/aclock% git add .
-/Users/keyes/aclock% git commit -m <span class="s1">&#39;initial&#39;</span>
-</code></pre></div>
-
+/Users/keyes/aclock% git commit -m <span class="s1">&#39;initial&#39;</span></code></pre></div>
 
 <p>Heroku側にアプリケーションのレポジトリを用意し、git pushでデプロイします。</p>
 
 <div class="highlight"><pre><code class="bash">/Users/keyes/aclock% heroku create myclock
-/Users/keyes/aclock% git push heroku master
-</code></pre></div>
-
+/Users/keyes/aclock% git push heroku master</code></pre></div>
 
 <p>早々アプリケーションを立ち上げましょう。</p>
 
-<div class="highlight"><pre><code class="bash">/Users/keyes/aclock% heroku open
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">/Users/keyes/aclock% heroku open</code></pre></div>
 
 <p>うまくいかない場合はlogを見てみましょう。</p>
 
-<div class="highlight"><pre><code class="bash">/Users/keyes/aclock% heroku logs
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">/Users/keyes/aclock% heroku logs</code></pre></div>
 
 <p>さあ、あなたもCanvasを使ったサイトを立ち上げましょう！</p>
 
@@ -549,12 +504,10 @@
 <p>参照： <a href="http://hail2u.net/documents/sass-and-sassy-css.html">Sass、そしてSassy CSS (SCSS)</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>save,restoreが保持するのは座標系だけに限らない <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>http://devcenter.heroku.com/articles/bundler <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>http://devcenter.heroku.com/articles/quickstart <a href='#fnref:3' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">save,restoreが保持するのは座標系だけに限らない <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">http://devcenter.heroku.com/articles/bundler <a href="#fnref:2" rev="footnote">↩</a></li><li id="fn:3">http://devcenter.heroku.com/articles/quickstart <a href="#fnref:3" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

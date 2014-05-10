@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,16 +179,17 @@
       </script>
     </div>
 
-    <p>少し前に文字列を上下反転して出力する<code>flippy</code>というgemを書きましたよ。</p>
+    
+<p>少し前に文字列を上下反転して出力する<code>flippy</code>というgemを書きましたよ。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" target="_blank">'RubyのコードをFlipして暗号化する？' </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" alt="error" class="http-bookmark"></a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" target="_blank">‘RubyのコードをFlipして暗号化する？’ </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2013/01/28/make-ruby-script-encript-with-flippy/" alt="error" class="http-bookmark" /></a></p>
+</blockquote>
 
 <p>このgemにはflippyコマンドが付いていて、ターミナルで簡単に反転文字が作れるようになっているのでした。</p>
 
 <div class="highlight"><pre><code class="bash">% flippy Hello, world!
-¡plɹoʍ ‘olləH
-</code></pre></div>
-
+¡plɹoʍ ‘olləH</code></pre></div>
 
 <p>で、今回これをもう少し拡張して、専用コンソールで反転文字を打てる<code>flippy console</code>というのを追加しましたので、お知らせしますね。flippy consoleはflippyコマンドに<code>--console</code>オプションを付加することで起動することができます。</p>
 
@@ -196,17 +197,15 @@
 
 <iframe src="http://www.screenr.com/embed/YIZ7" width="650" height="396" frameborder="0"></iframe>
 
-
 <p>カーソルが追随しないところがイマイチですけど、どうですか？ちょっと面白いですよね？実際に入力してると、ちょっと不思議な感覚があります。</p>
 
 <p>実用性ですか？</p>
 
-<p>ん〜、タッチタイピング練習具とか、右脳発育訓練具とかどうでしょう...</p>
+<p>ん〜、タッチタイピング練習具とか、右脳発育訓練具とかどうでしょう…</p>
 
-<p>少し逆立ちして考えてみます... それよりもここでは実装方法を少し書き残しておきますね。</p>
+<p>少し逆立ちして考えてみます… それよりもここでは実装方法を少し書き残しておきますね。</p>
 
-<h2>termios</h2>
-
+<h2 id="termios">termios</h2>
 <p>flippy consoleの実現にはプログラムからターミナルの設定を変更する必要があります。つまりターミナルはデフォルトで打った文字をエコーバックします。また、リターンキーを押すまで入力を受け付けないモードにセットされています（これを「カノニカルモード」といいます）。flippy consoleではこのエコーを無効にすると共に、入力文字をすぐに読み取るモード（非カノニカルモード）に一時的に変える必要があります。</p>
 
 <p>これらの設定を変更するにはターミナルの標準インタフェースとなっている<code>termios</code>構造体というものにアクセスしてその設定を変える必要があります。幸いRubyには<code>ruby-termios</code>というtermiosのラッパーがあるのでこれを使えば、Rubyからターミナルの設定を変更できます。</p>
@@ -226,9 +225,7 @@
   <span class="c1"># ターミナルを使う</span>
 <span class="k">ensure</span>
   <span class="vg">$stdin</span><span class="o">.</span><span class="n">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term_preset</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p><code>$stdin.extend Termios</code>で標準入力オブジェクトへTermiosモジュールのメソッドをmix-inします。<code>#tcgetattr</code>で現在のターミナルの設定を読み出し、これを保存しておきます。termiosには４種類の設定モード、入力（iflag）、出力（oflag）、制御（cflag）、ローカル（lflag）があって、その何れかに所望の設定を行います。</p>
 
@@ -236,45 +233,50 @@
 
 <p>この状態で<code>#tcsetattr</code>を使い、ターミナルに変更を加えたtermiosをセットします。第一引数の<code>TCSANOW</code>は直ちに設定を反映させるための指定です。以上でターミナルはエコー無し、非カノニカルモードとして動作するようになります。ターミナルの使用後は設定を元に戻しておきます。</p>
 
-<blockquote><p><a href="http://linuxjm.sourceforge.jp/html/LDP_man-pages/man3/termios.3.html" title="Man page of TERMIOS">TERMIOS</a></p></blockquote>
+<blockquote>
+  <p><a href="http://linuxjm.sourceforge.jp/html/LDP_man-pages/man3/termios.3.html" title="Man page of TERMIOS">TERMIOS</a></p>
+</blockquote>
 
-<h2>エスケープシーケンス</h2>
-
+<h2 id="section">エスケープシーケンス</h2>
 <p>flippy consoleではカーソルの移動を制御する必要があります。カーソルの制御には標準添付ライブラリの<code>curses</code>がありますが、簡単な制御ならエスケープシーケンスで行うことができます。flippyでは今ひとつ上手くできてないですが。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[5;10H&quot;</span>  <span class="c1"># カーソルをスクリーンの5行10列に移動</span>
 <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1A&quot;</span>     <span class="c1"># カーソルを一つ上に移動</span>
 <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1B&quot;</span>     <span class="c1"># カーソルを一つ下に移動</span>
 <span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1C&quot;</span>     <span class="c1"># カーソルを一つ前に移動</span>
-<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1D&quot;</span>     <span class="c1"># カーソルを一つ後ろに移動</span>
-</code></pre></div>
-
+<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1D&quot;</span>     <span class="c1"># カーソルを一つ後ろに移動</span></code></pre></div>
 
 <p>色の制御もエスケープシーケンスで行います。これについては以前に記事を書いているので、そちらを参考にして下さい。本当は文字単位で色の制御を行えるようにしたかったのですが、実装が難しくて諦めました。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2010/11/07/Ruby-ANSI/" title="RubyでANSIカラーシーケンスを学ぼう！">RubyでANSIカラーシーケンスを学ぼう！</a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2010/11/07/Ruby-ANSI/" title="RubyでANSIカラーシーケンスを学ぼう！">RubyでANSIカラーシーケンスを学ぼう！</a></p>
+</blockquote>
 
 <p>エスケープシーケンスの詳細については以下が参考になります。</p>
 
-<blockquote><p><a href="http://ascii-table.com/ansi-escape-sequences.php" title="ASCII Table - ANSI Escape sequences">ASCII Table - ANSI Escape sequences</a></p></blockquote>
+<blockquote>
+  <p><a href="http://ascii-table.com/ansi-escape-sequences.php" title="ASCII Table - ANSI Escape sequences">ASCII Table - ANSI Escape sequences</a></p>
+</blockquote>
 
 <p>以上、flippy consoleの紹介と実装の簡単な説明でした。あなたも<code>flippy -c</code>して不思議な感覚味わってみませんか？</p>
 
 <hr />
 
-<p>あっ、いい使い道思いついた...ムカつく上司の端末に(ry</p>
+<p>あっ、いい使い道思いついた…ムカつく上司の端末に(ry</p>
 
 <p>該当箇所のコードも一応貼っておきます。</p>
 
-<div><script src='https://gist.github.com/4984652.js?file='></script>
+<div><script src="https://gist.github.com/4984652.js?file="></script>
 <noscript><pre><code></code></pre></noscript></div>
-
 
 <hr />
 
 <p>関連記事：cursesを使ったサンプル</p>
 
-<blockquote><p><a href="http://melborne.github.com/2012/06/07/amida-ruby/" title="Rubyであみだくじ">Rubyであみだくじ</a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2012/06/07/amida-ruby/" title="Rubyであみだくじ">Rubyであみだくじ</a></p>
+</blockquote>
+
 
 
     <div class="ad" id="topAdsense">

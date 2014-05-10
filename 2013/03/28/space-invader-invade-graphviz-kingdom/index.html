@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,23 +179,24 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
-<p>Graphvizには「<strong>osage</strong>」という変わった名前のレイアウトがあります。これは多数のノードを整列して配置します。GraphvizのRubyラッパー「<a href="https://rubygems.org/gems/gviz" title="gviz | RubyGems.org | your community gem host">gviz</a>」を使って100個のノードを整列表示するには次のようにします<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<p>Graphvizには「<strong>osage</strong>」という変わった名前のレイアウトがあります。これは多数のノードを整列して配置します。GraphvizのRubyラッパー「<a href="https://rubygems.org/gems/gviz" title="gviz \| RubyGems.org \| your community gem host">gviz</a>」を使って100個のノードを整列表示するには次のようにします<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<h4>graph.ru</h4>
+<h4 id="graphru">graph.ru</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;osage&#39;</span>
 <span class="n">nodes</span> <span class="ss">shape</span><span class="p">:</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="ss">width</span><span class="p">:</span><span class="s1">&#39;0.8&#39;</span>
 <span class="mi">100</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">node</span> <span class="n">i</span><span class="o">.</span><span class="n">to_id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="n">i</span> <span class="p">}</span>
 
-<span class="n">save</span> <span class="ss">:osage</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:osage</span></code></pre></div>
 
 <p>ターミナルで<code>gviz</code>コマンドを実行し生成されたDOTファイルを開くと、次のグラフが得られます。</p>
 
@@ -205,13 +206,13 @@
 
 <p>前回の投稿ではGraphvizのこの能力を使ってカラータイルを作りましたが、今更ながらこれは正に「ドットマトリクス」であるなあと気付いたのでした。ドットマトリクスといえば、そう「ドット絵」です。</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>今回は、Graphvizで「スペースインベーダー」を描いてみるという、アホな企画です。良い子の皆さんは真似しないでくださいね。</p>
 
 <p>ところで、スペースインベーダー、知ってますか？</p>
 
-<h2>スペースインベーダーのドットマトリクス</h2>
+<h2 id="section">スペースインベーダーのドットマトリクス</h2>
 
 <p>まずは、ネットから次のようなインベーダーの画像を取得します。</p>
 
@@ -229,15 +230,13 @@
     <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="o">]</span><span class="p">,</span>
     <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="o">]</span><span class="p">,</span>
     <span class="o">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="o">]</span><span class="p">,</span>
-  <span class="o">]</span>
-</code></pre></div>
+  <span class="o">]</span></code></pre></div>
 
-
-<h2>Pieceオブジェクトの生成</h2>
+<h2 id="piece">Pieceオブジェクトの生成</h2>
 
 <p>次に、Pieceクラスを用意して、このドットデータを持ったPieceオブジェクトを生成するようにします。デフォルトで画があるところにはtrue、無いところにはfalseをセットする二次元配列を、mapインスタンス変数で保持させます。</p>
 
-<h4>invader.rb</h4>
+<h4 id="invaderrb">invader.rb</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Piece</span>
   <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:map</span>
@@ -263,9 +262,7 @@
     <span class="k">else</span> <span class="k">raise</span> <span class="s2">&quot;Accept only Fixnum or Range&quot;</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>build_mapメソッドは、すべてがfalse値の二次元配列を生成し、渡されたmapデータをArray#fillを使って埋め込むようにします。conv2st_lenメソッドは、座標値と座標レンジを統一的に扱えるように前処理します。</p>
 
@@ -285,15 +282,13 @@
 
 <span class="n">kani</span> <span class="o">=</span> <span class="no">Piece</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:kani</span><span class="p">,</span> <span class="n">kani_map</span><span class="p">)</span>
 
-<span class="n">kani</span><span class="o">.</span><span class="n">map</span> <span class="c1"># =&gt; [[false, false, false, true, false, false, false, false, false, true, false, false], [false, false, false, false, true, false, false, false, true, false, false, false], [false, false, false, true, true, true, true, true, true, true, false, false], [false, false, true, true, false, true, true, true, false, true, true, false], [false, true, true, true, true, true, true, true, true, true, true, true], [false, true, false, true, true, true, true, true, true, true, false, true], [false, true, false, true, false, false, false, false, false, true, false, true], [false, false, false, false, true, true, false, true, true, false, false, false]]</span>
-</code></pre></div>
+<span class="n">kani</span><span class="o">.</span><span class="n">map</span> <span class="c1"># =&gt; [[false, false, false, true, false, false, false, false, false, true, false, false], [false, false, false, false, true, false, false, false, true, false, false, false], [false, false, false, true, true, true, true, true, true, true, false, false], [false, false, true, true, false, true, true, true, false, true, true, false], [false, true, true, true, true, true, true, true, true, true, true, true], [false, true, false, true, true, true, true, true, true, true, false, true], [false, true, false, true, false, false, false, false, false, true, false, true], [false, false, false, false, true, true, false, true, true, false, false, false]]</span></code></pre></div>
 
-
-<h2>Pieceオブジェクトの描画</h2>
+<h2 id="piece-1">Pieceオブジェクトの描画</h2>
 
 <p>さて、データの準備ができたので、Graphvizで描画してみます。</p>
 
-<h4>graph.ru</h4>
+<h4 id="graphru-1">graph.ru</h4>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;./invader&quot;</span>
 
@@ -323,9 +318,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">save</span> <span class="ss">:invader</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:invader</span></code></pre></div>
 
 <p>osageレイアウトでは縦横のドット数が異なると配列がズレてしまうので、kani_mapでは横配列数(12ドット)に合わせて縦配列数を調整しています。eachでkaniオブジェクトのmapを展開し、各ドットの値（trueまたはfalse）に応じてノードの色を変えます。</p>
 
@@ -345,8 +338,7 @@
 
 <p>もう少しがんばって..みますか..</p>
 
-<h2>Canvasオブジェクトの生成</h2>
-
+<h2 id="canvas">Canvasオブジェクトの生成</h2>
 <p>Pieceオブジェクトを配置するCanvasオブジェクトを用意します。Canvasクラスを定義しましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Canvas</span>
@@ -365,9 +357,7 @@
     <span class="k">end</span>
     <span class="vi">@map</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Canvasクラスは、任意サイズの二次元配列を保持します。そして<code>Canvas#fill</code>メソッドにより、Canvasオブジェクト上の任意の位置に、Pieceオブジェクトのマップを埋め込めるようにします。</p>
 
@@ -403,9 +393,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">save</span> <span class="ss">:invader</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:invader</span></code></pre></div>
 
 <p>ここでは、<code>Piece.new</code>の第3引数に色を直接渡しています。</p>
 
@@ -524,9 +512,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">save</span> <span class="ss">:invader</span>
-</code></pre></div>
-
+<span class="n">save</span> <span class="ss">:invader</span></code></pre></div>
 
 <p><br />
 <br /></p>
@@ -548,16 +534,14 @@
 <p><br />
 <br /></p>
 
-<div><script src='https://gist.github.com/5254390.js?file='></script>
+<div><script src="https://gist.github.com/5254390.js?file="></script>
 <noscript><pre><code></code></pre></noscript></div>
-
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" style="width:200px" />
@@ -570,12 +554,10 @@
 </a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>patchworkというレイアウトでも同様のことができます。 <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">patchworkというレイアウトでも同様のことができます。 <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

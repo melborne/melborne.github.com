@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,7 +179,8 @@
       </script>
     </div>
 
-    <h2>─　問題　─</h2>
+    
+<h2 id="section">─　問題　─</h2>
 
 <p>ブログ記事に関する次のようなテキストデータがあって、Rubyを使って年別の記事数を集計したいとします。あなたならどうしますか？</p>
 
@@ -210,29 +211,29 @@
     Mar 18 Blog Post1
 </code></pre>
 
-<p><br/></p>
+<p><br /></p>
 
-<h2>─　僕のやり方　─</h2>
+<h2 id="section-1">─　僕のやり方　─</h2>
 
-<p>一見簡単そうで、でもよく考えるとちょっと厄介そうな問題ですよね。状態遷移を管理する必要がありそうな...。</p>
+<p>一見簡単そうで、でもよく考えるとちょっと厄介そうな問題ですよね。状態遷移を管理する必要がありそうな…。</p>
 
-<p><br/>
-<br/></p>
+<p><br />
+<br /></p>
 
 <p>でも安心してください、Rubyには<code>Enumerable#chunk</code>があります！</p>
 
-<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.0.0/method/Enumerable/i/chunk.html" title="instance method Enumerable#chunk">instance method Enumerable#chunk</a></p></blockquote>
+<blockquote>
+  <p><a href="http://docs.ruby-lang.org/ja/2.0.0/method/Enumerable/i/chunk.html" title="instance method Enumerable#chunk">instance method Enumerable#chunk</a></p>
+</blockquote>
 
-<p><br/></p>
+<p><br /></p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">lines</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="s1">&#39;blog_entries.txt&#39;</span><span class="p">)</span>
             <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:strip</span><span class="p">)</span><span class="o">.</span><span class="n">reject</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:empty?</span><span class="p">)</span>
 
 <span class="n">chunks</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/^\d{4}/</span><span class="p">)</span><span class="o">.</span><span class="n">nil?</span> <span class="p">}</span>
 
-<span class="n">chunks</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[false, [&quot;2013&quot;]], [true, [&quot;Dec 26 Blog Post23&quot;, &quot;Dec 25 Blog Post22&quot;, &quot;Nov 10 Blog Post21&quot;, &quot;Aug 09 Blog Post20&quot;, &quot;Feb 06 Blog Post19&quot;, &quot;Jun 09 Blog Post18&quot;, &quot;Mar 11 Blog Post17&quot;, &quot;Jan 21 Blog Post16&quot;, &quot;Jan 02 Blog Post15&quot;]], [false, [&quot;2012&quot;]], [true, [&quot;Nov 20 Blog Post14&quot;, &quot;Oct 09 Blog Post13&quot;, &quot;Oct 05 Blog Post12&quot;, &quot;Sep 15 Blog Post11&quot;, &quot;Sep 10 Blog Post10&quot;, &quot;Feb 02 Blog Post9&quot;]], [false, [&quot;2011&quot;]], [true, [&quot;Dec 24 Blog Post8&quot;, &quot;Dec 03 Blog Post7&quot;, &quot;Nov 04 Blog Post6&quot;, &quot;Oct 12 Blog Post5&quot;, &quot;Aug 12 Blog Post4&quot;, &quot;Aug 02 Blog Post3&quot;, &quot;May 11 Blog Post2&quot;, &quot;Mar 18 Blog Post1&quot;]]]</span>
-</code></pre></div>
-
+<span class="n">chunks</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[false, [&quot;2013&quot;]], [true, [&quot;Dec 26 Blog Post23&quot;, &quot;Dec 25 Blog Post22&quot;, &quot;Nov 10 Blog Post21&quot;, &quot;Aug 09 Blog Post20&quot;, &quot;Feb 06 Blog Post19&quot;, &quot;Jun 09 Blog Post18&quot;, &quot;Mar 11 Blog Post17&quot;, &quot;Jan 21 Blog Post16&quot;, &quot;Jan 02 Blog Post15&quot;]], [false, [&quot;2012&quot;]], [true, [&quot;Nov 20 Blog Post14&quot;, &quot;Oct 09 Blog Post13&quot;, &quot;Oct 05 Blog Post12&quot;, &quot;Sep 15 Blog Post11&quot;, &quot;Sep 10 Blog Post10&quot;, &quot;Feb 02 Blog Post9&quot;]], [false, [&quot;2011&quot;]], [true, [&quot;Dec 24 Blog Post8&quot;, &quot;Dec 03 Blog Post7&quot;, &quot;Nov 04 Blog Post6&quot;, &quot;Oct 12 Blog Post5&quot;, &quot;Aug 12 Blog Post4&quot;, &quot;Aug 02 Blog Post3&quot;, &quot;May 11 Blog Post2&quot;, &quot;Mar 18 Blog Post1&quot;]]]</span></code></pre></div>
 
 <p>chunkは各lineに対するブロックの評価結果が変化（遷移）する点を監視し、その点を区切りとしてlineを複数のチャンク（塊）に分けます。ここでは年のラベルにマッチする正規表現でチャンクを分けています。</p>
 
@@ -244,9 +245,7 @@
 
 <span class="c1"># &gt;&gt; 2013 =&gt; 9</span>
 <span class="c1"># &gt;&gt; 2012 =&gt; 6</span>
-<span class="c1"># &gt;&gt; 2011 =&gt; 8</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; 2011 =&gt; 8</span></code></pre></div>
 
 <p>ちなみにブロック内におけるマッチ結果に対するnil評価（nil?）は必須です。chunkではブロックの返り値がnilになる場合はその行をチャンクの対象外にするからです（非マッチはnilを返します）。</p>
 
@@ -255,9 +254,7 @@
 
 <span class="n">chunks</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/^\d{4}/</span><span class="p">)</span> <span class="p">}</span>
 
-<span class="n">chunks</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[#&lt;MatchData &quot;2013&quot;&gt;, [&quot;2013&quot;]], [#&lt;MatchData &quot;2012&quot;&gt;, [&quot;2012&quot;]], [#&lt;MatchData &quot;2011&quot;&gt;, [&quot;2011&quot;]]]</span>
-</code></pre></div>
-
+<span class="n">chunks</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[#&lt;MatchData &quot;2013&quot;&gt;, [&quot;2013&quot;]], [#&lt;MatchData &quot;2012&quot;&gt;, [&quot;2012&quot;]], [#&lt;MatchData &quot;2011&quot;&gt;, [&quot;2011&quot;]]]</span></code></pre></div>
 
 <p>併せて各月の集計もしてみます。これはEnumerable#group_byで一発です。</p>
 
@@ -286,15 +283,13 @@
 <span class="c1"># &gt;&gt;  Oct: 1</span>
 <span class="c1"># &gt;&gt;  Aug: 2</span>
 <span class="c1"># &gt;&gt;  May: 1</span>
-<span class="c1"># &gt;&gt;  Mar: 1</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt;  Mar: 1</span></code></pre></div>
 
+<p><br /></p>
 
-<p><br/></p>
+<h2 id="section-2">このブログの記事数を集計してみる</h2>
 
-<h2>このブログの記事数を集計してみる</h2>
-
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>このブログのトップページをコピペして記事数を集計してみます。</p>
 
@@ -384,13 +379,12 @@
 <span class="c1"># &gt;&gt;  Apr: 3</span>
 <span class="c1"># &gt;&gt;  Mar: 5</span>
 <span class="c1"># &gt;&gt;  Feb: 3</span>
-<span class="c1"># &gt;&gt;  Jan: 7</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;  Jan: 7</span></code></pre></div>
 
 <p>うん、今年もよく書いた。</p>
 
 <p>みんなもチャンクしようぜ。チャンク！チャンク！</p>
+
 
 
     <div class="ad" id="topAdsense">

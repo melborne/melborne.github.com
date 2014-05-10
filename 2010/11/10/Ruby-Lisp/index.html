@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -183,29 +183,24 @@
 
 <p>この記事を解読してRuby版Schemeインタプリタを書いたら、インタプリタ　Pyhon　Scheme　それからRubyのことも、もう少し分かるようになるかもしれない。こんなお得な勉強方法はないぞ。きっと。</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>以下では上記記事を参照しながら、Ruby版Schemeインタプリタを書いていきます。本文では適宜Norvigさんの解説およびコードを引用しつつ、自分の理解とRubyのコードをpythonのコードと対応させていきます。Rubyのインタプリタ名はlisr.rbとします。</p>
 
-<h2>インタプリタ</h2>
-
+<h2 id="section">インタプリタ</h2>
 <p>インタプリタはSchemeのプログラムを文字の列として読み込み、それを言語の構文規則に沿って内部表現へ変換する「構文解析(parse)」と、変換した内部表現を言語の意味論規則に基づいて処理する「実行(eval)」の２つの部分からなります。</p>
 
-<h2>構文解析（パーサ)</h2>
-
+<h2 id="section-1">構文解析（パーサ)</h2>
 <p>Schemeの構文はカッコ付きの前置記法であるリストを基本としています。PythonによるパーサがSchemeのリストをpythonのリストに変換するのと同じ方法で、RubyのArrayへ変換するパーサを作ります。</p>
 
-<h2>トークン生成</h2>
-
+<h2 id="section-2">トークン生成</h2>
 <p>パーサはまず読込んだプログラムの文字列をその構文要素であるトークン(token)に分割します。</p>
 
 <p>Pythonのコード</p>
 
 <div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="s">&quot;文字列をトークンのリストに変換する。&quot;</span>
-    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">,</span><span class="s">&#39; ( &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">,</span><span class="s">&#39; ) &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</code></pre></div>
-
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">,</span><span class="s">&#39; ( &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">,</span><span class="s">&#39; ) &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span></code></pre></div>
 
 <p>カッコの前後に空白を挿入してsplitによる分割がうまくいくように前処理している点がポイントです。</p>
 
@@ -215,14 +210,11 @@
   <span class="n">s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[()]/</span><span class="p">,</span> <span class="s1">&#39; \0 &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span>
 <span class="k">end</span>
 <span class="n">tokenize</span> <span class="s2">&quot;(define plus1 (lambda (n) (+ n 1)))&quot;</span>
-  <span class="c1">#=&gt; [&quot;(&quot;, &quot;define&quot;, &quot;plus1&quot;, &quot;(&quot;, &quot;lambda&quot;, &quot;(&quot;, &quot;n&quot;, &quot;)&quot;, &quot;(&quot;, &quot;+&quot;, &quot;n&quot;, &quot;1&quot;, &quot;)&quot;, &quot;)&quot;, &quot;)&quot;]</span>
-</code></pre></div>
-
+  <span class="c1">#=&gt; [&quot;(&quot;, &quot;define&quot;, &quot;plus1&quot;, &quot;(&quot;, &quot;lambda&quot;, &quot;(&quot;, &quot;n&quot;, &quot;)&quot;, &quot;(&quot;, &quot;+&quot;, &quot;n&quot;, &quot;1&quot;, &quot;)&quot;, &quot;)&quot;, &quot;)&quot;]</span></code></pre></div>
 
 <p>やり方は同じですがここでは、String#gsubに正規表現を渡すことで両カッコの前処理を一度にしています。</p>
 
-<h2>トークン列の解析</h2>
-
+<h2 id="section-3">トークン列の解析</h2>
 <p>次にトークンに分割された文字列を内部で処理できる表現に変換します。</p>
 
 <p>PythonではSchemeのリスト、数、シンボルをそれぞれ、Pythonのリスト、数、文字列で表現しています。</p>
@@ -243,9 +235,7 @@
     <span class="k">elif</span> <span class="s">&#39;)&#39;</span> <span class="o">==</span> <span class="n">token</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s">&#39;unexpected )&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">atom</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
-</code></pre></div>
-
+        <span class="k">return</span> <span class="n">atom</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></code></pre></div>
 
 <p>このコードは一件複雑そうですが例外処理を除いてよく見れば処理の構造が見えてきます。基本的にread_fromはトークンのリストを受け取り、先頭から１つづつ再帰的にトークンを解析します。</p>
 
@@ -272,14 +262,11 @@
   <span class="k">else</span>
     <span class="n">atom</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>コードはほぼPythonと同じですがここでは、if文に代えてcase式を使っています。「閉じカッコが来るまで」はwhileよりもuntilを使うと自然になります。</p>
 
-<h2>トークン変換</h2>
-
+<h2 id="section-4">トークン変換</h2>
 <p>次にトークンをインタプリタの表現に変換する関数atomを見ます。</p>
 
 <p>Pythonのコード</p>
@@ -290,9 +277,7 @@
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span> <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
-</code></pre></div>
-
+            <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></code></pre></div>
 
 <p>最初にトークンのintへの変換を試み、次にfloatへの変換を試み、最後にSymbolへの変換を試みています。</p>
 
@@ -305,14 +290,11 @@
   <span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="o">.</span><span class="n">shift</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
 <span class="k">rescue</span> <span class="no">ArgumentError</span>
   <span class="k">retry</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>同様の書き方もできますがここでは、rescue節でretryを使うことでコードを簡潔にしました。ただSymbolという関数メソッドが未定義なのでこれを用意しています。</p>
 
-<h2>パーサ・インタフェース</h2>
-
+<h2 id="section-5">パーサ・インタフェース</h2>
 <p>これらを統合したパーサのインタフェースは次のようになります。</p>
 
 <p>Pythonのコード</p>
@@ -320,18 +302,14 @@
 <div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="s">&quot;文字列からScheme式を読み込む。&quot;</span>
     <span class="k">return</span> <span class="n">read_from</span><span class="p">(</span><span class="n">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-<span class="n">parse</span> <span class="o">=</span> <span class="n">read</span>
-</code></pre></div>
-
+<span class="n">parse</span> <span class="o">=</span> <span class="n">read</span></code></pre></div>
 
 <p>Rubyのコード</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
   <span class="n">read_from</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 <span class="k">end</span>
-<span class="k">alias</span> <span class="ss">:parse</span> <span class="ss">:read</span>
-</code></pre></div>
-
+<span class="k">alias</span> <span class="ss">:parse</span> <span class="ss">:read</span></code></pre></div>
 
 <p>Rubyでは関数(メソッド)はオブジェクトではないので、そのまま変数に代入することはできません。別名を付ける場合はalias文かModule#alias_methodを使います。Rubyではあまりこういう書き方を見ない気がするのですが、Pythonでは一般的な手法なのでしょうか。</p>
 
@@ -343,11 +321,9 @@
 <span class="o">&gt;&gt;</span> <span class="n">parse</span> <span class="s2">&quot;(define plus1 (lambda (n) (+ n 1)))&quot;</span>
   <span class="c1"># =&gt; [:define, :plus1, [:lambda, [:n], [:+, :n, 1]]]</span>
 <span class="o">&gt;&gt;</span> <span class="n">parse</span> <span class="s2">&quot;(define area (lambda (r) (* 3.141592653 (* r r))))&quot;</span>
-  <span class="c1"># =&gt; [:define, :area, [:lambda, [:r], [:*, 3.141592653, [:*, :r, :r]]]]</span>
-</code></pre></div>
+  <span class="c1"># =&gt; [:define, :area, [:lambda, [:r], [:*, 3.141592653, [:*, :r, :r]]]]</span></code></pre></div>
 
-
-<p>うまくいっているようです<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<p>うまくいっているようです<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
 <p>余分ですがStringのメソッド群を使った、強引な(?)パーサ版(brute_parse)も書いてみました。</p>
 
@@ -360,14 +336,11 @@
         <span class="k">end</span>
        <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s1">&#39;[,&#39;</span><span class="p">,</span> <span class="s1">&#39;[&#39;</span><span class="p">)</span>
   <span class="nb">eval</span> <span class="n">s</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
+<p>tokenizeメソッドでプログラムをトークンに分割した後、mapメソッド内で各トークンに適切な処理を施します。カッコは角カッコに変換し、数字以外のトークンはRubyのシンボルに変換します。Rubyでは代入=のシンボル表記:=は許されていないので、表記方法を少し変えています。これらの変換されたトークンをカンマで接続します。最後に開き角カッコの後の不要なカンマを削除します<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。一応動作しますがやはり元のパーサのほうがエレガントです。</p>
 
-<p>tokenizeメソッドでプログラムをトークンに分割した後、mapメソッド内で各トークンに適切な処理を施します。カッコは角カッコに変換し、数字以外のトークンはRubyのシンボルに変換します。Rubyでは代入=のシンボル表記:=は許されていないので、表記方法を少し変えています。これらの変換されたトークンをカンマで接続します。最後に開き角カッコの後の不要なカンマを削除します<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。一応動作しますがやはり元のパーサのほうがエレガントです。</p>
-
-<h2>実行(eval)</h2>
-
+<h2 id="eval">実行(eval)</h2>
 <p>パーサが完成したので次にevalです。</p>
 
 <p>このSchemeには３つの構文的構成物つまり変数、定数(数)、手続き呼出しと、６つの特殊形式つまり、クォート(quote)、条件式(if)、代入(set!)、定義(define)、手続き(lambda)、逐次式(begin) しかありません。特殊形式は(set! x y)のように先頭に、上記の何れかのキーワードを持ったリストの形式をとります。リストの先頭が上記キーワードに該当しない場合(例えば(area 3))、それは手続き呼出しとして扱われます。</p>
@@ -406,15 +379,13 @@
  
 <span class="n">isa</span> <span class="o">=</span> <span class="nb">isinstance</span>
  
-<span class="n">Symbol</span> <span class="o">=</span> <span class="nb">str</span>
-</code></pre></div>
-
+<span class="n">Symbol</span> <span class="o">=</span> <span class="nb">str</span></code></pre></div>
 
 <p>evalの中身はif文による上記の９ケースの場合分け処理になっています。evalに与えられた内部表現(パースされたプログラム文字列)がリストである場合、特殊形式の何れかの処理でその構成要素が再帰的にeval処理されます。そしてeval対象がシンボルであれば、環境を定義したenvオブジェクトを参照してその実体を返します。シンボルでもリストでもない場合は、数字などの定数としてそのまま返します。eval対象が特殊形式でないリストである場合(else節)、これを手続きとしてその内容を実行します。</p>
 
 <p>なおevalの第２引数は環境オブジェクトenvを取ります。これは内部表現を評価する際にそれが定義された環境を区別する必要があるためです。これによってローカル変数がグローバルに評価されるようなことがなくなります。初期値はグローバル環境にセットされます。</p>
 
-<p>対応するRubyのevaluate<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>は以下のようになりました。</p>
+<p>対応するRubyのevaluate<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>は以下のようになりました。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="vg">$global_env</span><span class="p">)</span>
   <span class="k">case</span> <span class="n">x</span>
@@ -447,14 +418,11 @@
   <span class="k">else</span>
     <span class="n">x</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Rubyではcase式を使って条件分岐を行いました。手続き呼出し(内側のelse節)はPythonではリスト内包を使っていますが、Rubyにはそのような構文はないので代わりに、Enumerable#injectを使います。proc[<em>exps]はproc.call(</em>exps)と等価でprocの実行です。Python同様Rubyでも多重代入が便利に使えます。</p>
 
-<h2>環境クラス定義</h2>
-
+<h2 id="section-6">環境クラス定義</h2>
 <p>次に環境オブジェクトのためのクラスを定義します。</p>
 
 <p>Pythonのコード</p>
@@ -466,9 +434,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">outer</span> <span class="o">=</span> <span class="n">outer</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
         <span class="s">&quot;var が現れる一番内側のEnvを見つける。&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
-</code></pre></div>
-
+        <span class="k">return</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">var</span><span class="p">)</span></code></pre></div>
 
 <p>環境クラスENVはdictのサブクラスで、オブジェクト生成時に与えられた変数とその実体を辞書として保持します。zip関数で変数のリストと実体のリストから辞書を生成しマージします。そのオブジェクトが内部環境を構築するつまり外部環境を持っている場合、それを第３引数として渡してオブジェクトを生成します。これはeval関数内のlambdaにおける処理で使われています。</p>
 
@@ -486,14 +452,11 @@
   <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="nb">self</span><span class="o">.</span><span class="n">has_key?</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="p">?</span> <span class="nb">self</span> <span class="p">:</span> <span class="vi">@outer</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>外部環境outerはオブジェクトの外からアクセスする必要はないので、インスタンス変数@outerに保持します。Rubyのif修飾子ではelse節を書けないので、代わりに３項演算子?:を使います。</p>
 
-<h2>グローバル環境オブジェクト</h2>
-
+<h2 id="section-7">グローバル環境オブジェクト</h2>
 <p>環境クラスが定義できたのでこれを使ってグローバル環境オブジェクトを生成します。グローバル環境にはSchemeの組込み手続きを含めます。</p>
 
 <p>pythonのコード</p>
@@ -511,9 +474,7 @@
       <span class="s">&#39;null?&#39;</span><span class="p">:</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">==</span><span class="p">[],</span> <span class="s">&#39;symbol?&#39;</span><span class="p">:</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">isa</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">)})</span>
     <span class="k">return</span> <span class="n">env</span>
  
-<span class="n">global_env</span> <span class="o">=</span> <span class="n">add_globals</span><span class="p">(</span><span class="n">Env</span><span class="p">())</span>
-</code></pre></div>
-
+<span class="n">global_env</span> <span class="o">=</span> <span class="n">add_globals</span><span class="p">(</span><span class="n">Env</span><span class="p">())</span></code></pre></div>
 
 <p>add_globals関数は環境オブジェクトにSchemeの組込み手続きを追加します。この外部環境オブジェクトはグローバル変数global_envで参照できるようにセットされ、その結果どこからでもアクセスできるようになります。</p>
 
@@ -535,11 +496,9 @@
     <span class="p">})</span>
   <span class="n">env</span>
 <span class="k">end</span>
-<span class="vg">$global_env</span> <span class="o">=</span> <span class="n">add_globals</span><span class="p">(</span><span class="no">Env</span><span class="o">.</span><span class="n">new</span><span class="p">)</span>
-</code></pre></div>
+<span class="vg">$global_env</span> <span class="o">=</span> <span class="n">add_globals</span><span class="p">(</span><span class="no">Env</span><span class="o">.</span><span class="n">new</span><span class="p">)</span></code></pre></div>
 
-
-<p>RubyではPythonのmathモジュールのようなものはないので、すべてlambdaで生成しています。Ruby1.9で導入された->表記がこういうところでは便利です。Rubyではグローバル変数は変数名の前に$を前置します。</p>
+<p>RubyではPythonのmathモジュールのようなものはないので、すべてlambdaで生成しています。Ruby1.9で導入された-&gt;表記がこういうところでは便利です。Rubyではグローバル変数は変数名の前に$を前置します。</p>
 
 <p>ただRubyではあまりこういう書き方は見ません。Rubyistならブロックを使うでしょう。</p>
 
@@ -571,12 +530,9 @@
    <span class="ss">:null?</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">empty?</span><span class="p">},</span>
    <span class="ss">:symbol?</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">instance_of?</span><span class="p">(</span><span class="no">Symbol</span><span class="p">)}</span>
    <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h2>対話的Lispインタプリタ</h2>
-
+<h2 id="lisp">対話的Lispインタプリタ</h2>
 <p>最後に対話的インタプリタつまりユーザからSchemeプログラムの入力に対して、その評価結果をLispの文字列にして出力するものを追加します。</p>
 
 <p>Pythonのコード</p>
@@ -589,9 +545,7 @@
     <span class="s">&quot;read-eval-print-loopのプロンプト&quot;</span>
     <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
         <span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">parse</span><span class="p">(</span><span class="nb">raw_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> <span class="k">print</span> <span class="n">to_string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-</code></pre></div>
-
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> <span class="k">print</span> <span class="n">to_string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></code></pre></div>
 
 <p>to_string関数はインタプリタからの出力をLisp形式の文字列に変換します。raw_input関数は組み込み関数でpromptを表示して、ユーザの入力を促し入力があった場合それを返します。</p>
 
@@ -606,9 +560,7 @@
     <span class="n">val</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">parse</span> <span class="n">line</span><span class="p">)</span>
     <span class="n">to_string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">unless</span> <span class="n">val</span><span class="o">.</span><span class="n">nil?</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Rubyではraw_inputの代わりにReadlineライブラリを使います。</p>
 
@@ -628,26 +580,22 @@
 <span class="mi">51185210916864000000000000000000000000</span>
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">area</span> <span class="p">(</span><span class="n">fact</span> <span class="mi">10</span><span class="p">))</span>
 <span class="mi">41369087198016</span><span class="o">.</span><span class="mi">19</span>
-<span class="n">lisr</span><span class="o">&gt;</span> 
-</code></pre></div>
-
+<span class="n">lisr</span><span class="o">&gt;</span></code></pre></div>
 
 <p>うまくいきました！</p>
 
-<p>ところが...</p>
+<p>ところが…</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">define</span> <span class="n">first</span> <span class="n">car</span><span class="p">)</span>
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">define</span> <span class="n">rest</span> <span class="n">cdr</span><span class="p">)</span>
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">define</span> <span class="n">count</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="n">item</span> <span class="n">L</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="n">L</span> <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="nb">equal?</span> <span class="n">item</span> <span class="p">(</span><span class="n">first</span> <span class="n">L</span><span class="p">))</span> <span class="p">(</span><span class="n">count</span> <span class="n">item</span> <span class="p">(</span><span class="n">rest</span> <span class="n">L</span><span class="p">)))</span> <span class="mi">0</span><span class="p">)))</span>
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">count</span> <span class="mi">0</span> <span class="p">(</span><span class="n">list</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">))</span>
 <span class="n">lisr</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">17</span><span class="ss">:in</span> <span class="sb">`block in add_globals&#39;: undefined method `</span><span class="o">+</span><span class="s1">&#39; for false:FalseClass (NoMethodError)</span>
-<span class="s1">        from lisr.rb:57:in `[]&#39;</span>
-</code></pre></div>
+<span class="s1">        from lisr.rb:57:in `[]&#39;</span></code></pre></div>
 
+<p>これがうまくいきません…</p>
 
-<p>これがうまくいきません...</p>
-
-<p>というかcountの定義が僕には理解できません<sup id='fnref:4'><a href='#fn:4' rel='footnote'>4</a></sup>。</p>
+<p>というかcountの定義が僕には理解できません<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup>。</p>
 
 <p>自分のcountの定義で試してみると、</p>
 
@@ -657,19 +605,17 @@
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">count</span> <span class="mi">0</span> <span class="p">(</span><span class="n">list</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">))</span>
 <span class="mi">3</span>
 <span class="n">lisr</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">count</span> <span class="p">(</span><span class="n">quote</span> <span class="n">the</span><span class="p">)</span> <span class="p">(</span><span class="n">quote</span> <span class="p">(</span><span class="n">the</span> <span class="n">more</span> <span class="n">the</span> <span class="n">merrier</span> <span class="n">the</span> <span class="n">bigger</span> <span class="n">the</span> <span class="n">better</span><span class="p">)))</span>
-<span class="mi">4</span>
-</code></pre></div>
+<span class="mi">4</span></code></pre></div>
 
-
-<p>これはうまくいくのですが...</p>
+<p>これはうまくいくのですが…</p>
 
 <p>最後にちょっとすっきりしませんけど、十分に勉強になったのでまあいいとしますか。</p>
 
 <p>(追記：2010-11-13) Ruby実装の本格的なLispインタプリタを書いている方がいました。gem install nendoでインストールし、nendoで対話型インタプリタが実行できます。すごい！</p>
 
-<p>   <a href="http://oldtype.sumibi.org/show-page/Nendo">Nendo -- * Nendo programming languag</a></p>
+<p><a href="http://oldtype.sumibi.org/show-page/Nendo">Nendo – * Nendo programming languag</a></p>
 
-<div><script src='https://gist.github.com/670793.js?file=lisr.rb'></script>
+<div><script src="https://gist.github.com/670793.js?file=lisr.rb"></script>
 <noscript><pre><code>#!/opt/local/bin/ruby1.9
 #-*-encoding: utf-8-*-
 class Env &lt; Hash
@@ -804,16 +750,11 @@ if __FILE__ == $0
 end
 </code></pre></noscript></div>
 
-
-
-
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>自分の環境のirbでは:+, :*の表示には問題がありました <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>閉じ角カッコの前のカンマはRubyインタプリタでは無視されます <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>Rubyの組み込み関数evalをbrute_parseで使っているため名前を変えている <a href='#fnref:3' rev='footnote'>↩</a></li><li id='fn:4'>ちなみにcsi(Chicken Scheme Interpreter)でもerrorがでました <a href='#fnref:4' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">自分の環境のirbでは:+, :*の表示には問題がありました <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">閉じ角カッコの前のカンマはRubyインタプリタでは無視されます <a href="#fnref:2" rev="footnote">↩</a></li><li id="fn:3">Rubyの組み込み関数evalをbrute_parseで使っているため名前を変えている <a href="#fnref:3" rev="footnote">↩</a></li><li id="fn:4">ちなみにcsi(Chicken Scheme Interpreter)でもerrorがでました <a href="#fnref:4" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

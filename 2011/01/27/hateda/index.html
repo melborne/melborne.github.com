@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -185,34 +185,30 @@
 
 <p>はてダのユーザ単位で記事一覧を取得する、HateDa::EntryListというライブラリをRubyで作りました(‥;)取得したデータには記事のタイトル、日付、URLが含まれているので、それをベースにして簡単にまとめ頁を作ることができますね！</p>
 
-<h2>使い方</h2>
-
+<h2 id="section">使い方</h2>
 <p>次のサイトからファイルをダウンロードします。htmlの解析にNokogiriを使っているので、なければ<code>gem install nokogiri</code>してください。</p>
 
 <p><a href="https://github.com/melborne/HateDa">melborne/HateDa</a></p>
 
 <p>以下のように使います。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s1">&#39;hateda&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;hateda&#39;</span>
  <span class="n">hd</span> <span class="o">=</span> <span class="no">HateDa</span><span class="o">::</span><span class="no">EntryList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:keyesberry</span><span class="p">)</span>
  <span class="n">list</span> <span class="o">=</span> <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">url</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">date</span><span class="o">|</span>
    <span class="n">date</span><span class="o">.</span><span class="n">between?</span><span class="p">(</span><span class="s2">&quot;2010-10-1&quot;</span><span class="p">,</span> <span class="s2">&quot;2011-1-25&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">title</span> <span class="o">=~</span> <span class="sr">/ruby/i</span>
  <span class="k">end</span>
- <span class="nb">puts</span> <span class="n">hd</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="nb">puts</span> <span class="n">hd</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span><span class="n">list</span><span class="p">)</span></code></pre></div>
 
 <p>手順は以下の通りです。</p>
 
 <ol>
-<li>HateDa::EntryListクラスにユーザIDを渡しオブジェクトを生成します。</li>
-<li>getメソッドで対象頁を取得しHTML解析した結果を得ます。</li>
-<li>getメソッドでは頁を指定する引数と条件を指定するブロックを渡します。</li>
-<li>print_listメソッドで取得したリストをはてダ投稿用<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>に整形出力します。</li>
+  <li>HateDa::EntryListクラスにユーザIDを渡しオブジェクトを生成します。</li>
+  <li>getメソッドで対象頁を取得しHTML解析した結果を得ます。</li>
+  <li>getメソッドでは頁を指定する引数と条件を指定するブロックを渡します。</li>
+  <li>print_listメソッドで取得したリストをはてダ投稿用<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>に整形出力します。</li>
 </ol>
 
-
-<p>getメソッドの返り値は{url=>[title, date]}のようなHashになります。このサンプルの出力は以下のようになります。</p>
+<p>getメソッドの返り値は{url=&gt;[title, date]}のようなHashになります。このサンプルの出力は以下のようになります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20110124</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">を使って「なぜ関数プログラミングは重要か」を解読しよう！</span><span class="p">(</span><span class="mi">2011</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">24</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20110124</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
 <span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20110120</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">の末尾再帰最適化を理解する</span><span class="p">(</span><span class="mi">2011</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">20</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20110120</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
@@ -223,60 +219,48 @@
 <span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101107</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">で</span><span class="no">ANSI</span><span class="err">カラーシーケンスを学ぼう！</span><span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mo">07</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101107</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
 <span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101105</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">のモジュール関数を理解しよう！</span><span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mo">05</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101105</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
 <span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101017</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">で文字列検索アルゴリズムを表現しよう</span><span class="o">!</span><span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">17</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101017</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
-<span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101012</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">でソート・アルゴリズムを表現しよう</span><span class="o">!</span><span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101012</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span>
-</code></pre></div>
-
+<span class="o">+[</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101012</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">title</span><span class="o">=</span><span class="no">Ruby</span><span class="err">でソート・アルゴリズムを表現しよう</span><span class="o">!</span><span class="p">(</span><span class="mi">2010</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span><span class="p">)</span><span class="o">][</span><span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">d</span><span class="o">.</span><span class="n">hatena</span><span class="o">.</span><span class="n">ne</span><span class="o">.</span><span class="n">jp</span><span class="o">/</span><span class="n">keyesberry</span><span class="o">/</span><span class="mi">20101012</span><span class="o">/</span><span class="ss">p1</span><span class="p">:</span><span class="n">bookmark</span><span class="o">]</span></code></pre></div>
 
 <p>getメソッドには対象頁を指定するキーワード引数:pagesを渡せます。:pagesはその値として数字またはRangeを受けます。ここでいう頁は記事一覧の一頁のことで、一頁には50件程度の記事が含まれています。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1">#記事一覧の3頁目のみを取得</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1">#記事一覧の3頁目のみを取得</span>
  <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span>   <span class="c1">#1～3頁目を取得</span>
  <span class="n">hd</span><span class="o">.</span><span class="n">get</span>         <span class="err">　　　　　　</span><span class="c1">#1～10頁を取得</span>
- <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">15</span><span class="p">)</span>  <span class="c1">#1～15頁を取得</span>
-</code></pre></div>
-
+ <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">15</span><span class="p">)</span>  <span class="c1">#1～15頁を取得</span></code></pre></div>
 
 <p>引数を省略すると10頁までを取得します。それ以上を取得したい場合は例のように範囲を明示してください。</p>
 
 <p>getはまた頁の絞り込みをするためのキーワード引数:wordを取ります。:wordに渡した文字列で記事全文を検索し、その文字列が含まれる記事のみを対象にします。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="c1">#&#39;任天堂&#39;の語を含む記事のみを取得</span>
+<div class="highlight"><pre><code class="ruby"><span class="c1">#&#39;任天堂&#39;の語を含む記事のみを取得</span>
  <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:word</span> <span class="o">=&gt;</span> <span class="s1">&#39;任天堂&#39;</span><span class="p">)</span>
   <span class="c1">#&#39;ruby&#39;の語を含む記事群の1頁目のみを取得</span>
- <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:word</span> <span class="o">=&gt;</span> <span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="n">hd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:word</span> <span class="o">=&gt;</span> <span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="ss">:pages</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">)</span></code></pre></div>
 
 <p>getのブロックには、url, 記事タイトル(title), 日付(date)を対象に、条件を指定して目的の記事を絞り込むことができます。urlとtitleは文字列ですので、正規表現のマッチングを行うのがいいでしょう。dateはDateクラスのオブジェクトですのでそのメソッドが使えます。更にDateクラスを拡張して以下のメソッドが使えます。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="n">date</span><span class="o">.</span><span class="n">before?</span><span class="p">(</span><span class="s2">&quot;2010/12/31&quot;</span><span class="p">)</span>   <span class="c1"># dateが2010-12-31以前か？</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">date</span><span class="o">.</span><span class="n">before?</span><span class="p">(</span><span class="s2">&quot;2010/12/31&quot;</span><span class="p">)</span>   <span class="c1"># dateが2010-12-31以前か？</span>
   <span class="n">date</span><span class="o">.</span><span class="n">after?</span><span class="p">(</span><span class="s2">&quot;2009-12-3&quot;</span><span class="p">)</span>     <span class="c1"># dateが2009-12-3以降か？</span>
   <span class="n">date</span><span class="o">.</span><span class="n">sameday?</span><span class="p">(</span><span class="s2">&quot;2010-1-1&quot;</span><span class="p">)</span>    <span class="c1"># dateが2010-1-1か？</span>
   <span class="c1"># dateが2009-12-31と2010-2-1の間か？(当日を含む)</span>
-  <span class="n">date</span><span class="o">.</span><span class="n">between?</span><span class="p">(</span><span class="s2">&quot;2009-12-31&quot;</span><span class="p">,</span> <span class="s2">&quot;2010-2-1&quot;</span><span class="p">)</span>
-</code></pre></div>
-
+  <span class="n">date</span><span class="o">.</span><span class="n">between?</span><span class="p">(</span><span class="s2">&quot;2009-12-31&quot;</span><span class="p">,</span> <span class="s2">&quot;2010-2-1&quot;</span><span class="p">)</span></code></pre></div>
 
 <p>print_listメソッドはキーワード引数として、:bookmark :day :linenoを取れます。値はすべてBooleanです。:bookmarkは被ブクマ数表示の有無、:dayは日付表示の有無、:linenoは先頭連続番号の有無です。省略した場合は先の例のようにすべて有りになります。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="c1"># bookmarkと日付を省略</span>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># bookmarkと日付を省略</span>
  <span class="n">hd</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="ss">bookmark</span><span class="p">:</span><span class="kp">false</span><span class="p">,</span> <span class="ss">day</span><span class="p">:</span><span class="kp">false</span><span class="p">)</span>
  <span class="c1"># linenoのみ省略</span>
- <span class="n">hd</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="ss">lineno</span><span class="p">:</span><span class="kp">false</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="n">hd</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="ss">lineno</span><span class="p">:</span><span class="kp">false</span><span class="p">)</span></code></pre></div>
 
 <p>需要があるかは知りませんが、使ってくれる人がいたらうれしいです。</p>
 
 <p>(追記:2011-1-28)HateDa::EntryListの仕様を変更したので、それに合わせて記述を直しました。</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>はてな記法 <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">はてな記法 <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

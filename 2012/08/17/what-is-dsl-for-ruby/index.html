@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,16 +179,16 @@
       </script>
     </div>
 
-    <p>Rubyは<code>内部DSL</code>(Domain Specific Language)に向いている言語と言われます。<a href="https://rubygems.org/gems/rake" title="rake | RubyGems.org | your community gem host">Rake</a>, <a href="https://rubygems.org/gems/rspec" title="rspec | RubyGems.org | your community gem host">RSpec</a>, <a href="http://rack.github.com/" title="Rack: a Ruby Webserver Interface">Rack</a>, <a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>などは内部DSL on Rubyの代表的なサンプルです。Rubyの構文のユルさとメタプログラミングが内部DSLを容易にするんですね。</p>
+    
+<p>Rubyは<code>内部DSL</code>(Domain Specific Language)に向いている言語と言われます。<a href="https://rubygems.org/gems/rake" title="rake \| RubyGems.org \| your community gem host">Rake</a>, <a href="https://rubygems.org/gems/rspec" title="rspec \| RubyGems.org \| your community gem host">RSpec</a>, <a href="http://rack.github.com/" title="Rack: a Ruby Webserver Interface">Rack</a>, <a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>などは内部DSL on Rubyの代表的なサンプルです。Rubyの構文のユルさとメタプログラミングが内部DSLを容易にするんですね。</p>
 
 <p>しかし正直僕は、何が内部DSLで、何が内部DSLでないのかがわかっていません。人が何をさして「これは内部DSLである」と言っているのかがよくわかりません。</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p>以下では、Userクラスの設計を通して内部DSLらしきものを作ってみます。このイテレーションに対して「ここからが内部DSLだよ」「これは内部DSLとは呼ばないよ」と、誰か僕に優しく教えてくれませんか？</p>
 
-<h2>Userクラスの作成</h2>
-
+<h2 id="user">Userクラスの作成</h2>
 <p>Userクラスはユーザ情報を管理するクラスです。ファイル名はuser.rbとします。</p>
 
 <p>まずはユーザの登録機能を作ります。</p>
@@ -210,9 +210,7 @@
 <span class="k">end</span>
 
 <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span> <span class="c1"># =&gt; 1:Charlie(12/programmer)</span>
-<span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Ben&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span> <span class="c1"># =&gt; 2:Ben(17/teacher)</span>
-</code></pre></div>
-
+<span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Ben&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span> <span class="c1"># =&gt; 2:Ben(17/teacher)</span></code></pre></div>
 
 <p>生成されたUserオブジェクトは@@usersクラス変数で管理します。</p>
 
@@ -233,9 +231,7 @@
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>idとnameはユニークなものとしてdetectを、age, jobは複数の結果を返すものとしてselectを使った<code>find_by</code>メソッドをそれぞれ定義します。</p>
 
@@ -258,14 +254,11 @@
 <span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Alice&#39;</span> <span class="c1"># =&gt; nil</span>
 <span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Charlie&#39;</span> <span class="c1"># =&gt; 1:Charlie(12/programmer)</span>
 <span class="no">User</span><span class="o">.</span><span class="n">find_by_age</span> <span class="mi">33</span> <span class="c1"># =&gt; [3:Dick(33/lawyer), 6:George(33/programmer)]</span>
-<span class="no">User</span><span class="o">.</span><span class="n">find_by_job</span> <span class="ss">:programmer</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 6:George(33/programmer)]</span>
-</code></pre></div>
-
+<span class="no">User</span><span class="o">.</span><span class="n">find_by_job</span> <span class="ss">:programmer</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 6:George(33/programmer)]</span></code></pre></div>
 
 <p>いいですね。</p>
 
-<h2>改良１（registerの導入）</h2>
-
+<h2 id="register">改良１（registerの導入）</h2>
 <p>さて、これでUserクラスができたので、大量にユーザを登録していきたいと思います。上のようにuserlistを作って、eachすればいいですね！</p>
 
 <p>って、ちょっと躊躇しますよね。多重配列の括弧とカンマを打つのが面倒です。</p>
@@ -282,9 +275,7 @@
     <span class="k">alias</span> <span class="ss">:add</span> <span class="ss">:new</span>
 
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>クラスメソッドregisterとaddを用意しました。</p>
 
@@ -299,14 +290,11 @@
   <span class="n">u</span><span class="o">.</span><span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
 <span class="k">end</span>
 
-<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
-</code></pre></div>
-
+<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span></code></pre></div>
 
 <p>大分、入力が簡単になりました。</p>
 
-<h2>改良２（instance_evalの利用）</h2>
-
+<h2 id="instanceeval">改良２（instance_evalの利用）</h2>
 <p>でもここまで来ると、ブロック引数でUserクラスを引き渡すのが面倒と言えば面倒です。</p>
 
 <p>改善します。</p>
@@ -321,9 +309,7 @@
     <span class="k">alias</span> <span class="ss">:add</span> <span class="ss">:new</span>
 
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>instance_evalを使って、registerのブロック内をUserクラスのコンテキストとして評価させます。</p>
 
@@ -338,16 +324,13 @@
   <span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
 <span class="k">end</span>
 
-<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span>
-</code></pre></div>
-
+<span class="no">User</span><span class="o">.</span><span class="n">all</span> <span class="c1"># =&gt; [1:Charlie(12/programmer), 2:Ben(17/teacher), 3:Dick(33/lawyer), 4:Elizabeth(23/doctor), 5:Fernand(27/teacher), 6:George(33/programmer)]</span></code></pre></div>
 
 <p>更に入力が楽になりました。</p>
 
-<h2>改良３（userupコマンドの導入）</h2>
-
+<h2 id="userup">改良３（userupコマンドの導入）</h2>
 <p>ここまで来たらUserクラスとユーザの登録コマンドを別ファイルにしたほうがよさそうです。
-user.rbから'User.register do' 以下を削除し、次のような<code>userup</code>ファイルを用意します。</p>
+user.rbから’User.register do’ 以下を削除し、次のような<code>userup</code>ファイルを用意します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
 <span class="n">require_relative</span> <span class="s2">&quot;user&quot;</span>
@@ -361,9 +344,7 @@ user.rbから'User.register do' 以下を削除し、次のような<code>userup
   <span class="n">add</span> <span class="s1">&#39;George&#39;</span><span class="p">,</span>    <span class="mi">33</span><span class="p">,</span> <span class="ss">:programmer</span>
 <span class="k">end</span>
 
-<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span>
-</code></pre></div>
-
+<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span></code></pre></div>
 
 <p>userupに実行権限を付与して実行します。</p>
 
@@ -375,14 +356,11 @@ user.rbから'User.register do' 以下を削除し、次のような<code>userup
 3:Dick<span class="o">(</span>33/lawyer<span class="o">)</span>
 4:Elizabeth<span class="o">(</span>23/doctor<span class="o">)</span>
 5:Fernand<span class="o">(</span>27/teacher<span class="o">)</span>
-6:George<span class="o">(</span>33/programmer<span class="o">)</span>
-</code></pre></div>
-
+6:George<span class="o">(</span>33/programmer<span class="o">)</span></code></pre></div>
 
 <p>ユーザは、userup内registerでユーザを登録して、userupコマンドを実行すれば良くなりました。</p>
 
-<h2>改良４（configファイルの導入）</h2>
-
+<h2 id="config">改良４（configファイルの導入）</h2>
 <p>しかしながら、実行コマンド内にユーザ登録をするというのもなんか変です。</p>
 
 <p>ユーザ登録は別ファイルに分離して、それを読み込むようにするのがよさそうです。user.rbのregisterメソッドを改良します。</p>
@@ -401,11 +379,9 @@ user.rbから'User.register do' 以下を削除し、次のような<code>userup
     <span class="k">end</span>
 
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>registerにブロックが渡された場合はそれを評価しますが、ブロックが無い場合はcfgファイルを読み込んで評価するようにします。cfgファイルはデフォルトで'userdata'とします。</p>
+<p>registerにブロックが渡された場合はそれを評価しますが、ブロックが無い場合はcfgファイルを読み込んで評価するようにします。cfgファイルはデフォルトで’userdata’とします。</p>
 
 <p>userupコマンドは次のようにします。</p>
 
@@ -414,11 +390,9 @@ user.rbから'User.register do' 以下を削除し、次のような<code>userup
 
 <span class="no">User</span><span class="o">.</span><span class="n">register</span>
 
-<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span>
-</code></pre></div>
+<span class="nb">puts</span> <span class="no">User</span><span class="o">.</span><span class="n">all</span></code></pre></div>
 
-
-<p>そして、'userdata'ファイルを用意して、ここでaddコマンドでユーザ情報を登録していきます。</p>
+<p>そして、’userdata’ファイルを用意して、ここでaddコマンドでユーザ情報を登録していきます。</p>
 
 <div class="highlight"><pre><code class="bash"><span class="c"># userdata</span>
 add <span class="s1">&#39;Charlie&#39;</span>,   12, :programmer
@@ -426,9 +400,7 @@ add <span class="s1">&#39;Ben&#39;</span>,       17, :teacher
 add <span class="s1">&#39;Dick&#39;</span>,      33, :lawyer
 add <span class="s1">&#39;Elizabeth&#39;</span>, 23, :doctor
 add <span class="s1">&#39;Fernand&#39;</span>,   27, :teacher
-add <span class="s1">&#39;George&#39;</span>,    33, :programmer
-</code></pre></div>
-
+add <span class="s1">&#39;George&#39;</span>,    33, :programmer</code></pre></div>
 
 <p>準備ができたので、<code>userup</code>してみます。</p>
 
@@ -439,13 +411,11 @@ add <span class="s1">&#39;George&#39;</span>,    33, :programmer
 3:Dick<span class="o">(</span>33/lawyer<span class="o">)</span>
 4:Elizabeth<span class="o">(</span>23/doctor<span class="o">)</span>
 5:Fernand<span class="o">(</span>27/teacher<span class="o">)</span>
-6:George<span class="o">(</span>33/programmer<span class="o">)</span>
-</code></pre></div>
-
+6:George<span class="o">(</span>33/programmer<span class="o">)</span></code></pre></div>
 
 <p>いいですね。</p>
 
-<h2>改良５（IRBの利用）</h2>
+<h2 id="irb">改良５（IRBの利用）</h2>
 
 <p>最後に仕上げとして、userupコマンドをirbを使ったインタラクティブなものにします。</p>
 
@@ -455,11 +425,9 @@ add <span class="s1">&#39;George&#39;</span>,    33, :programmer
 <span class="no">User</span><span class="o">.</span><span class="n">register</span>
 
 <span class="nb">require</span> <span class="s2">&quot;irb&quot;</span>
-<span class="no">IRB</span><span class="o">.</span><span class="n">start</span>
-</code></pre></div>
+<span class="no">IRB</span><span class="o">.</span><span class="n">start</span></code></pre></div>
 
-
-<p>'userup'してみます。</p>
+<p>‘userup’してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="sx">% ./userup</span>
 <span class="sx">IRB </span><span class="n">on</span> <span class="no">Ruby1</span><span class="o">.</span><span class="mi">9</span><span class="o">.</span><span class="mi">3</span>
@@ -467,9 +435,7 @@ add <span class="s1">&#39;George&#39;</span>,    33, :programmer
 <span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_name</span> <span class="s1">&#39;Fernand&#39;</span> <span class="c1">#=&gt; 5:Fernand(27/teacher)</span>
 <span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_age</span> <span class="mi">33</span> <span class="c1">#=&gt; [3:Dick(33/lawyer), 6:George(33/programmer)]</span>
 <span class="o">&gt;&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_job</span> <span class="ss">:programmer</span> <span class="c1">#=&gt; [1:Charlie(12/programmer), 6:George(33/programmer)]</span>
-<span class="o">&gt;&gt;</span> <span class="nb">exit</span> 
-</code></pre></div>
-
+<span class="o">&gt;&gt;</span> <span class="nb">exit</span></code></pre></div>
 
 <p>いいですね。</p>
 
@@ -487,8 +453,9 @@ add <span class="s1">&#39;George&#39;</span>,    33, :programmer
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4864010471"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51myqqcxi0L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4864010471">ドメイン特化言語 パターンで学ぶDSLのベストプラクティス46項目</a> by マーチン ファウラー and Martin Fowler</p>
+<p><a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4864010471"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51myqqcxi0L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/ドメイン特化言語-パターンで学ぶDSLのベストプラクティス46項目-角-征典/dp/4864010471?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4864010471">ドメイン特化言語 パターンで学ぶDSLのベストプラクティス46項目</a> by マーチン ファウラー and Martin Fowler</p>
+
 
 
     <div class="ad" id="topAdsense">

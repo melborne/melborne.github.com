@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -192,13 +192,11 @@
 <p>実働時間の計測には次のステップが必要です。</p>
 
 <ol>
-<li>案件ごとの開始・終了時間を毎日記録する</li>
-<li>案件ごとに時間を集計する</li>
+  <li>案件ごとの開始・終了時間を毎日記録する</li>
+  <li>案件ごとに時間を集計する</li>
 </ol>
 
-
-<h2>案件ごとの開始・終了時間を毎日記録する</h2>
-
+<h2 id="section">案件ごとの開始・終了時間を毎日記録する</h2>
 <p>案件に対する実働時間というのは一日のうちでも小間切れになるので、これを記録するのはなかなか面倒です。よって時間の記録をできるだけ簡単に行えるようにする必要があります。</p>
 
 <p>そうなるとやっぱりテキストファイルに単純なフォーマットで記録するのがいいです。例えばこんな感じで。</p>
@@ -212,16 +210,12 @@
   &lt;開始日時&gt; - &lt;終了日時&gt;
   &lt;開始日時&gt; - &lt;終了日時&gt;
   &lt;開始日時&gt; - &lt;終了日時&gt;
-  &lt;開始日時&gt; - &lt;終了日時&gt;
-</code></pre></div>
-
+  &lt;開始日時&gt; - &lt;終了日時&gt;</code></pre></div>
 
 <p>日時の入力は面倒ですが、私はVimを使うので.vimrcに以下を追加して省力化します。</p>
 
 <div class="highlight"><pre><code class="bash"><span class="err">&quot;</span> insert timestamp
-map &lt;D-F2&gt; &lt;ESC&gt;:r !date&lt;CR&gt;
-</code></pre></div>
-
+map &lt;D-F2&gt; &lt;ESC&gt;:r !date&lt;CR&gt;</code></pre></div>
 
 <p>これでcmd+F2で日時が打てるようになります。</p>
 
@@ -240,12 +234,9 @@ Project-XYZ
   Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012
   Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012
   Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012
-  Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012
-</code></pre></div>
+  Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012</code></pre></div>
 
-
-<h2>案件ごとに時間を集計する</h2>
-
+<h2 id="section-1">案件ごとに時間を集計する</h2>
 <p>さあ仕事が終わったら上のファイルをRubyに読み込ませて集計しましょう。</p>
 
 <p>次のような出力が見やすくていいですね。</p>
@@ -264,21 +255,17 @@ Project-XYZ
   Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012
   Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012
   Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012
-  Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012
-</code></pre></div>
-
+  Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012</code></pre></div>
 
 <p>次のような方針にしましょう。</p>
 
 <ol>
-<li>ファイルを案件ごとに分ける。</li>
-<li>日時のラインをパースして日にちごとの時間に集計する。</li>
-<li>フォーマットを用意して集計データを出力する。</li>
+  <li>ファイルを案件ごとに分ける。</li>
+  <li>日時のラインをパースして日にちごとの時間に集計する。</li>
+  <li>フォーマットを用意して集計データを出力する。</li>
 </ol>
 
-
-<h2>ファイルを案件ごとに分ける</h2>
-
+<h2 id="section-2">ファイルを案件ごとに分ける</h2>
 <p>split_by_projectメソッドを定義します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">split_by_project</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">time_pattern</span><span class="o">=</span><span class="sr">/JST/</span><span class="p">)</span>
@@ -287,9 +274,7 @@ Project-XYZ
        <span class="o">.</span><span class="n">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="o">!</span><span class="n">line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">time_pattern</span><span class="p">)</span> <span class="p">}</span>
        <span class="o">.</span><span class="n">each_slice</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
        <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">names</span><span class="p">),</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">timelines</span><span class="p">)</span><span class="o">|</span>  <span class="o">[</span><span class="n">names</span><span class="o">.</span><span class="n">last</span><span class="p">,</span> <span class="n">timelines</span><span class="o">]</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このメソッドは読み込んだファイルの各行に対し、改行を除去し(chomp)、空行を除去し(empty?)、日時の行の前後で行分割し(chunk)、案件名と日時行をセットとし(each_slice(2))、最後に、案件名と日時行の配列を返します(map)。</p>
 
@@ -297,12 +282,9 @@ Project-XYZ
 
 <p>出力は次のようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">split_by_project</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span> <span class="c1"># =&gt; [[&quot;AA123&quot;, [&quot; Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012&quot;, &quot; Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012&quot;, &quot; Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012&quot;, &quot; Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012&quot;, &quot; Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012&quot;, &quot; Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012&quot;, &quot; Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012&quot;]], [&quot;Project-XYZ&quot;, [&quot; Sat Feb 11 08:57:36 JST 2012 - Sat Feb 11 11:00:00 JST 2012&quot;, &quot; Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012&quot;, &quot; Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012&quot;, &quot; Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012&quot;, &quot; Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012&quot;]]]</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">split_by_project</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span> <span class="c1"># =&gt; [[&quot;AA123&quot;, [&quot; Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012&quot;, &quot; Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012&quot;, &quot; Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012&quot;, &quot; Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012&quot;, &quot; Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012&quot;, &quot; Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012&quot;, &quot; Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012&quot;]], [&quot;Project-XYZ&quot;, [&quot; Sat Feb 11 08:57:36 JST 2012 - Sat Feb 11 11:00:00 JST 2012&quot;, &quot; Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012&quot;, &quot; Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012&quot;, &quot; Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012&quot;, &quot; Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012&quot;]]]</span></code></pre></div>
 
-
-<h2>日時のラインをパースして日にちごとの時間に集計する</h2>
-
+<h2 id="section-3">日時のラインをパースして日にちごとの時間に集計する</h2>
 <p>次にparse_and_arrange_timelinesメソッドを定義します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;date&#39;</span>
@@ -312,28 +294,23 @@ Project-XYZ
                           <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">parse</span> <span class="n">str</span> <span class="p">}</span>
            <span class="o">[</span><span class="n">from</span><span class="o">.</span><span class="n">to_date</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span> <span class="n">to</span><span class="o">-</span><span class="n">from</span><span class="o">]</span>
   <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lap</span><span class="p">)</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">date</span><span class="o">]</span> <span class="o">+=</span> <span class="n">lap</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このメソッドは、split_by_projectで生成された日時行を開始日時と終了日時に分けて(split)、DateTimeオブジェクトに変換し(DateTime.parse)、日付のラベルと経過時間の配列とし(map)、さらに、日付ごとの経過時間に集計します(inject)。</p>
 
-<p>ここでは規定のspliterを'-', '=>'としていますが、第２引数に任意のspliterを取ることができます。</p>
+<p>ここでは規定のspliterを’-‘, ‘=&gt;’としていますが、第２引数に任意のspliterを取ることができます。</p>
 
 <p>出力は次のようになります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">timelines</span> <span class="o">=</span> <span class="n">split_by_project</span><span class="p">(</span><span class="no">DATA</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;  Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012&quot;, &quot;  Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012&quot;, &quot;  Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012&quot;, &quot;  Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012&quot;, &quot;  Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012&quot;, &quot;  Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012&quot;, &quot;  Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012&quot;]</span>
-<span class="n">parse_and_arrange_timelines</span><span class="p">(</span><span class="n">timelines</span><span class="p">)</span> <span class="c1"># =&gt; {&quot;2012-01-21&quot;=&gt;(1523/9600), &quot;2012-01-22&quot;=&gt;(13543/43200), &quot;2012-01-24&quot;=&gt;(205/864)}</span>
-</code></pre></div>
-
+<span class="n">parse_and_arrange_timelines</span><span class="p">(</span><span class="n">timelines</span><span class="p">)</span> <span class="c1"># =&gt; {&quot;2012-01-21&quot;=&gt;(1523/9600), &quot;2012-01-22&quot;=&gt;(13543/43200), &quot;2012-01-24&quot;=&gt;(205/864)}</span></code></pre></div>
 
 <p>経過時間はRationalで表されています。</p>
 
-<h2>フォーマットを用意して集計データを出力する</h2>
-
+<h2 id="section-4">フォーマットを用意して集計データを出力する</h2>
 <p>最後に、出力用のフォーマットメソッドformat_forを用意します。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;term/ansicolor&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;term/ansicolor&quot;</span>
  <span class="k">def</span> <span class="nf">format_for</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">times_by_date</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
    <span class="n">times</span> <span class="o">=</span> <span class="n">times_by_date</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">date</span><span class="p">,</span> <span class="n">fractime</span><span class="o">|</span> <span class="o">[</span><span class="n">date</span><span class="p">,</span> <span class="n">frac2time</span><span class="p">(</span><span class="n">fractime</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
    <span class="n">total</span> <span class="o">=</span> <span class="n">frac2time</span> <span class="n">times_by_date</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span>
@@ -349,15 +326,13 @@ Project-XYZ
    <span class="n">hmsf</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:day_fraction_to_time</span><span class="p">,</span> <span class="n">fractime</span><span class="p">)</span>
    <span class="no">Hash</span><span class="o">[</span><span class="n">label</span><span class="o">.</span><span class="n">zip</span> <span class="n">hmsf</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">opt</span><span class="o">.</span><span class="n">include?</span> <span class="n">k</span> <span class="p">}</span>
                        <span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="nb">format</span> <span class="s2">&quot;%02d&quot;</span><span class="p">,</span> <span class="n">v</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>このメソッドは案件名と日付ごとの集計時間を取って、経過時間をhr:min:secのフォーマットに変換し(frac2time)、総経過時間を計算し(total)、rjustを使って出力用にフォーマットします。折角ですからterm-ansicolorで色付けしています。</p>
 
 <p>さあ、これらをまとめて実働時間を集計するworktime.rbの完成です!</p>
 
-<div><script src='https://gist.github.com/1670234.js?file=worktime.rb'></script>
+<div><script src="https://gist.github.com/1670234.js?file=worktime.rb"></script>
 <noscript><pre><code>#!/usr/bin/env ruby
 require &quot;date&quot;
 require &quot;term/ansicolor&quot;
@@ -425,9 +400,9 @@ Project-XYZ
   Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012
 </code></pre></noscript></div>
 
+<p>出力はこんな感じになります!</p>
 
-<p>出力はこんな感じになります!
-<img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20120125/20120125210748.png" alt="image" /></p>
+<p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20120125/20120125210748.png" alt="image" /></p>
 
 <p>これであなたも私もプロフェッショナル道まっしぐらですね!</p>
 

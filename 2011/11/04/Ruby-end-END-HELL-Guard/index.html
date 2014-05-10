@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -183,9 +183,11 @@
 
 <p>その一方でRubyのendを愛し、endを綴り続けることで悟りの境地に達したRubyistもいる。</p>
 
-<blockquote><p>  Rubyistは一日に何度もendと書くことで、
+<blockquote>
+  <p>Rubyistは一日に何度もendと書くことで、
   何事にも終わりがあることを日々確認しているのである
-  by @nalsh<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p></blockquote>
+  by @nalsh<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+</blockquote>
 
 <p>そしてこの私はというと、見習うべきRubyistの姿がそこにあるのに、defと打つと私のエディタが勝手にendと補完するので、物事の終わりも確認できず、醜いendの連なりだけを毎日目にする、という虚しい日々を送っている。</p>
 
@@ -193,18 +195,16 @@
 
 <p><a href="/2011/07/19/Ruby1-9-END-HELL/">Ruby1.9でもEND HELLを解消したい！</a></p>
 
-<h2>endの必要性</h2>
-
+<h2 id="end">endの必要性</h2>
 <p>しかし私は対称性という様式美の観点から、Rubyのendは重要な役割を果たしていることを知っている。</p>
 
 <p>開いたら閉じなければいけない。左足を下ろしたら右足も下ろさなければいけない。おもちゃを出したら片付けなければいけない。</p>
 
-<p>つまり対称性とは礼儀の作法である。つまりRubyのendはニッポンの心であり、私はRubyistがその文化の継承者であることを知っている<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+<p>つまり対称性とは礼儀の作法である。つまりRubyのendはニッポンの心であり、私はRubyistがその文化の継承者であることを知っている<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
 <p>このように美の観点から論じると、endはその構造的文化的背景によりプログラミングには欠かせない必須のエレメントであることが理解できるだろう。</p>
 
-<h2>問題の所在</h2>
-
+<h2 id="section">問題の所在</h2>
 <p>しかしそうは言っても次のようなendの連なりには、若干の問題を感じざるを得ない。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -230,9 +230,7 @@
 <span class="c1"># &gt;&gt; :large</span>
 <span class="c1"># &gt;&gt; :small</span>
 <span class="c1"># &gt;&gt; :large</span>
-<span class="c1"># &gt;&gt; :large</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; :large</span></code></pre></div>
 
 <p>このようなendの連なりはむしろその形式美を破壊し、その可読性を著しく阻害する。</p>
 
@@ -240,25 +238,20 @@
 
 <p>実はこれはRubyには意図されたことである。つまりRubyはあなたがEND HELLを量産すると、コードの美が破壊されるように設計されており、これによってあなたに要リファクタリングの警告を発していたのである!</p>
 
-<h2>許容end個数</h2>
-
+<h2 id="end-1">許容end個数</h2>
 <p>さて先のコードにリファクタリングが必要なことはわかった。リファクタリングに際しまずは許容end個数すなわち美を破壊しないendの連なり個数がいくつであるのかを知ることが重要である。</p>
 
 <p>一般に許容end個数はend対語平均語長未満とされるから、以下のように求められるだろう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">heads</span> <span class="o">=</span> <span class="sx">%w(class module def if unless case while until for begin do)</span>
-<span class="n">heads</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">/</span><span class="n">heads</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">to_f</span> <span class="c1"># =&gt; 4.181818181818182</span>
-</code></pre></div>
+<span class="n">heads</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">/</span><span class="n">heads</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">to_f</span> <span class="c1"># =&gt; 4.181818181818182</span></code></pre></div>
 
+<p>つまりendの連なりは４つ、理想的には３つ以下である。詳細はJIS X 3017(8.7.2: キーワード)を参照されたい<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>。</p>
 
-<p>つまりendの連なりは４つ、理想的には３つ以下である。詳細はJIS X 3017(8.7.2: キーワード)を参照されたい<sup id='fnref:3'><a href='#fn:3' rel='footnote'>3</a></sup>。</p>
-
-<h2>END HELLの回避方法</h2>
-
+<h2 id="end-hell">END HELLの回避方法</h2>
 <p>具体的なコードによってEND HELLの回避方法は変わるが、ここでは先のコードにおけるEND HELLの回避方法をいくつか示すに留める。</p>
 
-<h3>その１: 三項条件演算子</h3>
-
+<h3 id="section-1">その１: 三項条件演算子</h3>
 <p>if else end式に代えて?:三項条件演算子を使う。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -269,12 +262,9 @@
       <span class="k">end</span> 
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その２: { }(curly braces:波括弧)</h3>
-
+<h3 id="curly-braces">その２: { }(curly braces:波括弧)</h3>
 <p>do endに代えて{ }を使う。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -283,12 +273,9 @@
       <span class="mi">10</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="nb">p</span> <span class="nb">rand</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span> <span class="o">?</span> <span class="ss">:small</span> <span class="p">:</span> <span class="ss">:large</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その３:メソッド呼び出し</h3>
-
+<h3 id="section-2">その３:メソッド呼び出し</h3>
 <p>if else end式に代えてメソッド呼び出しを使う。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -297,12 +284,9 @@
       <span class="mi">10</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="nb">p</span> <span class="o">[</span><span class="ss">:small</span><span class="p">,</span> <span class="ss">:large</span><span class="o">][</span><span class="nb">rand</span><span class="o">.</span><span class="n">round</span><span class="o">]</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その４:メソッド分割</h3>
-
+<h3 id="section-3">その４:メソッド分割</h3>
 <p>メソッドを分割する。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -316,12 +300,9 @@
       <span class="nb">rand</span> <span class="o">&lt;</span> <span class="n">weight</span> <span class="p">?</span> <span class="ss">:small</span> <span class="p">:</span> <span class="ss">:large</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その５:ガード文</h3>
-
+<h3 id="section-4">その５:ガード文</h3>
 <p>if else end式に代えてガード文を使う(ここではnext)。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span>
@@ -333,12 +314,9 @@
       <span class="k">end</span> 
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その６:ポリモーフィズム</h3>
-
+<h3 id="section-5">その６:ポリモーフィズム</h3>
 <p>if else end式に代えてポリモーフィズムを使う。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Float</span>
@@ -354,12 +332,9 @@
       <span class="p">}</span> 
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h3>その７:定数スコープ演算子</h3>
-
+<h3 id="section-6">その７:定数スコープ演算子</h3>
 <p>定数のスコープ演算子::を使う。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MyModule</span><span class="p">;</span> <span class="k">end</span>
@@ -369,19 +344,15 @@
       <span class="nb">p</span> <span class="nb">rand</span><span class="o">.</span><span class="n">size</span>
     <span class="p">}</span> 
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>以上まとめると、END HELLはRubyのせいではなく、あなたのせいであり、したがってあなたのコードをリファクタして直ちにEND HELLを回避せよ！</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>[twitter](https://twitter.com/#!/nalsh/statuses/105432772570656768) <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>まったく訳がわからない <a href='#fnref:2' rev='footnote'>↩</a></li><li id='fn:3'>[JIS X 3017](http://www.webstore.jsa.or.jp/webstore/Com/FlowControl.jsp?lang=jp&bunsyoId=JIS+X+3017%3A2011&dantaiCd=JIS&status=1) <a href='#fnref:3' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">[twitter](https://twitter.com/#!/nalsh/statuses/105432772570656768) <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">まったく訳がわからない <a href="#fnref:2" rev="footnote">↩</a></li><li id="fn:3">[JIS X 3017](http://www.webstore.jsa.or.jp/webstore/Com/FlowControl.jsp?lang=jp&amp;bunsyoId=JIS+X+3017%3A2011&amp;dantaiCd=JIS&amp;status=1) <a href="#fnref:3" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

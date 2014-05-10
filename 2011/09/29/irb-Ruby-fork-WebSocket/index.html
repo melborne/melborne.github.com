@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -193,7 +193,6 @@
 <p>関連記事： <a href="/2012/12/13/ruby-parallel-on-ebook/" title="電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！">電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版をGumroadから出版しました！</a></p>
 
 <hr />
-
 <p>世の中は並列化花ざかりだよ。人間はシングルタスクのままなのに、プログラミングするときはマルチタスクが要求されるなんて、世知辛い世の中になったものだね。</p>
 
 <p>でも、情報革命は始まったばかりだから、愚痴ってばかりもいられないよ。自分がその波にうまく乗れないとしても、うまく乗ってる人の様を間近で見てみたいと思うんだ。</p>
@@ -202,15 +201,12 @@
 
 <p>Rubyのfork、Thread、Reactor、EventMachine、WebSocketなどの並列化について少し学んだので、自分の理解をここにまとめておくよ。</p>
 
-<h2>REPL</h2>
-
+<h2 id="repl">REPL</h2>
 <p>irbはRubyにおける対話型の実行環境だよ。これは一般にはREPLと呼ばれてるんだ。REPLはユーザの入力を読み取り(Read)、評価し(Eval)、出力する(Print) 処理を、繰り返すよ(Loop)。</p>
 
 <p>irbのコードは5000行にものぼるらしいけど、その核心は次のように1行で書けるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="kp">loop</span><span class="p">{</span> <span class="nb">puts</span> <span class="nb">eval</span> <span class="nb">gets</span> <span class="p">}</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="kp">loop</span><span class="p">{</span> <span class="nb">puts</span> <span class="nb">eval</span> <span class="nb">gets</span> <span class="p">}</span></code></pre></div>
 
 <p>getsでユーザ入力を読み取り、evalで評価し、putsで出力する処理を、loopで繰り返す。これじゃGEPLだけどね:)</p>
 
@@ -222,9 +218,7 @@ RUBY
 LISP
 HASKELL       
 <span class="s2">&quot;hello, repl!&quot;</span>.gsub<span class="o">(</span><span class="s1">&#39;r&#39;</span>,<span class="s1">&#39;g&#39;</span><span class="o">)</span>
-hello, gepl!  
-</code></pre></div>
-
+hello, gepl!</code></pre></div>
 
 <p>ちゃんと動いてるね。Ctrl+Cで終了するよ。</p>
 
@@ -236,14 +230,11 @@ hello, gepl!
   <span class="n">input</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="o">.</span><span class="n">gets</span>
   <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
   <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="n">output</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>デフォルトでグローバル変数$stdinと$stdoutには、標準入力、標準出力がセットされてるから、キーボードからの入力が読み取られ、ディスプレイに出力がなされるんだ。</p>
 
-<h2>マルチユーザーREPL</h2>
-
+<h2 id="repl-1">マルチユーザーREPL</h2>
 <p>REPLは１ユーザに対する対話環境だよ。でも複数ユーザで使えたらもっとうれしいよね。どうすればいい？</p>
 
 <p>そうだよ。入出力と評価(eval)を切り離せばいいんだよ。いわゆるクライアント・サーバー方式だね。クライアントからの入力をサーバーに渡して評価し、結果をクライアントに出力する。</p>
@@ -262,9 +253,7 @@ hello, gepl!
   <span class="k">ensure</span>
     <span class="n">client</span><span class="o">.</span><span class="n">close</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Rubyならこんなに簡単に書けちゃうんだ。TCPServer.newでサーバーインスタンスを生成し、acceptメソッドでクライアントからの接続を待ち受けるよ。クライアントが接続したら、getsでユーザからの入力を評価し結果をユーザに返す。接続したクライアント(これをソケットと呼ぶよ)からgetsし、ソケットにputsしてるところがポイントだよ。</p>
 
@@ -284,9 +273,7 @@ hello, gepl!
     <span class="vg">$stdin</span> <span class="o">=</span> <span class="no">STDIN</span>
     <span class="vg">$stdout</span> <span class="o">=</span> <span class="no">STDOUT</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ensure節ではこれらの後処理をしているよ。</p>
 
@@ -299,22 +286,18 @@ Escape character is <span class="s1">&#39;^]&#39;</span>.
 3.times.map <span class="o">{</span> <span class="s2">&quot;Hello, friend&quot;</span> <span class="o">}</span>
 Hello, friend
 Hello, friend
-Hello, friend
-</code></pre></div>
-
+Hello, friend</code></pre></div>
 
 <p>いい感じだね。Ctrl+]に続きquitでtelnetの接続を切るよ。</p>
 
-<h2>並列化REPL</h2>
-
+<h2 id="repl-2">並列化REPL</h2>
 <p>でも先のサーバーには大きな問題があるよ。誰か一人が接続していると他の人が接続できない、つまり複数の人が同時に使えないんだよ。先のコードで１つの接続がacceptされると、loop内のgetsはその接続先ユーザからの入力を待ち続けることになる。で、そのユーザの接続が切れてはじめて、処理はループされacceptで別の接続を待ち受けられるようになるんだ。これは大問題だね。複数のターミナルから接続して試してみればわかるよ。</p>
 
 <p>さあ、ここで並列化の出番だよ。</p>
 
 <p>Rubyで並列化を実現するにはいくつかの方法があるよ。ちょっとどんなやり方があるか考えてみてくれる？</p>
 
-<h2>個別接続による並列化</h2>
-
+<h2 id="section">個別接続による並列化</h2>
 <p>もっとも単純な方法は処理が終わるたびに、ユーザからの接続を毎回切る方法だよ。前のユーザの接続が切れれば、サーバーは別の接続を待てるからね。まあ、これを並列化と呼ぶのはどうかとも思うけど..</p>
 
 <p>コードは次のような感じになるかな。</p>
@@ -325,16 +308,13 @@ Hello, friend
   <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
   <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span>
   <span class="n">client</span><span class="o">.</span><span class="n">close</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>evalしたものをクライアントに返したら、そのソケットを閉じる。これによってそのクライアントの接続は切れるから、別のクライアントからの接続を待ち受けられるようになる。</p>
 
 <p>構成がシンプルでいいんだけど、ユーザにとってはちょっと面倒だよね。使うたびに接続し直さなきゃならないからね。なんかWebサーバーみたいだよね..</p>
 
-<h2>forkによる並列化</h2>
-
+<h2 id="fork">forkによる並列化</h2>
 <p>２つ目は複数のプロセスを起動する方法だよ。Rubyでプロセスを並列化するにはKernel#forkを使うよ。</p>
 
 <p>forkのブロックで囲まれたコードは別プロセスで起動されるから、loop{}のところをforkのブロックに投げればよさそうだね。やってみるよ。</p>
@@ -351,9 +331,7 @@ Hello, friend
       <span class="n">client</span><span class="o">.</span><span class="n">close</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>acceptでクライアントが接続するとforkで別プロセスが起動されて、その中でgetsの待ち受けがされるけど、メインプロセスは外側のループで先頭に戻り、これでacceptで別のクライアントの接続を待てるね。</p>
 
@@ -371,9 +349,7 @@ Trying 127.0.0.1...
 Connected to localhost.
 Escape character is <span class="s1">&#39;^]&#39;</span>.
 <span class="o">[</span>2011,10,1<span class="o">]</span>.join <span class="s1">&#39;-&#39;</span>
-2011-10-1
-</code></pre></div>
-
+2011-10-1</code></pre></div>
 
 <p>うまくいったね。</p>
 
@@ -382,16 +358,13 @@ Escape character is <span class="s1">&#39;^]&#39;</span>.
 <div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ps aux <span class="p">|</span> grep repl_server
 keyes     1335   0.3  0.1  2448356   1176 s001  R+    3:01PM   0:00.90 ruby repl_server.rb
 keyes     1303   0.3  0.0  2448356   1040 s001  S+    2:59PM   0:01.30 ruby repl_server.rb
-keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl_server.rb
-</code></pre></div>
-
+keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl_server.rb</code></pre></div>
 
 <p>３つのプロセスが立ってるのがわかるね。</p>
 
 <p>ただ、プロセスは個々に独立したメモリ空間を専有するから、接続ユーザ数が多くなるとちょっと心配だよね。またチャットサーバーのようにユーザ間での情報のやり取りが必要な場合、プロセス間で通信させなきゃならないから、そんなときはちょっと厄介そうだよね。</p>
 
-<h2>Threadによる並列化</h2>
-
+<h2 id="thread">Threadによる並列化</h2>
 <p>３つ目はスレッドを使う方法だよ。スレッドは１つのプロセス内で処理を並走させる仕組みだよ。並走する処理は同じプロセス内にあるから、その間でのデータ共有が容易という利点があるんだ。</p>
 
 <p>じゃあThreadクラスを使ったサーバーを書いてみるよ。</p>
@@ -409,9 +382,7 @@ keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl
       <span class="n">cl</span><span class="o">.</span><span class="n">close</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>forkをThread.newに変えればいいだけだから簡単だね。ただスレッドは同じプロセス内で並走するから、acceptしたclientをブロック引数を通して、ちゃんと渡さないと問題が生じるよ。</p>
 
@@ -437,9 +408,7 @@ Kernel
 BasicObject
 -------------------------------
 <span class="nv">$ </span>ps aux <span class="p">|</span>grep repl_server
-keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl_server.rb
-</code></pre></div>
-
+keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl_server.rb</code></pre></div>
 
 <p>プロセスは１つのままだってこと確認できるよね。</p>
 
@@ -464,16 +433,13 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
       <span class="n">clients</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="c1"># 切断したクライアントを管理対象外に</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>接続クライアント管理用の配列を用意して結果を全員にブロードキャストすればいいね。簡単だね。</p>
 
 <p>ただ、スレッドモデルはスレッド間で共有するデータを書き換えるような場合の取り扱いがちょっと厄介だよ。それと、やっぱり各スレッドごとにいつ来るかわからないデータを待っている、というのが無駄といえば無駄だよね。</p>
 
-<h2>Reactorパターンによる並列化</h2>
-
+<h2 id="reactor">Reactorパターンによる並列化</h2>
 <p>４つ目はReactorパターンを使って並列化する方法だよ。Reactorパターンというのは簡単に言うと、一箇所でいろいろなイベントを待ち受けて、イベントが来たらこれに反応(リアクト)して、その種類に応じた処理を実行するモデルのことだよ。RubyでReactorパターンを実現するには、IO.selectメソッド(またはKernel#select)を使うよ。</p>
 
 <p>早速Reactor版REPLサーバーを書いてみるよ。REPLサーバーにおけるイベントにはサーバーに対するものつまりクライアントの接続と、クライアントに対するものつまりソケットへのデータ入力があるよ。これらをsocketsという配列で管理しよう。</p>
@@ -497,9 +463,7 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>IO.selectは登録したソケットに対する入力／出力／例外のイベントを待ち受け、そのイベントが発生したソケットを返すけど、返り値はイベント別のソケットの配列になっているよ。ここでは入力イベントだけに関心があるから、配列の第一要素のみ取り出してるよ。</p>
 
@@ -509,8 +473,7 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
 
 <p>Reactorパターンでは、すべてのクライアントの接続は維持されたままなのに、処理が並走しないつまり単一プロセス単一スレッドで、複数クライアントからの要求に応じることができる、という点がユニークだよ。このモデルなら処理が並走することはないので、共有データを書き換えるようなことも簡単にできるよね。</p>
 
-<h2>EventMachineによる並列化</h2>
-
+<h2 id="eventmachine">EventMachineによる並列化</h2>
 <p>ただ、when式でのソケットの切り分け処理が面倒といえば面倒だよね。でも安心していいよ。EventMachineというライブラリを使えば、これが驚異的に簡単にできちゃうんだよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;eventmachine&quot;</span>
@@ -520,9 +483,7 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
       <span class="n">send_data</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>EventMachineはRreactorパターンによる、イベント駆動型のI/Oインタフェースを提供するライブラリだよ。JavaScriptのNode.jsみたいなものなんだろうね。</p>
 
@@ -550,18 +511,15 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
 
 <span class="no">EM</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span>
   <span class="no">EM</span><span class="o">.</span><span class="n">start_server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">60000</span><span class="p">,</span> <span class="no">Chat</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>EMサーバーはクライアントの接続があるたびにその引数でセットしたChatモジュールをインスタンス化して、その監視対象として登録するよ。<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup> 各インスタンスのpost_initメソッドはその接続時に、unbindメソッドはその切断時に呼び出され、receive_dataは先の例と同様にデータ受信時に呼び出されるよ。</p>
+<p>EMサーバーはクライアントの接続があるたびにその引数でセットしたChatモジュールをインスタンス化して、その監視対象として登録するよ。<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> 各インスタンスのpost_initメソッドはその接続時に、unbindメソッドはその切断時に呼び出され、receive_dataは先の例と同様にデータ受信時に呼び出されるよ。</p>
 
 <p>データをブロードキャストするにはEM::Channelを使うよ。subscribeでそのクライアントに対する処理を登録して、pushで呼び出せばいいんだ。</p>
 
 <p>gem install eventmachineして、telnetから試してみてね。</p>
 
-<h2>WebSocket</h2>
-
+<h2 id="websocket">WebSocket</h2>
 <p>ここまでくるとWebサーバー上でもこの並列化技術を使いたい、と考えるのが人情だよね。そう、これこそがWebSocketなんだよ。</p>
 
 <p>そしてうれしいことに、EventMachineにはそのためのプラグインem-websocketがあるんだ。gem install em-websocketして使うよ。サーバー側のコードは次のような感じだよ。</p>
@@ -575,9 +533,7 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
     <span class="n">ws</span><span class="o">.</span><span class="n">onmessage</span> <span class="p">{</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">push</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sid</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
     <span class="n">ws</span><span class="o">.</span><span class="n">onclose</span> <span class="p">{</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<span class="p">}</span></code></pre></div>
 
 <p>EM::WebSocket.startでサーバーインスタンスを立ち上げて、クライアントからの接続を待ち受けるよ。クライアントからの接続があるとonopenが呼ばれるから、ここでchannelにメッセージをブロードキャストする処理を登録するよ。クライアントがテキストを送信するとonmessageが呼ばれるから、それをchannelにpushして登録した処理を呼ぶよ。</p>
 
@@ -610,11 +566,9 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
     <span class="nt">&lt;/form&gt;</span>
     <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;msglist&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
   <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div>
+<span class="nt">&lt;/html&gt;</span></code></pre></div>
 
-
-<p>クライアント側では、サーバーに接続するソケットをインスタンス化するよ。ユーザがテキストを送信すると$("form").submitが呼ばれ、その内容はws.sendでソケットに送り出されるよ。これによってサーバー側のchannelに登録された処理が呼ばれ、接続されているクライアントにテキストがブロードキャストされるよ。クライアント側ではこれをonmessageで受けて、テキストをwindow上に表示するよ。</p>
+<p>クライアント側では、サーバーに接続するソケットをインスタンス化するよ。ユーザがテキストを送信すると$(“form”).submitが呼ばれ、その内容はws.sendでソケットに送り出されるよ。これによってサーバー側のchannelに登録された処理が呼ばれ、接続されているクライアントにテキストがブロードキャストされるよ。クライアント側ではこれをonmessageで受けて、テキストをwindow上に表示するよ。</p>
 
 <p>じゃあ試してみるよ。</p>
 
@@ -627,12 +581,10 @@ keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl
 <p>ちょっと長い投稿になっちゃったけど、最後まで付き合ってくれてありがとう。</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>モジュールをインスタンス化って変だよね.. <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">モジュールをインスタンス化って変だよね.. <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

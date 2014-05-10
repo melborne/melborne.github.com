@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,40 +179,37 @@
       </script>
     </div>
 
-    <h2>─　問題　─</h2>
+    
+<h2 id="section">─　問題　─</h2>
 
-<blockquote><p>次のファイルリストから<code>gemspec</code>ファイルだけを抜き出し、それをgemspec変数で、残りをfiles変数でアクセスできるようにする簡単な方法を示しなさい。但し、gemspecのファイル名はプロジェクトによって変わりうることを考慮しなさい。</p></blockquote>
+<blockquote>
+  <p>次のファイルリストから<code>gemspec</code>ファイルだけを抜き出し、それをgemspec変数で、残りをfiles変数でアクセスできるようにする簡単な方法を示しなさい。但し、gemspecのファイル名はプロジェクトによって変わりうることを考慮しなさい。</p>
+</blockquote>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">files</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Gemfile&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">,</span> <span class="s1">&#39;Rakefile&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">,</span> <span class="s1">&#39;maliq.gemspec&#39;</span><span class="p">,</span> <span class="s1">&#39;pkg&#39;</span><span class="p">,</span> <span class="s1">&#39;spec&#39;</span><span class="o">]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">files</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Gemfile&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">,</span> <span class="s1">&#39;Rakefile&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">,</span> <span class="s1">&#39;maliq.gemspec&#39;</span><span class="p">,</span> <span class="s1">&#39;pkg&#39;</span><span class="p">,</span> <span class="s1">&#39;spec&#39;</span><span class="o">]</span></code></pre></div>
 
 <p><br /></p>
 
 <p><br /></p>
 
-<h2>─　僕の通った道　─</h2>
+<h2 id="section-1">─　僕の通った道　─</h2>
 
-<h3>Array#deleteを使ってみる</h3>
+<h3 id="arraydelete">Array#deleteを使ってみる</h3>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">files</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Gemfile&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">,</span> <span class="s1">&#39;Rakefile&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">,</span> <span class="s1">&#39;maliq.gemspec&#39;</span><span class="p">,</span> <span class="s1">&#39;pkg&#39;</span><span class="p">,</span> <span class="s1">&#39;spec&#39;</span><span class="o">]</span>
 
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;maliq.gemspec&#39;</span><span class="p">)</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>gemspecのファイル名が固定ならこれで終わりだけど、もちろんこれは問の但し書き条件を満たしていないよ。だから<code>Array#delete</code>が、</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;*.gemspec&#39;</span><span class="p">)</span>
-<span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span></code></pre></div>
 
 <p>みたいにワイルドカードを取れたり、正規表現を取れたりできればよかったんだけど、残念ながらdeleteの引数は<code>==</code>同値判定っきりなんだよ。</p>
 
-<h3>Array#delete_ifまたはreject!</h3>
+<h3 id="arraydeleteifreject">Array#delete_ifまたはreject!</h3>
 
 <p>deleteが駄目だってんなら、次は<code>Array#delete_if</code>または<code>Array#reject!</code>だよね。</p>
 
@@ -224,9 +221,7 @@
 
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">reject!</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>ところが残念なことに、delete_ifは常にselfを返すんだよ。つまりヒットしたgemspecファイルを完全に捨て去っちゃうんだよ。</p>
 
@@ -237,13 +232,11 @@
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete_if</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.rb$/</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;maliq.gemspec&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">reject!</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.rb$/</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">gemspec</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+<span class="n">gemspec</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>nilが返るならその整合性としてヒットしたときはそれを返してくれてもと思うのは僕だけかな？</p>
 
-<h3>Enumerable#detectまたはfind</h3>
+<h3 id="enumerabledetectfind">Enumerable#detectまたはfind</h3>
 
 <p>次は<code>Enumerable#detect</code>を試してみるよ。</p>
 
@@ -251,13 +244,11 @@
 
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;maliq.gemspec&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;maliq.gemspec&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>filesにgemspecファイルが残っちゃうから、これはもちろん駄目だよね。</p>
 
-<h3>Enumerable#partition</h3>
+<h3 id="enumerablepartition">Enumerable#partition</h3>
 
 <p>次に辿り着いたのは<code>Enumerable#partition</code>だよ。partitionはブロック指定条件で集合を２つのグループに分けてくれるメソッドだよ。</p>
 
@@ -265,22 +256,18 @@
 
 <span class="n">gemspec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; [&quot;maliq.gemspec&quot;]</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>惜しい！gemspec変数には配列が入るから最終的には次のようにする必要があるよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">gemspecs</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">gemspec</span> <span class="o">=</span> <span class="n">gemspecs</span><span class="o">.</span><span class="n">first</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>なんかスマートじゃないよね。</p>
 
-<h3>Enumerable#partition + 括弧付き多重代入</h3>
+<h3 id="enumerablepartition--">Enumerable#partition + 括弧付き多重代入</h3>
 
 <p>で、Rubyの多重代入をちょっと工夫してみたんだよ。カッコを付けてね。</p>
 
@@ -288,9 +275,7 @@
 
 <span class="p">(</span><span class="n">gemspec</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">),</span> <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">gemspec</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
-<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
-</code></pre></div>
-
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span></code></pre></div>
 
 <p>括弧を使うと、partitionの返り値の第一配列が展開されてその先頭要素をgemspecに上手く取れるんだ。</p>
 
@@ -300,8 +285,9 @@
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/サンワダイレクト-パーティション-パーテーション-W800×H1600-100-SPT001-2/dp/B006OFA654?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B006OFA654"><img class="amazon" src="http://ecx.images-amazon.com/images/I/310v9SlKEiL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/サンワダイレクト-パーティション-パーテーション-W800×H1600-100-SPT001-2/dp/B006OFA654?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B006OFA654">サンワダイレクト パーティション 2枚セット 間仕切り パーテーション W800×H1600 100-SPT001-2</a></p>
+<p><a href="http://www.amazon.co.jp/サンワダイレクト-パーティション-パーテーション-W800×H1600-100-SPT001-2/dp/B006OFA654?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B006OFA654"><img class="amazon" src="http://ecx.images-amazon.com/images/I/310v9SlKEiL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/サンワダイレクト-パーティション-パーテーション-W800×H1600-100-SPT001-2/dp/B006OFA654?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B006OFA654">サンワダイレクト パーティション 2枚セット 間仕切り パーテーション W800×H1600 100-SPT001-2</a></p>
+
 
 
     <div class="ad" id="topAdsense">

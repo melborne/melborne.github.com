@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,18 +181,27 @@
 
     <p><a href="http://projecteuler.net/index.php?section=problems&amp;id=21">Problem 21 - Project Eulerより</a></p>
 
-<blockquote><p>Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
-If d(a) = b and d(b) = a, where a != b, then a and b are an amicable pair and each of a and b are called amicable numbers.
-For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
-Evaluate the sum of all the amicable numbers under 10000.
-d(n)をnの真約数(nを割り切れるn以下の数字)の合計と定義しよう。
-d(a) = b and d(b) = a (ただしa != b)であるとき、aとbは友愛ペアであり、a、bそれぞれは友愛数と呼ばれる。
-例えば、220の真約数は、1, 2, 4, 5, 10, 11, 20, 22, 44, 55および110であるから、d(220) = 284となる。284の真約数は、1, 2, 4, 71および142であるから、d(284) = 220となる。
-10000未満の全ての友愛数の和を求めよ。</p></blockquote>
+<blockquote>
+  <p>Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).</p>
+
+  <p>If d(a) = b and d(b) = a, where a != b, then a and b are an amicable pair and each of a and b are called amicable numbers.</p>
+
+  <p>For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.</p>
+
+  <p>Evaluate the sum of all the amicable numbers under 10000.</p>
+
+  <p>d(n)をnの真約数(nを割り切れるn以下の数字)の合計と定義しよう。</p>
+
+  <p>d(a) = b and d(b) = a (ただしa != b)であるとき、aとbは友愛ペアであり、a、bそれぞれは友愛数と呼ばれる。</p>
+
+  <p>例えば、220の真約数は、1, 2, 4, 5, 10, 11, 20, 22, 44, 55および110であるから、d(220) = 284となる。284の真約数は、1, 2, 4, 71および142であるから、d(284) = 220となる。</p>
+
+  <p>10000未満の全ての友愛数の和を求めよ。</p>
+</blockquote>
 
 <p>上の条件をそのまま素直に書いてみる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">n</span><span class="o">%</span><span class="n">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">v</span> <span class="p">:</span> <span class="n">sum</span> <span class="p">}</span>
  <span class="k">end</span>
  <span class="k">def</span> <span class="nf">sum_amicables</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
@@ -202,15 +211,13 @@ d(a) = b and d(b) = a (ただしa != b)であるとき、aとbは友愛ペアで
  <span class="k">end</span>
  <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
  <span class="n">sum_amicables</span> <span class="mi">10000</span> <span class="c1"># =&gt; 3xxxx</span>
- <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 31.430755</span>
-</code></pre></div>
-
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 31.430755</span></code></pre></div>
 
 <p>やっぱりd(n)メソッドがちょっと遅い
 ちょっとキレイでないけど
 factorで因数を求めてから約数を求める</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
    <span class="n">f</span> <span class="o">=</span> <span class="n">factor</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
    <span class="n">com</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">]</span>
    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">length</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
@@ -236,9 +243,7 @@ factorで因数を求めてから約数を求める</p>
  <span class="k">end</span>
  <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
  <span class="n">sum_amicables</span> <span class="mi">10000</span> <span class="c1"># =&gt; 3xxxx</span>
- <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 5.993918</span>
-</code></pre></div>
-
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 5.993918</span></code></pre></div>
 
 <p>速度的には改善された</p>
 

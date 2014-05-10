@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,17 +179,22 @@
       </script>
     </div>
 
-    <p>前の記事では<code>iTunesTrack</code>を使ってiTunesから音楽データを抽出しWebアプリ化する手順を説明しました。</p>
+    
+<p>前の記事では<code>iTunesTrack</code>を使ってiTunesから音楽データを抽出しWebアプリ化する手順を説明しました。</p>
 
-<blockquote><p><a href="/2013/11/19/build-a-database-for-itunes-music-data/" title="iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ">iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ</a></p></blockquote>
+<blockquote>
+  <p><a href="/2013/11/19/build-a-database-for-itunes-music-data/" title="iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ">iTunes.appの音楽ライブラリを最速でWebアプリにするたった３つのステップ</a></p>
+</blockquote>
 
 <p>ここでは<code>iTunesTrack</code>の詳細を説明します。対象バージョンは0.0.1です。</p>
 
-<blockquote><p><a href="https://rubygems.org/gems/itunes_track" title="itunes_track | RubyGems.org | your community gem host">itunes_track | RubyGems.org | your community gem host</a></p>
+<blockquote>
+  <p><a href="https://rubygems.org/gems/itunes_track" title="itunes_track \| RubyGems.org \| your community gem host">itunes_track | RubyGems.org | your community gem host</a></p>
 
-<p><a href="https://github.com/melborne/itunes_track" title="melborne/itunes_track">melborne/itunes_track</a></p></blockquote>
+  <p><a href="https://github.com/melborne/itunes_track" title="melborne/itunes_track">melborne/itunes_track</a></p>
+</blockquote>
 
-<h2>ターミナルでの使い方</h2>
+<h2 id="section">ターミナルでの使い方</h2>
 
 <p><code>gem install itunes_track</code>でインストールすると、<code>itunes_track</code>ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。</p>
 
@@ -199,18 +204,14 @@ Commands:
   itunes_track <span class="nb">help</span> <span class="o">[</span>COMMAND<span class="o">]</span>  <span class="c"># Describe available commands or one specific command</span>
   itunes_track size <span class="o">[</span>ARTIST<span class="o">]</span>   <span class="c"># Show track size for ARTIST match</span>
   itunes_track tracks          <span class="c"># Show tracks</span>
-  itunes_track version         <span class="c"># Show ItunesTrack version</span>
-</code></pre></div>
-
+  itunes_track version         <span class="c"># Show ItunesTrack version</span></code></pre></div>
 
 <p><code>size</code>サブコマンドは、引数で渡したARTISTにマッチするトラックの数を返します。引数を省略すると全楽曲数が返ります。</p>
 
 <div class="highlight"><pre><code class="bash">% itunes_track size sixpence
 47
 % itunes_track size
-1091
-</code></pre></div>
-
+1091</code></pre></div>
 
 <p><code>tracks</code>サブコマンドは楽曲一覧を表示するもので、<code>--artist</code>と<code>--album</code>というオプションを取れます。</p>
 
@@ -222,9 +223,7 @@ Options:
   -a, <span class="o">[</span>--artist<span class="o">=</span>ARTIST<span class="o">]</span>
   -l, <span class="o">[</span>--album<span class="o">=</span>ALBUM<span class="o">]</span>
 
-Show tracks
-</code></pre></div>
-
+Show tracks</code></pre></div>
 
 <pre><code>% itunes_track tracks -a sixpence -l 'Best Of'
  Kiss Me 3:29 Sixpence None The Richer The Best Of Sixpence None The Richer 36
@@ -260,17 +259,13 @@ Options:
                          <span class="c"># Default: name,time,artist,album,genre,rating,played_count,year,composer,track_count,track_number,disc_count,disc_number,lyrics</span>
   -a, <span class="o">[</span>--artist<span class="o">=</span>ARTIST<span class="o">]</span>
 
-Create CSV file from tracks data
-</code></pre></div>
-
+Create CSV file from tracks data</code></pre></div>
 
 <p>次のように使います。</p>
 
 <div class="highlight"><pre><code class="bash">% itunes_track csv sixpence.csv -a sixpence -f name,artist,album,year
 I am working on csv...
-CSV file successfully created at sixpence.csv.
-</code></pre></div>
-
+CSV file successfully created at sixpence.csv.</code></pre></div>
 
 <p>以下のようなファイルが出来上がります。</p>
 
@@ -298,23 +293,19 @@ Trust,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
  .
 </code></pre>
 
-<h2>Rubyスクリプトでの使い方</h2>
+<h2 id="ruby">Rubyスクリプトでの使い方</h2>
 
 <p>ItunesTrackクラスは次のようなクラスメソッドを持っています。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="sx">% irb </span><span class="o">-</span><span class="n">ritunes_track</span>
 <span class="no">IRB</span> <span class="n">on</span> <span class="no">Ruby2</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
 <span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="c1">#=&gt; [:build, :full_build, :tracks, :itunes, :itunes_tracks, :size, :track_properties, :to_csv]</span>
-<span class="o">&gt;&gt;</span>
-</code></pre></div>
-
+<span class="o">&gt;&gt;</span></code></pre></div>
 
 <p><code>.size</code>メソッドは楽曲数を返しますが、条件を指定したブロックを取ることができます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">size</span> <span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">match</span> <span class="sr">/jazz/i</span> <span class="p">}</span> <span class="c1">#=&gt; 66</span>
-<span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">size</span> <span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">match</span> <span class="sr">/hello/i</span> <span class="p">}</span> <span class="c1">#=&gt; 3</span>
-</code></pre></div>
-
+<span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">size</span> <span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">match</span> <span class="sr">/hello/i</span> <span class="p">}</span> <span class="c1">#=&gt; 3</span></code></pre></div>
 
 <p><code>rb-appscript</code>の仕様上、メソッドの最後で<code>get</code>する必要があります（イケてない）。</p>
 
@@ -322,26 +313,21 @@ Trust,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
 
 <div class="highlight"><pre><code class="ruby"><span class="o">&gt;&gt;</span> <span class="no">ItunesTrack</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:time</span><span class="p">,</span> <span class="ss">:artist</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">get</span> <span class="o">==</span> <span class="s1">&#39;Adele&#39;</span> <span class="p">}</span>
 
-<span class="o">=&gt;</span> <span class="o">[</span><span class="c1">#&lt;ItunesTrack::Track name=&quot;Daydreamer&quot;, time=&quot;3:40&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Best For Last&quot;, time=&quot;4:18&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Chasing Pavements&quot;, time=&quot;3:30&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Cold Shoulder&quot;, time=&quot;3:11&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Crazy For You&quot;, time=&quot;3:28&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Melt My Heart To Stone&quot;, time=&quot;3:23&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;First Love&quot;, time=&quot;3:10&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Right As Rain&quot;, time=&quot;3:17&quot;, artist=&quot;Adele&quot;&gt;, ... ]</span>
-</code></pre></div>
-
+<span class="o">=&gt;</span> <span class="o">[</span><span class="c1">#&lt;ItunesTrack::Track name=&quot;Daydreamer&quot;, time=&quot;3:40&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Best For Last&quot;, time=&quot;4:18&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Chasing Pavements&quot;, time=&quot;3:30&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Cold Shoulder&quot;, time=&quot;3:11&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Crazy For You&quot;, time=&quot;3:28&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Melt My Heart To Stone&quot;, time=&quot;3:23&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;First Love&quot;, time=&quot;3:10&quot;, artist=&quot;Adele&quot;&gt;, #&lt;ItunesTrack::Track name=&quot;Right As Rain&quot;, time=&quot;3:17&quot;, artist=&quot;Adele&quot;&gt;, ... ]</span></code></pre></div>
 
 <p>引数を省略した場合、name, time, artist, album, genre, rating, played_count, year, composer, track_count, track_number, disc_count, disc_number, lyricsを対象にリストを生成します。<code>rb-appscript</code>でアクセス可能なすべてのタグを取得したい場合は<code>build</code>に代えて<code>full_build</code>メソッドを使います。楽曲数が多い場合、生成に時間がかかることを覚悟します。</p>
 
 <p><code>.to_csv</code>メソッドはbuildしたデータをcsvファイルに保存します。第２引数でCSV化するフィールドを更に限定することもできます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">ItunesTrack</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;adele.csv&#39;</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:album</span><span class="p">,</span> <span class="ss">:time</span><span class="o">]</span><span class="p">)</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">ItunesTrack</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;adele.csv&#39;</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:album</span><span class="p">,</span> <span class="ss">:time</span><span class="o">]</span><span class="p">)</span></code></pre></div>
 
 <p>大体以上です。</p>
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
@@ -352,6 +338,7 @@ Trust,Sixpence None The Richer,The Best Of Sixpence None The Richer,2004
 <a href="/books/">
   <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
 </a></p>
+
 
 
     <div class="ad" id="topAdsense">

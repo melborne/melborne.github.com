@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,11 +179,12 @@
       </script>
     </div>
 
-    <p>Rubyのクラスはオープンです。つまりRubyのユーザが既存のクラスを開いて自由に実装を弄ることができるのです。組み込みクラスとてその例外ではありません。</p>
+    
+<p>Rubyのクラスはオープンです。つまりRubyのユーザが既存のクラスを開いて自由に実装を弄ることができるのです。組み込みクラスとてその例外ではありません。</p>
 
 <p>既存のクラスを開いてメソッドを追加したり再定義したりすることを、業界用語で「モンキーパッチ」といいます。モンキーパッチという語には明らかに批判的・軽蔑的ニュアンスが含まれていますが、多くのRubyistはそれにひるむこと無く良くモンキーパッチします。何しろドアはいつも開いてるんですからねぇ。</p>
 
-<h2>るびおのモンキーパッチ</h2>
+<h2 id="section">るびおのモンキーパッチ</h2>
 
 <p>モンキーパッチャー「るびお」は、製作中のライブラリで多次元配列の要素に頻繁にアクセスする必要が生じました。これには通常、<code>Array#[]</code>または<code>#at</code>を使って次のようにアクセスします。</p>
 
@@ -191,9 +192,7 @@
 <span class="n">irb</span><span class="o">&gt;</span> <span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span>
 <span class="o">=&gt;</span> <span class="mi">6</span>
 <span class="n">irb</span><span class="o">&gt;</span> <span class="n">arr</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="o">=&gt;</span> <span class="mi">6</span>
-</code></pre></div>
-
+<span class="o">=&gt;</span> <span class="mi">6</span></code></pre></div>
 
 <p>３次元配列ならさらに以下のようにします。</p>
 
@@ -205,11 +204,9 @@
 <span class="n">irb</span><span class="o">&gt;</span> <span class="n">arr2</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">2</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span>
 <span class="o">=&gt;</span> <span class="mi">16</span>
 <span class="n">irb</span><span class="o">&gt;</span> <span class="n">arr2</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">=&gt;</span> <span class="mi">16</span>
-</code></pre></div>
+<span class="o">=&gt;</span> <span class="mi">16</span></code></pre></div>
 
-
-<p>４次元配列なら...。</p>
+<p>４次元配列なら…。</p>
 
 <p>るびおはこれを面倒と感じました。</p>
 
@@ -225,11 +222,9 @@
       <span class="o">[[</span><span class="mi">19</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">21</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">24</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">27</span><span class="o">]]</span>
       <span class="o">]</span>
 <span class="n">irb</span><span class="o">&gt;</span> <span class="n">arr2</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">=&gt;</span> <span class="mi">16</span>
-</code></pre></div>
+<span class="o">=&gt;</span> <span class="mi">16</span></code></pre></div>
 
-
-<h2>モンキーパッチ ─ その１</h2>
+<h2 id="section-1">モンキーパッチ ─ その１</h2>
 
 <p>取り敢えずのコードができたので、対象のライブラリにおいてArrayをオープンして<code>#at</code>をオーバーライドしてみました。</p>
 
@@ -257,13 +252,11 @@
     <span class="o">]</span>
 
   <span class="n">arr</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; 16</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>オリジナルの#atをaliasを使って#__at__に退避させ、再定義の#atにおいて間接的に呼べるようにしました。#atの実装では、引数が１つならオリジナルの#atの結果を返すようにし、そうでない場合は、引数がなくなるまで再帰的に#atを呼ぶようにしました。さらに#__at__をprivate指定してライブラリのユーザが呼べないようにも配慮しました。</p>
 
-<h2>モンキーパッチ ─ その２</h2>
+<h2 id="section-2">モンキーパッチ ─ その２</h2>
 
 <p>ここでるびおは何かの本に、「モンキーパッチするなら、その意図がより明瞭になるようメソッドをモジュールに定義してincludeするのが儀礼上良い。」といったようなことが書いてあったことを思い出しました。これに従い、ArrayExtensionモジュールに#atを定義しincludeするようにしてみました。</p>
 
@@ -280,16 +273,12 @@
   <span class="kp">private</span> <span class="ss">:__at__</span>
 <span class="k">end</span>
 
-<span class="nb">Array</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">ArrayExtension</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="nb">Array</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">ArrayExtension</span><span class="p">)</span></code></pre></div>
 
 <p>しかしこれを実行してみると、以下のエラーが出力されてしまいました。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">core_ext</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">2</span><span class="ss">:in</span> <span class="sb">`&lt;module:ArrayExtension&gt;&#39;: undefined method `</span><span class="n">at</span><span class="s1">&#39; for module `ArrayExtension&#39;</span> <span class="p">(</span><span class="no">NameError</span><span class="p">)</span>
-        <span class="n">from</span> <span class="n">core_ext</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">1</span><span class="ss">:in</span> <span class="sb">`&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+        <span class="n">from</span> <span class="n">core_ext</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">1</span><span class="ss">:in</span> <span class="sb">`&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>当然といえば当然です。ArrayExtensionモジュールにはオリジナルの#atメソッドなんて存在しないのですからね。また仮にオリジナルの#atに頼らないで新たな#atを実装したとしても、これはうまくいきません。includeはArrayの後ろ（継承上位）にこのモジュールを差し込むので、結局、それはオリジナルの#atで上書きされてしまうからです。</p>
 
@@ -303,13 +292,15 @@
 
 <p><span style="color:#E50086">メグ</span>「るびお君、やっぱりまだまだね。後ろがだめなら、前に刺せばいいのよ。あんたまさか未だに<code>1.9.3</code>なんてことないわよね。」</p>
 
-<p><span style="color:#6BBF3F">るびお</span>「げっ！メグっ...」</p>
+<p><span style="color:#6BBF3F">るびお</span>「げっ！メグっ…」</p>
 
-<blockquote><p>参照：<a href="/2013/08/27/count-methods-of-ruby/" title="Rubyのメソッドを数えましょう♫">Rubyのメソッドを数えましょう♫</a></p></blockquote>
+<blockquote>
+  <p>参照：<a href="/2013/08/27/count-methods-of-ruby/" title="Rubyのメソッドを数えましょう♫">Rubyのメソッドを数えましょう♫</a></p>
+</blockquote>
 
 <hr />
 
-<h2>モンキーパッチ ─ その３</h2>
+<h2 id="section-3">モンキーパッチ ─ その３</h2>
 
 <p>天の声（？）に従い、るびおはモジュールをクラスの前に差す方法を模索しました。そしてRuby2.0の中に見つけたのです。</p>
 
@@ -328,9 +319,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="nb">Array</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:prepend</span><span class="p">,</span> <span class="no">ArrayExtension</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="nb">Array</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:prepend</span><span class="p">,</span> <span class="no">ArrayExtension</span><span class="p">)</span></code></pre></div>
 
 <p>ArrayExtension#atはオリジナルのArray#atの前（継承下位）に位置します。そのため、その実装においてArray#atを<code>super</code>で呼び出すことができます。オリジナルをaliasで退避させる必要がないのです。</p>
 
@@ -361,18 +350,16 @@
 <span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
   <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:7:in `at&#39;: undefined method `at&#39; for 2:Fixnum (NoMethodError)</span>
-<span class="c1"># ~&gt;    from -:16:in `&lt;main&gt;&#39;</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:16:in `&lt;main&gt;&#39;</span>
+<span class="k">end</span></code></pre></div>
 
 <p><span style="color:#E50086">メグ</span>「やっぱり。<code>undefined method 'at' for 2:Fixnum (NoMethodError)</code>って、意味不明じゃない。だからそんなダメ実装の拡張はあんただけのものにしときなさいよ。」</p>
 
-<p><span style="color:#6BBF3F">るびお</span>「ぐっ...」</p>
+<p><span style="color:#6BBF3F">るびお</span>「ぐっ…」</p>
 
 <hr />
 
-<h2>モンキーパッチ ─ その４</h2>
+<h2 id="section-4">モンキーパッチ ─ その４</h2>
 
 <p>再び天の声（？）に従い、るびおはモジュールによる影響を限定する方法を模索しました。そして再びRuby2.0の中に見つけたのです。</p>
 
@@ -408,10 +395,8 @@
 
   <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:8:in `at&#39;: undefined method `at&#39; for 2:Fixnum (NoMethodError)</span>
-<span class="c1"># ~&gt;    from -:31:in `&lt;main&gt;&#39;</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:31:in `&lt;main&gt;&#39;</span>
+<span class="k">end</span></code></pre></div>
 
 <p>これによりArrayExtensionモジュールで定義した#atは、その影響範囲において２つの制約を受けることになります。つまり<code>refine(Array)</code>によって、ArrayExtensionがincludeされるクラスに拘らず#atはArrayのみのメソッドになり、また明示的に<code>using</code>をしていないファイルではArrayExtension#atは呼び出せないようになるのです（言い換えればusingをしたファイルをrequireやloadしてもその効果は無効です）。</p>
 
@@ -423,9 +408,7 @@
 
 <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:5:in `at&#39;: wrong number of arguments (2 for 1) (ArgumentError)</span>
-<span class="c1"># ~&gt;    from -:5:in `&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:5:in `&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>Array#atの適切なエラーメッセージが吐かれ、ArrayExtension#atの拡張は適用されていないことが確認できました。</p>
 
@@ -449,11 +432,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">using</span> <span class="no">ArrayExtension</span>
-</code></pre></div>
-
-
-
+<span class="n">using</span> <span class="no">ArrayExtension</span></code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1">#user_code.rb</span>
 <span class="nb">require</span> <span class="s2">&quot;./core_ext&quot;</span>
@@ -466,9 +445,7 @@
 
 <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:10:in `at&#39;: wrong number of arguments (2 for 1) (ArgumentError)</span>
-<span class="c1"># ~&gt;    from -:10:in `&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; 	from -:10:in `&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>こうしてるびおはまた一歩、分別のあるRubyistの道を進むことができたとの満足感に浸っているのでした。するとそこに三度、天から一条の光が差し(ry</p>
 
@@ -476,12 +453,10 @@
 
 <p><span style="color:#E50086">メグ</span>「るびお君、あなたまた大事なこといい忘れてるわよ。Rubyの吐くメッセージちゃんと見てるの？それともこんな簡単な英語も読めないの？まったく。あたしが訳してあげるわ。」</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="c1"># !&gt; Refinements are experimental, and the behavior may change in future versions of Ruby!</span>
- <span class="err">（意訳：あんたらこの実装信じたら、将来痛い目見るよ。）</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># !&gt; Refinements are experimental, and the behavior may change in future versions of Ruby!</span>
+ <span class="err">（意訳：あんたらこの実装信じたら、将来痛い目見るよ。）</span></code></pre></div>
 
-
-<p><span style="color:#6BBF3F">るびお</span>「...」</p>
+<p><span style="color:#6BBF3F">るびお</span>「…」</p>
 
 <hr />
 
@@ -489,10 +464,9 @@
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
@@ -503,6 +477,7 @@
 <a href="/books/">
   <img src="/assets/images/2012/rack_cover.png" alt="rack" style="width:200px" />
 </a></p>
+
 
 
     <div class="ad" id="topAdsense">

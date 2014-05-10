@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,28 +179,23 @@
       </script>
     </div>
 
-    <p>「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」を読んでます。この本のタイトルとカバーデザインはかなりミスリードですね！もしこの本を入門書と呼ぶのなら、僕の脳に相当の問題があるか、Haskellが相当に難解であるかの何れかと断定せざるを得ません。いや、おそらく問題は僕の脳にあるのでしょう。そうであれば安心です。プログラム言語はツールなのですから難解であってはなりませんからね。Rubyはアヒル言語ですから、知らないうちに僕の脳もすっかりアヒル脳になっていたのですね.. ミスリードだなんて言ってすいませんでしたm(__)m<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+    
+<p>「<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a>」を読んでます。この本のタイトルとカバーデザインはかなりミスリードですね！もしこの本を入門書と呼ぶのなら、僕の脳に相当の問題があるか、Haskellが相当に難解であるかの何れかと断定せざるを得ません。いや、おそらく問題は僕の脳にあるのでしょう。そうであれば安心です。プログラム言語はツールなのですから難解であってはなりませんからね。Rubyはアヒル言語ですから、知らないうちに僕の脳もすっかりアヒル脳になっていたのですね.. ミスリードだなんて言ってすいませんでしたm(__)m<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
 
 <p>さて、この本の第10章にHaskellによる「逆ポーランド記法電卓」の例が出ていました。例ではその実現に畳み込み演算が使われていたので、<a href="http://melborne.github.com/2012/06/18/i-am-inject-lover-too/" title="YOUたち!RubyでinjectしちゃいなYO!">前回記事</a>にしたinjectを使ってRubyでこの電卓を書いてみます。</p>
 
-<h2>逆ポーランド記法</h2>
-
+<h2 id="section">逆ポーランド記法</h2>
 <p>逆ポーランド記法では演算子が数字の後にきます。</p>
 
 <div class="highlight"><pre><code class="bash">3 4 + <span class="c"># =&gt; 7</span>
-3 4 + 5 * <span class="c"># =&gt; 35</span>
-</code></pre></div>
-
+3 4 + 5 * <span class="c"># =&gt; 35</span></code></pre></div>
 
 <p>この演算をプログラムで実現するには、（１）数式を構成するトークンを先頭からスタックに入れていき、（２）演算子が出てきたところで、前の2つの数字を取り出して演算を実行し、（３）結果をスタックに戻す、という操作を繰り返せばいいです。</p>
 
-<h2>Rubyのコード</h2>
-
+<h2 id="ruby">Rubyのコード</h2>
 <p>RPNクラスを用意し、そのクラスメソッドrunで引数に渡した計算式を含む文字列に対する演算を実行するようにしましょう。次のようなイメージです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 35</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 35</span></code></pre></div>
 
 <p>受け取った文字列をトークンに分割し、injectのブロック内でcaseで処理を切り分けます。まずは四則演算に対応して。</p>
 
@@ -228,9 +223,7 @@
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5.5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 38.5</span>
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 * 6 7 / -&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 **&quot;</span><span class="p">)</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:36:in `block in run&#39;: operator `**` not defined (ArgumentError)</span>
-</code></pre></div>
-
+<span class="c1"># ~&gt; -:36:in `block in run&#39;: operator `**` not defined (ArgumentError)</span></code></pre></div>
 
 <p>case式では数字ならスタックmに挿入し、演算子ならスタックから2つの数字をpopして演算し、結果をスタックに挿入します。渡された式が文法的に正しいならinjectを出た後スタックには1つの値が残っているはずなので、それを結果としてshiftします。</p>
 
@@ -265,9 +258,7 @@
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 * 6 7 / -&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 **&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 81.0</span>
 <span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;2.7 ln&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 0.9932517730102834</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;1 2 3 4 5 sum 5 /&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 3.0</span>
-</code></pre></div>
-
+<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;1 2 3 4 5 sum 5 /&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 3.0</span></code></pre></div>
 
 <p>いいですね！</p>
 
@@ -275,21 +266,17 @@
 
 <script src="https://gist.github.com/2948894.js?file=rpn.rb"></script>
 
-
 <p>Rubyもなかなか簡潔ですよね！</p>
 
 <hr />
-
-<p><a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51P6NdS4IGL._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a> by Miran Lipovača</p>
+<p><a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51P6NdS4IGL._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/すごいHaskellたのしく学ぼう-Miran-Lipovača/dp/4274068854?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4274068854">すごいHaskellたのしく学ぼう!</a> by Miran Lipovača</p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>Haskellがわからず、悔しくてこういう文章を書いているのです。ごめんなさい。 <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">Haskellがわからず、悔しくてこういう文章を書いているのです。ごめんなさい。 <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

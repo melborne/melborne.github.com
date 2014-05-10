@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -182,32 +182,26 @@
     <p>文字列中のパターンを探し出すメソッドとして、RubyにはString#indexが用意されています。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.&quot;</span>
-<span class="n">text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 285</span>
-</code></pre></div>
-
+<span class="n">text</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 285</span></code></pre></div>
 
 <p>またRubyの標準ライブラリにはStringScannerクラスがあるので、これを使って以下のようにインデックスを求めることもできます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;strscan&quot;</span>
 <span class="n">text</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="n">text</span><span class="o">.</span><span class="n">skip_until</span><span class="p">(</span><span class="sr">/.?(?=</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span><span class="si">}</span><span class="sr">)/</span><span class="p">)</span> <span class="c1"># =&gt; 285</span>
-</code></pre></div>
+<span class="n">text</span><span class="o">.</span><span class="n">skip_until</span><span class="p">(</span><span class="sr">/.?(?=</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;velit&quot;</span><span class="p">)</span><span class="si">}</span><span class="sr">)/</span><span class="p">)</span> <span class="c1"># =&gt; 285</span></code></pre></div>
 
-
-<p>ですから今更、文字列検索のアルゴリズムを実装する価値はありません。しかしアルゴリズムを理解してそれを実装する能力は、プログラムする上での基礎力として必須と言われているので<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>、ここで勉強しておきたいと思います。</p>
+<p>ですから今更、文字列検索のアルゴリズムを実装する価値はありません。しかしアルゴリズムを理解してそれを実装する能力は、プログラムする上での基礎力として必須と言われているので<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>、ここで勉強しておきたいと思います。</p>
 
 <p>以下では、文字列検索として代表的なアルゴリズムである、力まかせ検索、ボイヤー-ムーア(ＢＭ)検索、クヌース-モリス-プラット(ＫＭＰ)検索、N-gramインデックス検索、ラビン-カープ(RK)検索の各検索アルゴリズムをRubyで実装します。なお、各アルゴリズムはWikipediaその他のネット上の情報を参考に、独自解釈して構成したものです。間違いがあるかも知れません。いやきっとあるでしょう。</p>
 
-<h2>力まかせ検索</h2>
-
+<h2 id="section">力まかせ検索</h2>
 <p>力まかせ検索はテキストの先頭から、検索パターンを１文字ずつずらして照合を行う検索アルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>テキストの先頭文字から検索パターンの各文字を照合。</li>
-<li>一致しない場合照合位置を１つずらす。</li>
-<li>1-2を一致するまで繰り返す。</li>
+  <li>テキストの先頭文字から検索パターンの各文字を照合。</li>
+  <li>一致しない場合照合位置を１つずらす。</li>
+  <li>1-2を一致するまで繰り返す。</li>
 </ol>
-
 
 <p>これをRubyのStringクラスに実装してみます。</p>
 
@@ -226,39 +220,33 @@
     <span class="k">end</span>
     <span class="n">pos</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>compareメソッドではパターンとテキストの対応箇所を、先頭から一文字ずつ比較してそのすべてが一致した場合に先頭のインデックスを返します。</p>
 
 <p>StringScannerクラスを使ったcompareメソッドの例も示しておきます。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">compare_with_scanner</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">compare_with_scanner</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="n">str</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
     <span class="n">str</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
     <span class="n">pattern</span><span class="o">.</span><span class="n">each_char</span> <span class="k">do</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span>
       <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">str</span><span class="o">.</span><span class="n">scan</span> <span class="sr">/</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span><span class="si">}</span><span class="sr">/</span>
     <span class="k">end</span>
     <span class="n">pos</span>
-  <span class="k">end</span>
-</code></pre></div>
-
+  <span class="k">end</span></code></pre></div>
 
 <p>StringScanner#scanメソッドはマッチする場合には、自動でポインタを進めるので繰り返しのための記述が簡潔になります。</p>
 
-<h2>ボイヤー-ムーア(ＢＭ)検索</h2>
-
+<h2 id="section-1">ボイヤー-ムーア(ＢＭ)検索</h2>
 <p>ＢＭ検索は検索パターンとの照合をパターン末尾から行い、パターン内文字と不一致文字との照合を行うことによって、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>テキストの先頭文字から検索パターンの各文字を後方から照合。</li>
-<li>一致しない場合その不一致文字がパターン前方にあるか調べる。</li>
-<li>ある場合照合位置をその位置までずらす。</li>
-<li>ない場合照合位置を不一致文字の後ろにずらす。</li>
-<li>1-4を一致するまで繰り返す。</li>
+  <li>テキストの先頭文字から検索パターンの各文字を後方から照合。</li>
+  <li>一致しない場合その不一致文字がパターン前方にあるか調べる。</li>
+  <li>ある場合照合位置をその位置までずらす。</li>
+  <li>ない場合照合位置を不一致文字の後ろにずらす。</li>
+  <li>1-4を一致するまで繰り返す。</li>
 </ol>
-
 
 <p>ＢＭ検索では次の照合位置を、後方から調べた不一致位置までずらすことができるので、効率が大変いいです。</p>
 
@@ -285,25 +273,21 @@
     <span class="n">length</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">pos</span><span class="o">|</span> <span class="k">return</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[-</span><span class="mi">1</span><span class="o">-</span><span class="n">pos</span><span class="o">]</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span>
     <span class="kp">nil</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>bm_compareではFixnum#downtoメソッドでインデックスを降順にして、比較をパターン後方から行うようにしています。また力まかせ検索ではパターンのずらし量は１に固定されていましたが、ここではbm_shiftメソッドの結果でその量を決定しています。</p>
 
-<h2>クヌース-モリス-プラット(ＫＭＰ)検索</h2>
-
+<h2 id="section-2">クヌース-モリス-プラット(ＫＭＰ)検索</h2>
 <p>ＫＭＰ検索は検索パターン内に存在する文字パターンを利用して、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います.</p>
 
 <ol>
-<li>テキストの先頭文字から検索パターンの各文字を照合。</li>
-<li>先頭文字で不一致が生じた場合、パターンを１つずらす。</li>
-<li>２文字目以降で不一致が生じた場合、不一致箇所以前の部分においてその先頭文字列の繰り返し文字列の有無を調べる。</li>
-<li>繰り返し文字列がなければ、不一致箇所にパターンをずらす。</li>
-<li>繰り返し文字列がある場合は、その位置にパターンをずらすと共に照合開始位置を繰り返し文字列の次にセットする。</li>
-<li>2-5を一致するまで繰り返す。</li>
+  <li>テキストの先頭文字から検索パターンの各文字を照合。</li>
+  <li>先頭文字で不一致が生じた場合、パターンを１つずらす。</li>
+  <li>２文字目以降で不一致が生じた場合、不一致箇所以前の部分においてその先頭文字列の繰り返し文字列の有無を調べる。</li>
+  <li>繰り返し文字列がなければ、不一致箇所にパターンをずらす。</li>
+  <li>繰り返し文字列がある場合は、その位置にパターンをずらすと共に照合開始位置を繰り返し文字列の次にセットする。</li>
+  <li>2-5を一致するまで繰り返す。</li>
 </ol>
-
 
 <p>上記よりＫＭＰ検索では検索パターンが繰り返し文字列を含んでおらず、照合の不一致がパターンの後方で多く発生する場合に効果が大きくなることが分かります。ですから通常の文字列検索ではあまり効率がよくありません。</p>
 
@@ -344,23 +328,19 @@
       <span class="n">shift</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではcount_sequenceメソッドにおいて繰り返し文字列の有無を調べています。そして繰り返し文字列の長さに応じて、次の照合の再開位置(from)を決定します。場合分けが多く若干コードが複雑になっていますが、その割に検索の効率が上がらないのが残念です。</p>
 
-<h2>N-gramインデックス検索</h2>
-
+<h2 id="n-gram">N-gramインデックス検索</h2>
 <p>N-gramインデックス検索はテキスト内文字のインデックスを使って、照合回数を減らす工夫をした検索アルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>テキストのすべての文字の出現位置を記録した索引を作る</li>
-<li>索引を参照して検索パターンの先頭文字と同じ文字の出現位置を調べる</li>
-<li>照合位置を出現位置に移動して照合を行う</li>
-<li>2-3を一致するまで繰り返す</li>
+  <li>テキストのすべての文字の出現位置を記録した索引を作る</li>
+  <li>索引を参照して検索パターンの先頭文字と同じ文字の出現位置を調べる</li>
+  <li>照合位置を出現位置に移動して照合を行う</li>
+  <li>2-3を一致するまで繰り返す</li>
 </ol>
-
 
 <p>N-gramインデックス検索では照合箇所をパターンの先頭文字の出現位置だけに限定できるので、照合回数を激減させることができます。一方で、インデックスの作成のためのコストが大きくかかる問題があります。</p>
 
@@ -385,23 +365,19 @@
     <span class="k">end</span>
     <span class="n">pos</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>インデックスの作成はindex_tableで行い、結果はHashに格納しています。デフォルトでインデックスは１文字ですが、複数文字(n)を指定することもできます。パターンのずらし回数はindicesの要素数で決まります。</p>
 
-<h2>ラビン-カープ検索(RK)検索</h2>
-
+<h2 id="rk">ラビン-カープ検索(RK)検索</h2>
 <p>ＲＫ検索は検索パターンとの照合を個々の文字列で行うのではなく、それらのハッシュ値で行うことによって照合に掛かる時間を効率化する検索アルゴリズムです。パターンのずらし量は１文字ずつで力まかせ検索と同じです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>検索パターンとその対応箇所のハッシュ値を求め照合する</li>
-<li>一致しない場合テキストの次の照合箇所のハッシュ値を求める</li>
-<li>照合位置を１つずらす</li>
-<li>2-3を一致するまで繰り返す</li>
+  <li>検索パターンとその対応箇所のハッシュ値を求め照合する</li>
+  <li>一致しない場合テキストの次の照合箇所のハッシュ値を求める</li>
+  <li>照合位置を１つずらす</li>
+  <li>2-3を一致するまで繰り返す</li>
 </ol>
-
 
 <p>なお次のハッシュ値の生成はその生成効率を上げるため、前のハッシュ値を利用したローリングハッシュ値の演算を用います。またハッシュ値が一致しても生文字列が一致しない場合があるのでその確認もします。</p>
 
@@ -428,14 +404,11 @@
     <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">]</span>
     <span class="p">(</span><span class="n">h_self</span> <span class="o">-</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">].</span><span class="n">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">].</span><span class="n">ord</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ハッシュ値の計算はrhashメソッドで行うようにし、ここでは素数であるbaseを基数とした各文字の文字コードを足し合わせたものを用います。hash_compareメソッドでハッシュ値が一致しない場合に、next_hashメソッドで次のハッシュ値を求めています。ここでは前のハッシュ値h_selfから先頭文字のハッシュ値を引き、基数を一つずらしてから次の文字のハッシュ値を足しています。</p>
 
-<h2>テスト</h2>
-
+<h2 id="section-3">テスト</h2>
 <p>これらのアルゴリズムをテストしてみます。各メソッドにクラス変数を挟んで照合回数を計算し、同時に各実行時間も求めます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="vc">@@time</span> <span class="o">=</span> <span class="o">[]</span>
@@ -506,9 +479,7 @@
   <span class="n">res</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> 
     <span class="nb">print</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%8d times(%.4f) %.4f sec</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">res</span><span class="o">[</span><span class="s2">&quot;power&quot;</span><span class="o">]</span><span class="p">,</span> <span class="vc">@@time</span><span class="o">.</span><span class="n">shift</span><span class="o">]</span>
   <span class="k">end</span>
-<span class="p">}}</span>
-</code></pre></div>
-
+<span class="p">}}</span></code></pre></div>
 
 <p>結果は以下の通りです。</p>
 
@@ -521,15 +492,13 @@
 <span class="n">kmp</span>       <span class="mi">382275</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">9850</span><span class="p">)</span> <span class="mi">2</span><span class="o">.</span><span class="mi">4872</span> <span class="n">sec</span>
 <span class="n">ngi</span>        <span class="mi">29977</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mo">0772</span><span class="p">)</span> <span class="mi">5</span><span class="o">.</span><span class="mi">3435</span> <span class="n">sec</span>
 <span class="n">power</span>     <span class="mi">388089</span> <span class="n">times</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mo">0000</span><span class="p">)</span> <span class="mi">2</span><span class="o">.</span><span class="mi">6198</span> <span class="n">sec</span>
-<span class="n">rk</span>        <span class="mi">370185</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">9539</span><span class="p">)</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2976</span> <span class="n">sec</span>
-</code></pre></div>
-
+<span class="n">rk</span>        <span class="mi">370185</span> <span class="n">times</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">9539</span><span class="p">)</span> <span class="mi">4</span><span class="o">.</span><span class="mi">2976</span> <span class="n">sec</span></code></pre></div>
 
 <p>このテストではN-gramインデックス検索(ngi)の照合回数が際立って少ないことが分かります。しかしインデックス作成のために実行時間は最も遅いです。ハッシュ値で比較するラビン-カープ(RK)検索では思ったほど比較回数が少なくならず、その結果ハッシュ値生成のためのコストが響いています。</p>
 
 <p>ボイヤー-ムーア(ＢＭ)検索が照合回数も少なく最速で、力まかせ(power)検索の倍の速度が出ています。一方で力まかせ検索の結果もそれほど悪くないという印象です。</p>
 
-<div><script src='https://gist.github.com/630347.js?file=searchs.rb'></script>
+<div><script src="https://gist.github.com/630347.js?file=searchs.rb"></script>
 <noscript><pre><code>#!/opt/local/bin/ruby1.9
 #-*-encoding: utf-8-*-
 require &quot;test/unit&quot;
@@ -727,22 +696,18 @@ END{END{
   end
 }}</code></pre></noscript></div>
 
-
 <p>参考：</p>
 
 <ol>
-<li><a href="http://ja.wikipedia.org/wiki/%E6%96%87%E5%AD%97%E5%88%97%E6%8E%A2%E7%B4%A2">文字列探索 - Wikipedia</a></li>
-<li><a href="http://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%93%E3%83%B3-%E3%82%AB%E3%83%BC%E3%83%97%E6%96%87%E5%AD%97%E5%88%97%E6%A4%9C%E7%B4%A2%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0">ラビン-カープ文字列検索アルゴリズム - Wikipedia</a></li>
+  <li><a href="http://ja.wikipedia.org/wiki/%E6%96%87%E5%AD%97%E5%88%97%E6%8E%A2%E7%B4%A2">文字列探索 - Wikipedia</a></li>
+  <li><a href="http://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%93%E3%83%B3-%E3%82%AB%E3%83%BC%E3%83%97%E6%96%87%E5%AD%97%E5%88%97%E6%A4%9C%E7%B4%A2%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0">ラビン-カープ文字列検索アルゴリズム - Wikipedia</a></li>
 </ol>
 
-
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>http://itpro.nikkeibp.co.jp/article/Watcher/20070924/282781/ <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">http://itpro.nikkeibp.co.jp/article/Watcher/20070924/282781/ <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

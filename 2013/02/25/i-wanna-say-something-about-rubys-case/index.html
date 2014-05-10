@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,15 +179,18 @@
       </script>
     </div>
 
-    <p>「Rubyのcase」を一瞥し「あー要は〇〇(言語名)のswitchね」などと早合点し、その後もその真の価値を知ることなく一生を終えるプログラマが近年跡を絶たない。加えて、「今更条件分岐？RubyはOOPなんだからポリモフィズムじゃね？」とか「HashにProc突っ込んでcallするのがオレ流。」とかうそぶく人たちもまた増加の一途を辿っている。</p>
+    
+<p>「Rubyのcase」を一瞥し「あー要は〇〇(言語名)のswitchね」などと早合点し、その後もその真の価値を知ることなく一生を終えるプログラマが近年跡を絶たない。加えて、「今更条件分岐？RubyはOOPなんだからポリモフィズムじゃね？」とか「HashにProc突っ込んでcallするのがオレ流。」とかうそぶく人たちもまた増加の一途を辿っている。</p>
 
 <p>そんな世の中にあって、ぼくは一言、できればガツンと一言申し上げたい。生まれも育ちもRubyなぼくから、是非ともそんな人たちに「Rubyのcase」について一言申し上げておきたい。</p>
 
 <p><br /></p>
 
-<h2>─ 問題１ ─</h2>
+<h2 id="section">─ 問題１ ─</h2>
 
-<blockquote><p>名前<code>name</code>、レベル<code>level</code>、ポイント<code>point</code>の各属性を持った複数のCharacterオブジェクトcharlie, liz, benがある。</p></blockquote>
+<blockquote>
+  <p>名前<code>name</code>、レベル<code>level</code>、ポイント<code>point</code>の各属性を持った複数のCharacterオブジェクトcharlie, liz, benがある。</p>
+</blockquote>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Character</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:level</span><span class="p">,</span> <span class="ss">:point</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">to_s</span>
@@ -203,16 +206,15 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:0</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:0</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:0</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:0</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:0</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:0</span></code></pre></div>
 
+<blockquote>
+  <p>キャラクタのレベルに応じてポイントを加算する<code>bonus_point</code>メソッドを実装せよ。但し、キャラクタレベルがlow(1〜3)のときは10ポイント、mid(4〜7)のときは5ポイント、high(8または9)のときは3ポイント、それ以外のときは0ポイントをpointに加算するものとする。</p>
+</blockquote>
 
-<blockquote><p>キャラクタのレベルに応じてポイントを加算する<code>bonus_point</code>メソッドを実装せよ。但し、キャラクタレベルがlow(1〜3)のときは10ポイント、mid(4〜7)のときは5ポイント、high(8または9)のときは3ポイント、それ以外のときは0ポイントをpointに加算するものとする。</p></blockquote>
-
-<h2>その０</h2>
-
+<h2 id="section-1">その０</h2>
 <p>さて、まずは<code>if-else</code>で実装してみますよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
@@ -231,16 +233,13 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>各式のアライメントが取れないから、ちょっと見づらいですねぇ。</p>
 
-<h2>その１</h2>
-
+<h2 id="section-2">その１</h2>
 <p>じゃあ、このままcaseに移管しますか。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
@@ -260,18 +259,15 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>アライメントが取れてちょっとマシになりましたか。</p>
 
 <p>こうしてcaseはcase後の式を省略してif-else風にも書けるんですよ。</p>
 
-<h2>その２</h2>
-
+<h2 id="section-3">その２</h2>
 <p>でも、こういうのあんまり見ませんねぇ。普通に行きましょうね。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
@@ -291,15 +287,13 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>あー良くなりました。whenの後にカンマ区切りで複数の式置けるんですね。</p>
 
-<h2>その３</h2>
+<h2 id="section-4">その３</h2>
 
 <p>でも、まあ普通、こうはしませんよね。こうですね。</p>
 
@@ -320,11 +314,9 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>ええ、Rangeです。でも、どうしてこういうことできるんですか？</p>
 
@@ -332,13 +324,11 @@
 
 <p>で、Range#===ってのが見事にRange#include?と同じ働きをするよう再定義されてるんです。マニュアル見てくださいね。だからwhenの後の式は概ねこんな感じですか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">chara</span><span class="o">.</span><span class="n">level</span><span class="p">)</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">chara</span><span class="o">.</span><span class="n">level</span><span class="p">)</span></code></pre></div>
 
 <p>これ聞いちゃうと、どんどん発想広がりますよね？</p>
 
-<h2>その４</h2>
+<h2 id="section-5">その４</h2>
 
 <p>ただね、まだこういう手もあるんですよ。</p>
 
@@ -360,15 +350,13 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>そう、<code>*</code>を使って配列展開もできるんですよ。low, mid, highというラベル（変数）の導入で抽象度が一段上がった気もしますね。</p>
 
-<h2>その５</h2>
+<h2 id="section-6">その５</h2>
 
 <p>さて、でもまだちょっとゴチャゴチャしてますよね。今度はこうしましょう。</p>
 
@@ -391,15 +379,13 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>スッキリしましたねぇ。そう、caseは「文」じゃなくて「式」、つまり評価の結果を返すんです。便利ですよね。</p>
 
-<h2>その６</h2>
+<h2 id="section-7">その６</h2>
 
 <p>でも、今度はちょっとスカスカな感じもしますよ。こうしましょう。</p>
 
@@ -418,16 +404,13 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p><code>then</code>を使えば式とその評価を一行にできますね。</p>
 
-<h2>その７</h2>
-
+<h2 id="section-8">その７</h2>
 <p>もちろん、セミコロン<code>;</code>使ってもいいですよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
@@ -439,11 +422,9 @@
     <span class="k">when</span> <span class="o">*</span><span class="n">high</span><span class="p">;</span> <span class="mi">3</span>
     <span class="k">else</span> <span class="mi">0</span>
     <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<h2>その８</h2>
+<h2 id="section-9">その８</h2>
 
 <p>代入のところで改行入るの嫌う人もいますよね。わたし気にしませんが。じゃこうしてください。</p>
 
@@ -457,14 +438,11 @@
     <span class="k">else</span> <span class="mi">0</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>さて、概ねいいと思うんですけど、もう少し続けてみますよ。</p>
 
-<h2>その９</h2>
-
+<h2 id="section-10">その９</h2>
 <p>lowとかの前に付いてる<code>*</code>ってのが少しcrypticっていう人もいるんじゃないですか。</p>
 
 <p>じゃあ、そういう人はこれなんかはお好みですかね？</p>
@@ -486,11 +464,9 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>なんですか、これは。</p>
 
@@ -500,13 +476,13 @@
 
 <p>もうこうなると、一致判定飛び越えてるじゃないですか。なんでもありですよ、Procさん呼べば。ただ、when節ごとにProc#callするからちょっとコスト増えますね。まあ、気にしませんが。</p>
 
-<h2>その１０</h2>
+<h2 id="section-11">その１０</h2>
 
 <p>はっきり言って、Range判定で誰ももう文句ないんですが。</p>
 
 <p>でもねぇ、is_lowはないでしょRubyで、is_lowは。これが変数に<code>?</code>使えないRubyの弱点ですねぇ。</p>
 
-<p>ということで...</p>
+<p>ということで…</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
   <span class="n">chara</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span>
@@ -535,17 +511,15 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>判定式をメソッド化しました。Procを返す高階関数ですね。bonus_pointメソッドの中、綺麗になりましたね。</p>
 
-<h2>その１１</h2>
+<h2 id="section-12">その１１</h2>
 
-<p>最後は、仕上げですね。ＤＲＹ、ＤＲＹ、Don't Repeat Yourself.　繰り返してるのあなたじゃないですか！</p>
+<p>最後は、仕上げですね。ＤＲＹ、ＤＲＹ、Don’t Repeat Yourself.　繰り返してるのあなたじゃないですか！</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">bonus_point</span><span class="p">(</span><span class="n">chara</span><span class="p">)</span>
   <span class="n">chara</span><span class="o">.</span><span class="n">point</span> <span class="o">+=</span>
@@ -578,29 +552,30 @@
 
 <span class="nb">puts</span> <span class="n">charas</span>
 
-<span class="c1"># &gt;&gt; Charlie:    lv:5    pt:5</span>
-<span class="c1"># &gt;&gt; Liz:    lv:3    pt:10</span>
-<span class="c1"># &gt;&gt; Ben:    lv:8    pt:3</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt; Charlie:	lv:5	pt:5</span>
+<span class="c1"># &gt;&gt; Liz:	lv:3	pt:10</span>
+<span class="c1"># &gt;&gt; Ben:	lv:8	pt:3</span></code></pre></div>
 
 <p>まあ、こんな感じです。</p>
 
 <p>２問目いってみましょうか。</p>
 
-<h2>─ 問題２ ─</h2>
+<h2 id="section-13">─ 問題２ ─</h2>
 
-<blockquote><p>仮想WebフレームワークRackのレスポンスは、３要素の配列、すなわちステータスコード(Fixnum), ヘッダ(Hash), レスポンスボディ(#eachに応答する)を要素とする配列で構成される。以下のレスポンスのうち、res1は有効、res2、res3は無効なレスポンスである。</p></blockquote>
+<blockquote>
+  <p>仮想WebフレームワークRackのレスポンスは、３要素の配列、すなわちステータスコード(Fixnum), ヘッダ(Hash), レスポンスボディ(#eachに応答する)を要素とする配列で構成される。以下のレスポンスのうち、res1は有効、res2、res3は無効なレスポンスである。</p>
+</blockquote>
 
 <pre><code>res1 = [200, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack".chars]
 res2 = ['404', {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack".chars]
 res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 </code></pre>
 
-<blockquote><p>有効なレスポンスかをチェックする<code>response_lint</code>メソッドを実装せよ。</p></blockquote>
+<blockquote>
+  <p>有効なレスポンスかをチェックする<code>response_lint</code>メソッドを実装せよ。</p>
+</blockquote>
 
-<h2>その１</h2>
-
+<h2 id="section-14">その１</h2>
 <p>えっ？これ、caseの問題ですか？</p>
 
 <p>普通は<code>&amp;&amp;</code>でこうするんじゃないですか。</p>
@@ -614,13 +589,11 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="n">res</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">is_a?</span><span class="p">(</span><span class="no">Fixnum</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">res</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">is_a?</span><span class="p">(</span><span class="no">Hash</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">res</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span></code></pre></div>
 
 <p>まあ、エレガントとは言えないですけどねぇ。</p>
 
-<h2>その２</h2>
+<h2 id="section-15">その２</h2>
 
 <p>えっ？やっぱり、caseでやるんですか？</p>
 
@@ -638,9 +611,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="kp">true</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span></code></pre></div>
 
 <p>おー、考えましたねー。<code>#each</code>で順番にレスポンスの要素を見ていく。caseで順番にpatternのクラスと一致判定する。一致しないものがあったら、そこでreturnして<code>false</code>を返して終わり。最後まで行けば<code>true</code>。ですね？<code>to_enum</code>が渋いじゃないですかあ。まあ、無理せずに<code>with_index</code>でもいいんですよ。</p>
 
@@ -648,7 +619,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 
 <p>そう、<code>Module#===</code>ですね。まあ<code>Class#===</code>って言ったほうがピンと来ますよね。マニュアルに<code>obj.kind_of?(self)</code>がtrueならtrueって書いてあります。<code>is_a?</code>はaliasですね。</p>
 
-<h2>その３</h2>
+<h2 id="section-16">その３</h2>
 
 <p>まあ、頑張ってるんですけど、そんなに綺麗じゃないですよね。</p>
 
@@ -658,9 +629,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="k">def</span> <span class="nf">===</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
     <span class="n">zip</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">a</span> <span class="o">===</span> <span class="n">b</span> <span class="p">}</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>何か良く見えてこないですけど、<code>Pattern#===</code>ってのを定義しているところを見ると、whenの横に置こうって算段ですか？</p>
 
@@ -677,26 +646,23 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span></code></pre></div>
 
 <p>おおっ！</p>
 
 <p>めちゃ可読性高いじゃないですかあ。<code>Pattern[Fixnum, Hash, Enumerable]</code>ってのは、<code>Array.[]</code>つまり<code>Pattern.new()</code>ですね？で、when節に入るとこのPattern配列にresがzipされて、一つづつ<code>===</code>判定されると。パターンマッチング、くわっ！</p>
 
-<p>これ、あなた考えたの？すごいじゃない...</p>
+<p>これ、あなた考えたの？すごいじゃない…</p>
 
 <p><br /></p>
 
-<p>...ですよね...まさかね...</p>
+<p>…ですよね…まさかね…</p>
 
-<p>...<a href="https://rubygems.org/gems/ohm">ohm gem</a>から...盗んできたんですか...</p>
+<p>…<a href="https://rubygems.org/gems/ohm">ohm gem</a>から…盗んできたんですか…</p>
 
-<p><code>Array#zip</code> => <code>#all?</code>はオレのものだって？...</p>
+<p><code>Array#zip</code> =&gt; <code>#all?</code>はオレのものだって？…</p>
 
-<h2>その４</h2>
-
+<h2 id="section-17">その４</h2>
 <p>Patternは汎用クラスだからこれ、ワンクッション入れて抽象化してもいいですよね。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Pattern</span> <span class="o">&lt;</span> <span class="nb">Array</span>
@@ -714,13 +680,11 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false]</span></code></pre></div>
 
 <p>Responseはクラスじゃないんですけど、クラスっぽく見えますね。</p>
 
-<h2>その５</h2>
+<h2 id="section-18">その５</h2>
 
 <p>こうなると、さらに欲が出ますよ。ステータスコード、ちゃんと弾くようにしますか。</p>
 
@@ -728,9 +692,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;rack&quot;</span>
 
-<span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">::</span><span class="no">HTTP_STATUS_CODES</span> <span class="c1"># =&gt; {100=&gt;&quot;Continue&quot;, 101=&gt;&quot;Switching Protocols&quot;, 102=&gt;&quot;Processing&quot;, 200=&gt;&quot;OK&quot;, 201=&gt;&quot;Created&quot;, 202=&gt;&quot;Accepted&quot;, 203=&gt;&quot;Non-Authoritative Information&quot;, 204=&gt;&quot;No Content&quot;, 205=&gt;&quot;Reset Content&quot;, 206=&gt;&quot;Partial Content&quot;, 207=&gt;&quot;Multi-Status&quot;, 208=&gt;&quot;Already Reported&quot;, 226=&gt;&quot;IM Used&quot;, 300=&gt;&quot;Multiple Choices&quot;, 301=&gt;&quot;Moved Permanently&quot;, 302=&gt;&quot;Found&quot;, 303=&gt;&quot;See Other&quot;, 304=&gt;&quot;Not Modified&quot;, 305=&gt;&quot;Use Proxy&quot;, 306=&gt;&quot;Reserved&quot;, 307=&gt;&quot;Temporary Redirect&quot;, 308=&gt;&quot;Permanent Redirect&quot;, 400=&gt;&quot;Bad Request&quot;, 401=&gt;&quot;Unauthorized&quot;, 402=&gt;&quot;Payment Required&quot;, 403=&gt;&quot;Forbidden&quot;, 404=&gt;&quot;Not Found&quot;, 405=&gt;&quot;Method Not Allowed&quot;, 406=&gt;&quot;Not Acceptable&quot;, 407=&gt;&quot;Proxy Authentication Required&quot;, 408=&gt;&quot;Request Timeout&quot;, 409=&gt;&quot;Conflict&quot;, 410=&gt;&quot;Gone&quot;, 411=&gt;&quot;Length Required&quot;, 412=&gt;&quot;Precondition Failed&quot;, 413=&gt;&quot;Request Entity Too Large&quot;, 414=&gt;&quot;Request-URI Too Long&quot;, 415=&gt;&quot;Unsupported Media Type&quot;, 416=&gt;&quot;Requested Range Not Satisfiable&quot;, 417=&gt;&quot;Expectation Failed&quot;, 422=&gt;&quot;Unprocessable Entity&quot;, 423=&gt;&quot;Locked&quot;, 424=&gt;&quot;Failed Dependency&quot;, 425=&gt;&quot;Reserved for WebDAV advanced collections expired proposal&quot;, 426=&gt;&quot;Upgrade Required&quot;, 427=&gt;&quot;Unassigned&quot;, 428=&gt;&quot;Precondition Required&quot;, 429=&gt;&quot;Too Many Requests&quot;, 430=&gt;&quot;Unassigned&quot;, 431=&gt;&quot;Request Header Fields Too Large&quot;, 500=&gt;&quot;Internal Server Error&quot;, 501=&gt;&quot;Not Implemented&quot;, 502=&gt;&quot;Bad Gateway&quot;, 503=&gt;&quot;Service Unavailable&quot;, 504=&gt;&quot;Gateway Timeout&quot;, 505=&gt;&quot;HTTP Version Not Supported&quot;, 506=&gt;&quot;Variant Also Negotiates (Experimental)&quot;, 507=&gt;&quot;Insufficient Storage&quot;, 508=&gt;&quot;Loop Detected&quot;, 509=&gt;&quot;Unassigned&quot;, 510=&gt;&quot;Not Extended&quot;, 511=&gt;&quot;Network Authentication Required&quot;}</span>
-</code></pre></div>
-
+<span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">::</span><span class="no">HTTP_STATUS_CODES</span> <span class="c1"># =&gt; {100=&gt;&quot;Continue&quot;, 101=&gt;&quot;Switching Protocols&quot;, 102=&gt;&quot;Processing&quot;, 200=&gt;&quot;OK&quot;, 201=&gt;&quot;Created&quot;, 202=&gt;&quot;Accepted&quot;, 203=&gt;&quot;Non-Authoritative Information&quot;, 204=&gt;&quot;No Content&quot;, 205=&gt;&quot;Reset Content&quot;, 206=&gt;&quot;Partial Content&quot;, 207=&gt;&quot;Multi-Status&quot;, 208=&gt;&quot;Already Reported&quot;, 226=&gt;&quot;IM Used&quot;, 300=&gt;&quot;Multiple Choices&quot;, 301=&gt;&quot;Moved Permanently&quot;, 302=&gt;&quot;Found&quot;, 303=&gt;&quot;See Other&quot;, 304=&gt;&quot;Not Modified&quot;, 305=&gt;&quot;Use Proxy&quot;, 306=&gt;&quot;Reserved&quot;, 307=&gt;&quot;Temporary Redirect&quot;, 308=&gt;&quot;Permanent Redirect&quot;, 400=&gt;&quot;Bad Request&quot;, 401=&gt;&quot;Unauthorized&quot;, 402=&gt;&quot;Payment Required&quot;, 403=&gt;&quot;Forbidden&quot;, 404=&gt;&quot;Not Found&quot;, 405=&gt;&quot;Method Not Allowed&quot;, 406=&gt;&quot;Not Acceptable&quot;, 407=&gt;&quot;Proxy Authentication Required&quot;, 408=&gt;&quot;Request Timeout&quot;, 409=&gt;&quot;Conflict&quot;, 410=&gt;&quot;Gone&quot;, 411=&gt;&quot;Length Required&quot;, 412=&gt;&quot;Precondition Failed&quot;, 413=&gt;&quot;Request Entity Too Large&quot;, 414=&gt;&quot;Request-URI Too Long&quot;, 415=&gt;&quot;Unsupported Media Type&quot;, 416=&gt;&quot;Requested Range Not Satisfiable&quot;, 417=&gt;&quot;Expectation Failed&quot;, 422=&gt;&quot;Unprocessable Entity&quot;, 423=&gt;&quot;Locked&quot;, 424=&gt;&quot;Failed Dependency&quot;, 425=&gt;&quot;Reserved for WebDAV advanced collections expired proposal&quot;, 426=&gt;&quot;Upgrade Required&quot;, 427=&gt;&quot;Unassigned&quot;, 428=&gt;&quot;Precondition Required&quot;, 429=&gt;&quot;Too Many Requests&quot;, 430=&gt;&quot;Unassigned&quot;, 431=&gt;&quot;Request Header Fields Too Large&quot;, 500=&gt;&quot;Internal Server Error&quot;, 501=&gt;&quot;Not Implemented&quot;, 502=&gt;&quot;Bad Gateway&quot;, 503=&gt;&quot;Service Unavailable&quot;, 504=&gt;&quot;Gateway Timeout&quot;, 505=&gt;&quot;HTTP Version Not Supported&quot;, 506=&gt;&quot;Variant Also Negotiates (Experimental)&quot;, 507=&gt;&quot;Insufficient Storage&quot;, 508=&gt;&quot;Loop Detected&quot;, 509=&gt;&quot;Unassigned&quot;, 510=&gt;&quot;Not Extended&quot;, 511=&gt;&quot;Network Authentication Required&quot;}</span></code></pre></div>
 
 <p>これで、<code>===</code>定義すりゃいいですな。ヒヒィ。</p>
 
@@ -740,13 +702,11 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 
 <span class="k">def</span> <span class="nc">HTTP_STATUS</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
   <span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">k</span> <span class="o">==</span> <span class="n">num</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>引数の数値がkeyの何れかに一致すればOKという感じですね。</p>
 
-<p>で、これをFixnumに代えてPatternにセットすると。テストサンプルも増やして...</p>
+<p>で、これをFixnumに代えてPatternにセットすると。テストサンプルも増やして…</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">res1</span> <span class="o">=</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to Rack&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">]</span>
 <span class="n">res2</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;404&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to Rack&quot;</span><span class="o">.</span><span class="n">chars</span><span class="o">]</span>
@@ -764,15 +724,13 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="p">,</span> <span class="n">res4</span><span class="p">,</span> <span class="n">res5</span><span class="p">,</span> <span class="n">res6</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false, true, true, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="p">,</span> <span class="n">res4</span><span class="p">,</span> <span class="n">res5</span><span class="p">,</span> <span class="n">res6</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [true, false, false, true, true, false]</span></code></pre></div>
 
 <p>いいんじゃないですかー。</p>
 
 <p>caseの自由度がなせる技ですよ。まさに。</p>
 
-<h2>その６</h2>
+<h2 id="section-19">その６</h2>
 
 <p>まあ、もういいんですけど、折角だからコードセクション毎にcaseするっての、どうですか。</p>
 
@@ -792,9 +750,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 <span class="no">Response2xx</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">[</span><span class="no">HTTP_STATUS_2xx</span><span class="p">,</span> <span class="no">Hash</span><span class="p">,</span> <span class="no">Enumerable</span><span class="o">]</span>
 <span class="no">Response3xx</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">[</span><span class="no">HTTP_STATUS_3xx</span><span class="p">,</span> <span class="no">Hash</span><span class="p">,</span> <span class="no">Enumerable</span><span class="o">]</span>
 <span class="no">Response4xx</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">[</span><span class="no">HTTP_STATUS_4xx</span><span class="p">,</span> <span class="no">Hash</span><span class="p">,</span> <span class="no">Enumerable</span><span class="o">]</span>
-<span class="no">Response5xx</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">[</span><span class="no">HTTP_STATUS_5xx</span><span class="p">,</span> <span class="no">Hash</span><span class="p">,</span> <span class="no">Enumerable</span><span class="o">]</span>
-</code></pre></div>
-
+<span class="no">Response5xx</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">[</span><span class="no">HTTP_STATUS_5xx</span><span class="p">,</span> <span class="no">Hash</span><span class="p">,</span> <span class="no">Enumerable</span><span class="o">]</span></code></pre></div>
 
 <p><code>group_by</code>でセクション分けてそれぞれ定数にセットします。で、各セクションには<code>===</code>を定義します。無理矢理感強いですか。</p>
 
@@ -818,23 +774,21 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="p">,</span> <span class="n">res4</span><span class="p">,</span> <span class="n">res5</span><span class="p">,</span> <span class="n">res6</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [:&quot;2xx&quot;, false, false, :&quot;3xx&quot;, :&quot;5xx&quot;, false]</span>
-</code></pre></div>
-
+<span class="o">[</span><span class="n">res1</span><span class="p">,</span> <span class="n">res2</span><span class="p">,</span> <span class="n">res3</span><span class="p">,</span> <span class="n">res4</span><span class="p">,</span> <span class="n">res5</span><span class="p">,</span> <span class="n">res6</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">res</span><span class="o">|</span> <span class="n">response_lint</span> <span class="n">res</span> <span class="p">}</span> <span class="c1"># =&gt; [:&quot;2xx&quot;, false, false, :&quot;3xx&quot;, :&quot;5xx&quot;, false]</span></code></pre></div>
 
 <p>いいんじゃないですかね！こんな感じです。</p>
 
 <p>えっ？もっと先は無いのかって？</p>
 
-<p>なら、<code>gem i case</code>してくださいよ、僕はもういっぱいですから。そうですよ、そのまんま<a href="https://rubygems.org/gems/case" title="case | RubyGems.org | your community gem host">case gem</a>。Rubyでパターンマッチ頑張ってるって感じですよ...</p>
+<p>なら、<code>gem i case</code>してくださいよ、僕はもういっぱいですから。そうですよ、そのまんま<a href="https://rubygems.org/gems/case" title="case \| RubyGems.org \| your community gem host">case gem</a>。Rubyでパターンマッチ頑張ってるって感じですよ…</p>
 
 <p><br /></p>
 
-<p>そんなわけで...ご清聴ありがとうございました...</p>
+<p>そんなわけで…ご清聴ありがとうございました…</p>
 
 <p><br /></p>
 
-<h2><br /></h2>
+<h2 id="br-"><br /></h2>
 
 <p>客観的に見て、ぼくはガツンと言ってやったと思う。「Rubyのcaseを〇〇(言語名)のswitch文だと思っている人たち」を前に、caseが持っている能力をひたすら羅列していった。この思い届けとばかりにガツンと言ってやった。それが彼らに届いたかどうかは、ぼくには分からない。しかしぼくがガツンと言ってやったことだけは確かだ。ぼくは今日Rubyのcaseについて一言申し上げたのだった。</p>
 
@@ -851,10 +805,9 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" style="width:200px" />
@@ -875,6 +828,7 @@ res3 = [500, {'Content-Type' =&gt; 'text/html'}, "Welcome to Rack"]
 <hr />
 
 <p>(追記：2013-02-26) 一部コードを修正しました。</p>
+
 
 
     <div class="ad" id="topAdsense">

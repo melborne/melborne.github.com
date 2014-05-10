@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,62 +181,55 @@
 
     <p>あるインスタンス変数にオブジェクトがセットされているときに、その参照を外しつつ、そのオブジェクトを返すというメソッドが必要になったんだよ。次のような感じだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="vi">@name</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1">#at initialize</span>
+<div class="highlight"><pre><code class="ruby"><span class="vi">@name</span> <span class="o">=</span> <span class="kp">nil</span> <span class="c1">#at initialize</span>
  <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
  <span class="k">end</span>
  <span class="k">def</span> <span class="nf">reset_name</span>
  <span class="k">end</span>
  <span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
- <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
-</code></pre></div>
-
+ <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span></code></pre></div>
 
 <p>ここでreset_nameしたときに、インスタンス変数にセットされてたオブジェクトを返したいんだ。なんかよくありそうだよね。</p>
 
 <p>こんなときは普通reset_nameを次のように書くと思うんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">reset_name</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">reset_name</span>
    <span class="nb">name</span> <span class="o">=</span> <span class="vi">@name</span>
    <span class="vi">@name</span> <span class="o">=</span> <span class="kp">nil</span>
    <span class="nb">name</span>
  <span class="k">end</span>
  <span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
- <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
-</code></pre></div>
-
+ <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span></code></pre></div>
 
 <p>でもなんかスマートじゃないよね。</p>
 
 <p>で、少し考えたんだけど、多重代入を使うともう少しマシになるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">reset_name</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">reset_name</span>
    <span class="nb">name</span><span class="p">,</span> <span class="vi">@name</span> <span class="o">=</span> <span class="vi">@name</span><span class="p">,</span> <span class="kp">nil</span>
    <span class="nb">name</span>
  <span class="k">end</span>
  <span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
- <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
-</code></pre></div>
-
+ <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span></code></pre></div>
 
 <p>でもやっぱり返り値を確保するためだけにローカル変数を用意しなきゃならないなんて、なんかイケてないよね..</p>
 
 <p>そこでObject#tapの出番ですよ奥さん..</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">reset_name</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">reset_name</span>
    <span class="vi">@name</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="vi">@name</span> <span class="o">=</span> <span class="kp">nil</span> <span class="p">}</span>
  <span class="k">end</span>
  <span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
  <span class="n">reset_name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
- <span class="vi">@name</span> <span class="c1"># =&gt; nil</span>
-</code></pre></div>
-
+ <span class="vi">@name</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <p>tapはそのブロックを評価するけれども、その結果を捨ててしまうという、謙虚な変わり者のメソッドだよ。</p>
 
 <p>なかなかイケてると思うんだけど、どうかな？</p>
 
 <p>周知のTipsだったらごめんね</p>
+
 
 
     <div class="ad" id="topAdsense">

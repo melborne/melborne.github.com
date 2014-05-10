@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,82 +181,66 @@
 
     <p>RubyのArrayにはrotate!という便利なメソッドがあるよ。このメソッドは文字通り配列の要素をローテートするんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
  <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="c1"># =&gt; [2, 3, 1]</span>
  <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="c1"># =&gt; [3, 1, 2]</span>
- <span class="n">a</span> <span class="c1"># =&gt; [3, 1, 2]</span>
-</code></pre></div>
-
+ <span class="n">a</span> <span class="c1"># =&gt; [3, 1, 2]</span></code></pre></div>
 
 <p>メソッド名の最後に!(ビックリマーク)があるから、これは元のオブジェクト自身を変えるよ。</p>
 
 <p>昨日、僕はこのrotate!メソッドにおけるローテートの過程を取りたいと思ったんだよ。で、次のようなコードを書いてみたんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
- <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="p">}</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+ <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="p">}</span></code></pre></div>
 
 <p>そうしたら期待したものとは違う、次のような結果が返ってきたんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span></code></pre></div>
 
 <p>あれ？</p>
 
 <p>mapがいけないのかな..</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">q</span> <span class="o">=</span> <span class="o">[]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">q</span> <span class="o">=</span> <span class="o">[]</span>
  <span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">q</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="p">}</span>
- <span class="n">q</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span>
-</code></pre></div>
-
+ <span class="n">q</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span></code></pre></div>
 
 <p>ローテートしてないのかと思って、ブロック内でpしてみたらちゃんとしてるんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
  <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nb">p</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span> <span class="p">}</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span>
  <span class="c1"># &gt;&gt; [2, 3, 1]</span>
  <span class="c1"># &gt;&gt; [3, 1, 2]</span>
- <span class="c1"># &gt;&gt; [1, 2, 3]</span>
-</code></pre></div>
-
+ <span class="c1"># &gt;&gt; [1, 2, 3]</span></code></pre></div>
 
 <p>なんか変だな..</p>
 
 <p>で、少し考えたら理由がわかったんだ。Array#rotate!はselfを返すんだったよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
  <span class="n">a</span><span class="o">.</span><span class="n">object_id</span> <span class="c1"># =&gt; 2151892940</span>
- <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span><span class="o">.</span><span class="n">object_id</span> <span class="p">}</span> <span class="c1"># =&gt; [2151892940, 2151892940, 2151892940]</span>
-</code></pre></div>
-
+ <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span><span class="o">.</span><span class="n">object_id</span> <span class="p">}</span> <span class="c1"># =&gt; [2151892940, 2151892940, 2151892940]</span></code></pre></div>
 
 <p>つまりmapの返り値はa.rotate!のスナップショットの配列を返すんじゃなくて、元オブジェクトの参照の配列を返すんだよ。で、mapの返り値はすべての要素に対するイテレートが終わってから返されるから(当然だよね)。その時点つまり最後のa.rotate!の後における元オブジェクトの状態がすべての配列の要素として返されることになるんだ。</p>
 
 <p>つまり、これは次のコードと同じようなことなんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
  <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span>
  <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span>
  <span class="n">d</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span>
- <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">]</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span>
-</code></pre></div>
-
+ <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">]</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 2, 3], [1, 2, 3]]</span></code></pre></div>
 
 <p>だからスナップショットつまり途中経過がほしい場合はさっきみたいにpしたり、to_sしたりdupしたりする必要があるんだね。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
  <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;[2, 3, 1]&quot;, &quot;[3, 1, 2]&quot;, &quot;[1, 2, 3]&quot;]</span>
  <span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
- <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span><span class="o">.</span><span class="n">dup</span> <span class="p">}</span> <span class="c1"># =&gt; [[2, 3, 1], [3, 1, 2], [1, 2, 3]]</span>
-</code></pre></div>
-
+ <span class="mi">3</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">rotate!</span><span class="o">.</span><span class="n">dup</span> <span class="p">}</span> <span class="c1"># =&gt; [[2, 3, 1], [3, 1, 2], [1, 2, 3]]</span></code></pre></div>
 
 <p>同じことはほかのRubyの破壊的メソッドでも起きるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;hello, world!&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;hello, world!&quot;</span>
  <span class="n">s</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nb">p</span> <span class="n">s</span><span class="o">.</span><span class="n">chop!</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;]</span>
  <span class="c1"># &gt;&gt; &quot;hello, world&quot;</span>
  <span class="c1"># &gt;&gt; &quot;hello, worl&quot;</span>
@@ -270,9 +254,7 @@
  <span class="c1"># &gt;&gt; &quot;hel&quot;</span>
  <span class="c1"># &gt;&gt; &quot;he&quot;</span>
  <span class="c1"># &gt;&gt; &quot;h&quot;</span>
- <span class="c1"># &gt;&gt; &quot;&quot;</span>
-</code></pre></div>
-
+ <span class="c1"># &gt;&gt; &quot;&quot;</span></code></pre></div>
 
 <p>うっかりしてるとまたミスしそうだよ。分かってる人には当たり前のことなんだろうけど。僕はちょっと嵌っちゃったから書いてみたよ :)</p>
 

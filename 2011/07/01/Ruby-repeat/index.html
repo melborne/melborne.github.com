@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -183,11 +183,9 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
   <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="n">f</span><span class="o">[*</span><span class="n">args</span><span class="o">]</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>repeatは関数f<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>とfの初期値となるargsを引数に取り、Enueratorオブジェクトを返す。</p>
+<p>repeatは関数f<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>とfの初期値となるargsを引数に取り、Enueratorオブジェクトを返す。</p>
 
 <p>Enumeratorのブロックの中ではloopによってargsを関数fに適用した結果が、繰り返しyつまりEnumerable::Yielderオブジェクトに渡される。</p>
 
@@ -195,63 +193,47 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">fib</span>
   <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">]</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>fib関数は数列上の並んだ2つの数a,bを取り、次の並びとしてその上位の数bとa,bの和の組を返す。</p>
 
 <p>さあ、今作成した2つの関数repeatとfibを使って、フィボナッチ数列の第20位までを求めよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fibonacci</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">fib</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">fibonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765]</span>
-</code></pre></div>
-
+<span class="n">fibonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765]</span></code></pre></div>
 
 <p>もちろんfib関数は高階関数である必要はない。通常の関数でいい。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">fibm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
   <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">]</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ただしこの場合は関数をオブジェクト化して、repeat関数に渡す必要がある。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fibonacci</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="nb">method</span><span class="p">(</span><span class="ss">:fibm</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">fibonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765]</span>
-</code></pre></div>
-
+<span class="n">fibonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765]</span></code></pre></div>
 
 <p>次はトリボナッチだ。フィボナッチが前2項の和を取るのに対して、トリボナッチは前3項の和を取る。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">tribo</span>
   <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">{</span> <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">]</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>これをrepeat関数に渡して結果を得よう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">tribonacci</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">tribo</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">tribonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890]</span>
-</code></pre></div>
-
+<span class="n">tribonacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890]</span></code></pre></div>
 
 <p>そしてテトラナッチだ、テトラナッチは前4項の和を取る。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">tetra</span>
   <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">{</span> <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="o">]</span> <span class="p">}</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>同じくrepeat関数に渡して結果を得よう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">tetranacci</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">tetra</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">tetranacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 0, 1, 1, 2, 4, 8, 15, 29, 56, 108, 208, 401, 773, 1490, 2872, 5536, 10671, 20569, 39648]</span>
-</code></pre></div>
-
+<span class="n">tetranacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 0, 1, 1, 2, 4, 8, 15, 29, 56, 108, 208, 401, 773, 1490, 2872, 5536, 10671, 20569, 39648]</span></code></pre></div>
 
 <p>このように１つのrepeat関数を定義することで、フィボナッチ、トリボナッチ、テトラナッチの各数列を容易に導きだすことができた。</p>
 
@@ -262,12 +244,9 @@
 <span class="k">end</span>
 <span class="n">sqrt3</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">sqrt</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 1.7320508075688772</span>
 <span class="n">sqrt5</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">sqrt</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 2.23606797749979</span>
-<span class="n">sqrt7</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">sqrt</span><span class="o">[</span><span class="mi">7</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 2.6457513110645907</span>
-</code></pre></div>
-
+<span class="n">sqrt7</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">sqrt</span><span class="o">[</span><span class="mi">7</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 2.6457513110645907</span></code></pre></div>
 
 <hr />
-
 <p>(追記:2011-7-1)
 さらに進んでEnumerable#repeatというのはどうだろうか</p>
 
@@ -276,9 +255,7 @@
     <span class="n">x</span> <span class="o">=</span> <span class="nb">self</span>
     <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">x</span><span class="p">)</span> <span class="p">}}</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>Enumerable#repeatはselfに初期値を与え、ブロックで繰り返し適用する関数を定義する。</p>
 
@@ -291,31 +268,25 @@
 <span class="n">tetranacci</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">|</span>  <span class="o">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="o">]</span> <span class="p">}</span>
 <span class="n">tetranacci</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; [0, 0, 1, 1, 2, 4, 8, 15, 29, 56, 108, 208, 401, 773, 1490, 2872, 5536, 10671, 20569, 39648]</span>
 <span class="n">sq5</span> <span class="o">=</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">].</span><span class="n">repeat</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span>  <span class="o">[</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span> <span class="p">}</span>
-<span class="n">sq5</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 2.23606797749979</span>
-</code></pre></div>
-
+<span class="n">sq5</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">last</span> <span class="c1"># =&gt; 2.23606797749979</span></code></pre></div>
 
 <p>このほうがRubyっぽいかもしれない。</p>
 
 <hr />
-
 <p>関連記事：</p>
 
 <ol>
-<li><a href="/2009/01/11/Ruby-2009-01-11/">Rubyでフィボナッチ、トリボナッチ、テトラナッチ！そして僕はヒトリボッチ(2009-01-11)</a></li>
-<li><a href="/2011/02/01/Ruby-2011-02-01/">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)(2011-02-01)</a></li>
+  <li><a href="/2009/01/11/Ruby-2009-01-11/">Rubyでフィボナッチ、トリボナッチ、テトラナッチ！そして僕はヒトリボッチ(2009-01-11)</a></li>
+  <li><a href="/2011/02/01/Ruby-2011-02-01/">Rubyを使って「なぜ関数プログラミングは重要か」を解読しよう！(その３)(2011-02-01)</a></li>
 </ol>
-
 
 <p>参考： <a href="http://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%9C%E3%83%8A%E3%83%83%E3%83%81%E6%95%B0">トリボナッチ</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>正確には[]メソッドでcallされる手続きオブジェクト <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">正確には[]メソッドでcallされる手続きオブジェクト <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

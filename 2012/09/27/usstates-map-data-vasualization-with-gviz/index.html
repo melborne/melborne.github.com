@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,91 +179,46 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
 <p>RubyのGraphvizラッパー「<a href="https://rubygems.org/gems/gviz" title="gviz">Gviz</a>」を前回紹介しました。</p>
 
-
-
-
 <blockquote><p><a href="/2012/09/25/ruby-plus-graphviz-should-eql-gviz/" title="Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！">Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！</a></p></blockquote>
-
-
-
 
 <p>そこでは隣接県情報に基づき日本地図を作りました。出来は兎も角、僕はこのやり方がすっかり気に入りました。そこで今回はもう一歩進んでこの地図でデータビジュアライゼーションをしてみようと思います。題材はアメリカ合衆国です！</p>
 
-
-
-
 <p>以下では、データの取得から順を追ってグラフ作成のやり方を説明しています。ちょっと長い投稿になります。</p>
-
-
-
 
 <h2>隣接州情報の生成</h2>
 
-
-
-
 <p>地図の形のベースとなる隣接州情報を用意します。<a href="http://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations" title="List of U.S. state abbreviations - Wikipedia, the free encyclopedia">List of U.S. state abbreviations - Wikipedia, the free encyclopedia</a>などから州名と略称(USPS)を取得し、USPSを使って次のような隣接州情報のファイルを作ります。</p>
-
-
-
 
 <script src="https://gist.github.com/3792505.js?file=uslinks.csv"></script>
 
-
-
-
 <h2>アメリカ合衆国州情報の取得</h2>
-
-
-
 
 <p>ビジュアライズするデータを見つけます。各州の人口や面積が入った情報がいいですね。ここでは次のサイトを使います。</p>
 
-
-
-
 <p><a href="http://en.wikipedia.org/wiki/List_of_U.S._states" title="List of U.S. states - Wikipedia, the free encyclopedia">List of U.S. states - Wikipedia, the free encyclopedia</a></p>
-
-
-
 
 <p>頁のソースをちょっと覗いて構造がわかったら、次のようなコードで対象データを取得します。</p>
 
-
-
-
 <script src="https://gist.github.com/3792505.js?file=us_scraper.rb"></script>
-
-
-
 
 <p>取得した各データをHEADER, BODY変数に割り当ててRubyスクリプトとして保存します。</p>
 
-
-
-
 <script src="https://gist.github.com/3792505.js?file=usdata.rb"></script>
-
-
-
 
 <h2>データの読み出しと統合</h2>
 
-
-
-
 <p>次にこれらの情報をRubyスクリプト上に読み出し、整理して統合します。ファイル名を<code>usstates.rb</code>とします。まずは<code>uslinks.csv</code>を読み出します。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
@@ -278,13 +233,7 @@
 </code></pre>
 </div>
 
-
-
-
 <p>次に<code>usdata.rb</code>を読み出して、必要なデータを取り出します。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">require_relative</span> <span class="s2">&quot;usdata&quot;</span>
 
@@ -300,13 +249,7 @@
 </code></pre>
 </div>
 
-
-
-
 <p>そしてこれらのデータを統合します。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">usdata</span> <span class="o">=</span> <span class="n">usdata</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">links</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">data</span><span class="p">,</span> <span class="n">links</span><span class="o">|</span> <span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">links</span><span class="o">.</span><span class="n">last</span> <span class="p">}</span>
 
@@ -314,18 +257,9 @@
 </code></pre>
 </div>
 
-
-
-
 <h2>Gvizでグラフ化</h2>
 
-
-
-
 <p>さて下準備が整ったので、これらのデータを<code>Gviz</code>を使ってグラフ化します。まずは隣接州情報で地形を作ります。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
 
@@ -340,28 +274,13 @@
 </code></pre>
 </div>
 
-
-
-
 <p>出力を見てみます。</p>
-
-
-
 
 <p><img src="/assets/images/usa1.png" alt="usa noshadow" /></p>
 
-
-
-
 <p>前回同様、ヒドイ結果です。</p>
 
-
-
-
 <p>ここでもlayoutを<code>neato</code>にして変化を見てみます。ラベルも変えます。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:USA</span><span class="p">)</span>
 <span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
@@ -376,38 +295,17 @@
 </code></pre>
 </div>
 
-
-
-
 <p>どうでしょう。</p>
-
-
-
 
 <p><img src="/assets/images/usa2.png" alt="usa noshadow" /></p>
 
-
-
-
 <p>一気に地図っぽくなりました。</p>
-
-
-
 
 <h2>州統合年のビジュアライズ</h2>
 
-
-
-
 <p>次に、各州の合衆国への統合年(statehood)をビジュアライズします。<a href="http://en.wikipedia.org/wiki/List_of_U.S._states_by_date_of_statehood" title="List of U.S. states by date of statehood - Wikipedia, the free encyclopedia">List of U.S. states by date of statehood - Wikipedia, the free encyclopedia</a>にある区分に従って各州を９区分し、ノードの色の違いで表現します。<code>blues9</code>というカラーセットを使います。</p>
 
-
-
-
 <p>まずは９区分をRangeのリストで表現します。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">era</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="no">EOS</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span> <span class="o">*</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">)</span> <span class="p">}</span>
 <span class="sh">  1776-1790</span>
@@ -425,13 +323,7 @@
 </code></pre>
 </div>
 
-
-
-
 <p>これを使って各州の統合年を1〜9の何れかに割り当てて<code>fillcolor</code>にセットします。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:USA</span><span class="p">)</span>
 <span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
@@ -450,39 +342,18 @@
 </code></pre>
 </div>
 
-
-
-
 <p>結果を見てみます。</p>
-
-
-
 
 <p><img src="/assets/images/usa3.png" alt="usa noshadow" /></p>
 
-
-
-
 <p>キレイに色分けされました。色が薄くなるに連れて統合年が遅いということを表しています。</p>
 
-
-
-
 <h2>州面積のビジュアライズ</h2>
-
-
-
 
 <p>次に各州の面積データをビジュアライズします。合衆国の州面積は最小が3,140km2（Rhode Island）で
 最大が1,717,854km2（Alaska）です。ビジュアライズのためにこれらを正規化する（一定の範囲の値に収める）必要があります。</p>
 
-
-
-
 <p><code>minmax</code>関数で対象データの最小最大範囲を取得し、Fixnum#normを定義してこれを正規化するようにします。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">minmax</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
   <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="o">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">minmax</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">minmax</span><span class="o">|</span> <span class="k">break</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span> <span class="o">*</span><span class="n">minmax</span> <span class="p">}</span>
@@ -501,13 +372,7 @@
 </code></pre>
 </div>
 
-
-
-
 <p>さてこれらのメソッドを使って各州の面積を1〜6の範囲に正規化し、これを使ってノードの幅を決定します。エッジの矢印も消します。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">area_minmax</span> <span class="o">=</span> <span class="n">minmax</span><span class="p">(</span><span class="n">usdata</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
@@ -530,33 +395,15 @@
 </code></pre>
 </div>
 
-
-
-
 <p>結果を見てみます。</p>
-
-
-
 
 <p><img src="/assets/images/usa4.png" alt="usa noshadow" /></p>
 
-
-
-
 <p>州面積に応じてノードのサイズが変わりました。</p>
-
-
-
 
 <h2>州人口のビジュアライズ</h2>
 
-
-
-
 <p>最後に州人口のデータをビジュアライズします。州人口をノードにおける多角形の辺の数で表現します。州面積と同様にデータ値を正規化し4〜12の何れかに収めます。ノードのshapeをpolygonとして各ノードのsidesをこの数値で決定します。つまり人口が多い州ほど辺数の多い多角形となります。</p>
-
-
-
 
 <div class="highlight"><pre><code class="ruby"><span class="n">pop_minmax</span> <span class="o">=</span> <span class="n">minmax</span><span class="p">(</span><span class="n">usdata</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 
@@ -580,53 +427,23 @@
 </code></pre>
 </div>
 
-
-
-
 <p>結果を見てみます。</p>
-
-
-
 
 <p><img src="/assets/images/usa5.png" alt="usa noshadow" /></p>
 
-
-
-
 <p>CaliforniaやTexasの人口が多いのが分かります。</p>
-
-
-
 
 <h2>仕上げ</h2>
 
-
-
-
 <p>Alaskaが大きすぎて全体のバランスが悪いのでこれを調整して完成とします。</p>
-
-
-
 
 <p><a href="/assets/images/usa6.png" rel="lightbox" title="U.S states"><img src="/assets/images/usa6.png" alt="us states noshadow" /></a></p>
 
-
-
-
 <p>（このグラフはクリックすれば拡大できます）</p>
-
-
-
 
 <p>いいですね！</p>
 
-
-
-
 <p>このグラフからアメリカ合衆国に関し概ね以下のことが分かります。</p>
-
-
-
 
 <blockquote><ol>
 <li>アメリカは東側から西側に向けて統合が進んだ。つまり東側のほうが歴史が古い。</li>
@@ -635,48 +452,22 @@
 </ol>
 </blockquote>
 
-
-
-
 <p>Gvizを使ってアメリカ合衆国における各州の統合年、面積および人口をビジュアライズする例を紹介しました。コード全体を以下に張っておきます。</p>
-
-
-
 
 <script src="https://gist.github.com/3792505.js?file=usstates.rb"></script>
 
-
-
-
 <p><a href="https://gist.github.com/3792505" title="melborne's gist: 3792505 — Gist">melborne's gist: 3792505 — Gist</a></p>
 
-
-
-
 <hr />
-
-
-
 
 <p>(追記：2012-9-30) Fixnum#normの実装が間違っていたので訂正しました。その結果添付のグラフの結果が一部間違っている点ご了承下さい。</p>
 
-
-
-
 <p>(追記：2012-10-1) Fixnum#normの実装がまた間違ってましたm(__)m</p>
-
-
-
 
 <hr />
 
-
-
-
-<p><a href="http://www.amazon.co.jp/ビューティフルビジュアライゼーション-THEORY-PRACTICE-Julie-Steele/dp/4873115043?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873115043"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51Yy4ezB85L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/ビューティフルビジュアライゼーション-THEORY-PRACTICE-Julie-Steele/dp/4873115043?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4873115043">ビューティフルビジュアライゼーション (THEORY/IN/PRACTICE)</a> by Julie Steele and Noah Iliinsky</p>
-
-
+<p><a href="http://www.amazon.co.jp/ビューティフルビジュアライゼーション-THEORY-PRACTICE-Julie-Steele/dp/4873115043?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4873115043"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51Yy4ezB85L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/ビューティフルビジュアライゼーション-THEORY-PRACTICE-Julie-Steele/dp/4873115043?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4873115043">ビューティフルビジュアライゼーション (THEORY/IN/PRACTICE)</a> by Julie Steele and Noah Iliinsky</p>
 
 
 

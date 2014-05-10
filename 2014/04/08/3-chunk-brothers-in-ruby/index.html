@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,25 +179,30 @@
       </script>
     </div>
 
-    <p>Rubyにはアクセスログのような行指向ドキュメントなどを、任意の条件で複数の束にまとめ上げる便利なEnumerableのメソッドが３つあります。<code>group_by</code>, <code>chunk</code>, そして<code>slice_before</code>です。これらはRubyの「<strong>だんご化３兄弟</strong>」としてRubyistの間で広く知られています<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+    
+<p>Rubyにはアクセスログのような行指向ドキュメントなどを、任意の条件で複数の束にまとめ上げる便利なEnumerableのメソッドが３つあります。<code>group_by</code>, <code>chunk</code>, そして<code>slice_before</code>です。これらはRubyの「<strong>だんご化３兄弟</strong>」としてRubyistの間で広く知られています<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
 <p>簡単に言えばこれらのメソッドは、行単位のデータに対し以下の処理を実現するものとして表現できます。</p>
 
-<blockquote><p><code>group_by</code>は、同一条件の行を総まとめするメソッド。</p>
+<blockquote>
+  <p><code>group_by</code>は、同一条件の行を総まとめするメソッド。</p>
 
-<p><code>chunk</code>は、同一条件の行を部分まとめするメソッド。</p>
+  <p><code>chunk</code>は、同一条件の行を部分まとめするメソッド。</p>
 
-<p><code>slice_before</code>は、指定行を先頭に後続行を部分まとめするメソッド。</p></blockquote>
+  <p><code>slice_before</code>は、指定行を先頭に後続行を部分まとめするメソッド。</p>
+</blockquote>
 
 <p>（もちろん、これらのメソッドは行単位データ以外のEnumerableなデータに適用できます。）</p>
 
-<h2>group_by</h2>
+<h2 id="groupby">group_by</h2>
 
-<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/group_by.html" title="instance method Enumerable#group_by">instance method Enumerable#group_by</a></p></blockquote>
+<blockquote>
+  <p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/group_by.html" title="instance method Enumerable#group_by">instance method Enumerable#group_by</a></p>
+</blockquote>
 
 <p>最も直感的なメソッドは<code>group_by</code>です。行単位データの並び順に拘らず、ブロックで渡された条件ごとにデータをまとめ上げます。group_byを使って、ランダムに並んだユーザのスコアーをユーザ単位にまとめてみます。</p>
 
-<h4>score.txt</h4>
+<h4 id="scoretxt">score.txt</h4>
 
 <pre><code>Alice,84.0,79.5
 Bob,20.0,56.5
@@ -225,9 +230,7 @@ Ross,48.0,36.5
 <span class="c1"># &gt;&gt;  &quot;Bob&quot;=&gt;[&quot;Bob,20.0,56.5\n&quot;, &quot;Bob,60.0,16.5\n&quot;, &quot;Bob,25.0,50.5\n&quot;],</span>
 <span class="c1"># &gt;&gt;  &quot;Jimmy&quot;=&gt;[&quot;Jimmy,80.0,31.0\n&quot;, &quot;Jimmy,85.0,42.0\n&quot;, &quot;Jimmy,60.0,61.0\n&quot;],</span>
 <span class="c1"># &gt;&gt;  &quot;Kent&quot;=&gt;[&quot;Kent,90.5,15.5\n&quot;, &quot;Kent,55.5,15.5\n&quot;, &quot;Kent,70.5,25.0\n&quot;],</span>
-<span class="c1"># &gt;&gt;  &quot;Ross&quot;=&gt;[&quot;Ross,68.0,33.0\n&quot;, &quot;Ross,22.0,33.5\n&quot;, &quot;Ross,48.0,36.5\n&quot;]}</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;  &quot;Ross&quot;=&gt;[&quot;Ross,68.0,33.0\n&quot;, &quot;Ross,22.0,33.5\n&quot;, &quot;Ross,48.0,36.5\n&quot;]}</span></code></pre></div>
 
 <p>group_byのブロックで先頭ワード（ユーザ名）の一致を条件にします。</p>
 
@@ -301,17 +304,17 @@ Ross,48.0,36.5
 <span class="c1"># &gt;&gt;    [508, &quot;Loop Detected&quot;],</span>
 <span class="c1"># &gt;&gt;    [509, &quot;Unassigned&quot;],</span>
 <span class="c1"># &gt;&gt;    [510, &quot;Not Extended&quot;],</span>
-<span class="c1"># &gt;&gt;    [511, &quot;Network Authentication Required&quot;]]}</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt;    [511, &quot;Network Authentication Required&quot;]]}</span></code></pre></div>
 
+<h2 id="chunk">chunk</h2>
 
-<h2>chunk</h2>
-
-<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/chunk.html" title="instance method Enumerable#chunk">instance method Enumerable#chunk</a></p></blockquote>
+<blockquote>
+  <p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/chunk.html" title="instance method Enumerable#chunk">instance method Enumerable#chunk</a></p>
+</blockquote>
 
 <p>行単位データの並びに意味があるときに、その順位を崩さずに部分まとめ（チャンク）を生成するときは<code>chunk</code>が使えます。chunkはブロックで渡された条件の評価が切り替わるポイントでチャンクを切ります。chunkを使って、空行で別れた複数のセンテンスを持つ小説<code>novel.txt</code>を、センテンスごとに分けてみます。</p>
 
-<h4>novel.txt</h4>
+<h4 id="noveltxt">novel.txt</h4>
 
 <pre><code>One morning, when Gregor Samsa woke from troubled dreams,
 he found himself transformed in his bed into a horrible vermin.
@@ -372,13 +375,11 @@ that he had recently cut out of an illustrated magazine and housed in a nice, gi
 <span class="c1"># &gt;&gt;  [true,</span>
 <span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
 <span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
-<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span></code></pre></div>
 
 <p>チャンクが空行のところで切れているのが確認できます。</p>
 
-<h3>不要な行をチャンクから除く</h3>
+<h3 id="section">不要な行をチャンクから除く</h3>
 
 <p>この例において空行のチャンクは不要でしょう。この場合、ブロックで<code>false</code>に代えて<code>nil</code>（または:_separator）が返るようにすれば、次のような結果が得られます。</p>
 
@@ -411,11 +412,9 @@ that he had recently cut out of an illustrated magazine and housed in a nice, gi
 <span class="c1"># &gt;&gt;  [true,</span>
 <span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
 <span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
-<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span></code></pre></div>
 
-
-<h3>単一行のチャンク</h3>
+<h3 id="section-1">単一行のチャンク</h3>
 
 <p>この小説のなかで<code>"</code>（double quatation mark）で始まる行を特別扱いし、しかもそれらを単一行でチャンクしたい場合は、その特別行に対し<code>:_alone</code>を返すようにします。</p>
 
@@ -452,19 +451,19 @@ that he had recently cut out of an illustrated magazine and housed in a nice, gi
 <span class="c1"># &gt;&gt;  [true,</span>
 <span class="c1"># &gt;&gt;   [&quot;A collection of textile samples lay spread out on the table\n&quot;,</span>
 <span class="c1"># &gt;&gt;    &quot;- Samsa was a travelling salesman - and above it there hung a picture\n&quot;,</span>
-<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;    &quot;that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.\n&quot;]]]</span></code></pre></div>
 
 <p>自分は翻訳支援ツール「<a href="https://rubygems.org/gems/togglate" title="togglate">togglate</a>」というものを作っています。このツールは訳文を作成するテキストに原文をそのセンテンスごとに埋め込むものです。つまり先のコードはtogglateの心臓部です。</p>
 
-<h2>slice_before</h2>
+<h2 id="slicebefore">slice_before</h2>
 
-<blockquote><p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/slice_before.html" title="instance method Enumerable#slice_before">instance method Enumerable#slice_before</a></p></blockquote>
+<blockquote>
+  <p><a href="http://docs.ruby-lang.org/ja/2.1.0/method/Enumerable/i/slice_before.html" title="instance method Enumerable#slice_before">instance method Enumerable#slice_before</a></p>
+</blockquote>
 
 <p>見出し行とそれに続く複数の行を一まとめにしたチャンクを得たいときなど、次に同じ条件が現れるまでを一つのチャンクとしたいときは、<code>slice_before</code>が使えます。行をまとめる機能をもったものに<code>slice</code>という名前が付いているので、このメソッドに辿り着くのは難しいかもしれません（個人的には<code>chunk_from</code>のような名前のほうがしっくり来ます）。Markdownファイル<code>README.md</code>からその大見出し<code>#</code>ごとに区切られたチャンクを生成してみます。</p>
 
-<h4>README.md</h4>
+<h4 id="readmemd">README.md</h4>
 
 <pre><code># Goals
 
@@ -523,9 +522,7 @@ A single extension (example: sinatra-content-for):
 <span class="c1"># &gt;&gt;   &quot;## Classic Style\n&quot;,</span>
 <span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
 <span class="c1"># &gt;&gt;   &quot;A single extension (example: sinatra-content-for):\n&quot;,</span>
-<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span>
-</code></pre></div>
-
+<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span></code></pre></div>
 
 <p><code>slice_before</code>はパターンを引数として取ることもできるので、先のコードは次のようにより簡潔に書けます。</p>
 
@@ -558,11 +555,9 @@ A single extension (example: sinatra-content-for):
 <span class="c1"># &gt;&gt;   &quot;## Classic Style\n&quot;,</span>
 <span class="c1"># &gt;&gt;   &quot;\n&quot;,</span>
 <span class="c1"># &gt;&gt;   &quot;A single extension (example: sinatra-content-for):\n&quot;,</span>
-<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span>
-</code></pre></div>
+<span class="c1"># &gt;&gt;   &quot;\n&quot;]]</span></code></pre></div>
 
-
-<p><br/></p>
+<p><br /></p>
 
 <p>あなたもRubyの<strong>だんご化３兄弟</strong>と戯れてみませんか？</p>
 
@@ -580,18 +575,16 @@ A single extension (example: sinatra-content-for):
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B00000JD0Z"><img class="amazon" src="http://ecx.images-amazon.com/images/I/31RT4F3B26L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B00000JD0Z">だんご3兄弟</a> by 速水けんたろう, 茂森あゆみ, ひまわりキッズ, だんご合唱団, 佐藤雅彦, 内野真澄, and 堀江由朗</p>
+<p><a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B00000JD0Z"><img class="amazon" src="http://ecx.images-amazon.com/images/I/31RT4F3B26L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/だんご3兄弟-速水けんたろう/dp/B00000JD0Z?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B00000JD0Z">だんご3兄弟</a> by 速水けんたろう, 茂森あゆみ, ひまわりキッズ, だんご合唱団, 佐藤雅彦, 内野真澄, and 堀江由朗</p>
 
 <hr />
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>嘘です。 <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">嘘です。 <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

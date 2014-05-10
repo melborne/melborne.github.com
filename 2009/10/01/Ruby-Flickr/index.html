@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -190,8 +190,7 @@
 
 <p>こういう面倒なことはRubyにやってもらおう!</p>
 
-<h2>Exifデータの取得</h2>
-
+<h2 id="exif">Exifデータの取得</h2>
 <p>デジカメで撮った写真データにはExifというメタデータが付いている
 Exifには撮影日時のデータが含まれているので
 これを読み出せれば上記のようなタイトルの構築は簡単だ</p>
@@ -200,33 +199,26 @@ Exifには撮影日時のデータが含まれているので
 これをインストールして使ってみよう
 (Mac OSX Tigerを前提に書いています)</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">exifr</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">exifr</span></code></pre></div>
 
 <p>まずはirbで</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="sx">% irb </span><span class="o">-</span><span class="n">rexifr</span>
+<div class="highlight"><pre><code class="ruby"><span class="sx">% irb </span><span class="o">-</span><span class="n">rexifr</span>
  <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span> <span class="o">=</span> <span class="no">EXIFR</span><span class="o">::</span><span class="no">JPEG</span><span class="o">.</span><span class="n">new</span> <span class="s2">&quot;RIMG0001.JPG&quot;</span>
  <span class="o">=&gt;</span> <span class="c1">#&lt;EXIFR::JPEG:0x5ef948 @bits=8, @height=2448, @width=3264, @exif=[{:image_desc ription=&gt;&quot;&quot;, :make=&gt;&quot;RICOH&quot;, :model=&gt;&quot;GR Digital&quot;, :orientation=&gt;#&lt;EXIFR::TIFF::O rientation:0x5fcd3c @value=1, @type=:TopLeft&gt;, :x_resolution=&gt;(72/1), :y_resoluti on=&gt;(72/1), :resolution_unit=&gt;2, :date_time=&gt;2009-09-29 19:37:07 +0900, :ycb_cr_positioning=&gt;2, :copyright=&gt;&quot;(C) by GR Digital User&quot;, :exposure_time=&gt;(1/9), :f_number=&gt;(12/5), :exposure_program=&gt;2, :iso_speed_ratings=&gt;154, :date_time_original=&gt;2009-09-29 19:37:07 +0900, :date_time_digitized=&gt;2009-09-29 19:37:07 +0900, :compressed_bits_per_pixel=&gt;(14/5), :aperture_value=&gt;(5/2), :brightness_value=&gt;(858993455/2), :exposure_bias_value=&gt;(0/1), :max_aperture_value=&gt;(12/5), :metering_mode=&gt;5, :light_source=&gt;0, :flash=&gt;16, :focal_length=&gt;(59/10), :color_space=&gt;1, :pixel_x_dimension=&gt;3264, :pixel_y_dimension=&gt;2448, :exposure_mode=&gt;0, :white_balance=&gt;0, :scene_capture_type=&gt;0, :sharpness=&gt;0}, {:compression=&gt;6, :x_resolution=&gt;(72/1), :y_resolution=&gt;(72/1), :resolution_unit=&gt;2, :jpeg_interchange_format=&gt;25361, :jpeg_interchange_format_length=&gt;5397}]&gt; </span>
  <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span>
  <span class="o">=&gt;</span> <span class="mi">2009</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">29</span> <span class="mi">19</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mo">07</span> <span class="o">+</span><span class="mi">0900</span>
  <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span><span class="o">.</span><span class="n">class</span>
- <span class="o">=&gt;</span> <span class="no">Time</span>
-</code></pre></div>
-
+ <span class="o">=&gt;</span> <span class="no">Time</span></code></pre></div>
 
 <p>ほうこりゃ簡単だ
 EXIFR::JPEG#date_timeはTimeクラスを返すので
 Time#strftimeが使える</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">004</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%b %d %Y&quot;</span><span class="p">)</span>
- <span class="o">=&gt;</span> <span class="s2">&quot;Sep 29 2009&quot;</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">004</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">p01</span><span class="o">.</span><span class="n">date_time_original</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%b %d %Y&quot;</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="s2">&quot;Sep 29 2009&quot;</span></code></pre></div>
 
-
-<h2>Flickrへのアップロード</h2>
-
+<h2 id="flickr">Flickrへのアップロード</h2>
 <p>次にFlickrへのアップロードだ
 FlickrにはFlickr上の写真を操作するためのAPIが用意されている
 APIには写真をFlickrにアップするためのメソッドもある
@@ -243,14 +235,12 @@ http://www.flickr.com/services/</p>
 認証トークンの取得および写真のアップロードの機能を持っている
 これをインストールして使ってみよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">rflickr</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="sx">% sudo </span><span class="n">gem</span> <span class="n">install</span> <span class="n">rflickr</span></code></pre></div>
 
 <p>更新が止まっていてRuby1.9には対応していない
-添付のGETTING-STARTEDにはトークン取得のためのサンプルコードがある<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+添付のGETTING-STARTEDにはトークン取得のためのサンプルコードがある<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="n">flickr</span> <span class="o">=</span> <span class="no">Flickr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">token_cache_file</span><span class="p">,</span><span class="no">MY_APPLICATION_KEY</span><span class="p">,</span><span class="no">MY_SHARED_SECRET</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">flickr</span> <span class="o">=</span> <span class="no">Flickr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">token_cache_file</span><span class="p">,</span><span class="no">MY_APPLICATION_KEY</span><span class="p">,</span><span class="no">MY_SHARED_SECRET</span><span class="p">)</span>
   <span class="k">unless</span> <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">token</span>
     <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">getFrob</span>
     <span class="n">url</span> <span class="o">=</span> <span class="vi">@flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">login_link</span>
@@ -259,9 +249,7 @@ http://www.flickr.com/services/</p>
     <span class="nb">gets</span>
     <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">getToken</span>
     <span class="n">flickr</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">cache_token</span>
-  <span class="k">end</span>
-</code></pre></div>
-
+  <span class="k">end</span></code></pre></div>
 
 <p>このコードを実行してターミナルに表示されたURLにアクセスし
 そこでこのプログラムに対する認証を行えば
@@ -280,7 +268,6 @@ token_cache_fileに認証トークンが保存されるようだ
 
 <script src="http://gist.github.com/197856.js"></script>
 
-
 <p>保証はありませんが同じようなことで
 お困りの方がおられたら使ってください</p>
 
@@ -293,12 +280,10 @@ token_cache_fileに認証トークンが保存されるようだ
 <a href="http://subtech.g.hatena.ne.jp/cho45/20080102/1199257680">アカウント情報を管理するコマンド pit - 冬通りに消え行く制服ガールは、夢物語にリアルを求めない。 - subtech</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>Macでは /opt/local/lib/ruby/gems/1.8/gems/rflickr-2006.02.01/GETTING-STARTED <a href='#fnref:1' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">Macでは /opt/local/lib/ruby/gems/1.8/gems/rflickr-2006.02.01/GETTING-STARTED <a href="#fnref:1" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

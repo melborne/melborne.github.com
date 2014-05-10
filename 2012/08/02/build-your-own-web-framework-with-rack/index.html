@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,7 +179,8 @@
       </script>
     </div>
 
-    <p>(追記：2012-12-25)
+    
+<p>(追記：2012-12-25)
 本記事およびこれに続くRackの記事（全４本）をまとめて電子書籍化しました。「<a href="https://gumroad.com/" title="Gumroad">Gumroad</a>」を通して100円にて販売しています。内容についての追加・変更はありませんが、誤記の修正およびメディア向けの調整を行っています。</p>
 
 <p><img src="/assets/images/2012/rack_cover.png" alt="Rack Ebook" /></p>
@@ -190,7 +191,9 @@
 
 <p>詳細は以下を参照して下さい。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2012/12/24/learning-rack-on-ebook/" title="電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！">電子書籍「エラーメッセージから学ぶRack」EPUB版をGumroadから出版しました！</a></p>
+</blockquote>
 
 <p>購入ご検討のほどよろしくお願いしますm(__)m</p>
 
@@ -200,13 +203,15 @@
 
 <p><a href="http://rack.github.com/" title="Rack">Rack</a>のサイトには、Rackについて次のように書いてあります。</p>
 
-<blockquote><p>Rack provides a minimal interface between webservers supporting Ruby and Ruby frameworks.</p>
+<blockquote>
+  <p>Rack provides a minimal interface between webservers supporting Ruby and Ruby frameworks.</p>
 
-<p>Rackは、Ruby向けWebサーバとRuby製フレームワークとの間の最小のインタフェースを提供します。</p></blockquote>
+  <p>Rackは、Ruby向けWebサーバとRuby製フレームワークとの間の最小のインタフェースを提供します。</p>
+</blockquote>
 
 <p>やっぱりよくわかりませんが、たぶんそれは、Ruby製Webフレームワークを作る人にとっては<strong>仮想Webサーバ</strong>であり、またRuby向けWebサーバを作る人にとっては<strong>仮想Webフレームワーク</strong>になるものだと理解します。</p>
 
-<h2>エラーメッセージから学ぶ</h2>
+<h2 id="section">エラーメッセージから学ぶ</h2>
 
 <p>古くからの格言の一つに「Rackのことはrackupに聞け」というものがあります。Rackがわからないので、この格言に従いrackupに聞いてみることにします。</p>
 
@@ -215,51 +220,37 @@
 <div class="highlight"><pre><code class="bash">% mkdir draque
 % <span class="nb">cd </span>draque
 % rackup
-configuration config.ru not found
-</code></pre></div>
-
+configuration config.ru not found</code></pre></div>
 
 <p>config.ruという設定ファイルがないと言われました。それでは、これを作って再度rackupします。</p>
 
 <div class="highlight"><pre><code class="bash">% touch config.ru
 % rackup
 ~/.rbenv/..../rack/builder.rb:129:in <span class="sb">`</span>to_app<span class="s1">&#39;: missing run or map statement (RuntimeError)</span>
-<span class="s1">        from config.ru:1:in `&lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="s1">        from config.ru:1:in `&lt;main&gt;&#39;</span></code></pre></div>
 
 <p>今度はrunまたはmapが見つからないと言われたので、config.ruに<code>run</code>と書いてもう一度やってみます。</p>
 
 <div class="highlight"><pre><code class="bash">% <span class="nb">echo </span>run &gt; config.ru 
 % rackup              
 ~/.rbenv/.../rack/builder.rb:99:in <span class="sb">`</span>run<span class="s1">&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
-<span class="s1">        from config.ru:2:in `block in &lt;main&gt;&#39;</span>
-</code></pre></div>
-
+<span class="s1">        from config.ru:2:in `block in &lt;main&gt;&#39;</span></code></pre></div>
 
 <p>今度は引数が足りないと言われました。<code>run</code>は恐らくWebアプリを走らせるコマンドでしょうから、Webアプリのインスタンスを渡せばよさそうです。試しに<code>1</code>を渡してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
-
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <div class="highlight"><pre><code class="bash">% rackup      
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</code></pre></div>
-
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>ポート9292でThin Webサーバが立ち上がりました。</p>
 
 <p>Browserでhttp://localhost:9292 にアクセスしてみます。</p>
 
-<div class="highlight"><pre><code class="bash">NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for </span>1:Fixnum
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for </span>1:Fixnum</code></pre></div>
 
 <p><code>call</code>メソッドがないと言われました。では、Fixnum#callを定義してみます。</p>
 
@@ -269,16 +260,12 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>今度はどうでしょう。</p>
 
 <div class="highlight"><pre><code class="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
-        config.ru:3:in <span class="sb">`</span>call<span class="err">&#39;</span>
-</code></pre></div>
-
+        config.ru:3:in <span class="sb">`</span>call<span class="err">&#39;</span></code></pre></div>
 
 <p>引数がないと言われました。引数を付けてみます。</p>
 
@@ -288,15 +275,11 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer</code></pre></div>
 
 <p>Statusは100以上の数でなければならないとのRack::Lint::LintErrorが吐かれました。ではcallメソッドが200を返すようにしてみます。</p>
 
@@ -307,15 +290,11 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span></code></pre></div>
 
 <p>headersオブジェクトはNilClassだから<code>#each</code>できないと言われました。では第２返り値として#eachできるオブジェクト<code>[1]</code>を渡してみます。</p>
 
@@ -326,15 +305,11 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: header key must be a string, was Fixnum
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: header key must be a string, was Fixnum</code></pre></div>
 
 <p>今度はヘッダーキーが文字列じゃないと言われました。これで#eachできるオブジェクトがHashとわかりました。キーが文字列のHashオブジェクトを返してみます。</p>
 
@@ -345,15 +320,11 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: a header value must be a String, but the value of <span class="s1">&#39;one&#39;</span> is a Fixnum
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: a header value must be a String, but the value of <span class="s1">&#39;one&#39;</span> is a Fixnum</code></pre></div>
 
 <p>今度は値も文字列じゃないとダメだと言われたので、これに対応してみます。</p>
 
@@ -364,15 +335,11 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found
-</code></pre></div>
-
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found</code></pre></div>
 
 <p><code>Content-Type</code>ヘッダーがないと言われました。用意します。</p>
 
@@ -383,18 +350,14 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。</p>
 
 <div class="highlight"><pre><code class="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
-127.0.0.1 - - <span class="o">[</span>02/Aug/2012 20:38:50<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010
-</code></pre></div>
+127.0.0.1 - - <span class="o">[</span>02/Aug/2012 20:38:50<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010</code></pre></div>
 
-
-<p>"<strong>GET / HTTP/1.1" 200</strong>"が返ってきました。しかし、レスポンスボディが<code>each</code>できないと言っています。</p>
+<p>“<strong>GET / HTTP/1.1” 200</strong>“が返ってきました。しかし、レスポンスボディが<code>each</code>できないと言っています。</p>
 
 <p>それでは第３返り値として、eachできるbodyを返すようにしてみます。</p>
 
@@ -405,9 +368,7 @@ configuration config.ru not found
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="mi">1</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
 <p>どうでしょう。
 <img src="/assets/images/draque1.png" alt="draque1" /></p>
@@ -416,16 +377,17 @@ configuration config.ru not found
 
 <p>以上のことをまとめます。</p>
 
-<blockquote><ol>
-<li>rackupコマンドはWebサーバを起動する。</li>
-<li>その際、config.ruという設定ファイル（Rubyスクリプト）を読み込む。</li>
-<li>config.ruでは、Webアプリのインスタンスをrunメソッドに渡す。</li>
-<li>Webアプリのインスタンスは、１引数のcallメソッドを持っている必要がある。</li>
-<li>callメソッドは、３つの返り値、すなわち（１）100以上の数字からなるステータスコード、（２）少なくとも"Content-Type"をキーに、文字列を値に持つハッシュによるヘッダー、および（３）eachできるボディを返す。</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>rackupコマンドはWebサーバを起動する。</li>
+    <li>その際、config.ruという設定ファイル（Rubyスクリプト）を読み込む。</li>
+    <li>config.ruでは、Webアプリのインスタンスをrunメソッドに渡す。</li>
+    <li>Webアプリのインスタンスは、１引数のcallメソッドを持っている必要がある。</li>
+    <li>callメソッドは、３つの返り値、すなわち（１）100以上の数字からなるステータスコード、（２）少なくとも”Content-Type”をキーに、文字列を値に持つハッシュによるヘッダー、および（３）eachできるボディを返す。</li>
+  </ol>
 </blockquote>
 
-<h2>Rack Webフレームワーク</h2>
+<h2 id="rack-web">Rack Webフレームワーク</h2>
 
 <p>さて、Webアプリが<code>1</code>では発展性が無さそうです。もう少しマシなWebアプリを考えます。</p>
 
@@ -436,9 +398,7 @@ configuration config.ru not found
   <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to the World of Draque!!&quot;</span><span class="o">.</span><span class="n">chars</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p><code>rackup</code>してBrowserでアクセスします。</p>
 
@@ -454,9 +414,7 @@ configuration config.ru not found
   <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to the World of Draque!!&quot;</span><span class="o">.</span><span class="n">chars</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>コンソールに次のような出力が得られました。</p>
 
@@ -464,9 +422,7 @@ configuration config.ru not found
 &gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 &gt;&gt; Maximum connections <span class="nb">set </span>to 1024
 &gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-<span class="o">{</span><span class="s2">&quot;SERVER_SOFTWARE&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;thin 1.3.1 codename Triple Espresso&quot;</span>, <span class="s2">&quot;SERVER_NAME&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;localhost&quot;</span>, <span class="s2">&quot;rack.input&quot;</span><span class="o">=</span>&gt;#&lt;Rack::Lint::InputWrapper:0x00000100a156c0 @input<span class="o">=</span><span class="c">#&lt;StringIO:0x000001009dab38&gt;&gt;, &quot;rack.version&quot;=&gt;[1, 0], &quot;rack.errors&quot;=&gt;#&lt;Rack::Lint::ErrorWrapper:0x00000100a15648 @error=#&lt;IO:&lt;STDERR&gt;&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;REQUEST_METHOD&quot;=&gt;&quot;GET&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;/&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:9292&quot;, &quot;HTTP_CONNECTION&quot;=&gt;&quot;keep-alive&quot;, &quot;HTTP_CACHE_CONTROL&quot;=&gt;&quot;max-age=0&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/22.0.1221.0 Safari/537.3&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;, &quot;HTTP_ACCEPT_ENCODING&quot;=&gt;&quot;gzip,deflate,sdch&quot;, &quot;HTTP_ACCEPT_LANGUAGE&quot;=&gt;&quot;ja,en-US;q=0.8,en;q=0.6&quot;, &quot;HTTP_ACCEPT_CHARSET&quot;=&gt;&quot;UTF-8,*;q=0.5&quot;, &quot;HTTP_COOKIE&quot;=&gt;&quot;_gauges_unique_year=1; _gauges_unique=1; _blog_app_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRkkiJTVjMmY2ZDU1ODBiNTUxMDY5NGY3ZDkxNzQ3ZmRkOWVkBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMTQvY1IyYUpOaFBYUXpFYTNXOEU5SHlpYnVEU0ZEaDRxTmUwTzVINThmbmc9BjsARg%3D%3D--f9184f85f7974529836b4bce7c23a5f7132bf8df&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.2&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;9292&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;async.callback&quot;=&gt;#&lt;Method: Thin::Connection#post_process&gt;, &quot;async.close&quot;=&gt;#&lt;EventMachine::DefaultDeferrable:0x00000100a06c38&gt;}127.0.0.1 - - [02/Aug/2012 21:39:21] &quot;GET / HTTP/1.1&quot; 200 - 0.0023</span>
-</code></pre></div>
-
+<span class="o">{</span><span class="s2">&quot;SERVER_SOFTWARE&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;thin 1.3.1 codename Triple Espresso&quot;</span>, <span class="s2">&quot;SERVER_NAME&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;localhost&quot;</span>, <span class="s2">&quot;rack.input&quot;</span><span class="o">=</span>&gt;#&lt;Rack::Lint::InputWrapper:0x00000100a156c0 @input<span class="o">=</span><span class="c">#&lt;StringIO:0x000001009dab38&gt;&gt;, &quot;rack.version&quot;=&gt;[1, 0], &quot;rack.errors&quot;=&gt;#&lt;Rack::Lint::ErrorWrapper:0x00000100a15648 @error=#&lt;IO:&lt;STDERR&gt;&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;REQUEST_METHOD&quot;=&gt;&quot;GET&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;/&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:9292&quot;, &quot;HTTP_CONNECTION&quot;=&gt;&quot;keep-alive&quot;, &quot;HTTP_CACHE_CONTROL&quot;=&gt;&quot;max-age=0&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/22.0.1221.0 Safari/537.3&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;, &quot;HTTP_ACCEPT_ENCODING&quot;=&gt;&quot;gzip,deflate,sdch&quot;, &quot;HTTP_ACCEPT_LANGUAGE&quot;=&gt;&quot;ja,en-US;q=0.8,en;q=0.6&quot;, &quot;HTTP_ACCEPT_CHARSET&quot;=&gt;&quot;UTF-8,*;q=0.5&quot;, &quot;HTTP_COOKIE&quot;=&gt;&quot;_gauges_unique_year=1; _gauges_unique=1; _blog_app_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRkkiJTVjMmY2ZDU1ODBiNTUxMDY5NGY3ZDkxNzQ3ZmRkOWVkBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMTQvY1IyYUpOaFBYUXpFYTNXOEU5SHlpYnVEU0ZEaDRxTmUwTzVINThmbmc9BjsARg%3D%3D--f9184f85f7974529836b4bce7c23a5f7132bf8df&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.2&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;9292&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;async.callback&quot;=&gt;#&lt;Method: Thin::Connection#post_process&gt;, &quot;async.close&quot;=&gt;#&lt;EventMachine::DefaultDeferrable:0x00000100a06c38&gt;}127.0.0.1 - - [02/Aug/2012 21:39:21] &quot;GET / HTTP/1.1&quot; 200 - 0.0023</span></code></pre></div>
 
 <p>クライアントの環境情報がWebサーバからハッシュで渡されていました。これらの情報があれば、クライアントの環境に応じたレスポンスが構築できそうです。まずは、これらを一覧表示するレスポンスを書いてみます。Content-Typeも<strong>text/html</strong>に変更します。</p>
 
@@ -480,9 +436,7 @@ configuration config.ru not found
   <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>どうでしょうか。</p>
 
@@ -521,9 +475,7 @@ configuration config.ru not found
   <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p><code>/draque</code>にアクセスします。</p>
 
@@ -578,9 +530,7 @@ configuration config.ru not found
   <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>わかりづらくなってきたので、フレームワークの部分をモジュール化します。</p>
 
@@ -629,9 +579,7 @@ configuration config.ru not found
   <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>なんちゃってWebフレームワークdraqueの完成です^ ^;</p>
 
@@ -647,9 +595,10 @@ configuration config.ru not found
 
 <hr />
 
-<p><a href="http://www.amazon.co.jp/Rack-DVD-Import/dp/B0052YV3XC?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B0052YV3XC"><img class="amazon" src="http://ecx.images-amazon.com/images/I/5193kZfY48L._SL160_.jpg" /></a></p>
+<p><a href="http://www.amazon.co.jp/Rack-DVD-Import/dp/B0052YV3XC?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B0052YV3XC"><img class="amazon" src="http://ecx.images-amazon.com/images/I/5193kZfY48L._SL160_.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/Rack-DVD-Import/dp/B0052YV3XC?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B0052YV3XC">Rack [DVD] [Import]</a></p>
+<p><a href="http://www.amazon.co.jp/Rack-DVD-Import/dp/B0052YV3XC?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=B0052YV3XC">Rack [DVD] [Import]</a></p>
+
 
 
     <div class="ad" id="topAdsense">

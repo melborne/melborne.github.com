@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,15 +179,15 @@
       </script>
     </div>
 
-    <p>さてこれらの演算子を使って何かしたいですね...</p>
+    <p>さてこれらの演算子を使って何かしたいですね…</p>
 
 <p>いいのを思いつきました。</p>
 
 <p>ある小説を元にしたオブジェクトから、基本単語からなるオブジェクトを差し引けば、その小説にユニークな単語が抽出できるかもしれません。</p>
 
-<h2>Version27</h2>
+<h2 id="version27">Version27</h2>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">WordDictionary</span>
    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
      <span class="n">text</span> <span class="o">=</span> <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span> <span class="o">=~</span> <span class="n">regexp</span> <span class="p">}</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="p">:</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">word</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">freq</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
      <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
@@ -195,9 +195,7 @@
    <span class="k">def</span> <span class="nf">uniq_words</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">base</span><span class="p">)</span>
      <span class="n">base</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_self</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">_self</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="sr">/./</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">freq</span><span class="o">|</span> <span class="n">freq</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">}</span>  <span class="p">}</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>uniq_wordsは個数nと複数の基本単語オブジェクトbaseを取って、そのオブジェクトに固有のワードトップnを出力します。injectメソッドのブロックの中で先ほど定義した-メソッドを使っています。</p>
 
@@ -205,30 +203,27 @@
 
 <p>さて、早速「不思議の国のアリス」のユニークなワードを出力してみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">if</span> <span class="vg">$0</span> <span class="o">==</span> <span class="bp">__FILE__</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">if</span> <span class="vg">$0</span> <span class="o">==</span> <span class="bp">__FILE__</span>
   <span class="n">base</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/base.txt&#39;</span><span class="p">)</span>
   <span class="n">alice</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/alice.txt&#39;</span><span class="p">)</span>
   <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
  <span class="k">end</span> 
  <span class="o">&gt;</span><span class="c1"># Argument has assumed as a text string</span>
  <span class="no">Argument</span> <span class="n">has</span> <span class="n">assumed</span> <span class="n">as</span> <span class="n">a</span> <span class="n">text</span> <span class="n">string</span>
- <span class="o">[[</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="mi">403</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;turtle&quot;</span><span class="p">,</span> <span class="mi">59</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;mock&quot;</span><span class="p">,</span> <span class="mi">56</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hatter&quot;</span><span class="p">,</span> <span class="mi">56</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;gryphon&quot;</span><span class="p">,</span> <span class="mi">55</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rabbit&quot;</span><span class="p">,</span> <span class="mi">51</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;got&quot;</span><span class="p">,</span> <span class="mi">45</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="mi">44</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;duchess&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;tone&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;dormouse&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="mi">37</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hare&quot;</span><span class="p">,</span> <span class="mi">31</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;caterpillar&quot;</span><span class="p">,</span> <span class="mi">28</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;jury&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;sort&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;tea&quot;</span><span class="p">,</span> <span class="mi">19</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="mi">18</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;bill&quot;</span><span class="p">,</span> <span class="mi">17</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hastily&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;bit&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;doesn&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;didn&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;dinah&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;anxiously&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;baby&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;footman&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;trying&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;cook&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;wouldn&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="o">]]</span>
-</code></pre></div>
-
+ <span class="o">[[</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="mi">403</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;turtle&quot;</span><span class="p">,</span> <span class="mi">59</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;mock&quot;</span><span class="p">,</span> <span class="mi">56</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hatter&quot;</span><span class="p">,</span> <span class="mi">56</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;gryphon&quot;</span><span class="p">,</span> <span class="mi">55</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;rabbit&quot;</span><span class="p">,</span> <span class="mi">51</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;got&quot;</span><span class="p">,</span> <span class="mi">45</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="mi">44</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;duchess&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;tone&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;dormouse&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="mi">37</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hare&quot;</span><span class="p">,</span> <span class="mi">31</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;caterpillar&quot;</span><span class="p">,</span> <span class="mi">28</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;jury&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;sort&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;tea&quot;</span><span class="p">,</span> <span class="mi">19</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="mi">18</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;bill&quot;</span><span class="p">,</span> <span class="mi">17</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;hastily&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;bit&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;doesn&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;didn&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;dinah&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;anxiously&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;baby&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;footman&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;trying&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;cook&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;wouldn&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="o">]]</span></code></pre></div>
 
 <p>なんかいい感じじゃないですか！</p>
 
-<p>なお最後のif $0 == <strong>FILE</strong> はこのスクリプトを他のスクリプトからrequireしたときにはこの部分が、require先で実行されないようにするための技法です。$0はrubyインタプリタに渡したスクリプト名<strong>FILE</strong>はこのスクリプト名を参照します。</p>
+<p>なお最後のif $0 == <strong>FILE</strong> はこのスクリプトを他のスクリプトからrequireしたときにはこの部分が、require先で実行されないようにするための技法です。$0はrubyインタプリタに渡したスクリプト名__FILE__はこのスクリプト名を参照します。</p>
 
-<h2>Version28</h2>
-
+<h2 id="version28">Version28</h2>
 <p>でも、さっきからうっとうしい文字が一緒に出力されていますね。オブジェクトを内部で再構築するとき文字列を渡すのでそれが原因です。フラグを立ててこれに対処します。</p>
 
-<p>WordDictionaryクラス内部でオブジェクトを生成するときはinner_callにtrueを渡して、"Argument has..."のメッセージがでないようにします。</p>
+<p>WordDictionaryクラス内部でオブジェクトを生成するときはinner_callにtrueを渡して、”Argument has…“のメッセージがでないようにします。</p>
 
 <p>ついでに最後の仕上げとして、クラスは入力データの名前nameを受け取れるようにし、また総単語種数を出力するsizeメソッドも定義しましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">WordDictionary</span>
    <span class="n">att_reader</span> <span class="ss">:words</span><span class="p">,</span> <span class="ss">:name</span>
    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="nb">name</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">inner_call</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
      <span class="n">input</span> <span class="o">=</span> <span class="n">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
@@ -258,13 +253,11 @@
      <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span><span class="o">.</span><span class="n">send</span> <span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
      <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
    <span class="k">end</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>さあこれで完成です！完成したスクリプト全体を眺めてみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;open-uri&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;open-uri&quot;</span>
   <span class="k">module</span> <span class="nn">Enumerable</span>
     <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
       <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">nth</span><span class="p">)</span>
@@ -331,7 +324,7 @@
     <span class="k">def</span> <span class="nf">uniq_words</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">*</span><span class="n">base</span><span class="p">)</span>
       <span class="n">base</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_self</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">_self</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="sr">/./</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">freq</span><span class="o">|</span> <span class="n">freq</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">}</span>  <span class="p">}</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
     <span class="k">end</span>
-    
+	
     <span class="kp">protected</span> <span class="ss">:words</span> 
     <span class="kp">private</span>
     <span class="k">def</span> <span class="nf">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">inner_call</span><span class="p">)</span>
@@ -392,15 +385,13 @@
   <span class="n">jp_history</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/japanese_history.txt&#39;</span><span class="p">)</span>
   <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
   <span class="nb">p</span> <span class="n">jp_history</span><span class="o">.</span><span class="n">uniq_words</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>英文小説の最頻出ワードを見つける旅はこれで終わりです。長い道のりでした。でもわたしは楽しめました。そして大変勉強になりました。</p>
 
-<p>そう、このチュートリアルは皆様のためにではなく、実は私自身のために書かれたものなのです。Rubyのエキスパートが余裕を持って書いたものではなく、プログラム新人が学び試行錯誤しながら。その知力の限界を引き出して書いたものなのです。<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup></p>
+<p>そう、このチュートリアルは皆様のためにではなく、実は私自身のために書かれたものなのです。Rubyのエキスパートが余裕を持って書いたものではなく、プログラム新人が学び試行錯誤しながら。その知力の限界を引き出して書いたものなのです。<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
 
-<p>でも一方で、このチュートリアルを役に立ったと言ってくれる人がいつか現れると信じてもいるのです。それがRubyを学びその成果をブログで公開するわたしのエンジンになっているのです。<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup></p>
+<p>でも一方で、このチュートリアルを役に立ったと言ってくれる人がいつか現れると信じてもいるのです。それがRubyを学びその成果をブログで公開するわたしのエンジンになっているのです。<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
 
 <p>最後にこのWordDictionaryクラスを使ったWebアプリケーションを構築してみました。これが今回のチュートリアルの一応の成果です。よろしければアクセスしてみてください。</p>
 
@@ -411,11 +402,10 @@
 <p>機能は次の3つだけです。</p>
 
 <ol>
-<li>いくつかの英文小説の特徴、つまりタイトル、総単語種数(Total Words in Kind)、最頻出ワードtop30(Most Used Words)、最ワード長top10(Longest Words)、特徴ワード20(Characteristic Words)を表示します。</li>
-<li>小説タイトルをクリックするとその文章の頁に遷移します。</li>
-<li>右端の入力欄に英文または英文の置かれたURLを入れることで、その文章の特徴を抽出して表示します。</li>
+  <li>いくつかの英文小説の特徴、つまりタイトル、総単語種数(Total Words in Kind)、最頻出ワードtop30(Most Used Words)、最ワード長top10(Longest Words)、特徴ワード20(Characteristic Words)を表示します。</li>
+  <li>小説タイトルをクリックするとその文章の頁に遷移します。</li>
+  <li>右端の入力欄に英文または英文の置かれたURLを入れることで、その文章の特徴を抽出して表示します。</li>
 </ol>
-
 
 <p>サイトの構築には、<a href="http://www.sinatrarb.com/">Sinatra</a>というWebフレームワークと、<a href="http://heroku.com/">heroku</a>というサービスを使いました。</p>
 
@@ -423,12 +413,10 @@
 <a href="http://gist.github.com/93900">gist: 93900 - GitHub</a></p>
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>そんなことは百も承知ですね <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>もういくつか星を頂きました。ありがとうございます <a href='#fnref:2' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">そんなことは百も承知ですね <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">もういくつか星を頂きました。ありがとうございます <a href="#fnref:2" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

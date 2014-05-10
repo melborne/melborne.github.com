@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,63 +181,53 @@
 
     <p>Rubyのクラス、モジュール、オブジェクトの関係を、自分なりにまとめてみた。読みづらいかもしれないけど、だれかの参考になればうれしい。</p>
 
-<h2>オブジェクトの種類</h2>
-
+<h2 id="section">オブジェクトの種類</h2>
 <p>Rubyはオブジェクト指向言語であり、Ruby空間に存在するオブジェクトをその操作対象とする。Ruby空間には3種類のオブジェクト、すなわちインスタンスオブジェクト、クラスオブジェクト、そしてモジュールオブジェクトが存在している。これらは通常単に、オブジェクト、クラス、モジュールと呼ばれているけど、ここではそれらのオブジェクトとしての側面を強調したいので、あえてその名称を使おう。</p>
 
-<h2>クラスオブジェクト ～クラスとしての側面～</h2>
-
+<h2 id="section-1">クラスオブジェクト ～クラスとしての側面～</h2>
 <p>クラスオブジェクトは通常単にクラスと呼ばれ、主にRuby空間にインスタンスオブジェクトを生み出すために存在する。生み出されるインスタンスオブジェクトのデザインは、クラスオブジェクトに記述されており、しかもユーザがインスタンスオブジェクトにアクセスしてその機能を実現しようとするとき、インスタンスオブジェクトはクラスオブジェクトからその機能を借り出す。</p>
 
 <p>Rubyにはその設計者により予め多数のクラスオブジェクトが用意されている。これらは組み込みクラスと呼ばれる。ユーザは組み込みクラスを自由に使うことができるけれど、class式を使って独自クラスを定義することもできる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
       <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
     <span class="k">end</span>
-  <span class="k">end</span>
-</code></pre></div>
-
+  <span class="k">end</span></code></pre></div>
 
 <p>ユーザがclass式を使って既存クラスと同名のクラスオブジェクトを定義した場合、それは既存クラスの書き換えではなく拡張となる。その既存クラスが本来持っている機能は失われず、新たな機能がそこに付加される。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
     <span class="k">def</span> <span class="nf">speak</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
      <span class="nb">puts</span> <span class="n">word</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;Charlie&quot;</span>
   <span class="n">my_name</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">)</span> <span class="c1"># =&gt; Hello</span>
-  <span class="n">my_name</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; 7</span>
-</code></pre></div>
-
+  <span class="n">my_name</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; 7</span></code></pre></div>
 
 <p>もっとも同名のメソッドを再定義すれば、それは基のメソッドの上書きになるので注意を要する。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
     <span class="k">def</span> <span class="nf">length</span>
       <span class="s2">&quot;I don&#39;t wanna tell you.&quot;</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; &quot;I don&#39;t wanna tell you.&quot;</span>
-</code></pre></div>
-
+  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; &quot;I don&#39;t wanna tell you.&quot;</span></code></pre></div>
 
 <p>特定のクラスオブジェクトからインスタンスオブジェクトを生成するには、newメソッドを使う。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
       <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="c1"># Creatureクラスのnewメソッドでオブジェクトを生成する</span>
-  <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span> 
-</code></pre></div>
-
+  <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span></code></pre></div>
 
 <p>ただ代表的な組み込みクラスではリテラル表記を使って、簡易にインスタンスオブジェクトを生成できる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="c1"># 文字列オブジェクトの生成</span>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># 文字列オブジェクトの生成</span>
   <span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;Charlie&quot;</span>
   <span class="c1"># 整数オブジェクトの生成</span>
   <span class="n">my_age</span> <span class="o">=</span> <span class="mi">195</span>
@@ -248,13 +238,11 @@
   <span class="c1"># 範囲オブジェクトの生成</span>
   <span class="n">my_range</span> <span class="o">=</span> <span class="mi">9</span><span class="o">.</span><span class="n">.</span><span class="mi">21</span>
   <span class="c1"># 正規表現オブジェクトの生成</span>
-  <span class="n">my_regexp</span> <span class="o">=</span> <span class="sr">/ruby/</span> 
-</code></pre></div>
-
+  <span class="n">my_regexp</span> <span class="o">=</span> <span class="sr">/ruby/</span></code></pre></div>
 
 <p>オブジェクトの特性はそのクラスオブジェクトのメソッド定義でほぼ決まる。メソッドはdef式を使って定義できる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
     <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">description</span>
       <span class="s2">&quot;I&#39;m a Creature Class for making creatures.&quot;</span>
     <span class="k">end</span>
@@ -264,35 +252,28 @@
     <span class="k">def</span> <span class="nf">name</span>
       <span class="vi">@name</span>
     <span class="k">end</span>
-  <span class="k">end</span>
-</code></pre></div>
-
+  <span class="k">end</span></code></pre></div>
 
 <p>クラスオブジェクトには、インスタンスオブジェクトのためのInstanceメソッドと、自身のためのselfメソッドとを定義できる。</p>
 
 <p>selfメソッドはメソッド名の前にselfあるいはクラス名を冠することで、Instanceメソッドと区別される。クラスオブジェクトにおけるselfメソッドは、普通クラスメソッドと呼ばれている。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">Creature</span><span class="o">.</span><span class="n">description</span>
-       <span class="c1"># =&gt;  &quot;I&#39;m a Creature Class for making creatures.&quot;</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">Creature</span><span class="o">.</span><span class="n">description</span>
+       <span class="c1"># =&gt;  &quot;I&#39;m a Creature Class for making creatures.&quot;</span></code></pre></div>
 
 <p>Instanceメソッドはこのクラスオブジェクトから派生するインスタンスオブジェクトの挙動を決定付ける。つまり、クラスオブジェクトからインスタンスオブジェクトが生成されたとき、Instanceメソッドがあたかも、インスタンスオブジェクト自身が持つメソッドのように振る舞う。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span>
-  <span class="n">my_pet</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Doggie&quot;</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span>
+  <span class="n">my_pet</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Doggie&quot;</span></code></pre></div>
 
-
-<h2>クラスオブジェクト ～オブジェクトとしての側面～</h2>
-
+<h2 id="section-2">クラスオブジェクト ～オブジェクトとしての側面～</h2>
 <p>確かにクラスオブジェクトはインスタンスオブジェクトを生成するための雛形的なものだ。だけれども、同時にクラスオブジェクトは、それ自身もRuby空間に存在するオブジェクトである。</p>
 
 <p>インスタンスオブジェクトにクラスオブジェクトという母があるように、すべてのクラスオブジェクトにもClassクラスオブジェクトという母がある。</p>
 
 <p>つまりすべてのクラスの雛形となっているのはClassクラスオブジェクトであり、クラスオブジェクトはすべてここから生成されている。classメソッドでこの事実を知ることができる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">Object</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">Object</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
   <span class="nb">Array</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
   <span class="no">Binding</span><span class="o">.</span><span class="n">class</span>          <span class="c1"># =&gt; Class</span>
   <span class="no">Continuation</span><span class="o">.</span><span class="n">class</span>     <span class="c1"># =&gt; Class</span>
@@ -320,29 +301,21 @@
   <span class="no">UnboundMethod</span><span class="o">.</span><span class="n">class</span>    <span class="c1"># =&gt; Class</span>
   <span class="no">TrueClass</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
   <span class="no">FalseClass</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
-  <span class="no">NilClass</span><span class="o">.</span><span class="n">class</span>         <span class="c1"># =&gt; Class</span>
-</code></pre></div>
-
+  <span class="no">NilClass</span><span class="o">.</span><span class="n">class</span>         <span class="c1"># =&gt; Class</span></code></pre></div>
 
 <p>驚くべきことに、Classクラスオブジェクトの母もClassクラスオブジェクト自身である！</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">Class</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">Class</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span></code></pre></div>
 
 <p>あなたが後から作るクラスオブジェクトも、その母はあなたではなくClassクラスオブジェクトである。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">Creature</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">Creature</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span></code></pre></div>
 
 <p>またある特定のクラスのサブクラスもその母はスーパークラスではなく、Classクラスオブジェクトである。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
   <span class="k">end</span>
-  <span class="no">Person</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
-</code></pre></div>
-
+  <span class="no">Person</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span></code></pre></div>
 
 <p>兎にも角にも、あらゆるクラスオブジェクトは、一つのクラスオブジェクトClassから生成されているのだ！</p>
 
@@ -352,17 +325,15 @@
 
 <p>このことを確認するために、恣意的にClassクラスオブジェクトのnewクラスメソッドを使ってクラスオブジェクトを生成してみよう。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="nb">puts</span> <span class="no">Creature</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Creature</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="no">Creature</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Creature</span><span class="p">)</span>
         <span class="c1"># =&gt;warning: already initialized constant Creature</span>
-        <span class="c1"># =&gt; Creature</span>
-</code></pre></div>
-
+        <span class="c1"># =&gt; Creature</span></code></pre></div>
 
 <p>これによりCreature定数には既にCreatureクラスオブジェクトがセットされていることが確認できる。なお上記によりCreatureクラスオブジェクトのサブクラスが生成され、それがCreature定数に再設定される。</p>
 
 <p>既に書いたがクラスオブジェクトには自身のためのselfメソッド(クラスメソッド)を定義できる。クラスオブジェクトに対しクラスメソッドを直接呼び出すことによって、クラスオブジェクト自身にアクセスできる。クラスメソッドはそこから派生したインスタンスオブジェクト全体を管理するためなどに使うことができる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Creature</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
     <span class="vc">@@counter</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
       <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
@@ -375,17 +346,14 @@
   <span class="n">dog</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
   <span class="n">alligator</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;thanks&#39;</span><span class="p">)</span>
   <span class="n">hippopotamus</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;idiot&#39;</span><span class="p">)</span>
-  <span class="no">Creature</span><span class="o">.</span><span class="n">count</span>  <span class="c1"># =&gt; &quot;You have 3 creatures.&quot;</span>
-</code></pre></div>
+  <span class="no">Creature</span><span class="o">.</span><span class="n">count</span>  <span class="c1"># =&gt; &quot;You have 3 creatures.&quot;</span></code></pre></div>
 
-
-<h2>継承(Inheritance)</h2>
-
+<h2 id="inheritance">継承(Inheritance)</h2>
 <p>継承とはクラスオブジェクト間の相互依存関係のことである。Rubyではあるクラスオブジェクトが定義したメソッドを、あたかも自分に定義されたもののように他のクラスオブジェクトが利用できる。利用される側をスーパークラス、利用する側をサブクラスと呼ぶ。</p>
 
 <p>他のクラスオブジェクトを利用してクラスを定義する場合、自分の名前にスーパークラス名を接ぎ木する。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
       <span class="vi">@age</span> <span class="o">=</span> <span class="n">age</span>
@@ -396,9 +364,7 @@
   <span class="k">end</span>
   <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
   <span class="n">me</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Charlie&quot;</span>
-  <span class="n">me</span><span class="o">.</span><span class="n">age</span>      <span class="c1"># =&gt; 8</span>
-</code></pre></div>
-
+  <span class="n">me</span><span class="o">.</span><span class="n">age</span>      <span class="c1"># =&gt; 8</span></code></pre></div>
 
 <p>こうすればサブクラスPersonのインスタンスであるmeオブジェクトでも、自ら定義することなくメソッドnameが使える。つまり、me.nameが実行されたとき、このメッセージは最初Personクラスオブジェクトに送られて、そこで対応するnameメソッドが存在しないことが分かると、次いでそのスーパークラスに渡され実行される(Moduleクラスオブジェクトの話はここでは割愛する)。</p>
 
@@ -408,7 +374,7 @@
 
 <p>しかし他のクラスオブジェクトのサブクラスをスーパークラスにすることはできる。この数つまり経時直線的な段数に制限はない。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">country</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
       <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
@@ -419,28 +385,22 @@
   <span class="k">end</span>
   <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernando&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
   <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>    <span class="c1"># &gt;&gt; &quot;Fernando&quot;</span>
-  <span class="n">a_friend</span><span class="o">.</span><span class="n">country</span> <span class="c1"># &gt;&gt; &quot;Spain&quot;</span>
-</code></pre></div>
-
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">country</span> <span class="c1"># &gt;&gt; &quot;Spain&quot;</span></code></pre></div>
 
 <p>誰がスーパークラスかはsuperclassメソッドで調べられる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">PersonInEarh</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># &gt;&gt; Person</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">PersonInEarh</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># &gt;&gt; Person</span></code></pre></div>
 
 <p>Rubyでは継承関係にない独立したクラスオブジェクトというのは作れない。クラス定義においてスーパークラスを指定しないとき、Rubyは勝手にObjectクラスオブジェクトをそのスーパークラスにセットする。つまりすべてのクラスオブジェクトはObjectクラスオブジェクトのサブクラスである。組み込みクラスも例外ではない。</p>
 
 <p>何も定義しないクラスでmethodsメソッドを呼べば、それが既にObjectクラスオブジェクトのサブクラスになっていることが確認できる(このメソッドを呼べること自体が証拠ですが)。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">Nothing</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Nothing</span>
   
   <span class="k">end</span>
   <span class="n">n</span> <span class="o">=</span> <span class="no">Nothing</span><span class="o">.</span><span class="n">new</span>
   <span class="nb">p</span> <span class="n">n</span><span class="o">.</span><span class="n">methods</span> 
-  <span class="c1"># &gt;&gt; [&quot;inspect&quot;, &quot;tap&quot;, &quot;clone&quot;, &quot;public_methods&quot;, &quot;object_id&quot;,  &quot;__send__&quot;, &quot;instance_variable_defined?&quot;, &quot;equal?&quot;, &quot;freeze&quot;,  &quot;extend&quot;, &quot;send&quot;, &quot;methods&quot;, &quot;hash&quot;, &quot;dup&quot;, &quot;to_enum&quot;,  &quot;instance_variables&quot;, &quot;eql?&quot;, &quot;instance_eval&quot;, &quot;id&quot;,  &quot;singleton_methods&quot;, &quot;taint&quot;, &quot;frozen?&quot;, &quot;instance_variable_get&quot;,  &quot;enum_for&quot;, &quot;instance_of?&quot;, &quot;display&quot;, &quot;to_a&quot;, &quot;method&quot;, &quot;type&quot;,  &quot;instance_exec&quot;, &quot;protected_methods&quot;, &quot;==&quot;, &quot;===&quot;,  &quot;instance_variable_set&quot;, &quot;kind_of?&quot;, &quot;respond_to?&quot;, &quot;to_s&quot;,  &quot;class&quot;, &quot;__id__&quot;, &quot;tainted?&quot;, &quot;=~&quot;, &quot;private_methods&quot;,  &quot;untaint&quot;, &quot;nil?&quot;, &quot;is_a?&quot;]</span>
-</code></pre></div>
-
+  <span class="c1"># &gt;&gt; [&quot;inspect&quot;, &quot;tap&quot;, &quot;clone&quot;, &quot;public_methods&quot;, &quot;object_id&quot;,  &quot;__send__&quot;, &quot;instance_variable_defined?&quot;, &quot;equal?&quot;, &quot;freeze&quot;,  &quot;extend&quot;, &quot;send&quot;, &quot;methods&quot;, &quot;hash&quot;, &quot;dup&quot;, &quot;to_enum&quot;,  &quot;instance_variables&quot;, &quot;eql?&quot;, &quot;instance_eval&quot;, &quot;id&quot;,  &quot;singleton_methods&quot;, &quot;taint&quot;, &quot;frozen?&quot;, &quot;instance_variable_get&quot;,  &quot;enum_for&quot;, &quot;instance_of?&quot;, &quot;display&quot;, &quot;to_a&quot;, &quot;method&quot;, &quot;type&quot;,  &quot;instance_exec&quot;, &quot;protected_methods&quot;, &quot;==&quot;, &quot;===&quot;,  &quot;instance_variable_set&quot;, &quot;kind_of?&quot;, &quot;respond_to?&quot;, &quot;to_s&quot;,  &quot;class&quot;, &quot;__id__&quot;, &quot;tainted?&quot;, &quot;=~&quot;, &quot;private_methods&quot;,  &quot;untaint&quot;, &quot;nil?&quot;, &quot;is_a?&quot;]</span></code></pre></div>
 
 <p>NothingクラスオブジェクトはObjectクラスオブジェクトが持っているすべてのメソッドを継承する。</p>
 
@@ -448,7 +408,7 @@
 
 <p>基本的にサブクラスはスーパークラスの特性をすべて引き継ぐが、サブクラスにおいてその一部を拒否したり再定義することは許される。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
     <span class="k">undef</span> <span class="ss">:age</span>  <span class="c1"># ageメソッドを未定義にする</span>
     <span class="k">alias</span> <span class="ss">:name_old</span> <span class="ss">:name</span>  <span class="c1">#nameメソッドをname_oldに変える</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">country</span><span class="p">)</span>
@@ -465,19 +425,16 @@
   <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
   <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span><span class="err">　</span><span class="c1"># &gt;&gt; &quot;my name is Fernand.&quot;</span>
   <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">age</span>
-  <span class="c1"># ~&gt; -:39: undefined method `age&#39; for #&lt;PersonInEarth:0x23550&gt; (NoMethodError)</span>
-</code></pre></div>
+  <span class="c1"># ~&gt; -:39: undefined method `age&#39; for #&lt;PersonInEarth:0x23550&gt; (NoMethodError)</span></code></pre></div>
 
-
-<h2>モジュールオブジェクト</h2>
-
+<h2 id="section-3">モジュールオブジェクト</h2>
 <p>単純継承はメソッド探索の複雑さを排除する。一方で継承の本来的意義を低下させうる。仮に異なる系譜の継承クラス群があり、その両方の系譜の特性を持ったクラスオブジェクトを生成したい場合、単純継承ではそれを一方の系譜のサブクラスとし、そこに他方の系譜の特性すべてを一から書き足す必要が生じる。これは継承の目的に反し極めて非生産的だ。</p>
 
 <p>Rubyではモジュールオブジェクトがこの問題を最小化する。モジュールオブジェクトは通常単にモジュールと呼ばれる。</p>
 
 <p>モジュールオブジェクトは、継承関係に立つことができない独立したクラスオブジェクトである。そこからインスタンスオブジェクトを生成することもできない。モジュールオブジェクトはその中に特定の機能のまとまりを持って、クラスオブジェクトにMix-inつまり挿し木される。モジュールオブジェクトをMix-inしたクラスオブジェクトは追加的にその機能を獲得することになる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Behavior</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Behavior</span>
     <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">description</span>  <span class="c1"># モジュールメソッドの定義</span>
       <span class="s2">&quot;I&#39;m a Behavior Module.&quot;</span>
     <span class="k">end</span>
@@ -501,9 +458,7 @@
   <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
   <span class="n">a_friend</span><span class="o">.</span><span class="n">eat</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m eating.&quot;</span>
   <span class="n">a_friend</span><span class="o">.</span><span class="n">sleep</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m sleeping.&quot;</span>
-  <span class="no">Behavior</span><span class="o">.</span><span class="n">description</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m a Behavior Module.&quot;</span>
-</code></pre></div>
-
+  <span class="no">Behavior</span><span class="o">.</span><span class="n">description</span>  <span class="c1"># &gt;&gt; &quot;I&#39;m a Behavior Module.&quot;</span></code></pre></div>
 
 <p>モジュールの定義はmodule式で行う。クラスオブジェクトと同様モジュールオブジェクトには、インスタンスオブジェクトのためのInstanceメソッドと、自身のためのselfメソッドとを定義できる。モジュールのselfメソッドは一般にモジュールメソッドと称される。</p>
 
@@ -513,10 +468,8 @@
 
 <p>モジュールオブジェクトのMix-inによって継承におけるメソッド探索のルートが変わる。モジュールオブジェクトをMix-inしたクラスオブジェクト内が探索されると、そのスーパークラスに先立ってモジュールオブジェクト内が探索される。多重継承におけるようなあいまいさはない。ancestorsメソッドでその順位を確認できる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">ancestors</span> 
-   <span class="c1">#  &gt;&gt; [PersonInEarth, Behavior, Person, Creature, Object, Kernel, BasicObject]</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="no">PersonInEarth</span><span class="o">.</span><span class="n">ancestors</span> 
+   <span class="c1">#  &gt;&gt; [PersonInEarth, Behavior, Person, Creature, Object, Kernel, BasicObject]</span></code></pre></div>
 
 <p>インスタンスオブジェクトにとって、その母がクラスオブジェクトであるならば、モジュールオブジェクトは、彼のベビーシッターのような存在だ。母に代わって子をヘルプする。ベビーシッターがそうであるように、モジュールオブジェクトは、複数のクラスオブジェクトにおいて掛け持ちされうる。</p>
 
@@ -524,8 +477,7 @@
 
 <p>なお、モジュールオブジェクトは継承関係には立てないが、モジュールオブジェクトに他のモジュールオブジェクトをMix-inすることはできる。しかし最終的にモジュールオブジェクトはクラスオブジェクトにMix-inされ、その継承関係に割り込まなければ機能しない(ただモジュールメソッドは直接呼ぶことができる)。</p>
 
-<h2>インスタンスオブジェクト</h2>
-
+<h2 id="section-4">インスタンスオブジェクト</h2>
 <p>インスタンスオブジェクトは普通単にオブジェクトあるいはインスタンスと呼ばれ、先に書いたようにクラスオブジェクトをnewすることでRuby空間に生み出される。</p>
 
 <p>Ruby空間では、各種のクラスオブジェクトから生み出された多数のインスタンスオブジェクトが、順次・分岐・繰り返しの制御構造の中で相互に働き掛けあうことによって、ユーザの所望する意味のある結果が返される。</p>
@@ -538,51 +490,43 @@
 
 <p>結局、メッセージを受け取ったインスタンスオブジェクトは、それを自分の生成元のクラスオブジェクトに投げ、彼女がインスタンスオブジェクトに代わって答えを用意する。そのクラスオブジェクト自身が対応するメソッドを備えていない場合、先に書いたように、モジュールオブジェクトを含むクラスツリーを辿ってメソッドが探索される。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="c1"># a_friendでラベル付けされたオブジェクトにメッセージnameを送る</span>
-  <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="c1"># a_friendでラベル付けされたオブジェクトにメッセージnameを送る</span>
+  <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span></code></pre></div>
 
 <p>この例でa_friendでラベル付けされたインスタンスオブジェクトは、メッセージnameを受け取るとこれをその生成元であるPersonInEarthクラスオブジェクトへ送る(後で述べるSingletonメソッドがある場合はまずそれを探索する)。PersonInEarthでは対応するnameメソッドを呼び出すために、まず自分自身がそれを持っているかが調べられる。次いで、そこにincludeしたBehaviorモジュールオブジェクト内が探索される。PersonInEarthおよびBehaviorモジュールはnameメソッドを持っていないので、メッセージは今度はそのスーパークラスであるPersonに渡される。</p>
 
 <p>ところがPersonクラスオブジェクトもnameメソッドを備えていないので、メッセージは更にそのスーパークラスであるCreatureクラスに渡される。そしてここに定義されたnameメソッドが実行され、その結果が順次逆のルートを辿って、a_friendでラベル付けされたインスタンスオブジェクトからユーザに返される。</p>
 
-<h2>Singletonメソッド(抽象メソッド)</h2>
-
+<h2 id="singleton">Singletonメソッド(抽象メソッド)</h2>
 <p>インスタンスオブジェクトの中身はほとんど空であるということを書いた。しかしインスタンスオブジェクトはクラスオブジェクトやモジュールオブジェクトと同様に、その内部にselfメソッドを持つことができる。インスタンスオブジェクトにおけるselfメソッドは、Singletonメソッドまたは抽象メソッドと呼ばれる。</p>
 
 <p>Singletonメソッドは、そのインスタンスオブジェクト固有のメソッドを定義するために使われる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
   <span class="k">def</span> <span class="nc">a_friend</span><span class="o">.</span><span class="nf">name</span>
     <span class="s2">&quot;My friend, </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span>
   <span class="k">end</span>
-  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span>
-</code></pre></div>
-
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span></code></pre></div>
 
 <p>メソッド定義におけるメソッド名の前にインスタンスオブジェクトを置くことによって、そのインスタンスオブジェクトのSingletonメソッドが定義される。Singletonメソッドはクラスツリーの最下層に位置し、メソッド探索において最優先の探索先となる。</p>
 
 <p>正確に記せばSingletonメソッドは、そのインスタンスオブジェクト自身に定義されているのではなく、そのインスタンスオブジェクトとそのクラスオブジェクトとの間に生成される、無名のクラスに定義される。だからこの無名クラスにSingletonメソッドを定義しても同様の結果が得られる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
     <span class="k">def</span> <span class="nf">name</span>
       <span class="s2">&quot;My friend, </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span>
-</code></pre></div>
-
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># &gt;&gt; &quot;My friend, Fernand&quot;</span></code></pre></div>
 
 <p>class名を無名とし、インスタンスオブジェクト名を二重の接ぎ木記号で繋ぐ(感情的には接ぎ木の向きは逆ですが)。複数のSingletonメソッドをまとめて定義する場合、この書式が有用だ。この無名クラスはSingletonクラスとも呼ばれる。</p>
 
 <p>Singletonクラスはクラスメソッドやモジュールメソッドを定義する場合にも使える。</p>
 
-<h2>extend</h2>
-
+<h2 id="extend">extend</h2>
 <p>なおSingletonクラスはクラスに他ならないので、当然そこにモジュールオブジェクトをMix-inできる。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="k">module</span> <span class="nn">Business</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Business</span>
     <span class="k">def</span> <span class="nf">job</span>
       <span class="s2">&quot;Programmer&quot;</span>
     <span class="k">end</span>
@@ -590,9 +534,7 @@
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
     <span class="kp">include</span> <span class="no">Business</span>
   <span class="k">end</span>
-  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span>
-</code></pre></div>
-
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span></code></pre></div>
 
 <p>SingletonクラスにMix-inされた
 モジュールBusinessのメソッドjobは、インスタンスオブジェクトa_friendのSingletonメソッドになる。</p>
@@ -601,36 +543,32 @@
 
 <p>SingletonメソッドがSingletonクラスのメソッドを直接インスタンスオブジェクトに追加できるようにするのと同様、extendはモジュールのメソッドを直接インスタンスオブジェクトに追加できるようにする。</p>
 
-<div class="highlight"><pre><code class="ruby">  <span class="n">a_friend</span><span class="o">.</span><span class="n">extend</span> <span class="no">Business</span>
-  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="ruby"><span class="n">a_friend</span><span class="o">.</span><span class="n">extend</span> <span class="no">Business</span>
+  <span class="nb">p</span> <span class="n">a_friend</span><span class="o">.</span><span class="n">job</span>  <span class="c1"># &gt;&gt; &quot;Programmer&quot;</span></code></pre></div>
 
 <p>これによりモジュール内メソッドは特定のインスタンスオブジェクトの機能になる。</p>
 
-<h2>まとめ</h2>
-
+<h2 id="section-5">まとめ</h2>
 <p>最後にクラス、モジュールおよびオブジェクトの特性を整理しておこう。</p>
 
 <ol>
-<li>すべてのクラスオブジェクトは、Classクラスオブジェクトから生成される。</li>
-<li>クラスオブジェクトは、インスタンスオブジェクトの雛形となり、それを生み出す母のような存在である。</li>
-<li>それと共にそれ自身もオブジェクトである。</li>
-<li>クラスオブジェクトは、インスタンスオブジェクトのためのInstanceメソッドと自身のためのクラスメソッドを持てる。</li>
-<li>クラスオブジェクトは、継承によって他のクラスオブジェクトのメソッドを利用できる。</li>
-<li>すべてのクラスオブジェクトは継承に係わっていて、その頂点にはObjectクラスオブジェクトがいる。</li>
-<li>Rubyの継承は、スーパークラスを唯一つしか持たない単純継承である。</li>
-<li>しかし継承の経時直線的な段数には制限はない。</li>
-<li>モジュールオブジェクトは、クラスオブジェクトに代わってインスタンスオブジェクトを支援する、ベビーシッターのような存在である。</li>
-<li>モジュールオブジェクトは継承関係に係われず、インスタンスオブジェクトを生成することもできない。</li>
-<li>モジュールオブジェクト自身もオブジェクトであり、Instanceメソッドの他に自身のためのモジュールメソッドを持てる。</li>
-<li>インスタンスオブジェクトは、クラスオブジェクトから生成される。</li>
-<li>インスタンスオブジェクトがRuby空間における主役である。</li>
-<li>インスタンスオブジェクトには、メッセージ送信以外にアクセス方法がない。</li>
-<li>インスタンスオブジェクトに送られたメッセージは、クラスツリーに従って順次クラスオブジェクトに渡される。</li>
-<li>インスタンスオブジェクト自身も固有のメソッドを持てる。</li>
+  <li>すべてのクラスオブジェクトは、Classクラスオブジェクトから生成される。</li>
+  <li>クラスオブジェクトは、インスタンスオブジェクトの雛形となり、それを生み出す母のような存在である。</li>
+  <li>それと共にそれ自身もオブジェクトである。</li>
+  <li>クラスオブジェクトは、インスタンスオブジェクトのためのInstanceメソッドと自身のためのクラスメソッドを持てる。</li>
+  <li>クラスオブジェクトは、継承によって他のクラスオブジェクトのメソッドを利用できる。</li>
+  <li>すべてのクラスオブジェクトは継承に係わっていて、その頂点にはObjectクラスオブジェクトがいる。</li>
+  <li>Rubyの継承は、スーパークラスを唯一つしか持たない単純継承である。</li>
+  <li>しかし継承の経時直線的な段数には制限はない。</li>
+  <li>モジュールオブジェクトは、クラスオブジェクトに代わってインスタンスオブジェクトを支援する、ベビーシッターのような存在である。</li>
+  <li>モジュールオブジェクトは継承関係に係われず、インスタンスオブジェクトを生成することもできない。</li>
+  <li>モジュールオブジェクト自身もオブジェクトであり、Instanceメソッドの他に自身のためのモジュールメソッドを持てる。</li>
+  <li>インスタンスオブジェクトは、クラスオブジェクトから生成される。</li>
+  <li>インスタンスオブジェクトがRuby空間における主役である。</li>
+  <li>インスタンスオブジェクトには、メッセージ送信以外にアクセス方法がない。</li>
+  <li>インスタンスオブジェクトに送られたメッセージは、クラスツリーに従って順次クラスオブジェクトに渡される。</li>
+  <li>インスタンスオブジェクト自身も固有のメソッドを持てる。</li>
 </ol>
-
 
 <p>関連記事：</p>
 

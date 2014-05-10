@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,34 +179,33 @@
       </script>
     </div>
 
-    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
+    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
 SchemeとRubyで写像の入れ子を見ていきます
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です</p>
 
-<h2>整数の和の素数列</h2>
-
+<h2 id="section">整数の和の素数列</h2>
 <p>1からnの範囲において j &lt; i なる2つの整数 i, j の和が
 素数になるものを見つける例を通して写像の入れ子を学ぼう</p>
 
 <p>nが6の場合のペアは以下のようになる</p>
 
-<blockquote><p>i      2  3  4  4  5  6  6
+<blockquote>
+  <p>i      2  3  4  4  5  6  6
 j      1  2  1  3  2  1  5
-i+j    3  5  5  7  7  7  11</p></blockquote>
+i+j    3  5  5  7  7  7  11</p>
+</blockquote>
 
 <p>戦略としてはn以下の正の整数のすべてのペア(i, j)を生成し
 その合計が素数であるものを選択し
 選択されたペアからそれに合計を加えたセット(i, j, i+j)を作る</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span>
     <span class="o">`</span><span class="p">()</span>
     <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span>
        <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">j</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="nv">i</span> <span class="nv">j</span><span class="p">))</span>
             <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">))))</span>
-          <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="nv">n</span><span class="p">)))</span>
-</code></pre></div>
-
+          <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="nv">n</span><span class="p">)))</span></code></pre></div>
 
 <p>enumerate_interval 1 nで1からnの各整数iを生成し
 これを次の段のmap手続きに渡すmap手続きに作用させる
@@ -219,14 +218,12 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
 <p>次にその和が素数であるものを見つける手続きprime_sum?と
 結果のセットを作る手続きmake_pair_sumを書く</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">prime_sum?</span> <span class="nv">pair</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">prime_sum?</span> <span class="nv">pair</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">prime?</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">))))</span>
  
     
  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">make_pair_sum</span> <span class="nv">pair</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">))))</span>
-</code></pre></div>
-
+    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">car </span><span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr </span><span class="nv">pair</span><span class="p">))))</span></code></pre></div>
 
 <p>これらを繋いで目的の手続きprime_sum_pairsが得られる</p>
 
@@ -240,23 +237,18 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
              <span class="p">(</span><span class="nf">enumerate_interval</span> <span class="mi">1</span> <span class="nv">n</span><span class="p">)))))</span>
  
  <span class="p">(</span><span class="nf">prime_sum_pairs</span> <span class="mi">6</span><span class="p">)</span>
- <span class="p">((</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">2</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">11</span><span class="p">))</span>
-</code></pre></div>
-
+ <span class="p">((</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">2</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">1</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">11</span><span class="p">))</span></code></pre></div>
 
 <p>なおここではmapとappendによるaccumulateの手続きを
 flatmap手続きとして抽象化している</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">flatmap</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)</span>
-    <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span> <span class="o">`</span><span class="p">()</span> <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">seq</span><span class="p">)))</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">flatmap</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span> <span class="o">`</span><span class="p">()</span> <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">seq</span><span class="p">)))</span></code></pre></div>
 
-
-<h2>Ruby版素数列</h2>
-
+<h2 id="ruby">Ruby版素数列</h2>
 <p>同じことをRubyでもやってみる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">flatmap</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">flatmap</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
    <span class="n">accumulate</span><span class="p">(</span><span class="ss">:append</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">))</span>
  <span class="k">end</span>
  
@@ -280,16 +272,13 @@ flatmap手続きとして抽象化している</p>
    <span class="n">x</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">chop</span>
  <span class="k">end</span>
  
- <span class="n">_p</span> <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; &quot;2 1 3  3 2 5  4 1 5  4 3 7  5 2 7  6 1 7  6 5 11 &quot;</span>
-</code></pre></div>
+ <span class="n">_p</span> <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; &quot;2 1 3  3 2 5  4 1 5  4 3 7  5 2 7  6 1 7  6 5 11 &quot;</span></code></pre></div>
 
-
-<h2>Arrayクラス版素数列</h2>
-
+<h2 id="array">Arrayクラス版素数列</h2>
 <p>Arrayクラスの各種メソッドを使えば
 もう少しRubyらしくなる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
  <span class="k">end</span>
  <span class="n">pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1], [3, 1], [3, 2], [4, 1], [4, 2], [4, 3], [5, 1], [5, 2], [5, 3], [5, 4], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5]]</span>
@@ -306,12 +295,9 @@ flatmap手続きとして抽象化している</p>
    <span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">pair</span><span class="o">|</span> <span class="n">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">?</span> <span class="n">arr</span> <span class="o">&lt;&lt;</span> <span class="n">make_list</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">:</span> <span class="n">arr</span><span class="p">}</span>
  <span class="k">end</span>
  
- <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1, 3], [3, 2, 5], [4, 1, 5], [4, 3, 7], [5, 2, 7], [6, 1, 7], [6, 5, 11]]</span>
-</code></pre></div>
+ <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1, 3], [3, 2, 5], [4, 1, 5], [4, 3, 7], [5, 2, 7], [6, 1, 7], [6, 5, 11]]</span></code></pre></div>
 
-
-<h2>集合Sの順列</h2>
-
+<h2 id="s">集合Sの順列</h2>
 <p>Schemeに戻って
 先のflatmap手続きを使って
 集合Sのすべての順列を求めてみよう</p>
@@ -325,9 +311,7 @@ flatmap手続きとして抽象化している</p>
               <span class="nv">s</span><span class="p">)))</span>
  
  <span class="p">(</span><span class="nf">permutations</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
- <span class="p">((</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">))</span>
-</code></pre></div>
-
+ <span class="p">((</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">))</span></code></pre></div>
 
 <p>内側のmap手続きで
 外側のflatmapから渡された要素xを除く集合に対し
@@ -335,17 +319,14 @@ flatmap手続きとして抽象化している</p>
 
 <p>要素xを除く手続きは以下のようになる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">remove</span> <span class="nv">item</span> <span class="nv">seq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">remove</span> <span class="nv">item</span> <span class="nv">seq</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">filter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">not </span><span class="p">(</span><span class="nb">= </span><span class="nv">x</span> <span class="nv">item</span><span class="p">)))</span>
-       <span class="nv">seq</span><span class="p">))</span>
-</code></pre></div>
+       <span class="nv">seq</span><span class="p">))</span></code></pre></div>
 
-
-<h2>Ruby版順列</h2>
-
+<h2 id="ruby-1">Ruby版順列</h2>
 <p>Rubyでもpermutationsを書いてみる</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">map</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="n">cons</span> <span class="n">x</span><span class="p">,</span> <span class="nb">p</span> <span class="p">},</span> <span class="n">permutations</span><span class="p">(</span><span class="n">remove</span> <span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="p">}</span>
    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">nil?</span>
      <span class="n">list</span> <span class="kp">nil</span>
@@ -358,19 +339,15 @@ flatmap手続きとして抽象化している</p>
    <span class="n">filter</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">item</span> <span class="p">},</span> <span class="n">seq</span><span class="p">)</span>
  <span class="k">end</span>
  
- <span class="n">_p</span> <span class="n">permutations</span><span class="p">(</span><span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1 2 3  1 3 2  2 1 3  2 3 1  3 1 2  3 2 1 &quot;</span>
-</code></pre></div>
-
+ <span class="n">_p</span> <span class="n">permutations</span><span class="p">(</span><span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1 2 3  1 3 2  2 1 3  2 3 1  3 1 2  3 2 1 &quot;</span></code></pre></div>
 
 <p>RubyのArrayクラスにはpermutationというメソッドが既にある</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">permutation</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">permutation</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]</span></code></pre></div>
 
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
-
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
 
 <p>ジェラルド・ジェイ サスマン, ジュリー サスマン, and ハロルド エイブルソン</p>
 

@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,19 +179,22 @@
       </script>
     </div>
 
-    <p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
+    
+<p>(追記：2014-3-3) Gvizについてのまとめ頁を作りました。</p>
 
-<blockquote><p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p></blockquote>
+<blockquote>
+  <p><a href="/2014/02/27/gviz-posts/" title="Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！">Gvizの目次 - Rubyの世界からGraphvizの世界にこんにちは！</a></p>
+</blockquote>
 
 <hr />
 
-<p>このブログとかでたまに無向だとか有向だとかのチャートの方じゃないグラフが書きたいと思うことがあるよ。でまさかこのご時世で今更<strong>VISIO</strong>とかあり得ないから<a href="http://www.graphviz.org/Home.php" title="Graphviz">Graphviz</a>のdotファイルを書くことになるんだけどDOT言語は制御構造を持ってないから結局より高級な言語によるインタフェースが必要になるよ。で<code>Ruby</code>の出番ってことになるんだけどGithubで"<strong>graphviz ruby</strong>"で検索すると1200件以上ものリポジトリがヒットするんだよ。でこの中から適当なものを選んで使えばいいってことなんだろうけどさすがにこれだけあるとどれを選んでいいか全然わからないから結局<a href="https://www.ruby-toolbox.com/" title="The Ruby Toolbox">The Ruby Toolbox</a>当たりで"<strong>graphviz</strong>"にヒットする20件くらいの中からDownload数の多いものを１つ２つ試してみるって結末になるよ。でそれらのインタフェースが今ひとつシックリ来ない要はRubyっぽくないとかおまえ内部ＤＳＬやり過ぎ！ってのに当たるともう面倒臭いからオレが適当にでっち上げたほうがいいかもって結論に至るんだけど。で一般に車輪の再発明は悪ってことになってるんだけどどうやらRuby界隈では奨励されているみたいな空気があるんだよね最近<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup>。</p>
+<p>このブログとかでたまに無向だとか有向だとかのチャートの方じゃないグラフが書きたいと思うことがあるよ。でまさかこのご時世で今更<strong>VISIO</strong>とかあり得ないから<a href="http://www.graphviz.org/Home.php" title="Graphviz">Graphviz</a>のdotファイルを書くことになるんだけどDOT言語は制御構造を持ってないから結局より高級な言語によるインタフェースが必要になるよ。で<code>Ruby</code>の出番ってことになるんだけどGithubで”<strong>graphviz ruby</strong>“で検索すると1200件以上ものリポジトリがヒットするんだよ。でこの中から適当なものを選んで使えばいいってことなんだろうけどさすがにこれだけあるとどれを選んでいいか全然わからないから結局<a href="https://www.ruby-toolbox.com/" title="The Ruby Toolbox">The Ruby Toolbox</a>当たりで”<strong>graphviz</strong>“にヒットする20件くらいの中からDownload数の多いものを１つ２つ試してみるって結末になるよ。でそれらのインタフェースが今ひとつシックリ来ない要はRubyっぽくないとかおまえ内部ＤＳＬやり過ぎ！ってのに当たるともう面倒臭いからオレが適当にでっち上げたほうがいいかもって結論に至るんだけど。で一般に車輪の再発明は悪ってことになってるんだけどどうやらRuby界隈では奨励されているみたいな空気があるんだよね最近<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<p>そんなわけで...</p>
+<p>そんなわけで…</p>
 
 <p><code>Gviz</code>というRubyのGraphvizインタフェースを作りましたので、ここで紹介させて下さい^ ^;</p>
 
-<h2>使い方</h2>
+<h2 id="section">使い方</h2>
 
 <p>まずは<code>gem install gviz</code>としまして、次のようなコードを書きます。</p>
 
@@ -204,98 +207,96 @@
   <span class="n">route</span> <span class="ss">:execute</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:compare</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample1</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample1</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>まずは<code>Gviz.new</code>でgvizオブジェクトを生成して、<code>graph</code>のブロックの中で<code>route</code>メソッドでルート、つまりノードとエッジの繋がりをハッシュ形式で記述します。シンボルだけを渡すと単独のノードを生成します。<code>save</code>メソッドは与えられたファイル名でdotファイルを出力します。更に上のようにフォーマットを指定すると、dotファイルに加えてその形式のファイルも出力します。saveせずに<code>puts gv</code>とすれば標準出力にdotのコードが出力されるので、<code>ruby sample.rb &gt; sample1.dot</code>などとしてもいいです。</p>
 
 <p>出力グラフは次のようになります。</p>
 
-<p><svg width="274pt" height="260pt"
- viewBox="0.00 0.00 274.00 260.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="274pt" height="260pt" viewbox="0.00 0.00 274.00 260.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph1" class="graph" transform="scale(1 1) rotate(0) translate(4 256)">
 <title>G</title>
-<polygon fill="white" stroke="white" points="-4,5 -4,-256 271,-256 271,5 -4,5"/>
+<polygon fill="white" stroke="white" points="-4,5 -4,-256 271,-256 271,5 -4,5" />
 <g id="node1" class="node"><title>main</title>
-<ellipse fill="none" stroke="black" cx="135" cy="-234" rx="30.0202" ry="18"/>
+<ellipse fill="none" stroke="black" cx="135" cy="-234" rx="30.0202" ry="18" />
 <text text-anchor="middle" x="135" y="-228.4" font-family="Times,serif" font-size="14.00">main</text>
 </g>
 <g id="node2" class="node"><title>init</title>
-<ellipse fill="none" stroke="black" cx="31" cy="-90" rx="27" ry="18"/>
+<ellipse fill="none" stroke="black" cx="31" cy="-90" rx="27" ry="18" />
 <text text-anchor="middle" x="31" y="-84.4" font-family="Times,serif" font-size="14.00">init</text>
 </g>
 <g id="edge2" class="edge"><title>main&#45;&gt;init</title>
-<path fill="none" stroke="black" d="M109.879,-223.739C90.5298,-215.297 64.6824,-200.927 50,-180 37.3492,-161.968 32.8424,-137.181 31.3613,-118.344"/>
-<polygon fill="black" stroke="black" points="34.8531,-118.097 30.8085,-108.305 27.8637,-118.482 34.8531,-118.097"/>
+<path fill="none" stroke="black" d="M109.879,-223.739C90.5298,-215.297 64.6824,-200.927 50,-180 37.3492,-161.968 32.8424,-137.181 31.3613,-118.344" />
+<polygon fill="black" stroke="black" points="34.8531,-118.097 30.8085,-108.305 27.8637,-118.482 34.8531,-118.097" />
 </g>
 <g id="node3" class="node"><title>parse</title>
-<ellipse fill="none" stroke="black" cx="90" cy="-162" rx="31.1178" ry="18"/>
+<ellipse fill="none" stroke="black" cx="90" cy="-162" rx="31.1178" ry="18" />
 <text text-anchor="middle" x="90" y="-156.4" font-family="Times,serif" font-size="14.00">parse</text>
 </g>
 <g id="edge4" class="edge"><title>main&#45;&gt;parse</title>
-<path fill="none" stroke="black" d="M124.563,-216.765C118.997,-208.106 112.033,-197.273 105.817,-187.604"/>
-<polygon fill="black" stroke="black" points="108.732,-185.666 100.38,-179.147 102.844,-189.452 108.732,-185.666"/>
+<path fill="none" stroke="black" d="M124.563,-216.765C118.997,-208.106 112.033,-197.273 105.817,-187.604" />
+<polygon fill="black" stroke="black" points="108.732,-185.666 100.38,-179.147 102.844,-189.452 108.732,-185.666" />
 </g>
 <g id="node4" class="node"><title>cleanup</title>
-<ellipse fill="none" stroke="black" cx="180" cy="-162" rx="41.0954" ry="18"/>
+<ellipse fill="none" stroke="black" cx="180" cy="-162" rx="41.0954" ry="18" />
 <text text-anchor="middle" x="180" y="-156.4" font-family="Times,serif" font-size="14.00">cleanup</text>
 </g>
 <g id="edge6" class="edge"><title>main&#45;&gt;cleanup</title>
-<path fill="none" stroke="black" d="M145.437,-216.765C150.867,-208.317 157.629,-197.799 163.728,-188.312"/>
-<polygon fill="black" stroke="black" points="166.844,-189.938 169.307,-179.633 160.955,-186.153 166.844,-189.938"/>
+<path fill="none" stroke="black" d="M145.437,-216.765C150.867,-208.317 157.629,-197.799 163.728,-188.312" />
+<polygon fill="black" stroke="black" points="166.844,-189.938 169.307,-179.633 160.955,-186.153 166.844,-189.938" />
 </g>
 <g id="node5" class="node"><title>printf</title>
-<ellipse fill="none" stroke="black" cx="234" cy="-18" rx="32.2368" ry="18"/>
+<ellipse fill="none" stroke="black" cx="234" cy="-18" rx="32.2368" ry="18" />
 <text text-anchor="middle" x="234" y="-12.4" font-family="Times,serif" font-size="14.00">printf</text>
 </g>
 <g id="edge8" class="edge"><title>main&#45;&gt;printf</title>
-<path fill="none" stroke="black" d="M162.394,-225.885C184.853,-218.464 215.255,-204.411 230,-180 254.915,-138.752 248.096,-80.0711 240.979,-46.1253"/>
-<polygon fill="black" stroke="black" points="244.315,-45.0095 238.697,-36.0265 237.487,-46.552 244.315,-45.0095"/>
+<path fill="none" stroke="black" d="M162.394,-225.885C184.853,-218.464 215.255,-204.411 230,-180 254.915,-138.752 248.096,-80.0711 240.979,-46.1253" />
+<polygon fill="black" stroke="black" points="244.315,-45.0095 238.697,-36.0265 237.487,-46.552 244.315,-45.0095" />
 </g>
 <g id="node6" class="node"><title>make</title>
-<ellipse fill="none" stroke="black" cx="31" cy="-18" rx="31.4242" ry="18"/>
+<ellipse fill="none" stroke="black" cx="31" cy="-18" rx="31.4242" ry="18" />
 <text text-anchor="middle" x="31" y="-12.4" font-family="Times,serif" font-size="14.00">make</text>
 </g>
 <g id="edge10" class="edge"><title>init&#45;&gt;make</title>
-<path fill="none" stroke="black" d="M31,-71.6966C31,-63.9827 31,-54.7125 31,-46.1124"/>
-<polygon fill="black" stroke="black" points="34.5001,-46.1043 31,-36.1043 27.5001,-46.1044 34.5001,-46.1043"/>
+<path fill="none" stroke="black" d="M31,-71.6966C31,-63.9827 31,-54.7125 31,-46.1124" />
+<polygon fill="black" stroke="black" points="34.5001,-46.1043 31,-36.1043 27.5001,-46.1044 34.5001,-46.1043" />
 </g>
 <g id="node7" class="node"><title>execute</title>
-<ellipse fill="none" stroke="black" cx="121" cy="-90" rx="40.2818" ry="18"/>
+<ellipse fill="none" stroke="black" cx="121" cy="-90" rx="40.2818" ry="18" />
 <text text-anchor="middle" x="121" y="-84.4" font-family="Times,serif" font-size="14.00">execute</text>
 </g>
 <g id="edge12" class="edge"><title>parse&#45;&gt;execute</title>
-<path fill="none" stroke="black" d="M97.3466,-144.411C100.923,-136.335 105.309,-126.431 109.329,-117.355"/>
-<polygon fill="black" stroke="black" points="112.642,-118.517 113.491,-107.956 106.241,-115.682 112.642,-118.517"/>
+<path fill="none" stroke="black" d="M97.3466,-144.411C100.923,-136.335 105.309,-126.431 109.329,-117.355" />
+<polygon fill="black" stroke="black" points="112.642,-118.517 113.491,-107.956 106.241,-115.682 112.642,-118.517" />
 </g>
 <g id="edge18" class="edge"><title>execute&#45;&gt;printf</title>
-<path fill="none" stroke="black" d="M143.596,-75.0027C161.054,-64.1875 185.367,-49.1266 204.382,-37.3471"/>
-<polygon fill="black" stroke="black" points="206.312,-40.2689 212.97,-32.0274 202.626,-34.3182 206.312,-40.2689"/>
+<path fill="none" stroke="black" d="M143.596,-75.0027C161.054,-64.1875 185.367,-49.1266 204.382,-37.3471" />
+<polygon fill="black" stroke="black" points="206.312,-40.2689 212.97,-32.0274 202.626,-34.3182 206.312,-40.2689" />
 </g>
 <g id="edge14" class="edge"><title>execute&#45;&gt;make</title>
-<path fill="none" stroke="black" d="M101.471,-73.811C88.4198,-63.6599 71.106,-50.1935 56.9062,-39.1492"/>
-<polygon fill="black" stroke="black" points="59.0035,-36.3465 48.9611,-32.9698 54.7059,-41.872 59.0035,-36.3465"/>
+<path fill="none" stroke="black" d="M101.471,-73.811C88.4198,-63.6599 71.106,-50.1935 56.9062,-39.1492" />
+<polygon fill="black" stroke="black" points="59.0035,-36.3465 48.9611,-32.9698 54.7059,-41.872 59.0035,-36.3465" />
 </g>
 <g id="node8" class="node"><title>compare</title>
-<ellipse fill="none" stroke="black" cx="125" cy="-18" rx="43.9209" ry="18"/>
+<ellipse fill="none" stroke="black" cx="125" cy="-18" rx="43.9209" ry="18" />
 <text text-anchor="middle" x="125" y="-12.4" font-family="Times,serif" font-size="14.00">compare</text>
 </g>
 <g id="edge16" class="edge"><title>execute&#45;&gt;compare</title>
-<path fill="none" stroke="black" d="M121.989,-71.6966C122.43,-63.9827 122.959,-54.7125 123.451,-46.1124"/>
-<polygon fill="black" stroke="black" points="126.946,-46.2878 124.023,-36.1043 119.958,-45.8883 126.946,-46.2878"/>
+<path fill="none" stroke="black" d="M121.989,-71.6966C122.43,-63.9827 122.959,-54.7125 123.451,-46.1124" />
+<polygon fill="black" stroke="black" points="126.946,-46.2878 124.023,-36.1043 119.958,-45.8883 126.946,-46.2878" />
 </g>
 </g>
-</svg></p>
+</svg>
 
 <p>対応出力フォーマットは以下を見て下さい。</p>
 
-<blockquote><p><a href="http://www.graphviz.org/content/output-formats" title="Output Formats | Graphviz - Graph Visualization Software">Output Formats | Graphviz - Graph Visualization Software</a></p></blockquote>
+<blockquote>
+  <p><a href="http://www.graphviz.org/content/output-formats" title="Output Formats \| Graphviz - Graph Visualization Software">Output Formats | Graphviz - Graph Visualization Software</a></p>
+</blockquote>
 
-<p>この頁のソースを見れば分かりますが、上のグラフはSVG(Scalable Vector Graphics)で出力したものを張り付けています<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup>。</p>
+<p>この頁のソースを見れば分かりますが、上のグラフはSVG(Scalable Vector Graphics)で出力したものを張り付けています<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
-<h2>グラフ、ノード、エッジの属性変更</h2>
-
+<h2 id="section-1">グラフ、ノード、エッジの属性変更</h2>
 <p>次に先のグラフに対して色などの属性を変更してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
@@ -314,9 +315,7 @@
   <span class="n">global</span><span class="p">(</span><span class="ss">bgcolor</span><span class="p">:</span><span class="s1">&#39;powderblue&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample2</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample2</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p><code>nodes</code>メソッドは全ノードに対する属性をセットします。ここでは<code>piyg8</code>というカラーセットを指定しています。<code>nodeset</code>は全ノードのオブジェクトを呼び出します。<code>node</code>メソッドは個別ノードの属性をセットします。ここでは<code>fillcolor</code>でpiyg8カラーセットの色番号1〜8を各ノードに順にセットしています。</p>
 
@@ -328,25 +327,26 @@
 
 <p>色見本は以下にあります。</p>
 
-<p><a href="http://www.graphviz.org/content/color-names" title="Color Names | Graphviz - Graph Visualization Software">Color Names | Graphviz - Graph Visualization Software</a></p>
+<p><a href="http://www.graphviz.org/content/color-names" title="Color Names \| Graphviz - Graph Visualization Software">Color Names | Graphviz - Graph Visualization Software</a></p>
 
 <p>グラフ、ノードおよびエッジの変更可能な属性については、以下を見て下さい。</p>
 
-<p><a href="http://www.graphviz.org/content/attrs" title="attrs | Graphviz - Graph Visualization Software">attrs | Graphviz - Graph Visualization Software</a></p>
+<p><a href="http://www.graphviz.org/content/attrs" title="attrs \| Graphviz - Graph Visualization Software">attrs | Graphviz - Graph Visualization Software</a></p>
 
 <p>またエッジの矢印の種類については以下を。</p>
 
-<p><a href="http://www.graphviz.org/content/arrow-shapes" title="Arrow Shapes | Graphviz - Graph Visualization Software">Arrow Shapes | Graphviz - Graph Visualization Software</a></p>
+<p><a href="http://www.graphviz.org/content/arrow-shapes" title="Arrow Shapes \| Graphviz - Graph Visualization Software">Arrow Shapes | Graphviz - Graph Visualization Software</a></p>
 
-<h2>エッジポート、ノード配置、サブグラフ</h2>
+<h2 id="section-2">エッジポート、ノード配置、サブグラフ</h2>
 
 <p>更に次の変更を加えます。</p>
 
-<blockquote><ol>
-<li>ノードに対するエッジの接続先（ポート）を変更</li>
-<li>ノードの配置を変更</li>
-<li>一部のノードをサブグラフ化</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>ノードに対するエッジの接続先（ポート）を変更</li>
+    <li>ノードの配置を変更</li>
+    <li>一部のノードをサブグラフ化</li>
+  </ol>
 </blockquote>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
@@ -375,11 +375,9 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample3</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample3</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
-
-<p><code>node</code>メソッドで:executeと:printfのshapeを<code>Mrecord</code>にし、label属性をセットするときポート情報を埋め込みます(\&lt;x>, \&lt;y>)。<code>edge</code>メソッドでエッジのidを指定するとき文字列を使い、各ノードidの後ろに<code>:</code>を挟んでポートidを付けます。</p>
+<p><code>node</code>メソッドで:executeと:printfのshapeを<code>Mrecord</code>にし、label属性をセットするときポート情報を埋め込みます(&lt;x&gt;, &lt;y&gt;)。<code>edge</code>メソッドでエッジのidを指定するとき文字列を使い、各ノードidの後ろに<code>:</code>を挟んでポートidを付けます。</p>
 
 <p><code>rank</code>メソッドではそのランクの種類（ここでは:same）を指定し、対象ノードをリストアップします。サブグラフを作るときは<code>subgraph</code>メソッドのブロック内で指定します。</p>
 
@@ -389,14 +387,12 @@
 
 <p>ノードの形については次を参考にして下さい。</p>
 
-<p><a href="http://www.graphviz.org/content/node-shapes" title="Node Shapes | Graphviz - Graph Visualization Software">Node Shapes | Graphviz - Graph Visualization Software</a></p>
+<p><a href="http://www.graphviz.org/content/node-shapes" title="Node Shapes \| Graphviz - Graph Visualization Software">Node Shapes | Graphviz - Graph Visualization Software</a></p>
 
-<h2>日本地図を書く</h2>
-
+<h2 id="section-3">日本地図を書く</h2>
 <p>別の例をやってみます。Gvizで日本地図に挑戦してみます。まずは<a href="http://ja.wikipedia.org/wiki/%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C" title="都道府県 - Wikipedia">都道府県 - Wikipedia</a>を参考に、次のようなCSVファイル（pref.csv）を用意します。データは都道府県コード、地方区分、名称、隣接県のコードの順に並んでいます。</p>
 
 <script src="https://gist.github.com/3780615.js?file=pref.csv"></script>
-
 
 <p>このファイルをRubyに読み込んでGvizで都道府県地図を作ります。まずはCSVを読み込んで処理しやすいように加工します。</p>
 
@@ -407,9 +403,7 @@
 <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;pref.csv&#39;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">link</span><span class="o">|</span> <span class="o">[</span><span class="nb">id</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">region</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:intern</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
 
-<span class="n">data</span> <span class="c1"># =&gt; [[:&quot;01&quot;, 1, &quot;北海道&quot;, [:&quot;02&quot;]], [:&quot;02&quot;, 2, &quot;青森県&quot;, [:&quot;01&quot;, :&quot;03&quot;, :&quot;05&quot;]], [:&quot;03&quot;, 2, &quot;岩手県&quot;, [:&quot;02&quot;, :&quot;05&quot;, :&quot;04&quot;]], [:&quot;04&quot;, 2, &quot;宮城県&quot;, [:&quot;03&quot;, :&quot;05&quot;, :&quot;06&quot;, :&quot;07&quot;]], [:&quot;05&quot;, 2, &quot;秋田県&quot;, [:&quot;02&quot;, :&quot;03&quot;, :&quot;04&quot;, :&quot;06&quot;]], [:&quot;06&quot;, 2, &quot;山形県&quot;, [:&quot;05&quot;, :&quot;04&quot;, :&quot;07&quot;, :&quot;15&quot;]], [:&quot;07&quot;, 2, &quot;福島県&quot;, [:&quot;04&quot;, :&quot;06&quot;, :&quot;15&quot;, :&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;]], [:&quot;08&quot;, 3, &quot;茨城県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;12&quot;]], [:&quot;09&quot;, 3, &quot;栃木県&quot;, [:&quot;07&quot;, :&quot;10&quot;, :&quot;08&quot;, :&quot;11&quot;]], [:&quot;10&quot;, 3, &quot;群馬県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;20&quot;, :&quot;15&quot;]], [:&quot;11&quot;, 3, &quot;埼玉県&quot;, [:&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;, :&quot;12&quot;, :&quot;13&quot;, :&quot;19&quot;, :&quot;20&quot;]], [:&quot;12&quot;, 3, &quot;千葉県&quot;, [:&quot;13&quot;, :&quot;11&quot;, :&quot;08&quot;]], [:&quot;13&quot;, 3, &quot;東京都&quot;, [:&quot;11&quot;, :&quot;12&quot;, :&quot;14&quot;, :&quot;19&quot;]], [:&quot;14&quot;, 3, &quot;神奈川県&quot;, [:&quot;13&quot;, :&quot;22&quot;, :&quot;19&quot;]], [:&quot;15&quot;, 4, &quot;新潟県&quot;, [:&quot;06&quot;, :&quot;07&quot;, :&quot;10&quot;, :&quot;20&quot;, :&quot;16&quot;]], [:&quot;16&quot;, 4, &quot;富山県&quot;, [:&quot;15&quot;, :&quot;20&quot;, :&quot;21&quot;, :&quot;17&quot;]], [:&quot;17&quot;, 4, &quot;石川県&quot;, [:&quot;16&quot;, :&quot;21&quot;, :&quot;18&quot;]], [:&quot;18&quot;, 4, &quot;福井県&quot;, [:&quot;17&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;]], [:&quot;19&quot;, 4, &quot;山梨県&quot;, [:&quot;20&quot;, :&quot;11&quot;, :&quot;13&quot;, :&quot;14&quot;, :&quot;22&quot;]], [:&quot;20&quot;, 4, &quot;長野県&quot;, [:&quot;15&quot;, :&quot;10&quot;, :&quot;11&quot;, :&quot;19&quot;, :&quot;22&quot;, :&quot;23&quot;, :&quot;21&quot;, :&quot;16&quot;]], [:&quot;21&quot;, 4, &quot;岐阜県&quot;, [:&quot;16&quot;, :&quot;20&quot;, :&quot;23&quot;, :&quot;24&quot;, :&quot;25&quot;, :&quot;18&quot;, :&quot;17&quot;]], [:&quot;22&quot;, 4, &quot;静岡県&quot;, [:&quot;23&quot;, :&quot;20&quot;, :&quot;19&quot;, :&quot;14&quot;]], [:&quot;23&quot;, 4, &quot;愛知県&quot;, [:&quot;24&quot;, :&quot;21&quot;, :&quot;20&quot;, :&quot;22&quot;]], [:&quot;24&quot;, 5, &quot;三重県&quot;, [:&quot;23&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;]], [:&quot;25&quot;, 5, &quot;滋賀県&quot;, [:&quot;18&quot;, :&quot;21&quot;, :&quot;24&quot;, :&quot;26&quot;]], [:&quot;26&quot;, 5, &quot;京都府&quot;, [:&quot;18&quot;, :&quot;25&quot;, :&quot;24&quot;, :&quot;29&quot;, :&quot;27&quot;, :&quot;28&quot;]], [:&quot;27&quot;, 5, &quot;大阪府&quot;, [:&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;, :&quot;28&quot;]], [:&quot;28&quot;, 5, &quot;兵庫県&quot;, [:&quot;26&quot;, :&quot;27&quot;, :&quot;33&quot;, :&quot;31&quot;]], [:&quot;29&quot;, 5, &quot;奈良県&quot;, [:&quot;26&quot;, :&quot;24&quot;, :&quot;30&quot;, :&quot;27&quot;]], [:&quot;30&quot;, 5, &quot;和歌山県&quot;, [:&quot;27&quot;, :&quot;29&quot;, :&quot;24&quot;]], [:&quot;31&quot;, 6, &quot;鳥取県&quot;, [:&quot;28&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;32&quot;]], [:&quot;32&quot;, 6, &quot;島根県&quot;, [:&quot;31&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;35&quot;]], [:&quot;33&quot;, 6, &quot;岡山県&quot;, [:&quot;28&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;34&quot;, :&quot;37&quot;]], [:&quot;34&quot;, 6, &quot;広島県&quot;, [:&quot;33&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;35&quot;]], [:&quot;35&quot;, 6, &quot;山口県&quot;, [:&quot;32&quot;, :&quot;34&quot;, :&quot;40&quot;]], [:&quot;36&quot;, 7, &quot;徳島県&quot;, [:&quot;37&quot;, :&quot;38&quot;, :&quot;39&quot;]], [:&quot;37&quot;, 7, &quot;香川県&quot;, [:&quot;36&quot;, :&quot;38&quot;, :&quot;33&quot;]], [:&quot;38&quot;, 7, &quot;愛媛県&quot;, [:&quot;37&quot;, :&quot;36&quot;, :&quot;39&quot;]], [:&quot;39&quot;, 7, &quot;高知県&quot;, [:&quot;38&quot;, :&quot;36&quot;]], [:&quot;40&quot;, 8, &quot;福岡県&quot;, [:&quot;35&quot;, :&quot;44&quot;, :&quot;43&quot;, :&quot;41&quot;]], [:&quot;41&quot;, 8, &quot;佐賀県&quot;, [:&quot;40&quot;, :&quot;42&quot;]], [:&quot;42&quot;, 8, &quot;長崎県&quot;, [:&quot;41&quot;]], [:&quot;43&quot;, 8, &quot;熊本県&quot;, [:&quot;40&quot;, :&quot;44&quot;, :&quot;45&quot;, :&quot;46&quot;]], [:&quot;44&quot;, 8, &quot;大分県&quot;, [:&quot;40&quot;, :&quot;43&quot;, :&quot;45&quot;]], [:&quot;45&quot;, 8, &quot;宮崎県&quot;, [:&quot;44&quot;, :&quot;43&quot;, :&quot;46&quot;]], [:&quot;46&quot;, 8, &quot;鹿児島県&quot;, [:&quot;43&quot;, :&quot;45&quot;, :&quot;47&quot;]], [:&quot;47&quot;, 9, &quot;沖縄県&quot;, [:&quot;46&quot;]]]</span>
-</code></pre></div>
-
+<span class="n">data</span> <span class="c1"># =&gt; [[:&quot;01&quot;, 1, &quot;北海道&quot;, [:&quot;02&quot;]], [:&quot;02&quot;, 2, &quot;青森県&quot;, [:&quot;01&quot;, :&quot;03&quot;, :&quot;05&quot;]], [:&quot;03&quot;, 2, &quot;岩手県&quot;, [:&quot;02&quot;, :&quot;05&quot;, :&quot;04&quot;]], [:&quot;04&quot;, 2, &quot;宮城県&quot;, [:&quot;03&quot;, :&quot;05&quot;, :&quot;06&quot;, :&quot;07&quot;]], [:&quot;05&quot;, 2, &quot;秋田県&quot;, [:&quot;02&quot;, :&quot;03&quot;, :&quot;04&quot;, :&quot;06&quot;]], [:&quot;06&quot;, 2, &quot;山形県&quot;, [:&quot;05&quot;, :&quot;04&quot;, :&quot;07&quot;, :&quot;15&quot;]], [:&quot;07&quot;, 2, &quot;福島県&quot;, [:&quot;04&quot;, :&quot;06&quot;, :&quot;15&quot;, :&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;]], [:&quot;08&quot;, 3, &quot;茨城県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;12&quot;]], [:&quot;09&quot;, 3, &quot;栃木県&quot;, [:&quot;07&quot;, :&quot;10&quot;, :&quot;08&quot;, :&quot;11&quot;]], [:&quot;10&quot;, 3, &quot;群馬県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;20&quot;, :&quot;15&quot;]], [:&quot;11&quot;, 3, &quot;埼玉県&quot;, [:&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;, :&quot;12&quot;, :&quot;13&quot;, :&quot;19&quot;, :&quot;20&quot;]], [:&quot;12&quot;, 3, &quot;千葉県&quot;, [:&quot;13&quot;, :&quot;11&quot;, :&quot;08&quot;]], [:&quot;13&quot;, 3, &quot;東京都&quot;, [:&quot;11&quot;, :&quot;12&quot;, :&quot;14&quot;, :&quot;19&quot;]], [:&quot;14&quot;, 3, &quot;神奈川県&quot;, [:&quot;13&quot;, :&quot;22&quot;, :&quot;19&quot;]], [:&quot;15&quot;, 4, &quot;新潟県&quot;, [:&quot;06&quot;, :&quot;07&quot;, :&quot;10&quot;, :&quot;20&quot;, :&quot;16&quot;]], [:&quot;16&quot;, 4, &quot;富山県&quot;, [:&quot;15&quot;, :&quot;20&quot;, :&quot;21&quot;, :&quot;17&quot;]], [:&quot;17&quot;, 4, &quot;石川県&quot;, [:&quot;16&quot;, :&quot;21&quot;, :&quot;18&quot;]], [:&quot;18&quot;, 4, &quot;福井県&quot;, [:&quot;17&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;]], [:&quot;19&quot;, 4, &quot;山梨県&quot;, [:&quot;20&quot;, :&quot;11&quot;, :&quot;13&quot;, :&quot;14&quot;, :&quot;22&quot;]], [:&quot;20&quot;, 4, &quot;長野県&quot;, [:&quot;15&quot;, :&quot;10&quot;, :&quot;11&quot;, :&quot;19&quot;, :&quot;22&quot;, :&quot;23&quot;, :&quot;21&quot;, :&quot;16&quot;]], [:&quot;21&quot;, 4, &quot;岐阜県&quot;, [:&quot;16&quot;, :&quot;20&quot;, :&quot;23&quot;, :&quot;24&quot;, :&quot;25&quot;, :&quot;18&quot;, :&quot;17&quot;]], [:&quot;22&quot;, 4, &quot;静岡県&quot;, [:&quot;23&quot;, :&quot;20&quot;, :&quot;19&quot;, :&quot;14&quot;]], [:&quot;23&quot;, 4, &quot;愛知県&quot;, [:&quot;24&quot;, :&quot;21&quot;, :&quot;20&quot;, :&quot;22&quot;]], [:&quot;24&quot;, 5, &quot;三重県&quot;, [:&quot;23&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;]], [:&quot;25&quot;, 5, &quot;滋賀県&quot;, [:&quot;18&quot;, :&quot;21&quot;, :&quot;24&quot;, :&quot;26&quot;]], [:&quot;26&quot;, 5, &quot;京都府&quot;, [:&quot;18&quot;, :&quot;25&quot;, :&quot;24&quot;, :&quot;29&quot;, :&quot;27&quot;, :&quot;28&quot;]], [:&quot;27&quot;, 5, &quot;大阪府&quot;, [:&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;, :&quot;28&quot;]], [:&quot;28&quot;, 5, &quot;兵庫県&quot;, [:&quot;26&quot;, :&quot;27&quot;, :&quot;33&quot;, :&quot;31&quot;]], [:&quot;29&quot;, 5, &quot;奈良県&quot;, [:&quot;26&quot;, :&quot;24&quot;, :&quot;30&quot;, :&quot;27&quot;]], [:&quot;30&quot;, 5, &quot;和歌山県&quot;, [:&quot;27&quot;, :&quot;29&quot;, :&quot;24&quot;]], [:&quot;31&quot;, 6, &quot;鳥取県&quot;, [:&quot;28&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;32&quot;]], [:&quot;32&quot;, 6, &quot;島根県&quot;, [:&quot;31&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;35&quot;]], [:&quot;33&quot;, 6, &quot;岡山県&quot;, [:&quot;28&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;34&quot;, :&quot;37&quot;]], [:&quot;34&quot;, 6, &quot;広島県&quot;, [:&quot;33&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;35&quot;]], [:&quot;35&quot;, 6, &quot;山口県&quot;, [:&quot;32&quot;, :&quot;34&quot;, :&quot;40&quot;]], [:&quot;36&quot;, 7, &quot;徳島県&quot;, [:&quot;37&quot;, :&quot;38&quot;, :&quot;39&quot;]], [:&quot;37&quot;, 7, &quot;香川県&quot;, [:&quot;36&quot;, :&quot;38&quot;, :&quot;33&quot;]], [:&quot;38&quot;, 7, &quot;愛媛県&quot;, [:&quot;37&quot;, :&quot;36&quot;, :&quot;39&quot;]], [:&quot;39&quot;, 7, &quot;高知県&quot;, [:&quot;38&quot;, :&quot;36&quot;]], [:&quot;40&quot;, 8, &quot;福岡県&quot;, [:&quot;35&quot;, :&quot;44&quot;, :&quot;43&quot;, :&quot;41&quot;]], [:&quot;41&quot;, 8, &quot;佐賀県&quot;, [:&quot;40&quot;, :&quot;42&quot;]], [:&quot;42&quot;, 8, &quot;長崎県&quot;, [:&quot;41&quot;]], [:&quot;43&quot;, 8, &quot;熊本県&quot;, [:&quot;40&quot;, :&quot;44&quot;, :&quot;45&quot;, :&quot;46&quot;]], [:&quot;44&quot;, 8, &quot;大分県&quot;, [:&quot;40&quot;, :&quot;43&quot;, :&quot;45&quot;]], [:&quot;45&quot;, 8, &quot;宮崎県&quot;, [:&quot;44&quot;, :&quot;43&quot;, :&quot;46&quot;]], [:&quot;46&quot;, 8, &quot;鹿児島県&quot;, [:&quot;43&quot;, :&quot;45&quot;, :&quot;47&quot;]], [:&quot;47&quot;, 9, &quot;沖縄県&quot;, [:&quot;46&quot;]]]</span></code></pre></div>
 
 <p>次にGVizでこれらを処理します。各都道府県をノードとし隣接県情報を使ってノードをつなぎます。</p>
 
@@ -429,9 +423,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>結果を見てみましょう。</p>
 
@@ -450,9 +442,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>さあどうでしょうか。</p>
 
@@ -471,9 +461,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p><img src="/assets/images/pref3.png" alt="pref3 noshadow" /></p>
 
@@ -492,9 +480,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>日本地図の完成です！</p>
 
@@ -502,7 +488,7 @@
 
 <p>いいですね！</p>
 
-<p>というわけで...</p>
+<p>というわけで…</p>
 
 <p>あなたも<code>Gviz</code>で何かグラフを作ってみませんか？</p>
 
@@ -512,21 +498,18 @@
 
 <script src="https://gist.github.com/3780615.js?file=pref.rb"></script>
 
-
 <hr />
 
-<p><a href="http://www.amazon.co.jp/グラフ理論入門-R-J-ウィルソン/dp/4764902966?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4764902966"><img class="amazon" src="http://ecx.images-amazon.com/images/I/416KKT9162L._SL160_.jpg" /></a>
-<a href="http://www.amazon.co.jp/グラフ理論入門-R-J-ウィルソン/dp/4764902966?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=4764902966">グラフ理論入門</a> by R.J. ウィルソン</p>
+<p><a href="http://www.amazon.co.jp/グラフ理論入門-R-J-ウィルソン/dp/4764902966?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4764902966"><img class="amazon" src="http://ecx.images-amazon.com/images/I/416KKT9162L._SL160_.jpg" /></a>
+<a href="http://www.amazon.co.jp/グラフ理論入門-R-J-ウィルソン/dp/4764902966?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=4764902966">グラフ理論入門</a> by R.J. ウィルソン</p>
 
 <hr />
 
 <div class="footnotes">
-    <ol>
-        <li id='fn:1'>コメント行があるとうまくいかなかったのでコメント行を削除しています。 <a href='#fnref:1' rev='footnote'>↩</a></li><li id='fn:2'>rubysapporo: Keynote Yukihiro "Matz" Matsumoto "One size does not fit all" http://www.ustream.tv/recorded/25417206 <a href='#fnref:2' rev='footnote'>↩</a></li>
-    </ol>
+	<ol>
+		<li id="fn:1">コメント行があるとうまくいかなかったのでコメント行を削除しています。 <a href="#fnref:1" rev="footnote">↩</a></li><li id="fn:2">rubysapporo: Keynote Yukihiro "Matz" Matsumoto "One size does not fit all" http://www.ustream.tv/recorded/25417206 <a href="#fnref:2" rev="footnote">↩</a></li>
+	</ol>
 </div>
-
-
 
 
 

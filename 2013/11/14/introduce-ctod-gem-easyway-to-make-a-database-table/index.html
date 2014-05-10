@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,17 +179,22 @@
       </script>
     </div>
 
-    <p>前の記事では<code>CtoD</code>を使ってCSVデータからHeroku上にWebアプリを構築する手順を説明しました。</p>
+    
+<p>前の記事では<code>CtoD</code>を使ってCSVデータからHeroku上にWebアプリを構築する手順を説明しました。</p>
 
-<blockquote><p><a href="/2013/11/11/your-data-from-excel-to-the-web/" title="Excelデータを最速でWebアプリ(Heroku)にする&lt;del&gt;１０&lt;/del&gt;９のステップ">Excelデータを最速でWebアプリ(Heroku)にする<del>１０</del>９のステップ</a></p></blockquote>
+<blockquote>
+  <p><a href="/2013/11/11/your-data-from-excel-to-the-web/" title="Excelデータを最速でWebアプリ(Heroku)にする&lt;del&gt;１０&lt;/del&gt;９のステップ">Excelデータを最速でWebアプリ(Heroku)にする<del>１０</del>９のステップ</a></p>
+</blockquote>
 
 <p>ここでは<code>CtoD</code>の詳細を説明します。対象バージョンは0.0.3です。</p>
 
-<blockquote><p><a href="https://rubygems.org/gems/ctoD" title="ctoD | RubyGems.org | your community gem host">ctoD | RubyGems.org | your community gem host</a></p>
+<blockquote>
+  <p><a href="https://rubygems.org/gems/ctoD" title="ctoD \| RubyGems.org \| your community gem host">ctoD | RubyGems.org | your community gem host</a></p>
 
-<p><a href="https://github.com/melborne/ctoD" title="melborne/ctoD">melborne/ctoD</a></p></blockquote>
+  <p><a href="https://github.com/melborne/ctoD" title="melborne/ctoD">melborne/ctoD</a></p>
+</blockquote>
 
-<h2>使い方</h2>
+<h2 id="section">使い方</h2>
 
 <p><code>gem install ctoD</code>でインストールすると、<code>ctoD</code>ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。</p>
 
@@ -198,15 +203,13 @@ Commands:
   ctoD create_table CSV DATABASE  <span class="c"># Create a database table for CSV</span>
   ctoD <span class="nb">export </span>CSV DATABASE        <span class="c"># Export CSV data to DATABASE</span>
   ctoD <span class="nb">help</span> <span class="o">[</span>COMMAND<span class="o">]</span>             <span class="c"># Describe available commands or one specific command</span>
-  ctoD version                    <span class="c"># Show CtoD version</span>
-</code></pre></div>
-
+  ctoD version                    <span class="c"># Show CtoD version</span></code></pre></div>
 
 <p><code>create_table</code>サブコマンドは、引数で渡したDATABASEにテーブルを生成します。テーブルの名称およびスキーマは第1引数で渡すCSVデータの内容に基づき構築されます。第1引数のCSVにはそのファイルパスを指定し、第2引数のDATABASEにはデータベースURLアドレスを指定します。</p>
 
 <p><code>export</code>サブコマンドは、DATABASEに該当テーブルがなければそれを構築した上で、CSVデータの内容をテーブルにストアします。</p>
 
-<h2>データベースURL</h2>
+<h2 id="url">データベースURL</h2>
 
 <p>第2引数で渡すデータベースURLは、スキーマ、ユーザおよびそのパスワード、ホスト、データベース名で構成されるデータベースのアドレスです。例を示します。</p>
 
@@ -219,38 +222,40 @@ sqlite3://localhost//Users/username/path/to/file
 
 <p>mysqlの例ではユーザ名とパスワードを渡しています。sqlite3の例ではデータベースとなるファイルの絶対パスを渡します（ホストとパスの間の<code>//</code>に注意）。</p>
 
-<h2>CSVデータの規約</h2>
+<h2 id="csv">CSVデータの規約</h2>
 
 <p><code>CtoD</code>では基になるCSVデータの内容に応じてテーブルのスキーマを決定しています。フィールドのデータ型はActiveRecordにおけるデータ型の何れかです（CtoDではテーブルの生成にActiveRecord::Base.connection.create_tableを使っています）。version0.0.3におけるルールは次のようになっています（将来変更の可能性があります）。</p>
 
-<blockquote><ol>
-<li>テーブル名はCSVファイル名と同じとなる</li>
-<li>CSVの先頭行はテーブルのヘッダーとして使われる</li>
-<li>先頭レコードにおける値が'true'または'false'のフィールドは、boolean型になる</li>
-<li>先頭レコードにおける値が<code>YYYY-MM-DD</code>または<code>YYYY/MM/DD</code>の形式のフィールドは、date型になる</li>
-<li>値が数値で構成されるフィールドは、そのフィールドの何れかの値がFloat型である場合はfloat型に、そうでない場合はinteger型になる</li>
-<li>既定の文字数（デフォルトで100文字）を超える値を持ったフィールドはtext型に、それ以外はstring型になる</li>
-<li>先頭レコードにおける値がないフィールドは、string型になる</li>
-<li>id, created_at, updated_atの各フィールドが自動生成される</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>テーブル名はCSVファイル名と同じとなる</li>
+    <li>CSVの先頭行はテーブルのヘッダーとして使われる</li>
+    <li>先頭レコードにおける値が’true’または’false’のフィールドは、boolean型になる</li>
+    <li>先頭レコードにおける値が<code>YYYY-MM-DD</code>または<code>YYYY/MM/DD</code>の形式のフィールドは、date型になる</li>
+    <li>値が数値で構成されるフィールドは、そのフィールドの何れかの値がFloat型である場合はfloat型に、そうでない場合はinteger型になる</li>
+    <li>既定の文字数（デフォルトで100文字）を超える値を持ったフィールドはtext型に、それ以外はstring型になる</li>
+    <li>先頭レコードにおける値がないフィールドは、string型になる</li>
+    <li>id, created_at, updated_atの各フィールドが自動生成される</li>
+  </ol>
 </blockquote>
 
 <p>text型を判定する文字数は、create_tableまたはexportコマンドの<code>--string-size</code>オプションで変更できます。</p>
 
 <p>この規約に従って期待するテーブルを作るために、以下の方針を取るのがいいです。</p>
 
-<blockquote><ol>
-<li>CSVのファイル名は英単語の複数形にすること（ActiveRecordを使っているため）</li>
-<li>余分な行・列が含まれていないこと</li>
-<li>各フィールドのヘッダー名が各異なる<strong>英文字</strong>であること</li>
-<li>idフィールドは削除すること</li>
-<li>日付のフィールドは<code>YYYY-MM-DD</code>または<code>YYYY/MM/DD</code>の形式とすること</li>
-<li>論理値の値は'true'または'false'にすること</li>
-<li>先頭レコードの各フィールドをできるだけ空欄にしないこと</li>
-</ol>
+<blockquote>
+  <ol>
+    <li>CSVのファイル名は英単語の複数形にすること（ActiveRecordを使っているため）</li>
+    <li>余分な行・列が含まれていないこと</li>
+    <li>各フィールドのヘッダー名が各異なる<strong>英文字</strong>であること</li>
+    <li>idフィールドは削除すること</li>
+    <li>日付のフィールドは<code>YYYY-MM-DD</code>または<code>YYYY/MM/DD</code>の形式とすること</li>
+    <li>論理値の値は’true’または’false’にすること</li>
+    <li>先頭レコードの各フィールドをできるだけ空欄にしないこと</li>
+  </ol>
 </blockquote>
 
-<h2>sqlite3での例</h2>
+<h2 id="sqlite3">sqlite3での例</h2>
 
 <p>以下のような<code>langs.csv</code>があるとして、SQLite3でテーブルを作る方法を示します。</p>
 
@@ -265,7 +270,9 @@ sqlite3://localhost//Users/username/path/to/file
 1987,Erlang,Joe Armstrong,Prolog
 </code></pre>
 
-<blockquote><p>from <a href="http://en.wikipedia.org/wiki/Timeline_of_programming_languages" title="Timeline of programming languages - Wikipedia, the free encyclopedia">Timeline of programming languages - Wikipedia, the free encyclopedia</a></p></blockquote>
+<blockquote>
+  <p>from <a href="http://en.wikipedia.org/wiki/Timeline_of_programming_languages" title="Timeline of programming languages - Wikipedia, the free encyclopedia">Timeline of programming languages - Wikipedia, the free encyclopedia</a></p>
+</blockquote>
 
 <p><code>export</code>サブコマンドを実行します。</p>
 
@@ -273,9 +280,7 @@ sqlite3://localhost//Users/username/path/to/file
 Table <span class="s1">&#39;langs&#39;</span> created at sqlite3://localhost//Users/keyes/plangs/langs.sqlite3.
 CSV data exported successfully.
 /plangs% ls
-langs.csv     langs.sqlite3
-</code></pre></div>
-
+langs.csv     langs.sqlite3</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
 
@@ -304,7 +309,7 @@ Lua|Roberto Ierusalimschy|1993
 Erlang|Joe Armstrong|1987
 </code></pre>
 
-<h2>PostgreSQLでの例</h2>
+<h2 id="postgresql">PostgreSQLでの例</h2>
 
 <p>事前にdatabaseを作っておく必要があります。ここでは<code>psql</code>コマンドを使います。</p>
 
@@ -327,9 +332,7 @@ keyes=# \l
 
 <div class="highlight"><pre><code class="bash">/plangs% ctoD <span class="nb">export </span>langs.csv postgres://localhost/langs
 Table <span class="s1">&#39;langs&#39;</span> created at postgresql://localhost/langs.
-CSV data exported successfully.
-</code></pre></div>
-
+CSV data exported successfully.</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
 
@@ -368,7 +371,7 @@ Indexes:
 (8 rows)
 </code></pre>
 
-<h2>MySQLでの例</h2>
+<h2 id="mysql">MySQLでの例</h2>
 
 <p>事前にdatabaseを作っておく必要があります。ここでは<code>mysql</code>コマンドを使います。</p>
 
@@ -396,9 +399,7 @@ mysql&gt; show databases;
 
 <div class="highlight"><pre><code class="bash">/plangs% ctoD <span class="nb">export </span>langs.csv mysql://root:xxxx@localhost/langs
 Table <span class="s1">&#39;langs&#39;</span> created at mysql://root:xxxx@localhost/langs.
-CSV data exported successfully.
-</code></pre></div>
-
+CSV data exported successfully.</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
 
@@ -449,7 +450,7 @@ mysql&gt; show create table langs;
 8 rows in set (0.01 sec)
 </code></pre>
 
-<h2>Rubyからデータベースに接続する</h2>
+<h2 id="ruby">Rubyからデータベースに接続する</h2>
 
 <p><code>CtoD</code>は<code>CtoD::DB.connect</code>というデータベースに接続するためのメソッドをもっており、かつActiveRecordをrequireしているので、Rubyからデータベースにアクセスするのは簡単です。irbを立ち上げてアクセスしてみます。</p>
 
@@ -479,9 +480,7 @@ mysql&gt; show create table langs;
 <span class="go">│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |</span>
 <span class="go">│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎</span>
 <span class="go">└-------------------------------------------------------------------------------</span>
-<span class="go">3 rows in set</span>
-</code></pre></div>
-
+<span class="go">3 rows in set</span></code></pre></div>
 
 <p>以上です。</p>
 
@@ -489,10 +488,9 @@ mysql&gt; show create table langs;
 
 <hr />
 
-<p style='color:red'>=== Ruby関連電子書籍100円で好評発売中！ ===</p>
+<p style="color:red">=== Ruby関連電子書籍100円で好評発売中！ ===</p>
 
-
-<p><a href="/books/" title="M'ELBORNE BOOKS">M'ELBORNE BOOKS</a></p>
+<p><a href="/books/" title="M'ELBORNE BOOKS">M’ELBORNE BOOKS</a></p>
 
 <p><a href="/books/">
   <img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" style="width:200px" />
@@ -503,6 +501,7 @@ mysql&gt; show create table langs;
 <a href="/books/">
   <img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" style="width:200px" />
 </a></p>
+
 
 
     <div class="ad" id="topAdsense">

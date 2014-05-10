@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,7 +179,8 @@
       </script>
     </div>
 
-    <p>Rubyでアクセスログからいま話題の<a href="http://ltsv.org/" title="Labeled Tab-separated Values (LTSV)">LTSV（Labeled Tab-separated Values）</a>を生成しようと考えました。ところが自分はアクセスログを扱った経験がなくそのフォーマットをよく知らないという事実に気付いたのでした（遅い）。一方で、仕様書を読むモチベーションもなく、仕方がないのでアクセスログというものの基礎仕様を以下のように仮定してみることにしました。</p>
+    
+<p>Rubyでアクセスログからいま話題の<a href="http://ltsv.org/" title="Labeled Tab-separated Values (LTSV)">LTSV（Labeled Tab-separated Values）</a>を生成しようと考えました。ところが自分はアクセスログを扱った経験がなくそのフォーマットをよく知らないという事実に気付いたのでした（遅い）。一方で、仕様書を読むモチベーションもなく、仕方がないのでアクセスログというものの基礎仕様を以下のように仮定してみることにしました。</p>
 
 <pre><code>1. １エントリ内の各情報はスペース区切りされている。
 2. [ ]または" "で囲まれた情報を含むことができ、その間ではスペースが許容される。
@@ -194,11 +195,10 @@
 2. タブ区切りアクセスログをLTSVに変換する。
 </code></pre>
 
-<h2>サンプルアクセスログ</h2>
-
+<h2 id="section">サンプルアクセスログ</h2>
 <p>アクセスログのサンプルとして、ここでは以下のものを使います。</p>
 
-<h4>access_log</h4>
+<h4 id="accesslog">access_log</h4>
 
 <div class="highlight"><pre><code class="text">80.101.90.180 - - [02/Jun/2009:15:11:51 -0400] &quot;GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1&quot; 200 4898
 80.101.90.180 - - [02/Jun/2009:15:11:52 -0400] &quot;GET /images/mplogo-white.jpg HTTP/1.1&quot; 200 9350
@@ -206,12 +206,9 @@
 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] &quot;GET /apache_pb.gif HTTP/1.0&quot; 200 2326 &quot;http://www.example.com/start.html&quot; &quot;Mozilla/4.08 [en] (Win98; I ;Nav)&quot;
 10.2.3.4 - - [18/Apr/2005:00:10:47 +0900] &quot;GET / HTTP/1.1&quot; 200 854 &quot;-&quot; &quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;
 10.2.3.4 - - [18/Apr/2005:00:10:47 +0900] &quot;GET /style.css HTTP/1.1&quot; 200 102 &quot;http://www.geekpage.jp/&quot; &quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;
-10.2.3.4 - - [18/Apr/2005:00:10:47 +0900] &quot;GET /img/title.png HTTP/1.1&quot; 304 - &quot;http://www.geekpage.jp/&quot; &quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;
-</code></pre></div>
+10.2.3.4 - - [18/Apr/2005:00:10:47 +0900] &quot;GET /img/title.png HTTP/1.1&quot; 304 - &quot;http://www.geekpage.jp/&quot; &quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;</code></pre></div>
 
-
-<h2>TSVへの変換</h2>
-
+<h2 id="tsv">TSVへの変換</h2>
 <p>上記方針に従って、スペース区切りをタブ区切りへ変換するメソッドを書いてみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
@@ -219,24 +216,19 @@
   <span class="n">irregular</span> <span class="o">=</span> <span class="s2">&quot;&lt;__IRREGULAR__&gt;&quot;</span>
   <span class="n">log</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="n">combined_re</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">irregular</span><span class="p">)</span> <span class="p">}</span>
      <span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="n">irregular</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre></div>
 
-
-<p>最初の<code>gsub</code>で[ ]または" "で囲まれた情報をブロックに取り込み、次の<code>gsub</code>でその内部のスペースを特殊シンボル<code>&lt;__IRREGULAR__&gt;</code>に置換します。次に<code>tr</code>で残っているすべてのスペースをタブに変換します。最後に<code>gsub</code>で特殊シンボルをスペースに戻します。</p>
+<p>最初の<code>gsub</code>で[ ]または” “で囲まれた情報をブロックに取り込み、次の<code>gsub</code>でその内部のスペースを特殊シンボル<code>&lt;__IRREGULAR__&gt;</code>に置換します。次に<code>tr</code>で残っているすべてのスペースをタブに変換します。最後に<code>gsub</code>で特殊シンボルをスペースに戻します。</p>
 
 <p>これを上記アクセスログに適用してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;access_log&#39;</span><span class="p">)</span>
 
-<span class="n">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="c1"># =&gt; &quot;80.101.90.180\t-\t-\t[02/Jun/2009:15:11:51 -0400]\t\&quot;GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\&quot;\t200\t4898\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\&quot;GET /images/mplogo-white.jpg HTTP/1.1\&quot;\t200\t9350\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\&quot;GET /css/style.css HTTP/1.1\&quot;\t200\t2816\n127.0.0.1\t-\tfrank\t[10/Oct/2000:13:55:36 -0700]\t\&quot;GET /apache_pb.gif HTTP/1.0\&quot;\t200\t2326\t\&quot;http://www.example.com/start.html\&quot;\t\&quot;Mozilla/4.08 [en] (Win98; I ;Nav)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET / HTTP/1.1\&quot;\t200\t854\t\&quot;-\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET /style.css HTTP/1.1\&quot;\t200\t102\t\&quot;http://www.geekpage.jp/\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET /img/title.png HTTP/1.1\&quot;\t304\t-\t\&quot;http://www.geekpage.jp/\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;&quot;</span>
-</code></pre></div>
-
+<span class="n">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="c1"># =&gt; &quot;80.101.90.180\t-\t-\t[02/Jun/2009:15:11:51 -0400]\t\&quot;GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\&quot;\t200\t4898\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\&quot;GET /images/mplogo-white.jpg HTTP/1.1\&quot;\t200\t9350\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\&quot;GET /css/style.css HTTP/1.1\&quot;\t200\t2816\n127.0.0.1\t-\tfrank\t[10/Oct/2000:13:55:36 -0700]\t\&quot;GET /apache_pb.gif HTTP/1.0\&quot;\t200\t2326\t\&quot;http://www.example.com/start.html\&quot;\t\&quot;Mozilla/4.08 [en] (Win98; I ;Nav)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET / HTTP/1.1\&quot;\t200\t854\t\&quot;-\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET /style.css HTTP/1.1\&quot;\t200\t102\t\&quot;http://www.geekpage.jp/\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\&quot;GET /img/title.png HTTP/1.1\&quot;\t304\t-\t\&quot;http://www.geekpage.jp/\&quot;\t\&quot;Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\&quot;&quot;</span></code></pre></div>
 
 <p>よさそうです。</p>
 
-<h2>TSVへの変換</h2>
-
+<h2 id="tsv-1">TSVへの変換</h2>
 <p>次に、TSVからLTSVへの変換をするメソッドを書きます。ここでは標準添付ライブラリ<code>csv</code>を使います。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
@@ -251,28 +243,26 @@
                               <span class="n">header_converters</span><span class="p">:</span> <span class="ss">:symbol</span> <span class="p">)</span>
 
   <span class="n">tsv</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">l</span><span class="o">|</span> <span class="n">l</span><span class="o">.</span><span class="n">to_hash</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kv</span><span class="o">|</span> <span class="n">kv</span> <span class="o">*</span> <span class="s2">&quot;:&quot;</span> <span class="p">}</span> <span class="o">*</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="o">*</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>ヘッダーラベルLABELSを用意しこれをTSVデータの先頭に結合し、csvライブラリに掛けます。このコードの説明は次の記事に書いています。なお、何回も登場する<code>*</code>はArray#joinと等価です。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" target="_blank">'私、RubyでならTSVからLTSV作れます！' </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" alt="error" class="http-bookmark"></a></p></blockquote>
+<blockquote>
+  <p><a href="http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" target="_blank">‘私、RubyでならTSVからLTSV作れます！’ </a><a href="http://b.hatena.ne.jp/entry/http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" class="http-bookmark" target="_blank"><img src="http://b.hatena.ne.jp/entry/image/http://melborne.github.com/2013/02/10/tsv-to-ltsv-in-ruby/" alt="error" class="http-bookmark" /></a></p>
+</blockquote>
 
 <p>上で生成したTSVに適用してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;access_log&#39;</span><span class="p">)</span>
 <span class="n">tsv</span> <span class="o">=</span> <span class="n">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
 
-<span class="n">ltsv</span> <span class="o">=</span> <span class="n">to_ltsv</span><span class="p">(</span><span class="n">tsv</span><span class="p">)</span> <span class="c1"># =&gt; &quot;host:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:51 -0400]\treq:GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\tstatus:200\tsize:4898\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /images/mplogo-white.jpg HTTP/1.1\tstatus:200\tsize:9350\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /css/style.css HTTP/1.1\tstatus:200\tsize:2816\treferer:\tua:\nhost:127.0.0.1\tident:-\tuser:frank\ttime:[10/Oct/2000:13:55:36 -0700]\treq:GET /apache_pb.gif HTTP/1.0\tstatus:200\tsize:2326\treferer:http://www.example.com/start.html\tua:Mozilla/4.08 [en] (Win98; I ;Nav)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET / HTTP/1.1\tstatus:200\tsize:854\treferer:-\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /style.css HTTP/1.1\tstatus:200\tsize:102\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /img/title.png HTTP/1.1\tstatus:304\tsize:-\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;</span>
-</code></pre></div>
-
+<span class="n">ltsv</span> <span class="o">=</span> <span class="n">to_ltsv</span><span class="p">(</span><span class="n">tsv</span><span class="p">)</span> <span class="c1"># =&gt; &quot;host:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:51 -0400]\treq:GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\tstatus:200\tsize:4898\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /images/mplogo-white.jpg HTTP/1.1\tstatus:200\tsize:9350\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /css/style.css HTTP/1.1\tstatus:200\tsize:2816\treferer:\tua:\nhost:127.0.0.1\tident:-\tuser:frank\ttime:[10/Oct/2000:13:55:36 -0700]\treq:GET /apache_pb.gif HTTP/1.0\tstatus:200\tsize:2326\treferer:http://www.example.com/start.html\tua:Mozilla/4.08 [en] (Win98; I ;Nav)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET / HTTP/1.1\tstatus:200\tsize:854\treferer:-\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /style.css HTTP/1.1\tstatus:200\tsize:102\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /img/title.png HTTP/1.1\tstatus:304\tsize:-\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)&quot;</span></code></pre></div>
 
 <p>上手くいっているようですね。</p>
 
 <p>上記コードをクラス化したものを貼っておきます。</p>
 
-<div><script src='https://gist.github.com/4960036.js?file=access_log_like.rb'></script>
+<div><script src="https://gist.github.com/4960036.js?file=access_log_like.rb"></script>
 <noscript><pre><code># encoding: UTF-8
 #
 require &quot;csv&quot;
@@ -309,12 +299,14 @@ if __FILE__ == $0
 end
 </code></pre></noscript></div>
 
+<p>で、ここまで書いてアレなんですが、Dankogai氏のPerl版（<a href="http://colabv6.dan.co.jp/ltsv/combined2ltsv.pl" title="colabv6.dan.co.jp/ltsv/combined2ltsv.pl">combined2ltsv.pl</a>）を見る限り、アクセスログの変換にはもっと複雑な処理が必要そうなので（Perlが読みきれない（泣））、やっぱりこのコードの実用性はなさそうです…</p>
 
-<p>で、ここまで書いてアレなんですが、Dankogai氏のPerl版（<a href="http://colabv6.dan.co.jp/ltsv/combined2ltsv.pl" title="colabv6.dan.co.jp/ltsv/combined2ltsv.pl">combined2ltsv.pl</a>）を見る限り、アクセスログの変換にはもっと複雑な処理が必要そうなので（Perlが読みきれない（泣））、やっぱりこのコードの実用性はなさそうです...</p>
-
-<blockquote><p><a href="http://blog.livedoor.jp/dankogai/archives/51853024.html" title="404 Blog Not Found:perl - Apache Combined Log を LTSV に">404 Blog Not Found:perl - Apache Combined Log を LTSV に</a></p></blockquote>
+<blockquote>
+  <p><a href="http://blog.livedoor.jp/dankogai/archives/51853024.html" title="404 Blog Not Found:perl - Apache Combined Log を LTSV に">404 Blog Not Found:perl - Apache Combined Log を LTSV に</a></p>
+</blockquote>
 
 <p>Melborne the Man who lack knowledge of AccessLog</p>
+
 
 
     <div class="ad" id="topAdsense">

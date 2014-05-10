@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,18 +181,22 @@
 
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-
 <p><a href="http://projecteuler.net/index.php?section=problems&amp;id=7">Problem 7 - Project Eulerより</a></p>
 
-<blockquote><p>By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
-What is the 10001st prime number?
-最初の6つの素数2、3、5、7、11、および13を並べれば、6番目が13であることがわかる。
-では10001番目の素数は何か。</p></blockquote>
+<blockquote>
+  <p>By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.</p>
+
+  <p>What is the 10001st prime number?</p>
+
+  <p>最初の6つの素数2、3、5、7、11、および13を並べれば、6番目が13であることがわかる。</p>
+
+  <p>では10001番目の素数は何か。</p>
+</blockquote>
 
 <p><a href="/2009/01/13/Ruby/">Rubyで素因数を求める</a>で書いた
 next_primeメソッドとprime?メソッドをそのまま使おう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">nth_prime</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">nth_prime</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="n">prime</span> <span class="o">=</span> <span class="mi">1</span>
    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
    <span class="k">until</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">nth</span>
@@ -216,16 +220,13 @@ next_primeメソッドとprime?メソッドをそのまま使おう</p>
  <span class="k">end</span>
  <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
  <span class="n">nth_prime</span> <span class="mi">10001</span> <span class="c1"># =&gt; 104743</span>
- <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 263.424058</span>
-</code></pre></div>
-
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 263.424058</span></code></pre></div>
 
 <p>ちょっと時間が掛かる…</p>
 
 <p>数字を小さくしてプロファイルを見る</p>
 
-<blockquote><p>|
-ruby -r profile p7.rb
+<pre><code>ruby -r profile p7.rb 
   %   cumulative   self              self     total
  time   seconds   seconds    calls  ms/call  ms/call  name
  63.80   172.72    172.72     1000   172.72   267.66  Integer#upto
@@ -235,23 +236,23 @@ ruby -r profile p7.rb
   0.03   268.59      0.08     7918     0.01     0.01  Fixnum#-
   0.01   268.63      0.04     1000     0.04   267.71  Object#prime?
   0.00   268.63      0.00        2     0.00     0.00  IO#set_encoding
-  0.00   268.63      0.00     1001     0.00     0.00  Fixnum#>
+  0.00   268.63      0.00     1001     0.00     0.00  Fixnum#&gt;
   0.00   268.63      0.00        2     0.00     0.00  Time#now
   0.00   268.63      0.00        2     0.00     0.00  Time#initialize
   0.00   268.63      0.00        3     0.00     0.00  Module#method_added
   0.00   268.63      0.00        1     0.00   580.00  Object#nth_prime
   0.00   268.63      0.00        1     0.00     0.00  Time#-
   0.00   270.74      0.00        1     0.00 270740.00  #toplevel
-|&lt;
-ボトルネックはやはりprime?メソッドだ…</p></blockquote>
+</code></pre>
+
+<p>ボトルネックはやはりprime?メソッドだ…</p>
 
 <p>素数の判定法に
 エラトステネスのふるいというのがある</p>
 
 <p><a href="http://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%A9%E3%83%88%E3%82%B9%E3%83%86%E3%83%8D%E3%82%B9%E3%81%AE%E7%AF%A9">エラトステネスの篩</a> - Wikipediaより</p>
 
-<blockquote><p>|
-ステップ 1
+<pre><code>ステップ 1
 　整数を最初の素数である 2 から昇順で探索リストに羅列する。
 　2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
 ステップ 2
@@ -264,14 +265,14 @@ ruby -r profile p7.rb
 　探索リスト：3 5 7 9 11 13 15 17 19
 ステップ 4
 　探索リストの最大値が素数リストの最大値の平方よりも小さい場合、素数リストおよび探索リストに残っている数が素数となる。探索リストの最大値が素数リストの最大値の平方よりも大きい場合、ステップ 2 に戻る。
-|&lt;</p></blockquote>
+</code></pre>
 
 <p>これを利用して上のコードを少し改良してみる
 nth_primeメソッドにおいて
 得られた素数をprime_listに持たせ
 prime?に渡すようにしよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">nth_prime</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">nth_prime</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="n">prime_list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">2</span><span class="o">]</span>
    <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
    <span class="k">until</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">nth</span>
@@ -297,57 +298,39 @@ prime?に渡すようにしよう</p>
  <span class="k">end</span>
  <span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
  <span class="n">nth_prime</span> <span class="mi">10001</span> <span class="c1"># =&gt; 104743</span>
- <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 21.216265</span>
-</code></pre></div>
-
+ <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span> <span class="c1"># =&gt; 21.216265</span></code></pre></div>
 
 <p>いくらかよくなったかな</p>
 
-<h2>Rubyでサムオブスクエアスクエアオブサム ～Rubyでオイラープロジェクトを解こう！Problem6</h2>
+<h2 id="ruby-rubyproblem6">Rubyでサムオブスクエアスクエアオブサム ～Rubyでオイラープロジェクトを解こう！Problem6</h2>
 
 <p><a href="http://projecteuler.net/index.php?section=problems&amp;id=6">Problem 6 - Project Eulerより</a></p>
 
 <hr />
-
-<p>The sum of the squares of the first ten natural numbers is,</p>
-
+<p>The sum of the squares of the first ten natural numbers is,
 <script type="math/tex; mode=display">
 1^2 + 2^2 + ... + 10^2 = 385
 </script>
-
-
-<p>The square of the sum of the first ten natural numbers is,</p>
-
+The square of the sum of the first ten natural numbers is,
 <script type="math/tex; mode=display">
 (1 + 2 + ... + 10)^2 = 55^2 = 3025
 </script>
-
-
-<p>Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is \(3025 - 385 = 2640\).
-Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.</p>
-
-<hr />
-
-<p>最初の10個の自然数を二乗したものの合計は、</p>
-
+Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is \(3025 - 385 = 2640\).
+Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+<strong>_
+最初の10個の自然数を二乗したものの合計は、
 <script type="math/tex; mode=display">
 1^2 + 2^2 + ... + 10^2 = 385
 </script>
-
-
-<p>最初の10個の自然数の合計を二乗したものは、</p>
-
+最初の10個の自然数の合計を二乗したものは、
 <script type="math/tex; mode=display">
 (1 + 2 + ... + 10)^2 = 55^2 = 3025
 </script>
+よってこれらの差は、\(3025 - 385 = 2640\)である。
+最初の100個の自然数を二乗したものの合計と、それら自然数の合計を二乗したものとの差を求めよ。
+__</strong></p>
 
-
-<p>よってこれらの差は、\(3025 - 385 = 2640\)である。
-最初の100個の自然数を二乗したものの合計と、それら自然数の合計を二乗したものとの差を求めよ。</p>
-
-<hr />
-
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">sum_of_squares</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">sum_of_squares</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
    <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
    <span class="mi">1</span><span class="o">.</span><span class="n">upto</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
      <span class="n">sum</span> <span class="o">+=</span> <span class="n">n</span> <span class="o">**</span> <span class="mi">2</span>
@@ -358,10 +341,7 @@ Find the difference between the sum of the squares of the first one hundred natu
    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.limit</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
  <span class="k">end</span>
  <span class="n">limit</span> <span class="o">=</span> <span class="mi">100</span>
- <span class="p">(</span><span class="n">sum_of_squares</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span> <span class="o">-</span> <span class="n">square_of_sum</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span> <span class="c1"># =&gt; 25164150</span>
-</code></pre></div>
-
-
+ <span class="p">(</span><span class="n">sum_of_squares</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span> <span class="o">-</span> <span class="n">square_of_sum</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span> <span class="c1"># =&gt; 25164150</span></code></pre></div>
 
 
 

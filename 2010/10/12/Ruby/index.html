@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -185,17 +185,15 @@
 
 <p>ソート・アルゴリズムは配列によるデータ構造を操作します。RubyのArrayクラスは強力だからRubyの記述力を証明するいい題材になります。早速、挿入ソート、選択ソート、バブルソート、クイックソート、マージソートをRubyで表現してみましょう。</p>
 
-<h2>挿入ソート</h2>
-
+<h2 id="section">挿入ソート</h2>
 <p>挿入ソートはデータの並びを維持しつつ、新たなデータをそこに挿入することでソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>ソート済みデータ群を格納するデータ構造を用意する。</li>
-<li>未整列のデータ群から１つデータをピックアップする。</li>
-<li>そのデータをソート済みデータ群の並びの正しい位置に挿入する。</li>
-<li>未整列データ群が無くなるまで2-3を繰り返す。</li>
+  <li>ソート済みデータ群を格納するデータ構造を用意する。</li>
+  <li>未整列のデータ群から１つデータをピックアップする。</li>
+  <li>そのデータをソート済みデータ群の並びの正しい位置に挿入する。</li>
+  <li>未整列データ群が無くなるまで2-3を繰り返す。</li>
 </ol>
-
 
 <p>これをRubyのArrayクラスに実装してみましょう。</p>
 
@@ -207,23 +205,19 @@
     <span class="n">pos</span> <span class="o">=</span> <span class="n">find_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">item</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="p">}</span> <span class="o">||</span> <span class="n">length</span>
     <span class="n">insert</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではinjectメソッドの引数で配列を用意し、injectのブロックに順次渡されるデータをinsert_with_orderメソッドに渡しています。そしてinsert_with_orderにおいてこのデータを、並びの正しい位置に挿入しています。正しい位置はArray#find_indexで求まります。</p>
 
-<h2>選択ソート</h2>
-
+<h2 id="section-1">選択ソート</h2>
 <p>選択ソートは未整列のデータ群から順次、最小のデータを選択することでソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>ソート済みデータ群を格納するデータ構造を用意する</li>
-<li>未整列のデータ群から最小(最大)のデータをピックアップする</li>
-<li>そのデータをソート済みデータ群の端に挿入する</li>
-<li>未整列データ群が無くなるまで2-3を繰り返す</li>
+  <li>ソート済みデータ群を格納するデータ構造を用意する</li>
+  <li>未整列のデータ群から最小(最大)のデータをピックアップする</li>
+  <li>そのデータをソート済みデータ群の端に挿入する</li>
+  <li>未整列データ群が無くなるまで2-3を繰り返す</li>
 </ol>
-
 
 <p>Rubyで実装してみましょう。</p>
 
@@ -238,24 +232,20 @@
     <span class="n">min_idx</span> <span class="o">=</span> <span class="n">find_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span> <span class="o">==</span> <span class="nb">self</span><span class="o">.</span><span class="n">min</span> <span class="p">}</span>
     <span class="n">delete_at</span><span class="p">(</span><span class="n">min_idx</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではresで参照できる配列を用意し、未整列のデータ群からdelete_minメソッドにより最小のデータを取り出して用意した配列の末尾に順次格納します。最小値はArray#minで求まります。なおArray#dupで元データは変更しないようにしています。</p>
 
-<h2>バブルソート</h2>
-
+<h2 id="section-2">バブルソート</h2>
 <p>バブルソートは隣り合うデータを比較して入替えを行い、データ構造の末端に最小(最大)のデータを移動させてソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>ソート済みデータ群を格納するデータ構造を用意する。</li>
-<li>未整列のデータ群に対して最小(最大)のデータが末端に来るようバブリングする。</li>
-<li>バブリングでは端から順に隣り合うデータの比較・入替えを行う。</li>
-<li>末端に来たデータをソート済みデータ群の端に挿入する。</li>
-<li>未整列データ群が無くなるまで2-4を繰り返す。</li>
+  <li>ソート済みデータ群を格納するデータ構造を用意する。</li>
+  <li>未整列のデータ群に対して最小(最大)のデータが末端に来るようバブリングする。</li>
+  <li>バブリングでは端から順に隣り合うデータの比較・入替えを行う。</li>
+  <li>末端に来たデータをソート済みデータ群の端に挿入する。</li>
+  <li>未整列データ群が無くなるまで2-4を繰り返す。</li>
 </ol>
-
 
 <p>Rubyで実装してみましょう。</p>
 
@@ -272,23 +262,19 @@
     <span class="k">end</span>
     <span class="n">delete_at</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではresで参照できる配列を用意し、未整列のデータ群に対してbubblingメソッドを実行し、最小のデータが末尾に来るようにしています。末尾のデータはArray#delete_atで取り出し、用意した配列の末尾に挿入します。</p>
 
-<h2>クイックソート</h2>
-
+<h2 id="section-3">クイックソート</h2>
 <p>クイックソートは１つのデータを基準に、未整列のデータ群を大小２つに分けることをそのデータ群が１つになるまで繰り返すことで、ソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>未整列のデータ群から任意の１つを取り出す</li>
-<li>これを基準に未整列のデータ群を大小２つに分ける</li>
-<li>分割したデータ群について1－2を繰り返す</li>
-<li>データ群が分割できなくなったところで結果を連結する</li>
+  <li>未整列のデータ群から任意の１つを取り出す</li>
+  <li>これを基準に未整列のデータ群を大小２つに分ける</li>
+  <li>分割したデータ群について1－2を繰り返す</li>
+  <li>データ群が分割できなくなったところで結果を連結する</li>
 </ol>
-
 
 <p>Rubyで実装してみましょう。</p>
 
@@ -300,22 +286,18 @@
     <span class="n">push</span> <span class="n">base</span>
     <span class="n">smaller</span><span class="o">.</span><span class="n">quick_sort</span> <span class="o">+</span> <span class="o">[</span><span class="n">base</span><span class="o">]</span> <span class="o">+</span> <span class="n">bigger</span><span class="o">.</span><span class="n">quick_sort</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではArray#partitionでデータを大小に分割し、各分割データsmaller,biggerについてquick_sortを再帰的に繰り返しています。なおオリジナルを維持するために分割後push baseしています。</p>
 
-<h2>マージソート</h2>
-
+<h2 id="section-4">マージソート</h2>
 <p>マージソートは未整列のデータを一旦多数に分割し、各分割データ群でソート・統合を繰り返して、最終的に全体のソートを行うアルゴリズムです。具体的には以下の手順を行います。</p>
 
 <ol>
-<li>未整列のデータ群を半分に分ける操作を繰り返す</li>
-<li>データ群が分割できなくなったところで今度は分割データのマージを繰り返す</li>
-<li>マージはデータが整列するよう行う</li>
+  <li>未整列のデータ群を半分に分ける操作を繰り返す</li>
+  <li>データ群が分割できなくなったところで今度は分割データのマージを繰り返す</li>
+  <li>マージはデータが整列するよう行う</li>
 </ol>
-
 
 <p>Rubyで実装してみましょう。</p>
 
@@ -344,14 +326,11 @@
     <span class="k">end</span>
     <span class="n">res</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
-
+<span class="k">end</span></code></pre></div>
 
 <p>このコードではhalfメソッドでデータ群を二分割し、分割した各データ群についてmerge_sortを呼ぶことでこれを繰り返します。分割によって双方の配列要素が１になるとa,bが返り、次にmergeメソッドが呼ばれて分割データのマージが始まります。mergeメソッドではcase式によって整列された配列データが得られます。</p>
 
-<h2>テスト</h2>
-
+<h2 id="section-5">テスト</h2>
 <p>これらのアルゴリズムのテストを用意しました。ここでは速度の比較も行っています。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;test/unit&quot;</span>
@@ -404,11 +383,7 @@
     <span class="n">res</span> <span class="o">=</span> <span class="vc">@@result</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">v</span><span class="o">/</span><span class="vc">@@result</span><span class="o">[</span><span class="ss">:Sort</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span> <span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="p">}</span>
     <span class="n">res</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="se">\t</span><span class="s2">=&gt;</span><span class="se">\t</span><span class="si">#{</span><span class="n">v</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-
-
+<span class="p">}</span></code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="no">Loaded</span> <span class="n">suite</span> <span class="n">sorts</span>
 <span class="no">Started</span>
@@ -421,9 +396,7 @@
 <span class="no">Merge</span>   <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mo">02633</span><span class="mi">8</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 <span class="no">Insert</span>  <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mi">080093</span><span class="p">(</span><span class="mi">185</span><span class="p">)</span>
 <span class="no">Bubble</span>  <span class="o">=&gt;</span>      <span class="mi">0</span><span class="o">.</span><span class="mi">782067</span><span class="p">(</span><span class="mi">1810</span><span class="p">)</span>
-<span class="no">Select</span>  <span class="o">=&gt;</span>      <span class="mi">42</span><span class="o">.</span><span class="mo">0075</span><span class="p">(</span><span class="mi">97239</span><span class="p">)</span>
-</code></pre></div>
-
+<span class="no">Select</span>  <span class="o">=&gt;</span>      <span class="mi">42</span><span class="o">.</span><span class="mo">0075</span><span class="p">(</span><span class="mi">97239</span><span class="p">)</span></code></pre></div>
 
 <p>クイックソートが最速でArray#sortの17倍、選択ソートが最も遅くsortの97239倍でした。速度はともかく、Rubyの記述力はやっぱりすごいですね。</p>
 

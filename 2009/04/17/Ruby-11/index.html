@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -181,7 +181,7 @@
 
     <p>さてもう改良点はないでしょうか。スクリプト全体をもう一度みてみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="k">end</span>
@@ -204,14 +204,11 @@
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
 <p>3行目が思いの外すっきりしたので、1行目のメソッドチェーンが気になりだしました。ちょっと病的な感覚かもしれません。でも楽しいRubyの学習のために先に進みます。</p>
 
-<h2>Version14</h2>
-
+<h2 id="version14">Version14</h2>
 <p>「添付ファイルから単語を取って配列に入れる」という操作は汎用性がありそうです。今度はこれをいじりましょう。ARGFに対するtake_wordsメソッドを定義します。</p>
 
 <p>ARGFは通常のオブジェクトと違い、属するクラスを持っていません。ですから上で示したハッシュや配列のように、その属するHashクラスやArrayクラスにメソッドを定義する、といったことができません。</p>
@@ -220,7 +217,7 @@
 
 <p>こういう場合はそのオブジェクト専用の名無しクラスにメソッドを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">ARGF</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">ARGF</span>
    <span class="k">def</span> <span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
      <span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
    <span class="k">end</span>
@@ -228,31 +225,25 @@
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
-
-<p>この場合クラスに名前を与えずに、オブジェクトを&lt;&lt;で接ぎ木します。この無名クラスはSingletonクラスまたは特異クラスなどと呼ばれます。</p>
+<p>この場合クラスに名前を与えずに、オブジェクトを«で接ぎ木します。この無名クラスはSingletonクラスまたは特異クラスなどと呼ばれます。</p>
 
 <p>クラスを定義しない別の書き方もあります。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nc">ARGF</span><span class="o">.</span><span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">ARGF</span><span class="o">.</span><span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
    <span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
- <span class="k">end</span>
-</code></pre></div>
-
+ <span class="k">end</span></code></pre></div>
 
 <p>こう書いたときSingletonメソッドまたは特異メソッドなどと呼ばれます。</p>
 
 <p>take_wordsには正規表現を渡せるようにしてます。先頭がx,y,zで始まる単語のみを対象に最頻出ワード30をリストしてみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[xyz][a-z]+/</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[xyz][a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
  <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
  
- <span class="c1">#&gt; [[&quot;you&quot;, 2071], [&quot;zabeth&quot;, 636], [&quot;your&quot;, 597], [&quot;ys&quot;, 556], [&quot;ying&quot;, 322], [&quot;years&quot;, 226], [&quot;yes&quot;, 214], [&quot;ything&quot;, 176], [&quot;ydia&quot;, 172], [&quot;yet&quot;, 163], [&quot;young&quot;, 144], [&quot;xt&quot;, 143], [&quot;ye&quot;, 137], [&quot;year&quot;, 124], [&quot;yself&quot;, 108], [&quot;zzy&quot;, 97], [&quot;yed&quot;, 82], [&quot;ybody&quot;, 77], [&quot;ylon&quot;, 75], [&quot;zed&quot;, 67], [&quot;ze&quot;, 64], [&quot;yourself&quot;, 60], [&quot;xpected&quot;, 58], [&quot;yton&quot;, 58], [&quot;yphon&quot;, 55], [&quot;xactly&quot;, 54], [&quot;yond&quot;, 54], [&quot;xed&quot;, 52], [&quot;yright&quot;, 48], [&quot;yone&quot;, 45]]</span>
-</code></pre></div>
-
+ <span class="c1">#&gt; [[&quot;you&quot;, 2071], [&quot;zabeth&quot;, 636], [&quot;your&quot;, 597], [&quot;ys&quot;, 556], [&quot;ying&quot;, 322], [&quot;years&quot;, 226], [&quot;yes&quot;, 214], [&quot;ything&quot;, 176], [&quot;ydia&quot;, 172], [&quot;yet&quot;, 163], [&quot;young&quot;, 144], [&quot;xt&quot;, 143], [&quot;ye&quot;, 137], [&quot;year&quot;, 124], [&quot;yself&quot;, 108], [&quot;zzy&quot;, 97], [&quot;yed&quot;, 82], [&quot;ybody&quot;, 77], [&quot;ylon&quot;, 75], [&quot;zed&quot;, 67], [&quot;ze&quot;, 64], [&quot;yourself&quot;, 60], [&quot;xpected&quot;, 58], [&quot;yton&quot;, 58], [&quot;yphon&quot;, 55], [&quot;xactly&quot;, 54], [&quot;yond&quot;, 54], [&quot;xed&quot;, 52], [&quot;yright&quot;, 48], [&quot;yone&quot;, 45]]</span></code></pre></div>
 
 <p>Singletonメソッドについては以下が参考になるかもしれません。</p>
 
@@ -262,15 +253,12 @@
 
 <p>ここまで来るともう止まりません。はっきり言って2行目も気になります。</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span></code></pre></div>
 
-
-<h2>Version15</h2>
-
+<h2 id="version15">Version15</h2>
 <p>しかも頻出ワード辞書というのは汎用性がありそうです。make_freq_dicメソッドとしてArrayに定義しましょう。ええこれは明らかに行き過ぎです。Arrayに定義されるべきメソッドは、あらゆる種類の配列で使われうるメソッドのみを定義すべきです。でももうわたしにも止められないのです！</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Array</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
    <span class="k">def</span> <span class="nf">make_freq_dic</span>
      <span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
    <span class="k">end</span>
@@ -278,9 +266,7 @@
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
  <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">make_freq_dic</span>
- <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
 <p>すっきりです。ARGFから単語を取り出しWORDSで参照する、WORDSから頻出ワードを作ってDICTIONARYで参照する、DICTIONARYから頻出トップ30を取って出力する、１つのオブジェクトに１つのメソッド。さすがにもう気が済みました。わたしの暴走を許してくださりありがとうございます。</p>
 

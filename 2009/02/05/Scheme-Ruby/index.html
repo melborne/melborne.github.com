@@ -113,9 +113,9 @@
   
 
   
-    
-  
 
+  
+    
   
 
   
@@ -179,25 +179,22 @@
       </script>
     </div>
 
-    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
+    <p>引き続き「<a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a>」を使って
 今度はSchemeとRubyでのリストの操作を見ていこうと思います
 なおSchemeのコードは本書からの抜粋で
 説明は自分の要約です</p>
 
-<h2>リスト要素の参照</h2>
-
+<h2 id="section">リスト要素の参照</h2>
 <p>Schemeにはデータオブジェクトの並びを表現する
 リストというデータ構造がある
 リストはlist手続きで作ることができるが
 これはconsを入れ子にしたものと等価である</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span>
+<div class="highlight"><pre><code class="scheme"><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span>
  <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
  
  <span class="p">(</span><span class="nb">cons </span><span class="mi">1</span> <span class="p">(</span><span class="nb">cons </span><span class="mi">2</span> <span class="p">(</span><span class="nb">cons </span><span class="mi">3</span> <span class="p">(</span><span class="nb">cons </span><span class="mi">4</span> <span class="nv">nil</span><span class="p">))))</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span></code></pre></div>
 
 <p>だからconsを順にcdrダウンしていけば
 リストの各要素にアクセスできる
@@ -205,17 +202,15 @@
 リストのn番目の要素を返す手続きlist_refを定義する
 リストは0番から始まる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">list_ref</span> <span class="nv">items</span> <span class="nv">n</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">)</span>
-        <span class="p">(</span><span class="nf">list_ref</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">))))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">list_ref</span> <span class="nv">items</span> <span class="nv">n</span><span class="p">)</span>
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="mi">0</span><span class="p">)</span>
+ 		<span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">)</span>
+ 		<span class="p">(</span><span class="nf">list_ref</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">))))</span>
  
  <span class="p">(</span><span class="k">define </span><span class="nv">squares</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span> <span class="mi">25</span><span class="p">))</span>
  
  <span class="p">(</span><span class="nf">list_ref</span> <span class="nv">squares</span> <span class="mi">3</span><span class="p">)</span>
- <span class="mi">16</span>
-</code></pre></div>
-
+ <span class="mi">16</span></code></pre></div>
 
 <p>再帰を使ってリストをcdrダウンしていき
 nが0になったところでその第一要素をcarで返す</p>
@@ -224,7 +219,7 @@ nが0になったところでその第一要素をcarで返す</p>
 まずconsを定義しこれを使ってリストを定義する
 consの定義にはRubyのArrayクラスを使うのがよさそうだ</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">cons</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">cons</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
    <span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">]</span>
  <span class="k">end</span>
  
@@ -254,15 +249,13 @@ consの定義にはRubyのArrayクラスを使うのがよさそうだ</p>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">odds</span> <span class="o">=</span> <span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span> <span class="c1"># =&gt; [1, [3, [5, [7, nil]]]]</span>
-</code></pre></div>
-
+ <span class="n">odds</span> <span class="o">=</span> <span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span> <span class="c1"># =&gt; [1, [3, [5, [7, nil]]]]</span></code></pre></div>
 
 <p>consに基づいてリストが定義できれば
 schemeと同じアルゴリズムで
 list_refが定義できるはずだ</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">list_ref</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">list_ref</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span>
      <span class="n">car</span> <span class="n">items</span>
    <span class="k">else</span>
@@ -270,32 +263,27 @@ list_refが定義できるはずだ</p>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">list_ref</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 7</span>
-</code></pre></div>
+ <span class="n">list_ref</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 7</span></code></pre></div>
 
-
-<h2>リストの長さ</h2>
-
+<h2 id="section-1">リストの長さ</h2>
 <p>schemeに戻って
 リストの長さ(要素数)を返す手続きlengthを定義する</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">length </span><span class="nv">items</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
-        <span class="mi">0</span>
-        <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="p">(</span><span class="nb">length </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span>
-        
- <span class="p">(</span><span class="k">define </span><span class="nv">odds</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">7</span> <span class="mi">9</span><span class="p">))</span>     
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">length </span><span class="nv">items</span><span class="p">)</span>
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
+ 		<span class="mi">0</span>
+ 		<span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="p">(</span><span class="nb">length </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span>
+ 		
+ <span class="p">(</span><span class="k">define </span><span class="nv">odds</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">7</span> <span class="mi">9</span><span class="p">))</span>		
  <span class="p">(</span><span class="nb">length </span><span class="nv">odds</span><span class="p">)</span>
- <span class="mi">5</span>
-</code></pre></div>
-
+ <span class="mi">5</span></code></pre></div>
 
 <p>cdrダウンするたびに1カウントして
 第二要素がnilになったところで終了する</p>
 
 <p>Rubyでもlengthを定義しよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">items</span><span class="o">.</span><span class="n">nil?</span>
      <span class="mi">0</span>
    <span class="k">else</span>
@@ -303,23 +291,18 @@ list_refが定義できるはずだ</p>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">length</span><span class="p">(</span><span class="n">odds</span><span class="p">)</span> <span class="c1"># =&gt; 4</span>
-</code></pre></div>
+ <span class="n">length</span><span class="p">(</span><span class="n">odds</span><span class="p">)</span> <span class="c1"># =&gt; 4</span></code></pre></div>
 
-
-<h2>リストの結合</h2>
-
+<h2 id="section-2">リストの結合</h2>
 <p>次に2つのリストを結合する手続きappendを定義する</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">append </span><span class="nv">list1</span> <span class="nv">list2</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">list1</span><span class="p">)</span>
-        <span class="nv">list2</span>
-        <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">car </span><span class="nv">list1</span><span class="p">)</span> <span class="p">(</span><span class="nb">append </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">list1</span><span class="p">)</span> <span class="nv">list2</span><span class="p">))))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">append </span><span class="nv">list1</span> <span class="nv">list2</span><span class="p">)</span>
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">list1</span><span class="p">)</span>
+ 		<span class="nv">list2</span>
+ 		<span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">car </span><span class="nv">list1</span><span class="p">)</span> <span class="p">(</span><span class="nb">append </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">list1</span><span class="p">)</span> <span class="nv">list2</span><span class="p">))))</span>
  
  <span class="p">(</span><span class="nb">append </span><span class="nv">squares</span> <span class="nv">odds</span><span class="p">)</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span> <span class="mi">25</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">7</span> <span class="mi">9</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span> <span class="mi">25</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">7</span> <span class="mi">9</span><span class="p">)</span></code></pre></div>
 
 <p>list1をcdrダウンしていくたびに
 list1をcarして新たなpairをconsする
@@ -327,7 +310,7 @@ list1が空に達したらlist2を繋ぐ</p>
 
 <p>Rubyでもappendを定義しよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">list1</span><span class="o">.</span><span class="n">nil?</span>
      <span class="n">list2</span>
    <span class="k">else</span>
@@ -336,22 +319,17 @@ list1が空に達したらlist2を繋ぐ</p>
  <span class="k">end</span>
  
  <span class="n">squares</span> <span class="o">=</span> <span class="n">list</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span>
- <span class="n">append</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="n">squares</span><span class="p">)</span> <span class="c1"># =&gt; [1, [3, [5, [7, [1, [4, [9, [16, [25, nil]]]]]]]]]</span>
-</code></pre></div>
+ <span class="n">append</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="n">squares</span><span class="p">)</span> <span class="c1"># =&gt; [1, [3, [5, [7, [1, [4, [9, [16, [25, nil]]]]]]]]]</span></code></pre></div>
 
-
-<h2>リスト要素に手続きを作用させる</h2>
-
+<h2 id="section-3">リスト要素に手続きを作用させる</h2>
 <p>今度はリストの各要素に
 任意の手続きを作用させたリストを返す手続きmapを定義する</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">items</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
-        <span class="o">`</span><span class="p">()</span>
-        <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">proc</span> <span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">))</span>
-            <span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="nv">items</span><span class="p">)</span>
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
+ 		<span class="o">`</span><span class="p">()</span>
+ 		<span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">proc</span> <span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">))</span>
+ 			<span class="p">(</span><span class="nb">map </span><span class="nv">proc</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span></code></pre></div>
 
 <p>map手続きにはリストと共に手続きprocを渡し
 リストをcdrダウンしていくたびに
@@ -361,28 +339,24 @@ consして新たな要素を作る</p>
 <p>mapに渡す演算を変えることによって
 多様な結果が得られる</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nb">map </span><span class="nv">abs</span> <span class="p">(</span><span class="nb">list </span><span class="mi">-10</span> <span class="mf">2.5</span> <span class="mf">-11.6</span> <span class="mi">17</span><span class="p">))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="nb">map </span><span class="nv">abs</span> <span class="p">(</span><span class="nb">list </span><span class="mi">-10</span> <span class="mf">2.5</span> <span class="mf">-11.6</span> <span class="mi">17</span><span class="p">))</span>
  <span class="p">(</span><span class="mi">10</span> <span class="mf">2.5</span> <span class="mf">11.6</span> <span class="mi">17</span><span class="p">)</span>
  
  <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
-        <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span><span class="p">)</span>
-</code></pre></div>
-
+ 		<span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span><span class="p">)</span></code></pre></div>
 
 <p>これを使って新たな演算を定義してもいい</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">scale_list</span> <span class="nv">items</span><span class="p">)</span>
-    <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
-         <span class="nv">items</span><span class="p">))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">scale_list</span> <span class="nv">items</span><span class="p">)</span>
+ 	<span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+ 		 <span class="nv">items</span><span class="p">))</span>
  <span class="p">(</span><span class="nf">square_list</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
- <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span><span class="p">)</span>
-</code></pre></div>
-
+ <span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">16</span><span class="p">)</span></code></pre></div>
 
 <p>次にRubyでもmapを定義しよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">items</span><span class="o">.</span><span class="n">nil?</span>
      <span class="kp">nil</span>
    <span class="k">else</span>
@@ -396,48 +370,39 @@ consして新たな要素を作る</p>
    <span class="n">map</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="p">},</span> <span class="n">items</span><span class="p">)</span>
  <span class="k">end</span>
  
- <span class="n">scale_list</span> <span class="n">odds</span> <span class="c1"># =&gt; [1, [9, [25, [49, nil]]]]</span>
-</code></pre></div>
+ <span class="n">scale_list</span> <span class="n">odds</span> <span class="c1"># =&gt; [1, [9, [25, [49, nil]]]]</span></code></pre></div>
 
-
-<h2>treeに対する演算</h2>
-
+<h2 id="tree">treeに対する演算</h2>
 <p>並びはその要素自身が並びである階層構造を許す</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
- <span class="p">((</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
-</code></pre></div>
-
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+ <span class="p">((</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span></code></pre></div>
 
 <p>これは再帰的に枝分かれしていくtreeの構造を表現する
 ここで先のlength手続きを適用した場合
 先端の葉の部分までは数え上げてくれない</p>
 
-<div class="highlight"><pre><code class="scheme"> <span class="p">(</span><span class="k">define </span><span class="nv">tree</span> <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">)))</span>
+<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="nv">tree</span> <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">)))</span>
  
  <span class="p">(</span><span class="nb">length </span><span class="nv">tree</span><span class="p">)</span>
- <span class="mi">3</span>
-</code></pre></div>
-
+ <span class="mi">3</span></code></pre></div>
 
 <p>葉を数える手続きcount_leavesを定義しよう</p>
 
 <div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">count_leaves</span> <span class="nv">tree</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">null? </span><span class="nv">tree</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
-          <span class="p">((</span><span class="nb">not </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">tree</span><span class="p">))</span> <span class="mi">1</span><span class="p">)</span>
-          <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">count_leaves</span> <span class="p">(</span><span class="nb">car </span><span class="nv">tree</span><span class="p">))</span>
-                   <span class="p">(</span><span class="nf">count_leaves</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">tree</span><span class="p">))))))</span>
+ 	<span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">null? </span><span class="nv">tree</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+ 		  <span class="p">((</span><span class="nb">not </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">tree</span><span class="p">))</span> <span class="mi">1</span><span class="p">)</span>
+ 		  <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">count_leaves</span> <span class="p">(</span><span class="nb">car </span><span class="nv">tree</span><span class="p">))</span>
+ 				   <span class="p">(</span><span class="nf">count_leaves</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">tree</span><span class="p">))))))</span>
  
  <span class="p">(</span><span class="nf">count_leaves</span> <span class="nv">tree</span><span class="p">)</span>
  <span class="mi">4</span>
  
  <span class="c1">;length手続き</span>
  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">length </span><span class="nv">items</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
-        <span class="mi">0</span>
-        <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="p">(</span><span class="nb">length </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span>
-</code></pre></div>
-
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
+ 		<span class="mi">0</span>
+ 		<span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="p">(</span><span class="nb">length </span><span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)))))</span></code></pre></div>
 
 <p>length手続きと比べると分かるが
 treeをcdrダウンするときに
@@ -448,7 +413,7 @@ treeをcdrダウンするときに
 <p>Rubyでもcount_leavesを定義しよう
 その前にpair?メソッドを定義する</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">pair?</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">pair?</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
    <span class="k">case</span> <span class="n">items</span>
    <span class="k">when</span> <span class="nb">Array</span>
      <span class="kp">true</span>
@@ -466,9 +431,7 @@ treeをcdrダウンするときに
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="n">count_leaves</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># =&gt; 7</span>
-</code></pre></div>
-
+ <span class="n">count_leaves</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># =&gt; 7</span></code></pre></div>
 
 <p>うまくいった</p>
 
@@ -476,23 +439,21 @@ treeをcdrダウンするときに
 先のscale_listもtreeに対応させよう</p>
 
 <div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">scale_tree</span> <span class="nv">tree</span> <span class="nv">factor</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">null? </span><span class="nv">tree</span><span class="p">)</span> <span class="o">`</span><span class="p">())</span>
-          <span class="p">((</span><span class="nb">not </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">tree</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">tree</span> <span class="nv">factor</span><span class="p">))</span>
-          <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">scale_tree</span> <span class="p">(</span><span class="nb">car </span><span class="nv">tree</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)</span>
-                      <span class="p">(</span><span class="nf">scale_tree</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">tree</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)))))</span>
-                    
+ 	<span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">null? </span><span class="nv">tree</span><span class="p">)</span> <span class="o">`</span><span class="p">())</span>
+ 		  <span class="p">((</span><span class="nb">not </span><span class="p">(</span><span class="nb">pair? </span><span class="nv">tree</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">tree</span> <span class="nv">factor</span><span class="p">))</span>
+ 		  <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nf">scale_tree</span> <span class="p">(</span><span class="nb">car </span><span class="nv">tree</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)</span>
+ 					  <span class="p">(</span><span class="nf">scale_tree</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">tree</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)))))</span>
+ 					
  <span class="p">(</span><span class="nf">scale_tree</span> <span class="p">(</span><span class="nb">list </span><span class="mi">1</span> <span class="p">(</span><span class="nb">list </span><span class="mi">2</span> <span class="p">(</span><span class="nb">list </span><span class="mi">3</span> <span class="mi">4</span><span class="p">)</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="mi">6</span> <span class="mi">7</span><span class="p">))</span>
-               <span class="mi">10</span><span class="p">)</span>
+ 			   <span class="mi">10</span><span class="p">)</span>
  <span class="p">(</span><span class="mi">10</span> <span class="p">(</span><span class="mi">20</span> <span class="p">(</span><span class="mi">30</span> <span class="mi">40</span><span class="p">)</span> <span class="mi">50</span><span class="p">)</span> <span class="p">(</span><span class="mi">60</span> <span class="mi">70</span><span class="p">))</span>
  
  <span class="c1">;scale_list手続き</span>
  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">scale_list</span> <span class="nv">items</span> <span class="nv">factor</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
-        <span class="o">`</span><span class="p">()</span>
-        <span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)</span>
-              <span class="p">(</span><span class="nf">scale_list</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)</span> <span class="nv">factor</span><span class="p">))))</span>
-</code></pre></div>
-
+ 	<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">null? </span><span class="nv">items</span><span class="p">)</span>
+ 		<span class="o">`</span><span class="p">()</span>
+ 		<span class="p">(</span><span class="nb">cons </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">car </span><span class="nv">items</span><span class="p">)</span> <span class="nv">factor</span><span class="p">)</span>
+ 			  <span class="p">(</span><span class="nf">scale_list</span> <span class="p">(</span><span class="nb">cdr </span><span class="nv">items</span><span class="p">)</span> <span class="nv">factor</span><span class="p">))))</span></code></pre></div>
 
 <p>scale_listとの違いはcdrダウンするときに
 listの第一要素とfactorを直ぐに掛けず
@@ -500,7 +461,7 @@ carダウンして葉に至ったところでfactorを作用させる点であ�
 
 <p>Rubyでも同じようにやってみよう</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">scale_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">scale_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
    <span class="k">case</span> 
    <span class="k">when</span> <span class="n">tree</span><span class="o">.</span><span class="n">nil?</span> <span class="k">then</span> <span class="kp">nil</span>
    <span class="k">when</span> <span class="o">!</span><span class="n">pair?</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span> <span class="k">then</span> <span class="n">tree</span> <span class="o">*</span> <span class="n">factor</span>
@@ -509,16 +470,13 @@ carダウンして葉に至ったところでfactorを作用させる点であ�
    <span class="k">end</span>
  <span class="k">end</span>
  <span class="n">l</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">list</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">list</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="n">list</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span> <span class="c1"># =&gt; [1, [[2, [[3, [4, nil]], [5, nil]]], [[6, [7, nil]], nil]]]</span>
- <span class="n">scale_tree</span> <span class="n">l</span><span class="p">,</span> <span class="mi">10</span> <span class="c1"># =&gt; [10, [[20, [[30, [40, nil]], [50, nil]]], [[60, [70, nil]], nil]]]</span>
-</code></pre></div>
+ <span class="n">scale_tree</span> <span class="n">l</span><span class="p">,</span> <span class="mi">10</span> <span class="c1"># =&gt; [10, [[20, [[30, [40, nil]], [50, nil]]], [[60, [70, nil]], nil]]]</span></code></pre></div>
 
-
-<h2>Listクラスを定義する</h2>
-
+<h2 id="list">Listクラスを定義する</h2>
 <p>Rubyではリストをオブジェクトしたバージョンも書いてみる
 Arrayクラスを継承してListクラスを定義する</p>
 
-<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
    <span class="k">def</span> <span class="nf">list_ref</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
      <span class="nb">self</span><span class="o">[</span><span class="n">n</span><span class="o">]</span>
    <span class="k">end</span>
@@ -581,16 +539,14 @@ Arrayクラスを継承してListクラスを定義する</p>
  <span class="n">tree</span> <span class="o">=</span> <span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="no">List</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span> <span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="o">]</span><span class="p">,</span> <span class="mi">5</span><span class="o">]</span><span class="p">,</span> <span class="no">List</span><span class="o">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="o">]]</span> <span class="c1"># =&gt; [1, [2, [3, 4], 5], [6, 7]]</span>
  
  <span class="n">tree</span><span class="o">.</span><span class="n">count_leaves</span> <span class="c1"># =&gt; 7</span>
- <span class="n">tree</span><span class="o">.</span><span class="n">map_tree</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, [4, [9, 16], 25], [36, 49]]</span>
-</code></pre></div>
-
+ <span class="n">tree</span><span class="o">.</span><span class="n">map_tree</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, [4, [9, 16], 25], [36, 49]]</span></code></pre></div>
 
 <p>injectを使うのはちょっとずるっぽいけど
 まあいいか</p>
 
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
 
-<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&tag=keyesblog05-22&linkCode=xm2&camp=2025&creative=165953&creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
+<p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X">計算機プログラムの構造と解釈</a></p>
 
 <p>ジェラルド・ジェイ サスマン, ジュリー サスマン, and ハロルド エイブルソン</p>
 
