@@ -21,9 +21,217 @@ published: true
 
 > [Liana Leahy (lleahy) on Twitter](https://twitter.com/lleahy "Liana Leahy (lleahy) on Twitter")
 
+感動したので歌詞の日本語訳をしてみました。雰囲気が伝わればと。
+
+> (追記：2014-5-13) 対訳版を追加しました。
+
+## Let Me Code Lyrics 対訳版
+
+    PCスクリーンが　白く光る夜
+    The screen glows white on my laptop tonight  (Let Me Code)
+    The snow glows white on the mountain tonight (Let It Go)
+
+    RSpecは　グリーンにならない
+    And my rspec won't go green
+    Not a footprint to be seen.
+
+    私は一人ぼっちで　コーディングしている
+    I'm coding in isolation,
+    A kingdom of isolation,
+
+    だから　私のプルリクは行儀が悪いの
+    So my PRs are obscene
+    and it looks like I'm the Queen
+
+    疑心暗鬼が叫んでる　内なる渦巻く嵐のように
+    My doubts are howling like this swirling storm inside
+    The wind is howling like this swirling storm inside
+
+    もう　抑えることができないの
+    Couldn't keep it in;
+    Couldn't keep it in;
+
+    神様は　私が頑張ったこと知っている
+    Heaven knows I've tried
+    Heaven knows I've tried
+
+    
+    誰も入れてはだめ
+    Don't let them in,
+    Don't let them in,
+
+    誰に見せてもだめ
+    don't let them see
+    don't let them see
+
+    私のGithubレポは　私を落ち込ませる
+    my github repos are mortifying me
+    Be the good girl you always have to be
+
+    隠さなくちゃ　感情さえも
+    Conceal, don't feel,
+    Conceal, don't feel,
+
+    知られちゃだめ
+    don't let them know
+    don't let them know
+
+
+    でも　もうみんな知っているの！
+    Well now they know
+    Well now they know
+    
+    
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    もう　隠すことなんてできない
+    Can't hold it back anymore
+    Can't hold it back anymore
+
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    私はRails4.0.4と　戯れていたいの
+    I want to play with rails 4.0.4
+    Turn away and slam the door
+
+    彼らが言うことなんて　もう気にしない
+    I don't care
+    what they're going to say
+    I don't care
+    what they're going to say
+
+    モヒカンには　言わせておくわ
+    Let the nerds rage on.
+    Let the storm rage on.
+    
+
+    そうよ　荒らしなんて
+    気にしたことなかったんだから！
+    The trolls never bothered me anyway
+    The cold never bothered me anyway
+    
+    
+    笑っちゃうわ　離れてみれば
+    It's funny how some distance
+    It's funny how some distance
+
+    すべてが小さく見えるの
+    Makes everything seem small
+    Makes everything seem small
+
+    自信喪失症候群が
+    And the impostor syndrome
+    And the fears that once controlled me
+
+    もう私を苦しめることはないわ
+    Can't get to me at all
+    Can't get to me at all
+    
+
+    私に何ができるか　試す時がきたの
+    It's time to see what I can do
+    It's time to see what I can do
+
+    限界に挑んで　それを超えるのよ
+    To test the limits and break through
+    To test the limits and break through
+
+    私には正しいとか　間違ってるとか
+    Sandiの教えとかも　いらないのよ
+    No right, no wrong, Sandi's rules for me,
+    No right, no wrong, no rules for me,
+
+    私は　自由なの！
+    I'm free!
+    I'm free!
+    
+
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    Matzが私の好みなの
+    Matz is my favorite guy
+    I am one with the wind and sky
+
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    DHHに私の嘆きは見せないわ
+    DHH will never see me cry
+    You'll never see me cry
+
+    ここが私の居場所
+    Here I stand
+    Here I stand
+
+    そしてこれからもそう
+    And here I'll stay
+    And here I'll stay
+
+    モヒカンは言ってなさいよ
+    Let the nerds rage on
+    Let the storm rage on
+    
+    私のSQLクエリは　見つけたデータをフェッチする
+    My SQL queries fetching data that it found
+    My power flurries through the air into the ground
+
+    Rubyを使って 一面の凍ったフラクタルを描くの
+    I'm using ruby to draw frozen fractals all around
+    My soul is spiraling in frozen fractals all around
+
+    そして想いは 氷の矢のように確かなものになるの
+    And one thought's solidifying like an icy blast
+    And one thought crystallizes like an icy blast
+
+    もう戻らないわ　過去は過ぎ去ったのよ
+    I'm never going back, the past is in the past
+    I'm never going back, the past is in the past
+    
+
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    立ち上がるときよ　日が昇るように
+    When I'll rise like the break of dawn
+    And I'll rise like the break of dawn
+
+    ありのままに　コードを書けばいいの
+    Let me code, let me code
+    Let it go, let it go
+
+    完璧な女子なんていない
+    That perfect girl is gone
+    That perfect girl is gone
+
+    私はここにいる
+    Here I stand
+    Here I stand
+
+    作ったばかりのアプリと共に
+    With the apps I've made
+    In the light of day
+
+    モヒカンには　言わせておけばいいわ
+    Let the nerds rage on
+    Let the storm rage on
+
+    
+    そうよ　荒らしなんて
+    気にしたことなかったんだから！
+    The trolls never bothered me anyway!
+    The cold never bothered me anyway!
+    
+
 ## Let Me Code 歌詞
 
-感動したので歌詞の日本語訳をしてみました。訳に自信はないのですが、雰囲気が伝わればと（誤訳の指摘助かります）。
 
     PCスクリーンが　白く光る夜
     RSpecは　グリーンにならない
