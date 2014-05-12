@@ -215,6 +215,8 @@ Let Me Codeの歌詞はオリジナルLet It Goのパロディになっている
 
 併せて、「[let_it_fall](https://rubygems.org/gems/let_it_fall "let_it_fall")」もよろしくね！
 
+> [(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！](http://melborne.github.io/2014/05/12/letitfall-is-not-letitgo/ "(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！")
+>
 > [Macのターミナルで〇〇が降る](http://melborne.github.io/2014/05/01/let-it-fall-in-the-mac-terminal/ "Macのターミナルで〇〇が降る")
 
 ---
