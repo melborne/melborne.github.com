@@ -193,24 +193,24 @@
 <p>一見問題無さそうな以下のコードにはバグがあります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-  <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+  <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
     <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">init</span><span class="p">;</span> <span class="n">init</span> <span class="o">+=</span> <span class="n">step</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span></code></pre></div>
 
 <p>これは<code>Numeric#step</code>を使った以下のコードと同じ挙動を期待したものですが、実は正しく動作しないんです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">odd</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">odd</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span></code></pre></div>
 
 <p>バグがどこだか分かりますか？</p>
 
@@ -242,46 +242,46 @@
 <p>まず、先の<code>step</code>メソッドで<code>rewind</code>すると、バグがあることがわかります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-  <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+  <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
     <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">init</span><span class="p">;</span> <span class="n">init</span> <span class="o">+=</span> <span class="n">step</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">rewind</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 7</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">rewind</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 7</span></code></pre></div>
 
 <p>そう、rewindしないんです。今度は<code>take</code>してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [5, 7, 9]</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 11</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 13</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [5, 7, 9]</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 11</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 13</span></code></pre></div>
 
 <p>takeの開始位置がオブジェクトの先頭ではなく現在のカーソル位置から始まり、次のnextがtakeの次の値になっています。本来は次のようにならなければいけません。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 7</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 9</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 7</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 9</span></code></pre></div>
 
 <p>このバグは<code>init</code>の値をEnumeratorのブロック内で一旦受けてループに渡すことで解消できます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-  <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+  <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
     <span class="n">current</span> <span class="o">=</span> <span class="n">init</span>
     <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">current</span><span class="p">;</span> <span class="n">current</span> <span class="o">+=</span> <span class="n">step</span> <span class="p">}</span>
   <span class="k">end</span>
@@ -289,15 +289,15 @@
 
 <span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 7</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 9</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">rewind</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-<span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span></code></pre></div>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 7</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 9</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">rewind</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+<span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span></code></pre></div>
 
 <p>このバグは、rewindやtake（eachに依存するメソッド）を呼ぶと、Enumerator生成時に渡したブロックがその度にcallされることにより起きます。つまりrewindやtakeしたときに、ブロック変数yで参照されるyielderオブジェクトには、最初に渡された初期値ではなく、イテレーションの最後の値が与えられてしまうのです。</p>
 
@@ -312,23 +312,23 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Enu</span>
   <span class="kp">include</span> <span class="no">Enumerable</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="kp">nil</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="vi">@obj</span> <span class="o">=</span> <span class="n">obj</span> <span class="o">||</span> <span class="no">Generator</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="vi">@obj</span> <span class="o">=</span> <span class="n">obj</span> <span class="o">||</span> <span class="no">Generator</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">reset</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="vi">@obj</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="vi">@obj</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
   <span class="k">end</span>
   
   <span class="k">def</span> <span class="nf">reset</span>
-    <span class="vi">@fiber</span> <span class="o">=</span> <span class="no">Fiber</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span>
-      <span class="vi">@obj</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="no">Fiber</span><span class="o">.</span><span class="n">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
-      <span class="k">raise</span> <span class="no">StopIteration</span><span class="p">,</span> <span class="s2">&quot;iteration has ended&quot;</span>
+    <span class="vi">@fiber</span> <span class="o">=</span> <span class="no">Fiber</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span>
+      <span class="vi">@obj</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="no">Fiber</span><span class="p">.</span><span class="nf">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">raise</span> <span class="no">StopIteration</span><span class="p">,</span> <span class="s2">"iteration has ended"</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">next</span>
-    <span class="vi">@fiber</span><span class="o">.</span><span class="n">resume</span>
+    <span class="vi">@fiber</span><span class="p">.</span><span class="nf">resume</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">rewind</span>
@@ -352,14 +352,14 @@
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-      <span class="vi">@proc</span><span class="o">[</span><span class="no">Yielder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span><span class="o">]</span>
+      <span class="vi">@proc</span><span class="o">[</span><span class="no">Yielder</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span><span class="o">]</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
+<span class="k">if</span> <span class="kp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="no">Enu</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+    <span class="no">Enu</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
       <span class="n">current</span> <span class="o">=</span> <span class="n">init</span>
       <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">current</span><span class="p">;</span> <span class="n">current</span> <span class="o">+=</span> <span class="n">step</span> <span class="p">}</span>
     <span class="k">end</span>
@@ -367,15 +367,15 @@
 
   <span class="n">odd</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 5</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 7</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 9</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">rewind</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 1</span>
-  <span class="n">odd</span><span class="o">.</span><span class="n">next</span> <span class="c1"># =&gt; 3</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 5</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 5]</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 7</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 9</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">rewind</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 1</span>
+  <span class="n">odd</span><span class="p">.</span><span class="nf">next</span> <span class="c1"># =&gt; 3</span>
 <span class="k">end</span></code></pre></div>
 
 <p>ブロックの呼び出し関係がちょっと複雑ですが、Enumerator.newにブロックが渡されたときには、そのブロック引数yにyielderオブジェクトをセットし、ブロック内の<code>Yielder#&lt;&lt;</code>でFiber.yield（Fiberを生成するEnu#reset内で実装）が呼ばれるようになります。そしてrewindしたときはresetが呼ばれその中でGenerator#eachが起動されます。またtakeしたときはEnu#eachを介してやはりGenerator#eachが起動されます。Generator#eachはyielderを引数としてEnuに渡したブロックをcallするのです。</p>

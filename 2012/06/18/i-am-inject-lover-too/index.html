@@ -195,7 +195,7 @@
 <h2 id="inject">injectの動作</h2>
 <p>まずは<code>inject</code>の動作を確認します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
 
 <p>配列の各数を足し合わせた結果を返す例です。ブロックには、ブロックの実行結果をその都度指す変数mと配列の各要素を順番に指す変数xが渡されます。変数mの初期値はinjectの引数です。つまり上の例でブロックの実行は<code>m = m + x</code>のループと等価です。そしてxが5を指して最後のブロックの実行が終わるとその結果、つまり変数mが指すものをinjectの返り値として出力します。</p>
 
@@ -203,7 +203,7 @@
 
 <p>Rubyのinjectは引数を省略することができ、その場合、配列の先頭要素を変数mにセットし、第２要素からイテレーションを始めます。よって次のコードは先のコードと同じ結果を返します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">inject</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
 
 <h2 id="section">実装ターゲット</h2>
 <p>ここではArray（Enumerableを含む）が持っている次の29個の便利なメソッドを、injectを使って再実装してみます。</p>
@@ -217,10 +217,10 @@
   <span class="n">undef_method</span> <span class="o">*</span><span class="sx">%w(inject map size at index select reject detect all? any? one? none? min max minmax take_while grep include? partition group_by count join assoc zip reverse values_at compact take flat_map product)</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; </span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">}</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:5:in `&lt;main&gt;&#39;: undefined method `inject&#39; for [1, 2, 3, 4, 5]:List (NoMethodError)</span>
-<span class="c1"># ~&gt; -:6:in `&lt;main&gt;&#39;: undefined method `map&#39; for [1, 2, 3, 4, 5]:List (NoMethodError)</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; </span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">}</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:5:in `&lt;main&gt;': undefined method `inject' for [1, 2, 3, 4, 5]:List (NoMethodError)</span>
+<span class="c1"># ~&gt; -:6:in `&lt;main&gt;': undefined method `map' for [1, 2, 3, 4, 5]:List (NoMethodError)</span></code></pre></div>
 
 <h2 id="inject-1">injectの実装</h2>
 <p>injectも共にundefしたので、まずは再帰を使ってinjectを実装します。</p>
@@ -228,11 +228,11 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">inject</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">m</span> <span class="k">if</span> <span class="n">empty?</span>
-    <span class="p">(</span><span class="n">drop</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span> <span class="k">yield</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">first</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">drop</span> <span class="mi">1</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span> <span class="k">yield</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">first</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; 15</span></code></pre></div>
 
 <p>injectの一行目は、配列の要素が全て処理されたら変数mが指すものを返して処理を終えるコードです。二行目が再帰になっていて、<code>drop 1</code>が配列の先頭要素を除いたものに対して再度injectを呼び出すコードです。ここでの第１引数は、変数mと配列の最初の要素に対するブロックの実行結果になります。</p>
 
@@ -245,7 +245,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span></code></pre></div>
 
 <p>injectの引数に空配列<code>[]</code>を渡します。そしてブロックではmapに渡したブロックを実行した結果を変数mつまり配列に挿入していきます。</p>
 
@@ -258,7 +258,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">size</span> <span class="c1"># =&gt; 5</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">size</span> <span class="c1"># =&gt; 5</span></code></pre></div>
 
 <p>injectの引数を0とし、ブロック実行毎に1を加算していきます。つまり変数mをカウンタとして使います。</p>
 
@@ -275,7 +275,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 4</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 4</span></code></pre></div>
 
 <p>sizeと同様に変数mをカウンタとして使い、atの引数posと一致したところの要素xを返すようにします。posが配列要素数より多い場合にnilが変えるようにします。</p>
 
@@ -292,7 +292,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">index</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 2</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 2</span></code></pre></div>
 
 <p>atとほぼ同じですが、返り値が位置を指す変数mを返すところが違います。</p>
 
@@ -301,14 +301,14 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
     <span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span>
-      <span class="k">return</span> <span class="n">m</span> <span class="k">if</span> <span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">nil?</span> <span class="o">&amp;&amp;</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">:</span> <span class="n">x</span><span class="o">==</span><span class="n">val</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">m</span> <span class="k">if</span> <span class="p">(</span><span class="n">val</span><span class="p">.</span><span class="nf">nil?</span> <span class="o">&amp;&amp;</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">:</span> <span class="n">x</span><span class="o">==</span><span class="n">val</span><span class="p">)</span>
       <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="k">end</span>
     <span class="kp">nil</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">index</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; 1</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">index</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; 1</span></code></pre></div>
 
 <p>if式の条件だけを変えます。block_given?でブロックがあるか判定します。</p>
 
@@ -321,7 +321,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">odd?</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 3, 5]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">odd?</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 3, 5]</span></code></pre></div>
 
 <p>ブロックの実行結果が真のときだけ変数mが指す配列に要素を追加していきます。偽のときはブロックの結果がnilになってしまうので、最後にmを置いてそれが返るようにします。</p>
 
@@ -334,7 +334,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">odd?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">odd?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4]</span></code></pre></div>
 
 <p>ifがunlessになるだけです。</p>
 
@@ -350,7 +350,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; 2</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; 2</span></code></pre></div>
 
 <p>yield(x)が真になる要素xがあったときそれを返します。injectの引数をnilとして該当がないときnilが返るようにします。</p>
 
@@ -363,8 +363,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="o">].</span><span class="n">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="o">]</span><span class="p">.</span><span class="nf">all?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p>injectの引数にtrueを渡しブロックの実行結果と&amp;&amp;します。</p>
 
@@ -377,8 +377,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">].</span><span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">.</span><span class="nf">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span></code></pre></div>
 
 <table>
   <tbody>
@@ -399,8 +399,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">one?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">].</span><span class="n">one?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">one?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">.</span><span class="nf">one?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p>変数mで真になる数を数えて、最後に1と比較します。</p>
 
@@ -413,8 +413,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">none?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">].</span><span class="n">none?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">none?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; false</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">.</span><span class="nf">none?</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p>変数mで真になる数を数えて、最後に0と比較します。</p>
 
@@ -427,7 +427,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">].</span><span class="n">min</span> <span class="c1"># =&gt; 2</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">.</span><span class="nf">min</span> <span class="c1"># =&gt; 2</span></code></pre></div>
 
 <p>変数mに最初は先頭値をセットし、それよりも大きい要素が現れたら変数mの参照先を変えることで最小値を探します。</p>
 
@@ -443,7 +443,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="s1">&#39;haskell&#39;</span><span class="o">].</span><span class="n">min</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;ruby&quot;</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'python'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="p">,</span> <span class="s1">'haskell'</span><span class="o">]</span><span class="p">.</span><span class="nf">min</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; "ruby"</span></code></pre></div>
 
 <h2 id="max">13. max</h2>
 <p>最大値を返す<code>max</code>を実装します。</p>
@@ -458,8 +458,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">].</span><span class="n">max</span> <span class="c1"># =&gt; 8</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="s1">&#39;haskell&#39;</span><span class="o">].</span><span class="n">max</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;haskell&quot;</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">.</span><span class="nf">max</span> <span class="c1"># =&gt; 8</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'python'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="p">,</span> <span class="s1">'haskell'</span><span class="o">]</span><span class="p">.</span><span class="nf">max</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; "haskell"</span></code></pre></div>
 
 <h2 id="minmax">14. minmax</h2>
 <p>最大値と最小値を返す<code>minmax</code>を実装します。</p>
@@ -470,8 +470,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">].</span><span class="n">minmax</span> <span class="c1"># =&gt; [2, 8]</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="s1">&#39;haskell&#39;</span><span class="o">].</span><span class="n">minmax</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;ruby&quot;, &quot;haskell&quot;]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">.</span><span class="nf">minmax</span> <span class="c1"># =&gt; [2, 8]</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'python'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="p">,</span> <span class="s1">'haskell'</span><span class="o">]</span><span class="p">.</span><span class="nf">minmax</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; ["ruby", "haskell"]</span></code></pre></div>
 
 <p>既に実装したminとmaxを使います。</p>
 
@@ -487,7 +487,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">take_while</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
 
 <p>変数mに順次要素を入れていき、ブロックの実行結果が偽となったところで返します。</p>
 
@@ -507,7 +507,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;acb&#39;</span><span class="p">,</span> <span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="o">].</span><span class="n">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;abc&quot;, &quot;bcc&quot;, &quot;bbc&quot;]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'abc'</span><span class="p">,</span> <span class="s1">'acb'</span><span class="p">,</span> <span class="s1">'bcc'</span><span class="p">,</span> <span class="s1">'bbc'</span><span class="p">,</span> <span class="s1">'bbb'</span><span class="o">]</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="c1"># =&gt; ["abc", "bcc", "bbc"]</span></code></pre></div>
 
 <p>case式でpatternにマッチするか検査します。</p>
 
@@ -526,8 +526,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;acb&#39;</span><span class="p">,</span> <span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="o">].</span><span class="n">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;abc&quot;, &quot;bcc&quot;, &quot;bbc&quot;]</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;acb&#39;</span><span class="p">,</span> <span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbc&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="o">].</span><span class="n">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;ABC&quot;, &quot;BCC&quot;, &quot;BBC&quot;]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'abc'</span><span class="p">,</span> <span class="s1">'acb'</span><span class="p">,</span> <span class="s1">'bcc'</span><span class="p">,</span> <span class="s1">'bbc'</span><span class="p">,</span> <span class="s1">'bbb'</span><span class="o">]</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="c1"># =&gt; ["abc", "bcc", "bbc"]</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'abc'</span><span class="p">,</span> <span class="s1">'acb'</span><span class="p">,</span> <span class="s1">'bcc'</span><span class="p">,</span> <span class="s1">'bbc'</span><span class="p">,</span> <span class="s1">'bbb'</span><span class="o">]</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="sr">/c$/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; ["ABC", "BCC", "BBC"]</span></code></pre></div>
 
 <h2 id="include">17. include?</h2>
 <p>渡した要素と等しい要素が配列内にあるか調べる<code>include?</code>を実装します。</p>
@@ -541,7 +541,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;haskell&#39;</span><span class="o">].</span><span class="n">include?</span><span class="p">(</span><span class="s1">&#39;haskell&#39;</span><span class="p">)</span> <span class="c1"># =&gt; true</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'ruby'</span><span class="p">,</span> <span class="s1">'python'</span><span class="p">,</span> <span class="s1">'haskell'</span><span class="o">]</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s1">'haskell'</span><span class="p">)</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p><code>x == val</code>で一致する要素があったらtrueを返して処理を終えます。</p>
 
@@ -554,7 +554,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; [[1, 2, 0], [3, 5, 4]]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; [[1, 2, 0], [3, 5, 4]]</span></code></pre></div>
 
 <p>変数mが<code>[[],[]]</code>を指すようにし、ブロックの実行結果に応じて要素xの挿入先を変えます。</p>
 
@@ -567,7 +567,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">%</span><span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; {0=&gt;[3, 0], 2=&gt;[5, 2], 1=&gt;[1, 4]}</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">%</span><span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; {0=&gt;[3, 0], 2=&gt;[5, 2], 1=&gt;[1, 4]}</span></code></pre></div>
 
 <p>変数mが<code>{}</code>を指すようにし、ブロックの実行結果をキーとして要素xを挿入していきます。</p>
 
@@ -580,7 +580,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span></code></pre></div>
 
 <p>引数valに一致する要素があるときに変数mを増分します。</p>
 
@@ -599,8 +599,8 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span> <span class="c1"># =&gt; 10</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span> <span class="c1"># =&gt; 10</span></code></pre></div>
 
 <p>更に、ブロックが渡されたときはその条件に一致する要素数を返す機能も実装します。</p>
 
@@ -610,7 +610,7 @@
       <span class="k">case</span> 
       <span class="k">when</span> <span class="n">val</span>
         <span class="n">x</span><span class="o">==</span><span class="n">val</span> <span class="p">?</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">m</span>
-      <span class="k">when</span> <span class="n">val</span><span class="o">.</span><span class="n">nil?</span> <span class="o">&amp;&amp;</span> <span class="nb">block_given?</span>
+      <span class="k">when</span> <span class="n">val</span><span class="p">.</span><span class="nf">nil?</span> <span class="o">&amp;&amp;</span> <span class="nb">block_given?</span>
         <span class="k">yield</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">?</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">m</span>
       <span class="k">else</span>
         <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
@@ -619,9 +619,9 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span> <span class="c1"># =&gt; 10</span>
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">].</span><span class="n">count</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; 2</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span> <span class="c1"># =&gt; 10</span>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="nf">count</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="p">}</span> <span class="c1"># =&gt; 2</span></code></pre></div>
 
 <p>ブロックを渡されたときのwhen節を追加します。</p>
 
@@ -630,11 +630,11 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">join</span>
-    <span class="n">inject</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span>  <span class="p">}</span>
+    <span class="n">inject</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span>  <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span> <span class="c1"># =&gt; &quot;helloworldofinject&quot;</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span> <span class="c1"># =&gt; "helloworldofinject"</span></code></pre></div>
 
 <p>String#+で空の文字列に要素を足していきます。</p>
 
@@ -642,26 +642,26 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">inject</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
-    <span class="n">sep</span> <span class="p">?</span> <span class="n">s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">sep</span><span class="si">}</span><span class="sr">$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="n">s</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">inject</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="s2">"</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
+    <span class="n">sep</span> <span class="p">?</span> <span class="n">s</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">sep</span><span class="si">}</span><span class="sr">$/</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span> <span class="p">:</span> <span class="n">s</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span> <span class="c1"># =&gt; &quot;helloworldofinject&quot;</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;hello-world-of-inject&quot;</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span> <span class="c1"># =&gt; "helloworldofinject"</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)</span> <span class="c1"># =&gt; "hello-world-of-inject"</span></code></pre></div>
 
 <p>ついでにブロックも取れるようにします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">inject</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="p">(</span><span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">sep</span> <span class="p">?</span> <span class="n">s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">sep</span><span class="si">}</span><span class="sr">$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="n">s</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">inject</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="p">(</span><span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">x</span><span class="si">}#{</span><span class="n">sep</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">sep</span> <span class="p">?</span> <span class="n">s</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">sep</span><span class="si">}</span><span class="sr">$/</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span> <span class="p">:</span> <span class="n">s</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span> <span class="c1"># =&gt; &quot;helloworldofinject&quot;</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;hello-world-of-inject&quot;</span>
-<span class="no">List</span><span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;of&#39;</span><span class="p">,</span> <span class="s1">&#39;inject&#39;</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span> <span class="c1"># =&gt; &quot;Hello-World-Of-Inject&quot;</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span> <span class="c1"># =&gt; "helloworldofinject"</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)</span> <span class="c1"># =&gt; "hello-world-of-inject"</span>
+<span class="no">List</span><span class="o">[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'inject'</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">capitalize</span> <span class="p">}</span> <span class="c1"># =&gt; "Hello-World-Of-Inject"</span></code></pre></div>
 
 <h2 id="assoc">22. assoc</h2>
 <p>２次元配列をハッシュに見立てて、渡されたキーに一致する要素を返す<code>assoc</code>を実装します。</p>
@@ -675,7 +675,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:b</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:c</span><span class="p">,</span> <span class="mi">3</span><span class="o">]].</span><span class="n">assoc</span><span class="p">(</span><span class="ss">:b</span><span class="p">)</span> <span class="c1"># =&gt; [:b, 2]</span></code></pre></div>
+<span class="no">List</span><span class="o">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:b</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:c</span><span class="p">,</span> <span class="mi">3</span><span class="o">]]</span><span class="p">.</span><span class="nf">assoc</span><span class="p">(</span><span class="ss">:b</span><span class="p">)</span> <span class="c1"># =&gt; [:b, 2]</span></code></pre></div>
 
 <p>引数keyと一致する先頭要素を持つ配列があったときに、その配列を返します。</p>
 
@@ -684,12 +684,12 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">zip</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="n">dup</span>
-    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="o">.</span><span class="n">shift</span><span class="o">]</span><span class="p">;</span> <span class="n">m</span> <span class="p">}</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="nf">dup</span>
+    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">.</span><span class="nf">shift</span><span class="o">]</span><span class="p">;</span> <span class="n">m</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x], [:b, :y], [:c, :z]]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x], [:b, :y], [:c, :z]]</span></code></pre></div>
 
 <p>引数で渡されたlist自身が破壊されないようコピーを作って操作します。shiftを使って先頭要素を取り出します。</p>
 
@@ -697,16 +697,16 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">zip</span><span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="p">)</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:dup</span><span class="p">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:dup</span><span class="p">)</span>
     <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span>
-      <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">+</span> <span class="n">xs</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_m</span><span class="p">,</span> <span class="n">_x</span><span class="o">|</span> <span class="n">_m</span> <span class="o">&lt;&lt;</span> <span class="n">_x</span><span class="o">.</span><span class="n">shift</span><span class="p">;</span> <span class="n">_m</span> <span class="p">}</span>
+      <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">+</span> <span class="n">xs</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_m</span><span class="p">,</span> <span class="n">_x</span><span class="o">|</span> <span class="n">_m</span> <span class="o">&lt;&lt;</span> <span class="n">_x</span><span class="p">.</span><span class="nf">shift</span><span class="p">;</span> <span class="n">_m</span> <span class="p">}</span>
       <span class="n">m</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x], [:b, :y], [:c, :z]]</span>
-<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">,</span><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x, 1], [:b, :y, 2], [:c, :z, 3]]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x], [:b, :y], [:c, :z]]</span>
+<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span><span class="ss">:b</span><span class="p">,</span><span class="ss">:c</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="ss">:x</span><span class="p">,</span><span class="ss">:y</span><span class="p">,</span><span class="ss">:z</span><span class="o">]</span><span class="p">,</span><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:a, :x, 1], [:b, :y, 2], [:c, :z, 3]]</span></code></pre></div>
 
 <p>引数で渡されたリストxsに対してもinjectを適用して各リストの先頭要素を順次引き出します。</p>
 
@@ -715,11 +715,11 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">reverse</span>
-    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span><span class="o">.</span><span class="n">unshift</span> <span class="n">x</span> <span class="p">}</span>
+    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span><span class="p">.</span><span class="nf">unshift</span> <span class="n">x</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">reverse</span> <span class="c1"># =&gt; [5, 4, 3, 2, 1]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="nf">reverse</span> <span class="c1"># =&gt; [5, 4, 3, 2, 1]</span></code></pre></div>
 
 <p>Array#unshiftを使って、要素を空配列に前から挿入していきます。</p>
 
@@ -729,12 +729,12 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">values_at</span><span class="p">(</span><span class="o">*</span><span class="n">pos</span><span class="p">)</span>
     <span class="n">l</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">l</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">if</span> <span class="n">pos</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">}</span>
+    <span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">l</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">if</span> <span class="n">pos</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">}</span>
     <span class="n">l</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">values_at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [2, 4, 6]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">]</span><span class="p">.</span><span class="nf">values_at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [2, 4, 6]</span></code></pre></div>
 
 <p>変数mはカウンタとして使い、結果を格納する配列lを別途用意します。</p>
 
@@ -742,22 +742,22 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">values_at</span><span class="p">(</span><span class="o">*</span><span class="n">pos</span><span class="p">)</span>
-    <span class="n">inject</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="o">[]]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">),</span> <span class="n">x</span><span class="o">|</span> <span class="n">l</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">if</span> <span class="n">pos</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> <span class="o">[</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">l</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">last</span>
+    <span class="n">inject</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="o">[]]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">),</span> <span class="n">x</span><span class="o">|</span> <span class="n">l</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">if</span> <span class="n">pos</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> <span class="o">[</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">l</span><span class="o">]</span> <span class="p">}.</span><span class="nf">last</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">values_at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [2, 4, 6]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">]</span><span class="p">.</span><span class="nf">values_at</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [2, 4, 6]</span></code></pre></div>
 
 <h2 id="compact">26. compact</h2>
 <p>配列からnil要素を除去する<code>compact</code>を実装します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">compact</span>
-    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">nil?</span> <span class="p">?</span> <span class="n">m</span> <span class="p">:</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="p">}</span>
+    <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">nil?</span> <span class="p">?</span> <span class="n">m</span> <span class="p">:</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:c</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:d</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:e</span><span class="p">,</span> <span class="kp">false</span><span class="o">].</span><span class="n">compact</span> <span class="c1"># =&gt; [:a, :b, :c, :d, :e, false]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:c</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:d</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">:e</span><span class="p">,</span> <span class="kp">false</span><span class="o">]</span><span class="p">.</span><span class="nf">compact</span> <span class="c1"># =&gt; [:a, :b, :c, :d, :e, false]</span></code></pre></div>
 
 <h2 id="take">27. take</h2>
 <p>先頭から渡された数までの要素の配列を返す<code>take</code>を実装します。</p>
@@ -774,7 +774,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">]</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
 
 <p>配列mをカウンタとして、別途用意した空配列lにカウンタがnになるまで要素を追加していきます。</p>
 
@@ -786,11 +786,11 @@
       <span class="k">return</span> <span class="n">l</span> <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;=</span> <span class="n">n</span>
       <span class="n">l</span> <span class="o">&lt;&lt;</span> <span class="n">x</span>
       <span class="o">[</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">l</span><span class="o">]</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">last</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">last</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">].</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="o">]</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span></code></pre></div>
 
 <h2 id="flatmap">28. flat_map</h2>
 <p>２次元配列に対するブロックの実行結果を１次元配列として返す<code>flat_map</code>を実装します。</p>
@@ -801,7 +801,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span><span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]].</span><span class="n">flat_map</span> <span class="p">{</span> <span class="o">|</span><span class="n">xs</span><span class="o">|</span> <span class="n">xs</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span> <span class="p">}</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4, 6, 8]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span><span class="no">List</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]]</span><span class="p">.</span><span class="nf">flat_map</span> <span class="p">{</span> <span class="o">|</span><span class="n">xs</span><span class="o">|</span> <span class="n">xs</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span> <span class="p">}</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4, 6, 8]</span></code></pre></div>
 
 <h2 id="product">29. product</h2>
 <p>各配列から順次抽出される要素の組の集合を返す<code>product</code>を実装します。</p>
@@ -809,12 +809,12 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">List</span> <span class="o">&lt;</span> <span class="nb">Array</span>
   <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
     <span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span>
-      <span class="n">m</span> <span class="o">+</span> <span class="n">list</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_m</span><span class="p">,</span> <span class="n">y</span><span class="o">|</span> <span class="n">_m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span> <span class="p">}</span>
+      <span class="n">m</span> <span class="o">+</span> <span class="n">list</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">_m</span><span class="p">,</span> <span class="n">y</span><span class="o">|</span> <span class="n">_m</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">product</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[1, 4], [1, 5], [2, 4], [2, 5], [3, 4], [3, 5]]</span></code></pre></div>
+<span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">product</span><span class="p">(</span><span class="no">List</span><span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[1, 4], [1, 5], [2, 4], [2, 5], [3, 4], [3, 5]]</span></code></pre></div>
 
 <p>injectを二重に使って要素を引き出します。</p>
 

@@ -183,15 +183,15 @@
 <p>任意のテキストに対して複数の置換を実行したい、ってときあるよね。そんなときRubyでは普通、String#subあるいは#gsubメソッドをチェーンするよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-  <span class="n">text</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span>
-      <span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/ruby/i</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;*</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">*&quot;</span> <span class="p">}</span> 
-      <span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/a(.)/</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;a-</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+  <span class="n">text</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="p">.</span><span class="nf">capitalize</span> <span class="p">}</span>
+      <span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sr">/ruby/i</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">"*</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">*"</span> <span class="p">}</span> 
+      <span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/a(.)/</span><span class="p">)</span> <span class="p">{</span> <span class="s2">"a-</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
 <span class="k">end</span>
 
-<span class="n">text</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span>
-<span class="sh">ruby is a fantastic language!</span>
-<span class="sh">I love ruby.</span>
-<span class="no">EOS</span>
+<span class="n">text</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span><span class="sh">
+ruby is a fantastic language!
+I love ruby.
+</span><span class="no">EOS</span>
 
 <span class="nb">puts</span> <span class="n">replace</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -215,38 +215,38 @@
 
 <p>GsubFilterは次のように、複数のfilterを登録してからrunで置換を実行するよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gsub_filter&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"gsub_filter"</span>
 
-<span class="n">gs</span> <span class="o">=</span> <span class="no">GsubFilter</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;ruby is a fantastic language!</span><span class="se">\n</span><span class="s2">I love ruby.&quot;</span><span class="p">)</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="no">GsubFilter</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"ruby is a fantastic language!</span><span class="se">\n</span><span class="s2">I love ruby."</span><span class="p">)</span>
 
 <span class="c1"># 各単語をキャピタライズする。</span>
-<span class="n">gs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="n">md</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span>
+<span class="n">gs</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="n">md</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">capitalize</span> <span class="p">}</span>
 
-<span class="c1"># 最初の&#39;ruby&#39;だけにアスタリスクを付ける。</span>
-<span class="n">gs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="sr">/ruby/i</span><span class="p">,</span> <span class="ss">global</span><span class="p">:</span><span class="kp">false</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">&quot;*</span><span class="si">#{</span><span class="n">md</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">*&quot;</span> <span class="p">}</span>
+<span class="c1"># 最初の'ruby'だけにアスタリスクを付ける。</span>
+<span class="n">gs</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="sr">/ruby/i</span><span class="p">,</span> <span class="n">global</span><span class="ss">:false</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">"*</span><span class="si">#{</span><span class="n">md</span><span class="p">.</span><span class="nf">to_s</span><span class="si">}</span><span class="s2">*"</span> <span class="p">}</span>
 
 <span class="c1"># MatchDataオブジェクトがブロックの第1引数として渡される。</span>
-<span class="n">gs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="sr">/a(.)/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">&quot;a-</span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+<span class="n">gs</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="sr">/a(.)/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">"a-</span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
 
 <span class="c1"># runメソッドでこれらのフィルタを実行する。</span>
-<span class="n">gs</span><span class="o">.</span><span class="n">run</span> <span class="c1"># =&gt; &quot;*Ruby* Is A Fa-nta-stic La-ngua-ge!\nI Love Ruby.&quot;</span></code></pre></div>
+<span class="n">gs</span><span class="p">.</span><span class="nf">run</span> <span class="c1"># =&gt; "*Ruby* Is A Fa-nta-stic La-ngua-ge!\nI Love Ruby."</span></code></pre></div>
 
 <p>GsubFilter#runは、他のテキストを先のフィルタのために取ることができるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;hello, world of ruby!&quot;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Hello, World Of *Ruby*!&quot;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"hello, world of ruby!"</span><span class="p">)</span> <span class="c1"># =&gt; "Hello, World Of *Ruby*!"</span></code></pre></div>
 
 <p>GsubFilter#replaceを使えば各フィルタをあとから交換できるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sr">/ruby/i</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">&quot;##</span><span class="si">#{</span><span class="n">md</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">##&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sr">/ruby/i</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span> <span class="s2">"##</span><span class="si">#{</span><span class="n">md</span><span class="p">.</span><span class="nf">to_s</span><span class="si">}</span><span class="s2">##"</span> <span class="p">}</span>
 
-<span class="n">gs</span><span class="o">.</span><span class="n">run</span> <span class="c1"># =&gt; &quot;##Ruby## Is A Fa-nta-stic La-ngua-ge!\nI Love ##Ruby##.&quot;</span></code></pre></div>
+<span class="n">gs</span><span class="p">.</span><span class="nf">run</span> <span class="c1"># =&gt; "##Ruby## Is A Fa-nta-stic La-ngua-ge!\nI Love ##Ruby##."</span></code></pre></div>
 
 <p>またMatchDataオブジェクトはフィルタブロックの第2引数を通してストックできて、これはGsubFilter#stocksで後からアクセスできるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="sr">/#(\w+)#/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="p">,</span> <span class="n">stocks</span><span class="o">|</span> <span class="n">stocks</span><span class="o">[</span><span class="ss">:lang</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span> <span class="s2">&quot;+</span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">+&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">gs</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="sr">/#(\w+)#/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">md</span><span class="p">,</span> <span class="n">stocks</span><span class="o">|</span> <span class="n">stocks</span><span class="o">[</span><span class="ss">:lang</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span> <span class="s2">"+</span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">+"</span> <span class="p">}</span>
 
-<span class="n">gs</span><span class="o">.</span><span class="n">run</span> <span class="c1"># =&gt; &quot;#+Ruby+# Is A Fa-nta-stic La-ngua-ge!\nI Love #+Ruby+#.&quot;</span>
-<span class="n">gs</span><span class="o">.</span><span class="n">stocks</span> <span class="c1"># =&gt; {:lang=&gt;[&quot;Ruby&quot;, &quot;Ruby&quot;]}</span></code></pre></div>
+<span class="n">gs</span><span class="p">.</span><span class="nf">run</span> <span class="c1"># =&gt; "#+Ruby+# Is A Fa-nta-stic La-ngua-ge!\nI Love #+Ruby+#."</span>
+<span class="n">gs</span><span class="p">.</span><span class="nf">stocks</span> <span class="c1"># =&gt; {:lang=&gt;["Ruby", "Ruby"]}</span></code></pre></div>
 
 <p>まあ需要があるとは思えないけどいままでgemを作ったことがなかったから、勉強を兼ねてこのクラスをgem化してみたよ! gem i gsub_filterでインストールできるから暇つぶしに遊んでくれたらうれしいよ。</p>
 

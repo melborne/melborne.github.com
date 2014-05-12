@@ -198,16 +198,16 @@
 
 <p>まずは<code>gem install gviz</code>としまして、次のようなコードを書きます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"gviz"</span>
 
-<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
+<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
   <span class="n">route</span> <span class="ss">:main</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:init</span><span class="p">,</span> <span class="ss">:parse</span><span class="p">,</span> <span class="ss">:cleanup</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
   <span class="n">route</span> <span class="ss">:init</span> <span class="o">=&gt;</span> <span class="ss">:make</span><span class="p">,</span> <span class="ss">:parse</span> <span class="o">=&gt;</span> <span class="ss">:execute</span>
   <span class="n">route</span> <span class="ss">:execute</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:compare</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample1</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:sample1</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>まずは<code>Gviz.new</code>でgvizオブジェクトを生成して、<code>graph</code>のブロックの中で<code>route</code>メソッドでルート、つまりノードとエッジの繋がりをハッシュ形式で記述します。シンボルだけを渡すと単独のノードを生成します。<code>save</code>メソッドは与えられたファイル名でdotファイルを出力します。更に上のようにフォーマットを指定すると、dotファイルに加えてその形式のファイルも出力します。saveせずに<code>puts gv</code>とすれば標準出力にdotのコードが出力されるので、<code>ruby sample.rb &gt; sample1.dot</code>などとしてもいいです。</p>
 
@@ -299,23 +299,23 @@
 <h2 id="section-1">グラフ、ノード、エッジの属性変更</h2>
 <p>次に先のグラフに対して色などの属性を変更してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"gviz"</span>
 
-<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
+<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
   <span class="n">route</span> <span class="ss">:main</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:init</span><span class="p">,</span> <span class="ss">:parse</span><span class="p">,</span> <span class="ss">:cleanup</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
   <span class="n">route</span> <span class="ss">:init</span> <span class="o">=&gt;</span> <span class="ss">:make</span><span class="p">,</span> <span class="ss">:parse</span> <span class="o">=&gt;</span> <span class="ss">:execute</span>
   <span class="n">route</span> <span class="ss">:execute</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:compare</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
 
   <span class="c1">#        ---- 追加 ----</span>
-  <span class="n">nodes</span><span class="p">(</span><span class="ss">colorscheme</span><span class="p">:</span><span class="s1">&#39;piyg8&#39;</span><span class="p">,</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span><span class="p">)</span>
-  <span class="n">nodeset</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">nd</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">node</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="n">i</span><span class="p">)</span> <span class="p">}</span>
-  <span class="n">edges</span><span class="p">(</span><span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;onormal&#39;</span><span class="p">,</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="s1">&#39;magenta4&#39;</span><span class="p">)</span>
-  <span class="n">edge</span><span class="p">(</span><span class="ss">:main_printf</span><span class="p">,</span> <span class="ss">arrowtail</span><span class="p">:</span><span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="ss">dir</span><span class="p">:</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="s1">&#39;#3355FF&#39;</span><span class="p">)</span>
-  <span class="n">global</span><span class="p">(</span><span class="ss">bgcolor</span><span class="p">:</span><span class="s1">&#39;powderblue&#39;</span><span class="p">)</span>
+  <span class="n">nodes</span><span class="p">(</span><span class="n">colorscheme</span><span class="ss">:'piyg8'</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span><span class="p">)</span>
+  <span class="n">nodeset</span><span class="p">.</span><span class="nf">each</span><span class="p">.</span><span class="nf">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">nd</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">node</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="nf">id</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:i</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">edges</span><span class="p">(</span><span class="n">arrowhead</span><span class="ss">:'onormal'</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'bold'</span><span class="p">,</span> <span class="n">color</span><span class="ss">:'magenta4'</span><span class="p">)</span>
+  <span class="n">edge</span><span class="p">(</span><span class="ss">:main_printf</span><span class="p">,</span> <span class="n">arrowtail</span><span class="ss">:'diamond'</span><span class="p">,</span> <span class="n">dir</span><span class="ss">:'both'</span><span class="p">,</span> <span class="n">color</span><span class="ss">:'#3355FF'</span><span class="p">)</span>
+  <span class="n">global</span><span class="p">(</span><span class="n">bgcolor</span><span class="ss">:'powderblue'</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample2</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:sample2</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p><code>nodes</code>メソッドは全ノードに対する属性をセットします。ここでは<code>piyg8</code>というカラーセットを指定しています。<code>nodeset</code>は全ノードのオブジェクトを呼び出します。<code>node</code>メソッドは個別ノードの属性をセットします。ここでは<code>fillcolor</code>でpiyg8カラーセットの色番号1〜8を各ノードに順にセットしています。</p>
 
@@ -349,33 +349,33 @@
   </ol>
 </blockquote>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"gviz"</span>
 
-<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
+<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
   <span class="n">route</span> <span class="ss">:main</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:init</span><span class="p">,</span> <span class="ss">:parse</span><span class="p">,</span> <span class="ss">:cleanup</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
   <span class="n">route</span> <span class="ss">:init</span> <span class="o">=&gt;</span> <span class="ss">:make</span><span class="p">,</span> <span class="ss">:parse</span> <span class="o">=&gt;</span> <span class="ss">:execute</span>
   <span class="n">route</span> <span class="ss">:execute</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:compare</span><span class="p">,</span> <span class="ss">:printf</span><span class="o">]</span>
 
-  <span class="n">nodes</span> <span class="ss">colorscheme</span><span class="p">:</span><span class="s1">&#39;piyg8&#39;</span><span class="p">,</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span>
-  <span class="n">nodeset</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">nd</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">node</span> <span class="n">nd</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="n">i</span> <span class="p">}</span>
-  <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;onormal&#39;</span><span class="p">,</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="s1">&#39;magenta4&#39;</span>
-  <span class="n">edge</span> <span class="ss">:main_printf</span><span class="p">,</span> <span class="ss">arrowtail</span><span class="p">:</span><span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="ss">dir</span><span class="p">:</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span><span class="s1">&#39;#3355FF&#39;</span>
-  <span class="n">global</span> <span class="ss">bgcolor</span><span class="p">:</span><span class="s1">&#39;powderblue&#39;</span>
+  <span class="n">nodes</span> <span class="n">colorscheme</span><span class="ss">:'piyg8'</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span>
+  <span class="n">nodeset</span><span class="p">.</span><span class="nf">each</span><span class="p">.</span><span class="nf">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">nd</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">node</span> <span class="n">nd</span><span class="p">.</span><span class="nf">id</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:i</span> <span class="p">}</span>
+  <span class="n">edges</span> <span class="n">arrowhead</span><span class="ss">:'onormal'</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'bold'</span><span class="p">,</span> <span class="n">color</span><span class="ss">:'magenta4'</span>
+  <span class="n">edge</span> <span class="ss">:main_printf</span><span class="p">,</span> <span class="n">arrowtail</span><span class="ss">:'diamond'</span><span class="p">,</span> <span class="n">dir</span><span class="ss">:'both'</span><span class="p">,</span> <span class="n">color</span><span class="ss">:'#3355FF'</span>
+  <span class="n">global</span> <span class="n">bgcolor</span><span class="ss">:'powderblue'</span>
 
   <span class="c1">#        ---- 追加 ----</span>
-  <span class="n">node</span> <span class="ss">:execute</span><span class="p">,</span> <span class="ss">shape</span><span class="p">:</span><span class="s1">&#39;Mrecord&#39;</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;{&lt;x&gt;execute | {a | b | c}}&#39;</span>
-  <span class="n">node</span> <span class="ss">:printf</span><span class="p">,</span> <span class="ss">shape</span><span class="p">:</span><span class="s1">&#39;Mrecord&#39;</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;{printf |&lt;y&gt; format}&#39;</span>
-  <span class="n">edge</span> <span class="s1">&#39;execute:x_printf:y&#39;</span>
+  <span class="n">node</span> <span class="ss">:execute</span><span class="p">,</span> <span class="n">shape</span><span class="ss">:'Mrecord'</span><span class="p">,</span> <span class="n">label</span><span class="ss">:'{&lt;x&gt;execute | {a | b | c}}'</span>
+  <span class="n">node</span> <span class="ss">:printf</span><span class="p">,</span> <span class="n">shape</span><span class="ss">:'Mrecord'</span><span class="p">,</span> <span class="n">label</span><span class="ss">:'{printf |&lt;y&gt; format}'</span>
+  <span class="n">edge</span> <span class="s1">'execute:x_printf:y'</span>
   <span class="n">rank</span> <span class="ss">:same</span><span class="p">,</span> <span class="ss">:cleanup</span><span class="p">,</span> <span class="ss">:execute</span>
   <span class="n">subgraph</span> <span class="k">do</span>
-    <span class="n">global</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;SUB&#39;</span>
+    <span class="n">global</span> <span class="n">label</span><span class="ss">:'SUB'</span>
     <span class="n">node</span> <span class="ss">:init</span>
     <span class="n">node</span> <span class="ss">:make</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:sample3</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:sample3</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p><code>node</code>メソッドで:executeと:printfのshapeを<code>Mrecord</code>にし、label属性をセットするときポート情報を埋め込みます(&lt;x&gt;, &lt;y&gt;)。<code>edge</code>メソッドでエッジのidを指定するとき文字列を使い、各ノードidの後ろに<code>:</code>を挟んでポートidを付けます。</p>
 
@@ -397,33 +397,33 @@
 <p>このファイルをRubyに読み込んでGvizで都道府県地図を作ります。まずはCSVを読み込んで処理しやすいように加工します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
-<span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+<span class="nb">require</span> <span class="s2">"gviz"</span>
+<span class="nb">require</span> <span class="s2">"csv"</span>
 
-<span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;pref.csv&#39;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">link</span><span class="o">|</span> <span class="o">[</span><span class="nb">id</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">region</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:intern</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
+<span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'pref.csv'</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">link</span><span class="o">|</span> <span class="o">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">intern</span><span class="p">,</span> <span class="n">region</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:intern</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
 
-<span class="n">data</span> <span class="c1"># =&gt; [[:&quot;01&quot;, 1, &quot;北海道&quot;, [:&quot;02&quot;]], [:&quot;02&quot;, 2, &quot;青森県&quot;, [:&quot;01&quot;, :&quot;03&quot;, :&quot;05&quot;]], [:&quot;03&quot;, 2, &quot;岩手県&quot;, [:&quot;02&quot;, :&quot;05&quot;, :&quot;04&quot;]], [:&quot;04&quot;, 2, &quot;宮城県&quot;, [:&quot;03&quot;, :&quot;05&quot;, :&quot;06&quot;, :&quot;07&quot;]], [:&quot;05&quot;, 2, &quot;秋田県&quot;, [:&quot;02&quot;, :&quot;03&quot;, :&quot;04&quot;, :&quot;06&quot;]], [:&quot;06&quot;, 2, &quot;山形県&quot;, [:&quot;05&quot;, :&quot;04&quot;, :&quot;07&quot;, :&quot;15&quot;]], [:&quot;07&quot;, 2, &quot;福島県&quot;, [:&quot;04&quot;, :&quot;06&quot;, :&quot;15&quot;, :&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;]], [:&quot;08&quot;, 3, &quot;茨城県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;12&quot;]], [:&quot;09&quot;, 3, &quot;栃木県&quot;, [:&quot;07&quot;, :&quot;10&quot;, :&quot;08&quot;, :&quot;11&quot;]], [:&quot;10&quot;, 3, &quot;群馬県&quot;, [:&quot;07&quot;, :&quot;09&quot;, :&quot;11&quot;, :&quot;20&quot;, :&quot;15&quot;]], [:&quot;11&quot;, 3, &quot;埼玉県&quot;, [:&quot;10&quot;, :&quot;09&quot;, :&quot;08&quot;, :&quot;12&quot;, :&quot;13&quot;, :&quot;19&quot;, :&quot;20&quot;]], [:&quot;12&quot;, 3, &quot;千葉県&quot;, [:&quot;13&quot;, :&quot;11&quot;, :&quot;08&quot;]], [:&quot;13&quot;, 3, &quot;東京都&quot;, [:&quot;11&quot;, :&quot;12&quot;, :&quot;14&quot;, :&quot;19&quot;]], [:&quot;14&quot;, 3, &quot;神奈川県&quot;, [:&quot;13&quot;, :&quot;22&quot;, :&quot;19&quot;]], [:&quot;15&quot;, 4, &quot;新潟県&quot;, [:&quot;06&quot;, :&quot;07&quot;, :&quot;10&quot;, :&quot;20&quot;, :&quot;16&quot;]], [:&quot;16&quot;, 4, &quot;富山県&quot;, [:&quot;15&quot;, :&quot;20&quot;, :&quot;21&quot;, :&quot;17&quot;]], [:&quot;17&quot;, 4, &quot;石川県&quot;, [:&quot;16&quot;, :&quot;21&quot;, :&quot;18&quot;]], [:&quot;18&quot;, 4, &quot;福井県&quot;, [:&quot;17&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;]], [:&quot;19&quot;, 4, &quot;山梨県&quot;, [:&quot;20&quot;, :&quot;11&quot;, :&quot;13&quot;, :&quot;14&quot;, :&quot;22&quot;]], [:&quot;20&quot;, 4, &quot;長野県&quot;, [:&quot;15&quot;, :&quot;10&quot;, :&quot;11&quot;, :&quot;19&quot;, :&quot;22&quot;, :&quot;23&quot;, :&quot;21&quot;, :&quot;16&quot;]], [:&quot;21&quot;, 4, &quot;岐阜県&quot;, [:&quot;16&quot;, :&quot;20&quot;, :&quot;23&quot;, :&quot;24&quot;, :&quot;25&quot;, :&quot;18&quot;, :&quot;17&quot;]], [:&quot;22&quot;, 4, &quot;静岡県&quot;, [:&quot;23&quot;, :&quot;20&quot;, :&quot;19&quot;, :&quot;14&quot;]], [:&quot;23&quot;, 4, &quot;愛知県&quot;, [:&quot;24&quot;, :&quot;21&quot;, :&quot;20&quot;, :&quot;22&quot;]], [:&quot;24&quot;, 5, &quot;三重県&quot;, [:&quot;23&quot;, :&quot;21&quot;, :&quot;25&quot;, :&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;]], [:&quot;25&quot;, 5, &quot;滋賀県&quot;, [:&quot;18&quot;, :&quot;21&quot;, :&quot;24&quot;, :&quot;26&quot;]], [:&quot;26&quot;, 5, &quot;京都府&quot;, [:&quot;18&quot;, :&quot;25&quot;, :&quot;24&quot;, :&quot;29&quot;, :&quot;27&quot;, :&quot;28&quot;]], [:&quot;27&quot;, 5, &quot;大阪府&quot;, [:&quot;26&quot;, :&quot;29&quot;, :&quot;30&quot;, :&quot;28&quot;]], [:&quot;28&quot;, 5, &quot;兵庫県&quot;, [:&quot;26&quot;, :&quot;27&quot;, :&quot;33&quot;, :&quot;31&quot;]], [:&quot;29&quot;, 5, &quot;奈良県&quot;, [:&quot;26&quot;, :&quot;24&quot;, :&quot;30&quot;, :&quot;27&quot;]], [:&quot;30&quot;, 5, &quot;和歌山県&quot;, [:&quot;27&quot;, :&quot;29&quot;, :&quot;24&quot;]], [:&quot;31&quot;, 6, &quot;鳥取県&quot;, [:&quot;28&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;32&quot;]], [:&quot;32&quot;, 6, &quot;島根県&quot;, [:&quot;31&quot;, :&quot;33&quot;, :&quot;34&quot;, :&quot;35&quot;]], [:&quot;33&quot;, 6, &quot;岡山県&quot;, [:&quot;28&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;34&quot;, :&quot;37&quot;]], [:&quot;34&quot;, 6, &quot;広島県&quot;, [:&quot;33&quot;, :&quot;31&quot;, :&quot;32&quot;, :&quot;35&quot;]], [:&quot;35&quot;, 6, &quot;山口県&quot;, [:&quot;32&quot;, :&quot;34&quot;, :&quot;40&quot;]], [:&quot;36&quot;, 7, &quot;徳島県&quot;, [:&quot;37&quot;, :&quot;38&quot;, :&quot;39&quot;]], [:&quot;37&quot;, 7, &quot;香川県&quot;, [:&quot;36&quot;, :&quot;38&quot;, :&quot;33&quot;]], [:&quot;38&quot;, 7, &quot;愛媛県&quot;, [:&quot;37&quot;, :&quot;36&quot;, :&quot;39&quot;]], [:&quot;39&quot;, 7, &quot;高知県&quot;, [:&quot;38&quot;, :&quot;36&quot;]], [:&quot;40&quot;, 8, &quot;福岡県&quot;, [:&quot;35&quot;, :&quot;44&quot;, :&quot;43&quot;, :&quot;41&quot;]], [:&quot;41&quot;, 8, &quot;佐賀県&quot;, [:&quot;40&quot;, :&quot;42&quot;]], [:&quot;42&quot;, 8, &quot;長崎県&quot;, [:&quot;41&quot;]], [:&quot;43&quot;, 8, &quot;熊本県&quot;, [:&quot;40&quot;, :&quot;44&quot;, :&quot;45&quot;, :&quot;46&quot;]], [:&quot;44&quot;, 8, &quot;大分県&quot;, [:&quot;40&quot;, :&quot;43&quot;, :&quot;45&quot;]], [:&quot;45&quot;, 8, &quot;宮崎県&quot;, [:&quot;44&quot;, :&quot;43&quot;, :&quot;46&quot;]], [:&quot;46&quot;, 8, &quot;鹿児島県&quot;, [:&quot;43&quot;, :&quot;45&quot;, :&quot;47&quot;]], [:&quot;47&quot;, 9, &quot;沖縄県&quot;, [:&quot;46&quot;]]]</span></code></pre></div>
+<span class="n">data</span> <span class="c1"># =&gt; [[:"01", 1, "北海道", [:"02"]], [:"02", 2, "青森県", [:"01", :"03", :"05"]], [:"03", 2, "岩手県", [:"02", :"05", :"04"]], [:"04", 2, "宮城県", [:"03", :"05", :"06", :"07"]], [:"05", 2, "秋田県", [:"02", :"03", :"04", :"06"]], [:"06", 2, "山形県", [:"05", :"04", :"07", :"15"]], [:"07", 2, "福島県", [:"04", :"06", :"15", :"10", :"09", :"08"]], [:"08", 3, "茨城県", [:"07", :"09", :"11", :"12"]], [:"09", 3, "栃木県", [:"07", :"10", :"08", :"11"]], [:"10", 3, "群馬県", [:"07", :"09", :"11", :"20", :"15"]], [:"11", 3, "埼玉県", [:"10", :"09", :"08", :"12", :"13", :"19", :"20"]], [:"12", 3, "千葉県", [:"13", :"11", :"08"]], [:"13", 3, "東京都", [:"11", :"12", :"14", :"19"]], [:"14", 3, "神奈川県", [:"13", :"22", :"19"]], [:"15", 4, "新潟県", [:"06", :"07", :"10", :"20", :"16"]], [:"16", 4, "富山県", [:"15", :"20", :"21", :"17"]], [:"17", 4, "石川県", [:"16", :"21", :"18"]], [:"18", 4, "福井県", [:"17", :"21", :"25", :"26"]], [:"19", 4, "山梨県", [:"20", :"11", :"13", :"14", :"22"]], [:"20", 4, "長野県", [:"15", :"10", :"11", :"19", :"22", :"23", :"21", :"16"]], [:"21", 4, "岐阜県", [:"16", :"20", :"23", :"24", :"25", :"18", :"17"]], [:"22", 4, "静岡県", [:"23", :"20", :"19", :"14"]], [:"23", 4, "愛知県", [:"24", :"21", :"20", :"22"]], [:"24", 5, "三重県", [:"23", :"21", :"25", :"26", :"29", :"30"]], [:"25", 5, "滋賀県", [:"18", :"21", :"24", :"26"]], [:"26", 5, "京都府", [:"18", :"25", :"24", :"29", :"27", :"28"]], [:"27", 5, "大阪府", [:"26", :"29", :"30", :"28"]], [:"28", 5, "兵庫県", [:"26", :"27", :"33", :"31"]], [:"29", 5, "奈良県", [:"26", :"24", :"30", :"27"]], [:"30", 5, "和歌山県", [:"27", :"29", :"24"]], [:"31", 6, "鳥取県", [:"28", :"33", :"34", :"32"]], [:"32", 6, "島根県", [:"31", :"33", :"34", :"35"]], [:"33", 6, "岡山県", [:"28", :"31", :"32", :"34", :"37"]], [:"34", 6, "広島県", [:"33", :"31", :"32", :"35"]], [:"35", 6, "山口県", [:"32", :"34", :"40"]], [:"36", 7, "徳島県", [:"37", :"38", :"39"]], [:"37", 7, "香川県", [:"36", :"38", :"33"]], [:"38", 7, "愛媛県", [:"37", :"36", :"39"]], [:"39", 7, "高知県", [:"38", :"36"]], [:"40", 8, "福岡県", [:"35", :"44", :"43", :"41"]], [:"41", 8, "佐賀県", [:"40", :"42"]], [:"42", 8, "長崎県", [:"41"]], [:"43", 8, "熊本県", [:"40", :"44", :"45", :"46"]], [:"44", 8, "大分県", [:"40", :"43", :"45"]], [:"45", 8, "宮崎県", [:"44", :"43", :"46"]], [:"46", 8, "鹿児島県", [:"43", :"45", :"47"]], [:"47", 9, "沖縄県", [:"46"]]]</span></code></pre></div>
 
 <p>次にGVizでこれらを処理します。各都道府県をノードとし隣接県情報を使ってノードをつなぎます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
-<span class="nb">require</span> <span class="s2">&quot;gviz&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+<span class="nb">require</span> <span class="s2">"gviz"</span>
+<span class="nb">require</span> <span class="s2">"csv"</span>
 
-<span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;pref.csv&#39;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">link</span><span class="o">|</span> <span class="o">[</span><span class="nb">id</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">region</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:intern</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
+<span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'pref.csv'</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">link</span><span class="o">|</span> <span class="o">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">intern</span><span class="p">,</span> <span class="n">region</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:intern</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
 
-<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
+<span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
-  <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
+  <span class="n">data</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
     <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">link</span>
-    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="nb">name</span>
+    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label: </span><span class="nb">name</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>結果を見てみましょう。</p>
 
@@ -433,16 +433,16 @@
 
 <p>graphのレイアウトを<code>neato</code>に変えてみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
-  <span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span>
-  <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="n">layout</span><span class="ss">:'neato'</span>
+  <span class="n">data</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
     <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">link</span>
-    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="nb">name</span>
+    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label: </span><span class="nb">name</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>さあどうでしょうか。</p>
 
@@ -452,16 +452,16 @@
 
 <p>ノードの重なりが気になるので重なり(overlap)を無くします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
-  <span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span><span class="p">,</span> <span class="ss">overlap</span><span class="p">:</span><span class="kp">false</span>
-  <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="n">layout</span><span class="ss">:'neato'</span><span class="p">,</span> <span class="n">overlap</span><span class="ss">:false</span>
+  <span class="n">data</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
     <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">link</span>
-    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="nb">name</span>
+    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label: </span><span class="nb">name</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p><img src="/assets/images/pref3.png" alt="pref3 noshadow" /></p>
 
@@ -469,18 +469,18 @@
 
 <p>形はこれで良しとして（マジか）、色を付けて仕上げます:)</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
-<span class="n">gv</span><span class="o">.</span><span class="n">graph</span> <span class="k">do</span>
-  <span class="n">global</span> <span class="ss">layout</span><span class="p">:</span><span class="s1">&#39;neato&#39;</span><span class="p">,</span> <span class="ss">overlap</span><span class="p">:</span><span class="kp">false</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span><span class="s1">&#39;日本地図&#39;</span>
-  <span class="n">nodes</span> <span class="ss">colorscheme</span><span class="p">:</span><span class="s1">&#39;set310&#39;</span>
-  <span class="n">edges</span> <span class="ss">arrowhead</span><span class="p">:</span><span class="s1">&#39;none&#39;</span>
-  <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">gv</span> <span class="o">=</span> <span class="no">Gviz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:Pref</span><span class="p">)</span>
+<span class="n">gv</span><span class="p">.</span><span class="nf">graph</span> <span class="k">do</span>
+  <span class="n">global</span> <span class="n">layout</span><span class="ss">:'neato'</span><span class="p">,</span> <span class="n">overlap</span><span class="ss">:false</span><span class="p">,</span> <span class="n">label</span><span class="ss">:'日本地図'</span>
+  <span class="n">nodes</span> <span class="n">colorscheme</span><span class="ss">:'set310'</span>
+  <span class="n">edges</span> <span class="n">arrowhead</span><span class="ss">:'none'</span>
+  <span class="n">data</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="n">link</span><span class="o">|</span>
     <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">link</span>
-    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span> <span class="ss">style</span><span class="p">:</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="ss">fillcolor</span><span class="p">:</span><span class="n">reg</span>
+    <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">label: </span><span class="nb">name</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:reg</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">gv</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
+<span class="n">gv</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="ss">:pref</span><span class="p">,</span> <span class="ss">:png</span><span class="p">)</span></code></pre></div>
 
 <p>日本地図の完成です！</p>
 

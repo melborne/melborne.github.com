@@ -240,9 +240,9 @@ n! = n * (n-1)!\\
 
 <p>これはちょうど同じ文字列が、Rubyでは別のオブジェクトとして扱われるのと似ている。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-   <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;factorial&#39;</span>
-   <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">(id:</span><span class="si">#{</span><span class="n">s</span><span class="o">.</span><span class="n">__id__</span><span class="si">}</span><span class="s2">)&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+   <span class="n">s</span> <span class="o">=</span> <span class="s1">'factorial'</span>
+   <span class="nb">puts</span> <span class="s2">"</span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">(id:</span><span class="si">#{</span><span class="n">s</span><span class="p">.</span><span class="nf">__id__</span><span class="si">}</span><span class="s2">)"</span>
  <span class="k">end</span>
  
  <span class="c1"># &gt;&gt; factorial(id:72570)</span>
@@ -273,7 +273,7 @@ n! = n * (n-1)!\\
 
 <p>でも、再帰はその度に別の手続きを呼び出すのと等価だから、深い再帰では手続きでRuby空間が溢れるという問題が生じる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact&#39;: stack level too deep (SystemStackError)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact': stack level too deep (SystemStackError)</span></code></pre></div>
 
 <h2 id="section-2">末尾再帰で階乗</h2>
 <p>そこで末尾再帰の出番だ。</p>
@@ -298,7 +298,7 @@ n! = n * (n-1)!\\
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">mem</span><span class="o">=[]</span><span class="p">)</span>
    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
-     <span class="n">mem</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:*</span><span class="p">)</span>     <span class="c1">#fact1が配列の要素を全部掛けて返す</span>
+     <span class="n">mem</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">*</span><span class="p">)</span>     <span class="c1">#fact1が配列の要素を全部掛けて返す</span>
    <span class="k">else</span>
      <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="n">n</span>
      <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mem</span><span class="p">)</span>   <span class="c1">#nを配列に入れて次のfactに順次渡す</span>
@@ -323,7 +323,7 @@ n! = n * (n-1)!\\
 
 <p>実は残念ながらSchemeとは違って現在のRubyの実装では、この末尾再帰のメリットは受けられないようだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact&#39;: stack level too deep (SystemStackError)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="mi">10000</span> <span class="c1">#&gt; `fact': stack level too deep (SystemStackError)</span></code></pre></div>
 
 <h2 id="section-3">末尾再帰によるフィボナッチ</h2>
 <p>Rubyで末尾再帰を使っても、ふつうの再帰と同様に分身が呼ばれるようだ。</p>
@@ -358,8 +358,8 @@ fn = f(n-1) + f(n-2) : それ以外のとき
 
 <p>すると、高々20番目のフィボナッチ数を求めるのにfibメソッドは21891回も呼ばれることになる。</p>
 
-<div class="highlight"><pre><code class="bash">% ruby -rprofile fib.rb
-% cumulative self self total <span class="nb">time </span>seconds seconds calls  ms/call  ms/call  name
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby -rprofile fib.rb
+<span class="gp">% </span>cumulative self self total <span class="nb">time </span>seconds seconds calls  ms/call  ms/call  name
  69.45     2.16      2.16    21891     0.10     1.93  Object#fib
  15.76     2.65      0.49    39601     0.01     0.01  Fixnum#<span class="o">==</span>
  10.61     2.98      0.33    21890     0.02     0.02  Fixnum#-
@@ -372,14 +372,14 @@ fn = f(n-1) + f(n-2) : それ以外のとき
 
 <p>今8番目のフィボナッチ数を求める演算をfib8とすると、これは以下のように展開できる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="nv">fib8</span> <span class="o">=</span>  1*fib8 +  0*fib7
-     <span class="o">=</span>  1*fib7 +  1*fib6 <span class="o">=</span> <span class="o">(</span>fib6 + fib5<span class="o">)</span> + <span class="nv">fib6</span>
-     <span class="o">=</span>  2*fib6 +  1*fib5
-     <span class="o">=</span>  3*fib5 +  2*fib4
-     <span class="o">=</span>  5*fib4 +  3*fib3
-     <span class="o">=</span>  8*fib3 +  5*fib2
-     <span class="o">=</span> 13*fib2 +  8*fib1
-     <span class="o">=</span> 21*fib1 + 13*fib0 <span class="o">=</span> 21</code></pre></div>
+<div class="highlight"><pre><code class="bash">fib8 <span class="o">=</span>  1<span class="k">*</span>fib8 +  0<span class="k">*</span>fib7
+     <span class="o">=</span>  1<span class="k">*</span>fib7 +  1<span class="k">*</span>fib6 <span class="o">=</span> <span class="o">(</span>fib6 + fib5<span class="o">)</span> + fib6
+     <span class="o">=</span>  2<span class="k">*</span>fib6 +  1<span class="k">*</span>fib5
+     <span class="o">=</span>  3<span class="k">*</span>fib5 +  2<span class="k">*</span>fib4
+     <span class="o">=</span>  5<span class="k">*</span>fib4 +  3<span class="k">*</span>fib3
+     <span class="o">=</span>  8<span class="k">*</span>fib3 +  5<span class="k">*</span>fib2
+     <span class="o">=</span> 13<span class="k">*</span>fib2 +  8<span class="k">*</span>fib1
+     <span class="o">=</span> 21<span class="k">*</span>fib1 + 13<span class="k">*</span>fib0 <span class="o">=</span> 21</code></pre></div>
 
 <p>各項の係数をそれぞれa, bとすると、各ステップでbには前のステップのaの値が、aにはa+bの値が与えられていることがわかる。また最後のステップをみると、fib0が0なので第2項の演算結果は結果的に答えに反映されないことがわかる。だから１つのfibメソッドにa、bを渡していき、fib1に達したところでaの値を返すようにすればいい。</p>
 
@@ -397,9 +397,9 @@ fn = f(n-1) + f(n-2) : それ以外のとき
 
 <p>これでフィボナッチを末尾再帰で実現できた。これなら1000番目のフィボナッチ数だって直ぐ求められる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>
  <span class="nb">p</span> <span class="n">fib</span> <span class="mi">1000</span>
- <span class="nb">p</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span>
+ <span class="nb">p</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="o">-</span> <span class="n">t</span>
  <span class="c1">#&gt;43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875</span>
  <span class="mi">0</span><span class="o">.</span><span class="mo">0015</span><span class="mi">81</span></code></pre></div>
 

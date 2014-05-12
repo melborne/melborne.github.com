@@ -192,11 +192,11 @@
 <h2 id="memcached">memcached</h2>
 <p>環境はOSX Snow Leopardだよ。ローカルでmemcachedを使うには、<code>brew install memcached</code>すればいいよ。very verboseモードでの起動はこうだよ。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="nv">$ </span>memcached -vv</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">$ </span>memcached -vv</code></pre></div>
 
 <p>Herokuでmemcachedを使う場合はadd-onするだけでいいみたいなんだ<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="nv">$ </span>heroku addons:add memcache</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">$ </span>heroku addons:add memcache</code></pre></div>
 
 <p>5MBまでは無料だけど<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>add-onを利用するには、クレジットカード情報などによる登録が必要だよ。登録しないで上のコマンドを実行すると、登録サイトを教えてくれるからそれに従ってね。</p>
 
@@ -224,31 +224,31 @@
 <p>Gemfileの中身は以下のとおりだよ。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">source</span> <span class="ss">:rubygems</span>
-<span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;haml&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;sass&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;dalli&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;nokogiri&#39;</span></code></pre></div>
+<span class="n">gem</span> <span class="s1">'sinatra'</span>
+<span class="n">gem</span> <span class="s1">'haml'</span>
+<span class="n">gem</span> <span class="s1">'sass'</span>
+<span class="n">gem</span> <span class="s1">'dalli'</span>
+<span class="n">gem</span> <span class="s1">'nokogiri'</span></code></pre></div>
 
 <p>本の例ではmemcachedのRubyインタフェースにmemcache-clientというのを使ってるんだけど、HerokuではSASL<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup>というセキュリティ上の認証ができるgemしか使えないようなんだ。だからSASLに対応したDalliという変わった名前のgemを使っているよ。余談だけどdalliとnokogiriを並べて書くと、僕にはdankogaiに見えてしょうがないんだよ!</p>
 
 <p>SinatraでDalliを使うときは例えば以下のようにするよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">set</span> <span class="ss">:cache</span><span class="p">,</span> <span class="no">Dalli</span><span class="o">::</span><span class="no">Client</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_SERVERS&#39;</span><span class="o">]</span><span class="p">,</span>
-                    <span class="ss">:username</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_USERNAME&#39;</span><span class="o">]</span><span class="p">,</span>
-                    <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MEMCACHE_PASSWORD&#39;</span><span class="o">]</span><span class="p">,</span>
-                    <span class="ss">:expires_in</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-<span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">set</span> <span class="ss">:cache</span><span class="p">,</span> <span class="no">Dalli</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">'MEMCACHE_SERVERS'</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:username</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">'MEMCACHE_USERNAME'</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">'MEMCACHE_PASSWORD'</span><span class="o">]</span><span class="p">,</span>
+                    <span class="ss">:expires_in</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">.</span><span class="nf">day</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">settings</span><span class="p">.</span><span class="nf">cache</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">settings</span><span class="p">.</span><span class="nf">cache</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">)</span></code></pre></div>
 
 <p>つまりDalli::Clientオブジェクトをcacheという変数にセットして、getでkeyに対応するデータの取得をし、setでkeyにdataを保存する。データの保持期間はオブジェクト生成時のoptionで指定できる。optionを指定しないならmemcache serverの指定を含めて引数は不要だよ。</p>
 
 <p>次にapp.rbだけど、ちょっと長いので分けて要点だけ説明するよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">&#39;/:term/:category&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="o">|</span>
-  <span class="vi">@term</span><span class="p">,</span> <span class="vi">@category</span><span class="p">,</span> <span class="vi">@date</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span>
-  <span class="vi">@videos</span> <span class="o">=</span> <span class="n">videos</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="vi">@date</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
-  <span class="vi">@urls</span> <span class="o">=</span> <span class="sx">%w(daily weekly newly)</span><span class="o">.</span><span class="n">product</span> <span class="sx">%w(music movie drama anime owarai variety all)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">'/:term/:category'</span> <span class="k">do</span> <span class="o">|</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="o">|</span>
+  <span class="vi">@term</span><span class="p">,</span> <span class="vi">@category</span><span class="p">,</span> <span class="vi">@date</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="no">Date</span><span class="p">.</span><span class="nf">today</span>
+  <span class="vi">@videos</span> <span class="o">=</span> <span class="n">videos</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="vi">@date</span><span class="p">.</span><span class="nf">to_s</span><span class="p">)</span>
+  <span class="vi">@urls</span> <span class="o">=</span> <span class="sx">%w(daily weekly newly)</span><span class="p">.</span><span class="nf">product</span> <span class="sx">%w(music movie drama anime owarai variety all)</span>
   <span class="n">haml</span> <span class="ss">:index</span>
 <span class="k">end</span></code></pre></div>
 
@@ -258,12 +258,12 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
   <span class="k">def</span> <span class="nf">videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">term_category_date</span> <span class="o">*</span> <span class="s1">&#39;/&#39;</span>
-    <span class="k">if</span> <span class="n">vdata</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">term_category_date</span> <span class="o">*</span> <span class="s1">'/'</span>
+    <span class="k">if</span> <span class="n">vdata</span> <span class="o">=</span> <span class="n">settings</span><span class="p">.</span><span class="nf">cache</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
       <span class="n">vdata</span>
     <span class="k">else</span>
       <span class="n">vdata</span> <span class="o">=</span> <span class="n">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
-      <span class="n">settings</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">vdata</span><span class="p">)</span>
+      <span class="n">settings</span><span class="p">.</span><span class="nf">cache</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">vdata</span><span class="p">)</span>
       <span class="n">vdata</span>
     <span class="k">end</span>
   <span class="k">rescue</span>
@@ -277,7 +277,7 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
   <span class="k">def</span> <span class="nf">get_videos</span><span class="p">(</span><span class="o">*</span><span class="n">term_category_date</span><span class="p">)</span>
-    <span class="n">ranking</span> <span class="o">=</span> <span class="n">rank_data</span><span class="p">(</span><span class="n">term_category_date</span><span class="o">.</span><span class="n">first</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ranking</span> <span class="o">=</span> <span class="n">rank_data</span><span class="p">(</span><span class="n">term_category_date</span><span class="p">.</span><span class="nf">first</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">video_data</span><span class="p">(</span><span class="n">ranking</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
@@ -288,26 +288,26 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
   <span class="k">def</span> <span class="nf">rank_data</span><span class="p">(</span><span class="o">*</span><span class="n">term_category</span><span class="p">)</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span> <span class="no">URL</span><span class="p">(</span><span class="ss">:rank</span><span class="p">)</span> <span class="o">+</span> <span class="n">term_category</span><span class="o">*</span><span class="s1">&#39;/&#39;</span> <span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">RSS</span><span class="o">::</span><span class="no">Parser</span><span class="o">.</span><span class="n">parse</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
-    <span class="n">rss</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">item</span><span class="o">|</span> <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="n">item</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[^「」]+/</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span> <span class="no">URL</span><span class="p">(</span><span class="ss">:rank</span><span class="p">)</span> <span class="o">+</span> <span class="n">term_category</span><span class="o">*</span><span class="s1">'/'</span> <span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">RSS</span><span class="o">::</span><span class="no">Parser</span><span class="p">.</span><span class="nf">parse</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span> <span class="p">}</span>
+    <span class="n">rss</span><span class="p">.</span><span class="nf">items</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">item</span><span class="o">|</span> <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="n">item</span><span class="p">.</span><span class="nf">title</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/[^「」]+/</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">video_data</span><span class="p">(</span><span class="n">ranking</span><span class="p">)</span>
-    <span class="n">ranking</span><span class="o">.</span><span class="n">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">|</span>
-      <span class="n">opts</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;vq=&quot;</span> <span class="o">+</span> <span class="no">URI</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;%s %s&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">]</span><span class="p">),</span> <span class="s2">&quot;format=5&quot;</span><span class="o">]*</span><span class="s1">&#39;&amp;&#39;</span>
-      <span class="n">entry</span> <span class="o">=</span> <span class="no">Nokogiri</span><span class="o">::</span><span class="no">XML</span><span class="p">(</span><span class="nb">open</span> <span class="o">[</span><span class="no">URL</span><span class="p">(</span><span class="ss">:video</span><span class="p">),</span> <span class="n">opts</span><span class="o">]*</span><span class="s1">&#39;?&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;entry&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
-      <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">artist</span><span class="p">:</span> <span class="n">artist</span><span class="p">,</span> <span class="ss">title</span><span class="p">:</span>  <span class="n">title</span> <span class="p">}</span>
+    <span class="n">ranking</span><span class="p">.</span><span class="nf">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">|</span>
+      <span class="n">opts</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"vq="</span> <span class="o">+</span> <span class="no">URI</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span><span class="s2">"%s %s"</span> <span class="o">%</span> <span class="o">[</span><span class="n">artist</span><span class="p">,</span> <span class="n">title</span><span class="o">]</span><span class="p">),</span> <span class="s2">"format=5"</span><span class="o">]*</span><span class="s1">'&amp;'</span>
+      <span class="n">entry</span> <span class="o">=</span> <span class="no">Nokogiri</span><span class="o">::</span><span class="no">XML</span><span class="p">(</span><span class="nb">open</span> <span class="o">[</span><span class="no">URL</span><span class="p">(</span><span class="ss">:video</span><span class="p">),</span> <span class="n">opts</span><span class="o">]*</span><span class="s1">'?'</span><span class="p">).</span><span class="nf">search</span><span class="p">(</span><span class="s1">'entry'</span><span class="p">).</span><span class="nf">first</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">artist: </span><span class="n">artist</span><span class="p">,</span> <span class="ss">title:  </span><span class="n">title</span> <span class="p">}</span>
       <span class="k">if</span> <span class="n">entry</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">url</span><span class="p">:</span>    <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;media:group/media:content&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;url&#39;</span><span class="o">]</span><span class="p">,</span>
-              <span class="ss">type</span><span class="p">:</span>   <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;media:group/media:content&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;type&#39;</span><span class="o">]</span><span class="p">,</span>
-              <span class="ss">count</span><span class="p">:</span>  <span class="n">entry</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;yt:statistics&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">[</span><span class="s1">&#39;viewCount&#39;</span><span class="o">]</span> <span class="p">}</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">update</span> <span class="n">q</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">url:    </span><span class="n">entry</span><span class="p">.</span><span class="nf">xpath</span><span class="p">(</span><span class="s1">'media:group/media:content'</span><span class="p">).</span><span class="nf">first</span><span class="o">[</span><span class="s1">'url'</span><span class="o">]</span><span class="p">,</span>
+              <span class="ss">type:   </span><span class="n">entry</span><span class="p">.</span><span class="nf">xpath</span><span class="p">(</span><span class="s1">'media:group/media:content'</span><span class="p">).</span><span class="nf">first</span><span class="o">[</span><span class="s1">'type'</span><span class="o">]</span><span class="p">,</span>
+              <span class="ss">count:  </span><span class="n">entry</span><span class="p">.</span><span class="nf">xpath</span><span class="p">(</span><span class="s1">'yt:statistics'</span><span class="p">).</span><span class="nf">first</span><span class="o">[</span><span class="s1">'viewCount'</span><span class="o">]</span> <span class="p">}</span>
+        <span class="n">data</span><span class="p">.</span><span class="nf">update</span> <span class="n">q</span>
       <span class="k">end</span>
       <span class="n">data</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">URL</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-    <span class="p">{</span> <span class="ss">video</span><span class="p">:</span> <span class="s1">&#39;http://gdata.youtube.com/feeds/api/videos&#39;</span><span class="p">,</span>
-      <span class="ss">rank</span><span class="p">:</span>  <span class="s1">&#39;http://gyao.yahoo.co.jp/rss/ranking/c/&#39;</span> <span class="p">}</span><span class="o">[</span><span class="n">code</span><span class="o">]</span>
+    <span class="p">{</span> <span class="ss">video: </span><span class="s1">'http://gdata.youtube.com/feeds/api/videos'</span><span class="p">,</span>
+      <span class="ss">rank:  </span><span class="s1">'http://gyao.yahoo.co.jp/rss/ranking/c/'</span> <span class="p">}</span><span class="o">[</span><span class="n">code</span><span class="o">]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -319,12 +319,12 @@
 <span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">thread_with</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
     <span class="n">mem</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="n">map</span><span class="o">.</span><span class="n">with_index</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
-      <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
+    <span class="n">map</span><span class="p">.</span><span class="nf">with_index</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="no">Thread</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
         <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="k">yield</span><span class="p">(</span><span class="o">*</span><span class="n">_item</span><span class="p">)</span><span class="o">]</span>
       <span class="k">end</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">order</span> <span class="p">?</span> <span class="n">mem</span><span class="o">.</span><span class="n">sort</span> <span class="p">:</span> <span class="n">mem</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">order</span> <span class="p">?</span> <span class="n">mem</span><span class="p">.</span><span class="nf">sort</span> <span class="p">:</span> <span class="n">mem</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">class</span> <span class="nc">Fixnum</span>
@@ -335,7 +335,7 @@
 <span class="k">end</span>
 <span class="k">module</span> <span class="nn">Kernel</span>
   <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="o">*</span><span class="n">features</span><span class="p">)</span>
-    <span class="n">features</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+    <span class="n">features</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span><span class="p">.</span><span class="nf">to_s</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 

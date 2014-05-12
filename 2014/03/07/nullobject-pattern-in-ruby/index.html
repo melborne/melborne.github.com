@@ -191,11 +191,11 @@
 <p>前回私が書いた記事の中に、次のようなコードが出てきた。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">run</span>
-  <span class="vi">@methods</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="vi">@obj</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
-    <span class="k">if</span> <span class="n">custom</span> <span class="o">=</span> <span class="no">Filter</span><span class="o">.</span><span class="n">filters</span><span class="o">[</span><span class="nb">method</span><span class="o">]</span>
-      <span class="n">custom</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
+  <span class="vi">@methods</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="vi">@obj</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
+    <span class="k">if</span> <span class="n">custom</span> <span class="o">=</span> <span class="no">Filter</span><span class="p">.</span><span class="nf">filters</span><span class="o">[</span><span class="nb">method</span><span class="o">]</span>
+      <span class="n">custom</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
     <span class="k">else</span>
-      <span class="n">mem</span><span class="o">.</span><span class="n">send</span> <span class="nb">method</span>
+      <span class="n">mem</span><span class="p">.</span><span class="nf">send</span> <span class="nb">method</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
@@ -210,27 +210,27 @@
 
 <p>これは一般に、「あるなら呼べ、そうでないならお前は黙ってろ」パターンと呼ばれている。以下も同様である。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">user</span><span class="o">.</span><span class="n">age</span> <span class="k">if</span> <span class="n">user</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">user</span><span class="p">.</span><span class="nf">age</span> <span class="k">if</span> <span class="n">user</span>
 
-<span class="n">liz</span><span class="o">.</span><span class="n">score</span> <span class="o">&amp;&amp;</span> <span class="n">liz</span><span class="o">.</span><span class="n">score</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span></code></pre></div>
+<span class="n">liz</span><span class="p">.</span><span class="nf">score</span> <span class="o">&amp;&amp;</span> <span class="n">liz</span><span class="p">.</span><span class="nf">score</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span></code></pre></div>
 
 <p>しかし、この頻出するパターンに対し患者たちは叫ぶ。「そうじゃない。僕たちはこう書きたいんだ。」</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">run</span>
-  <span class="vi">@methods</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="vi">@obj</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
-    <span class="no">Filter</span><span class="o">.</span><span class="n">filters</span><span class="o">[</span><span class="nb">method</span><span class="o">].</span><span class="n">call</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span> <span class="o">||</span> <span class="n">mem</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+  <span class="vi">@methods</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="vi">@obj</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
+    <span class="no">Filter</span><span class="p">.</span><span class="nf">filters</span><span class="o">[</span><span class="nb">method</span><span class="o">]</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span> <span class="o">||</span> <span class="n">mem</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">user</span><span class="o">.</span><span class="n">age</span>
+<span class="n">user</span><span class="p">.</span><span class="nf">age</span>
 
-<span class="n">liz</span><span class="o">.</span><span class="n">score</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span></code></pre></div>
+<span class="n">liz</span><span class="p">.</span><span class="nf">score</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span></code></pre></div>
 
 <p>これを、「呼んで駄目なら黙ってろ」パターンという。</p>
 
 <p>当然、Rubyからは次のような返事が帰ってくる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">filter</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">34</span><span class="ss">:in</span> <span class="sb">`block in run&#39;: undefined method `</span><span class="n">call</span><span class="err">&#39;</span> <span class="k">for</span> <span class="kp">nil</span><span class="ss">:NilClass</span> <span class="p">(</span><span class="no">NoMethodError</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">filter</span><span class="p">.</span><span class="nf">rb</span><span class="p">:</span><span class="mi">34</span><span class="ss">:in</span> <span class="sb">`block in run': undefined method `</span><span class="n">call</span><span class="err">'</span> <span class="k">for</span> <span class="kp">nil</span><span class="ss">:NilClass</span> <span class="p">(</span><span class="no">NoMethodError</span><span class="p">)</span></code></pre></div>
 
 <h2 id="section">重患者のための即効性特効薬</h2>
 
@@ -252,14 +252,14 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">using</span> <span class="no">NullObject</span>
 
-<span class="no">User</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:scores</span><span class="p">)</span>
+<span class="no">User</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:scores</span><span class="p">)</span>
 
-<span class="n">charlie</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="n">charlie</span><span class="o">.</span><span class="n">scores</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">math</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span> <span class="ss">english</span><span class="p">:</span><span class="mi">78</span><span class="p">,</span> <span class="ss">music</span><span class="p">:</span><span class="mi">60</span> <span class="p">}</span>
-<span class="n">charlie</span><span class="o">.</span><span class="n">scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="c1"># =&gt; 35</span>
+<span class="n">charlie</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">charlie</span><span class="p">.</span><span class="nf">scores</span> <span class="o">=</span> <span class="p">{</span> <span class="n">math</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span> <span class="n">english</span><span class="p">:</span><span class="mi">78</span><span class="p">,</span> <span class="n">music</span><span class="p">:</span><span class="mi">60</span> <span class="p">}</span>
+<span class="n">charlie</span><span class="p">.</span><span class="nf">scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="c1"># =&gt; 35</span>
 
-<span class="n">liz</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Liz&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="c1"># =&gt; nil</span></code></pre></div>
+<span class="n">liz</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Liz'</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+<span class="n">liz</span><span class="p">.</span><span class="nf">scores</span><span class="o">[</span><span class="ss">:math</span><span class="o">]</span> <span class="c1"># =&gt; nil</span></code></pre></div>
 
 <hr />
 

@@ -188,7 +188,7 @@
 
 <p>このgemにはflippyコマンドが付いていて、ターミナルで簡単に反転文字が作れるようになっているのでした。</p>
 
-<div class="highlight"><pre><code class="bash">% flippy Hello, world!
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>flippy Hello, world!
 ¡plɹoʍ ‘olləH</code></pre></div>
 
 <p>で、今回これをもう少し拡張して、専用コンソールで反転文字を打てる<code>flippy console</code>というのを追加しましたので、お知らせしますね。flippy consoleはflippyコマンドに<code>--console</code>オプションを付加することで起動することができます。</p>
@@ -212,19 +212,19 @@
 
 <p>次のような感じで使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;termios&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"termios"</span>
 
-<span class="vg">$stdin</span><span class="o">.</span><span class="n">extend</span> <span class="no">Termios</span>
+<span class="vg">$stdin</span><span class="p">.</span><span class="nf">extend</span> <span class="no">Termios</span>
 
 <span class="k">begin</span>
-  <span class="n">term_preset</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="o">.</span><span class="n">tcgetattr</span>
-  <span class="n">term</span> <span class="o">=</span> <span class="n">term_preset</span><span class="o">.</span><span class="n">dup</span>
-  <span class="o">[</span><span class="no">Termios</span><span class="o">::</span><span class="no">ICANON</span><span class="p">,</span> <span class="no">Termios</span><span class="o">::</span><span class="no">ECHO</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">flag</span><span class="o">|</span> <span class="n">term</span><span class="o">.</span><span class="n">lflag</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">flag</span> <span class="p">}</span>
-  <span class="vg">$stdin</span><span class="o">.</span><span class="n">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
+  <span class="n">term_preset</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="p">.</span><span class="nf">tcgetattr</span>
+  <span class="n">term</span> <span class="o">=</span> <span class="n">term_preset</span><span class="p">.</span><span class="nf">dup</span>
+  <span class="o">[</span><span class="no">Termios</span><span class="o">::</span><span class="no">ICANON</span><span class="p">,</span> <span class="no">Termios</span><span class="o">::</span><span class="no">ECHO</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">flag</span><span class="o">|</span> <span class="n">term</span><span class="p">.</span><span class="nf">lflag</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">flag</span> <span class="p">}</span>
+  <span class="vg">$stdin</span><span class="p">.</span><span class="nf">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
 
   <span class="c1"># ターミナルを使う</span>
 <span class="k">ensure</span>
-  <span class="vg">$stdin</span><span class="o">.</span><span class="n">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term_preset</span><span class="p">)</span>
+  <span class="vg">$stdin</span><span class="p">.</span><span class="nf">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term_preset</span><span class="p">)</span>
 <span class="k">end</span></code></pre></div>
 
 <p><code>$stdin.extend Termios</code>で標準入力オブジェクトへTermiosモジュールのメソッドをmix-inします。<code>#tcgetattr</code>で現在のターミナルの設定を読み出し、これを保存しておきます。termiosには４種類の設定モード、入力（iflag）、出力（oflag）、制御（cflag）、ローカル（lflag）があって、その何れかに所望の設定を行います。</p>
@@ -240,11 +240,11 @@
 <h2 id="section">エスケープシーケンス</h2>
 <p>flippy consoleではカーソルの移動を制御する必要があります。カーソルの制御には標準添付ライブラリの<code>curses</code>がありますが、簡単な制御ならエスケープシーケンスで行うことができます。flippyでは今ひとつ上手くできてないですが。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[5;10H&quot;</span>  <span class="c1"># カーソルをスクリーンの5行10列に移動</span>
-<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1A&quot;</span>     <span class="c1"># カーソルを一つ上に移動</span>
-<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1B&quot;</span>     <span class="c1"># カーソルを一つ下に移動</span>
-<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1C&quot;</span>     <span class="c1"># カーソルを一つ前に移動</span>
-<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">[1D&quot;</span>     <span class="c1"># カーソルを一つ後ろに移動</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[5;10H"</span>  <span class="c1"># カーソルをスクリーンの5行10列に移動</span>
+<span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1A"</span>     <span class="c1"># カーソルを一つ上に移動</span>
+<span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1B"</span>     <span class="c1"># カーソルを一つ下に移動</span>
+<span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1C"</span>     <span class="c1"># カーソルを一つ前に移動</span>
+<span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1D"</span>     <span class="c1"># カーソルを一つ後ろに移動</span></code></pre></div>
 
 <p>色の制御もエスケープシーケンスで行います。これについては以前に記事を書いているので、そちらを参考にして下さい。本当は文字単位で色の制御を行えるようにしたかったのですが、実装が難しくて諦めました。</p>
 

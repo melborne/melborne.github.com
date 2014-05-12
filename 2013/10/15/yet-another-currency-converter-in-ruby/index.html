@@ -204,10 +204,10 @@
 
 <p><code>MoneyExchange</code>をインストールすると<code>money_exchange</code>ってコマンドが使えるようになるよ。でこれを実行すると次のようなヘルプメッセージがでるよ。</p>
 
-<div class="highlight"><pre><code class="bash">% money_exchange
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>money_exchange
 Commands:
-  money_exchange ex AMOUNT BASE *TARGETS  <span class="c"># Currency Exchange from base to targets</span>
-  money_exchange <span class="nb">help</span> <span class="o">[</span>COMMAND<span class="o">]</span>           <span class="c"># Describe available commands or one specific command</span>
+  money_exchange ex AMOUNT BASE <span class="k">*</span>TARGETS  <span class="c"># Currency Exchange from base to targets</span>
+  money_exchange <span class="nb">help</span> <span class="o">[</span>COMMAND]           <span class="c"># Describe available commands or one specific command</span>
   money_exchange version                  <span class="c"># Show MoneyExchange version</span>
 
 Available currency codes:
@@ -234,11 +234,11 @@ Available currency codes:
 
 <p>でヘルプにしたがって<code>ex</code>コマンドに続いて金額とコードを入れれば結果が出力されるよ。</p>
 
-<div class="highlight"><pre><code class="bash">% money_exchange ex 1 usd jpy
-USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>money_exchange ex 1 usd jpy
+USD 1  <span class="o">=</span>&gt; JPY 98.65
 
-% money_exchange ex 1 usd jpy eur gbp
-USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
+<span class="gp">% </span>money_exchange ex 1 usd jpy eur gbp
+USD 1  <span class="o">=</span>&gt; JPY 98.65
           EUR 0.74
           GBP 0.63</code></pre></div>
 
@@ -250,9 +250,9 @@ USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
 
 <div class="highlight"><pre><code class="ruby"><span class="sx">% irb </span><span class="o">-</span><span class="n">rmoney_exchange</span>
 <span class="no">IRB</span> <span class="n">on</span> <span class="no">Ruby2</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
-<span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">usd_to_jpy</span> <span class="c1">#=&gt; 98.65</span>
-<span class="o">&gt;&gt;</span> <span class="s1">&#39;1&#39;</span><span class="o">.</span><span class="n">usd_to_jpy</span> <span class="c1">#=&gt; 98.65</span>
-<span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">usd_to</span><span class="p">(</span><span class="ss">:jpy</span><span class="p">,</span> <span class="ss">:eur</span><span class="p">,</span> <span class="ss">:gbp</span><span class="p">)</span> <span class="c1">#=&gt; [98.65, 0.74, 0.63]</span></code></pre></div>
+<span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">.</span><span class="nf">usd_to_jpy</span> <span class="c1">#=&gt; 98.65</span>
+<span class="o">&gt;&gt;</span> <span class="s1">'1'</span><span class="p">.</span><span class="nf">usd_to_jpy</span> <span class="c1">#=&gt; 98.65</span>
+<span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">.</span><span class="nf">usd_to</span><span class="p">(</span><span class="ss">:jpy</span><span class="p">,</span> <span class="ss">:eur</span><span class="p">,</span> <span class="ss">:gbp</span><span class="p">)</span> <span class="c1">#=&gt; [98.65, 0.74, 0.63]</span></code></pre></div>
 
 <h2 id="moneyexchange">MoneyExchangeの実装</h2>
 
@@ -260,15 +260,15 @@ USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">MoneyExchange</span>
 
-  <span class="c1"># Presume &#39;#xxx_to&#39; style methods as for money exchanges</span>
+  <span class="c1"># Presume '#xxx_to' style methods as for money exchanges</span>
   <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="n">meth</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">meth</span>
     <span class="k">when</span> <span class="sr">/^([a-z]{3})_to_([a-z]{3})$/</span>
-      <span class="n">currency</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="vg">$~</span><span class="o">.</span><span class="n">captures</span>
-      <span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">currency</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;to_</span><span class="si">#{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="n">currency</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="vg">$~</span><span class="p">.</span><span class="nf">captures</span>
+      <span class="no">Money</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">currency</span><span class="p">).</span><span class="nf">send</span><span class="p">(</span><span class="s2">"to_</span><span class="si">#{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">when</span> <span class="sr">/^([a-z]{3})_to$/</span>
       <span class="n">currency</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="vg">$~</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="n">a</span>
-      <span class="n">targets</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">currency</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;to_</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">targets</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="no">Money</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">currency</span><span class="p">).</span><span class="nf">send</span><span class="p">(</span><span class="s2">"to_</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="p">}</span>
     <span class="k">else</span>
       <span class="k">super</span>
     <span class="k">end</span>
@@ -284,7 +284,7 @@ USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
     <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="n">meth</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">meth</span>
       <span class="k">when</span> <span class="sr">/^to_([a-z]{3})$/</span>
-        <span class="no">Exchange</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="vg">$~</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span>
+        <span class="no">Exchange</span><span class="p">.</span><span class="nf">calc</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="vg">$~</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span>
       <span class="k">else</span>
         <span class="k">super</span>
       <span class="k">end</span>
@@ -296,37 +296,37 @@ USD <span class="nv">1</span>  <span class="o">=</span>&gt; JPY 98.65
 
     <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
       <span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="n">money</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">money</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="n">rate</span><span class="p">(</span><span class="n">money</span><span class="o">.</span><span class="n">currency</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="o">.</span><span class="n">to_f</span> <span class="o">/</span> <span class="mi">100</span>
-      <span class="k">end</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">money</span><span class="p">.</span><span class="nf">amount</span> <span class="o">*</span> <span class="n">rate</span><span class="p">(</span><span class="n">money</span><span class="p">.</span><span class="nf">currency</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="mi">100</span><span class="p">).</span><span class="nf">round</span><span class="p">.</span><span class="nf">to_f</span> <span class="sr">/ 100
+      end
 
-      <span class="kp">private</span>
-      <span class="k">def</span> <span class="nf">rate</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">call_google_currency_api</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="n">parse_rate</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-      <span class="k">end</span>
+      private
+      def rate(base, target)
+        response = call_google_currency_api(base, target)
+        rate = parse_rate(response)
+      end
       
-      <span class="k">def</span> <span class="nf">parse_rate</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">fix_json</span> <span class="n">response</span><span class="p">)</span>
+      def parse_rate(response)
+        body = JSON.parse(fix_json response)
 
-        <span class="k">if</span> <span class="o">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">].</span><span class="n">include?</span><span class="p">(</span><span class="n">body</span><span class="o">[</span><span class="s1">&#39;error&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># when no error</span>
-          <span class="n">body</span><span class="o">[</span><span class="s1">&#39;rhs&#39;</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_f</span>
-        <span class="k">else</span>
-          <span class="k">raise</span> <span class="no">NoCurrencyDataError</span>
-        <span class="k">end</span>
-      <span class="k">end</span>
+        if ['0', ''].include?(body['error']) # when no error
+          body['rhs'].split(',')[0].to_f
+        else
+          raise NoCurrencyDataError
+        end
+      end
 
-      <span class="c1"># Because Google Currency API returns a broken json.</span>
-      <span class="k">def</span> <span class="nf">fix_json</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/(\w+):/</span><span class="p">,</span> <span class="s1">&#39;&quot;\1&quot;:&#39;</span><span class="p">)</span>
+      # Because Google Currency API returns a broken json.
+      def fix_json(json)
+        json.gsub(/</span><span class="p">(\</span><span class="n">w</span><span class="o">+</span><span class="p">)</span><span class="ss">:/</span><span class="p">,</span> <span class="s1">'"\1":'</span><span class="p">)</span>
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="nf">call_google_currency_api</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com/ig/calculator&quot;</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;?hl=en&amp;q=1</span><span class="si">#{</span><span class="n">base</span><span class="si">}</span><span class="s2">=?</span><span class="si">#{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="no">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">uri</span><span class="o">+</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">read</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="s2">"http://www.google.com/ig/calculator"</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">"?hl=en&amp;q=1</span><span class="si">#{</span><span class="n">base</span><span class="si">}</span><span class="s2">=?</span><span class="si">#{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span>
+        <span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">uri</span><span class="o">+</span><span class="n">query</span><span class="p">).</span><span class="nf">read</span>
       <span class="k">rescue</span> <span class="no">OpenURI</span><span class="o">::</span><span class="no">HTTPError</span> <span class="o">=&gt;</span> <span class="n">e</span>
-        <span class="nb">abort</span> <span class="s2">&quot;HTTP Access Error:</span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">abort</span> <span class="s2">"HTTP Access Error:</span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>

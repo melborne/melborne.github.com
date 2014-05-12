@@ -181,33 +181,33 @@
 
     <p>mycal.rbに戻ってもう少し機能を増やします。日表示のための以下のコードを追加します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">&#39;/:year/:mon/:day&#39;</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
-   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">to_i</span> <span class="p">}</span>
    <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">)</span>
-   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">&#39;Webカレンダー完成予定日&#39;</span>
+   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">'Webカレンダー完成予定日'</span>
    <span class="n">erb</span> <span class="ss">:day</span>
  <span class="k">end</span>
  
- <span class="cp">__END__</span>
-<span class="cp"> </span>
-<span class="cp"> @@day</span>
-<span class="cp"> &lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日</span>
-<span class="cp"> &lt;%= @message %&gt;</span>
-<span class="cp"> &lt;%= @dcal %&gt;</span></code></pre></div>
+ <span class="cp">__END__
+ 
+ @@day
+ &lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日
+ &lt;%= @message %&gt;
+ &lt;%= @dcal %&gt;</span></code></pre></div>
 
 <p>Webサーバを起動します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="o">%</span> <span class="n">ruby</span> <span class="n">mycal</span><span class="o">.</span><span class="n">rb</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="sx">% ruby </span><span class="n">mycal</span><span class="p">.</span><span class="nf">rb</span></code></pre></div>
 
 <p>http://localhost:4567/1993/2/24にアクセスして、1993年2月24日の頁が表示されるか確認します。</p>
 
 <p>頁のカレンダーにおいて、対象の日の色付けを行うためタグを挿入します。メッセージもグレードアップします。先のコードを以下のように修正します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">&#39;/:year/:mon/:day&#39;</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
-   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_i</span> <span class="p">}</span>
-   <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="vi">@day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;target&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>
-   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">&#39;Webカレンダー完成予定日&#39;</span>
-   <span class="vi">@message</span> <span class="o">+=</span> <span class="s1">&#39;&lt;br/&gt;って、期限過ぎてるじゃん！&#39;</span> <span class="k">if</span> <span class="no">Time</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="o">*</span><span class="n">ymd</span><span class="p">)</span> <span class="o">-</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+   <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">to_i</span> <span class="p">}</span>
+   <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">).</span><span class="nf">sub</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="vi">@day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">'&lt;span id="target"&gt;\0&lt;/span&gt;'</span><span class="p">)</span>
+   <span class="vi">@message</span> <span class="o">=</span> <span class="s1">'Webカレンダー完成予定日'</span>
+   <span class="vi">@message</span> <span class="o">+=</span> <span class="s1">'&lt;br/&gt;って、期限過ぎてるじゃん！'</span> <span class="k">if</span> <span class="no">Time</span><span class="p">.</span><span class="nf">local</span><span class="p">(</span><span class="o">*</span><span class="n">ymd</span><span class="p">)</span> <span class="o">-</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="o">&lt;</span> <span class="mi">0</span>
    <span class="n">erb</span> <span class="ss">:day</span>
  <span class="k">end</span></code></pre></div>
 
@@ -217,49 +217,49 @@
 
 <p>表示形式が頁によって異なっているので、divで要素を識別できるようにテンプレートを修正します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="cp">__END__</span>
-<span class="cp"> @@layout</span>
-<span class="cp"> &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>
-<span class="cp">   &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;</span>
-<span class="cp"> &lt;html&gt;</span>
-<span class="cp">   &lt;head&gt;</span>
-<span class="cp">     &lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span>
-<span class="cp">     &lt;title&gt;mycal&lt;/title&gt;</span>
-<span class="cp">     </span>
-<span class="cp">   &lt;/head&gt;</span>
-<span class="cp">   &lt;body id=&quot;mycal&quot;&gt;</span>
-<span class="cp">     &lt;div id=&quot;banner&quot;&gt;</span>
-<span class="cp">       &lt;h1&gt;&lt;a id=&#39;title&#39; href=&#39;/&#39;&gt;Web Calendar&lt;/a&gt;&lt;/h1&gt;</span>
-<span class="cp">       &lt;div id=&quot;year_pred&quot;&gt;&lt;a href=&quot;/&lt;%= @year-1 %&gt;&quot;&gt;Previous Year&lt;/a&gt;&lt;/div&gt;</span>
-<span class="cp">       &lt;div id=&quot;year_next&quot;&gt;&lt;a href=&quot;/&lt;%= @year+1 %&gt;&quot;&gt;Next Year&lt;/a&gt;&lt;/div&gt;</span>
-<span class="cp">     &lt;/div&gt;</span>
-<span class="cp">     &lt;div id=&quot;main&quot;&gt;</span>
-<span class="cp">       &lt;%= yield %&gt;</span>
-<span class="cp">     &lt;/div&gt;</span>
-<span class="cp">   &lt;/body&gt;</span>
-<span class="cp"> &lt;/html&gt;</span>
-<span class="cp"> </span>
-<span class="cp"> @@index</span>
-<span class="cp"> &lt;div id=&quot;index&quot;&gt;</span>
-<span class="cp">   &lt;pre class=&quot;ycal&quot;&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;</span>
-<span class="cp"> &lt;/div&gt;</span>
-<span class="cp"> </span>
-<span class="cp"> @@year</span>
-<span class="cp"> &lt;div id=&quot;year&quot;&gt;</span>
-<span class="cp">   &lt;pre class=&quot;ycal&quot;&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;</span>
-<span class="cp"> &lt;/div&gt;</span>
-<span class="cp"> </span>
-<span class="cp"> @@mon</span>
-<span class="cp"> &lt;div id=&quot;mon&quot;&gt;</span>
-<span class="cp">   &lt;pre class=&quot;mcal&quot;&gt;&lt;%= @mcal %&gt;&lt;/pre&gt;</span>
-<span class="cp"> &lt;/div&gt;</span>
-<span class="cp"> </span>
-<span class="cp"> @@day</span>
-<span class="cp"> &lt;div id=&quot;day&quot;&gt;</span>
-<span class="cp">   &lt;h3 id=&quot;date&quot;&gt;&lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日&lt;/h3&gt;</span>
-<span class="cp">   &lt;p id=&quot;message&quot;&gt;&lt;%= @message %&gt;&lt;/p&gt;</span>
-<span class="cp">   &lt;pre class=&quot;dcal&quot;&gt;&lt;%= @dcal %&gt;&lt;/pre&gt;</span>
-<span class="cp"> &lt;/div&gt;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="cp">__END__
+ @@layout
+ &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+ &lt;html&gt;
+   &lt;head&gt;
+     &lt;meta http-equiv="Content-type" content="text/html; charset=utf-8"&gt;
+     &lt;title&gt;mycal&lt;/title&gt;
+     
+   &lt;/head&gt;
+   &lt;body id="mycal"&gt;
+     &lt;div id="banner"&gt;
+       &lt;h1&gt;&lt;a id='title' href='/'&gt;Web Calendar&lt;/a&gt;&lt;/h1&gt;
+       &lt;div id="year_pred"&gt;&lt;a href="/&lt;%= @year-1 %&gt;"&gt;Previous Year&lt;/a&gt;&lt;/div&gt;
+       &lt;div id="year_next"&gt;&lt;a href="/&lt;%= @year+1 %&gt;"&gt;Next Year&lt;/a&gt;&lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div id="main"&gt;
+       &lt;%= yield %&gt;
+     &lt;/div&gt;
+   &lt;/body&gt;
+ &lt;/html&gt;
+ 
+ @@index
+ &lt;div id="index"&gt;
+   &lt;pre class="ycal"&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;
+ &lt;/div&gt;
+ 
+ @@year
+ &lt;div id="year"&gt;
+   &lt;pre class="ycal"&gt;&lt;%= @ycal %&gt;&lt;/pre&gt;
+ &lt;/div&gt;
+ 
+ @@mon
+ &lt;div id="mon"&gt;
+   &lt;pre class="mcal"&gt;&lt;%= @mcal %&gt;&lt;/pre&gt;
+ &lt;/div&gt;
+ 
+ @@day
+ &lt;div id="day"&gt;
+   &lt;h3 id="date"&gt;&lt;%= @year %&gt;年&lt;%= @mon %&gt;月&lt;%= @day %&gt;日&lt;/h3&gt;
+   &lt;p id="message"&gt;&lt;%= @message %&gt;&lt;/p&gt;
+   &lt;pre class="dcal"&gt;&lt;%= @dcal %&gt;&lt;/pre&gt;
+ &lt;/div&gt;</span></code></pre></div>
 
 <p>yield回りの＜pre＞を削除し、各実体頁側で対応するようにします。</p>
 
@@ -271,13 +271,13 @@
      <span class="n">cal</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mon</span>
        <span class="n">calendar</span><span class="p">(</span><span class="n">mon</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
      <span class="k">else</span>
-       <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
-         <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal&#39; id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+       <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+         <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">"&lt;div class='mon_cal' id='mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">'&gt;"</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
          <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
        <span class="k">end</span>
      <span class="k">end</span>
-     <span class="n">cal</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/((</span><span class="si">#{</span><span class="no">MONTHS</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span><span class="si">}</span><span class="sr">)\w*)/</span><span class="p">)</span> <span class="k">do</span>
-       <span class="sx">%Q{&lt;a href=&quot;/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="no">MONTHS</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="sx">&quot;&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
+     <span class="n">cal</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/((</span><span class="si">#{</span><span class="no">MONTHS</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'|'</span><span class="p">)</span><span class="si">}</span><span class="sr">)\w*)/</span><span class="p">)</span> <span class="k">do</span>
+       <span class="sx">%Q{&lt;a href="/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="no">MONTHS</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="sx">"&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
      <span class="k">end</span>
    <span class="k">end</span>
    
@@ -290,28 +290,28 @@
 
 <p>今日の日付にタグを付けます。calメソッドのelse節を次のようにします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
-   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">"&lt;div class='mon_cal id='mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;"</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
    <span class="c1">#make today tag</span>
-   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
-   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">mon</span> <span class="ow">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
-     <span class="n">monthly_cal</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;today&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>          
+   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>
+   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="p">.</span><span class="nf">mon</span> <span class="n">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="p">.</span><span class="nf">year</span>
+     <span class="n">monthly_cal</span><span class="p">.</span><span class="nf">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="p">.</span><span class="nf">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">'&lt;span id="today"&gt;\0&lt;/span&gt;'</span><span class="p">)</span>          
    <span class="k">end</span>
    <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
  <span class="k">end</span></code></pre></div>
 
 <p>更に各日付に該当頁のリンクタグを挿入します。else節に追加します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
-   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=&#39;mon_cal id=&#39;mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+   <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">"&lt;div class='mon_cal id='mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;"</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
    <span class="c1">#make days link</span>
-   <span class="n">monthly_cal</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/(\s([1-3]?[0-9](?=\D)))/</span><span class="p">)</span> <span class="k">do</span>
-     <span class="sx">%Q{&lt;a class=&quot;days_link&quot; href=&quot;/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="vg">$2</span><span class="si">}</span><span class="sx">&quot;&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
+   <span class="n">monthly_cal</span><span class="p">.</span><span class="nf">gsub!</span><span class="p">(</span><span class="sr">/(\s([1-3]?[0-9](?=\D)))/</span><span class="p">)</span> <span class="k">do</span>
+     <span class="sx">%Q{&lt;a class="days_link" href="/</span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="sx">/</span><span class="si">#{</span><span class="vg">$2</span><span class="si">}</span><span class="sx">"&gt;</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="sx">&lt;/a&gt;}</span>
    <span class="k">end</span>
    <span class="c1">#make today tag</span>
-   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
-   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">mon</span> <span class="ow">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
-     <span class="n">monthly_cal</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">&#39;&lt;span id=&quot;today&quot;&gt;\0&lt;/span&gt;&#39;</span><span class="p">)</span>          
+   <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>
+   <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">today</span><span class="p">.</span><span class="nf">mon</span> <span class="n">and</span> <span class="n">year</span> <span class="o">==</span> <span class="n">today</span><span class="p">.</span><span class="nf">year</span>
+     <span class="n">monthly_cal</span><span class="p">.</span><span class="nf">sub!</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="n">today</span><span class="p">.</span><span class="nf">day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">'&lt;span id="today"&gt;\0&lt;/span&gt;'</span><span class="p">)</span>          
    <span class="k">end</span>
    <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">monthly_cal</span>
  <span class="k">end</span></code></pre></div>
@@ -320,56 +320,56 @@
 
 <div class="highlight"><pre><code class="css"><span class="nt">__END__</span>
  <span class="o">@</span><span class="k">@layout</span>
- <span class="o">&lt;!</span><span class="nt">DOCTYPE</span> <span class="nt">html</span> <span class="nt">PUBLIC</span> <span class="s2">&quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>
-   <span class="s2">&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;</span><span class="o">&gt;</span>
- <span class="o">&lt;</span><span class="nt">html</span><span class="o">&gt;</span>
-   <span class="o">&lt;</span><span class="nt">head</span><span class="o">&gt;</span>
-     <span class="o">&lt;</span><span class="nt">meta</span> <span class="nt">http-equiv</span><span class="o">=</span><span class="s2">&quot;Content-type&quot;</span> <span class="nt">content</span><span class="o">=</span><span class="s2">&quot;text/html; charset=utf-8&quot;</span><span class="o">&gt;</span>
-     <span class="o">&lt;</span><span class="nt">title</span><span class="o">&gt;</span><span class="nt">mycal</span><span class="o">&lt;/</span><span class="nt">title</span><span class="o">&gt;</span>
-     <span class="o">&lt;</span><span class="nt">style</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span> <span class="nt">media</span><span class="o">=</span><span class="s2">&quot;screen&quot;</span><span class="o">&gt;</span>
-       <span class="o">*</span> <span class="p">{</span> <span class="nt">margin</span><span class="o">:</span> <span class="nt">0</span><span class="o">;</span> <span class="nt">padding</span><span class="o">:</span> <span class="nt">0</span><span class="o">;</span><span class="p">}</span>
-       <span class="nt">body</span> <span class="p">{</span><span class="k">background</span><span class="o">:</span><span class="m">#eed</span><span class="p">;}</span>
-       <span class="nf">#banner</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">20px</span><span class="p">;</span> <span class="k">margin-left</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">margin-right</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span><span class="m">700px</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#906</span><span class="p">;</span> <span class="p">}</span>
-       <span class="nf">#title</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">250px</span><span class="p">;}</span>
-       <span class="nf">#year_pred</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="p">}</span>
-       <span class="nf">#year_next</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
+ <span class="err">&lt;!</span><span class="n">DOCTYPE</span> <span class="n">html</span> <span class="n">PUBLIC</span> <span class="s1">"-//W3C//DTD XHTML 1.1//EN"</span>
+   <span class="s1">"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"</span><span class="err">&gt;</span>
+ <span class="err">&lt;</span><span class="n">html</span><span class="err">&gt;</span>
+   <span class="err">&lt;</span><span class="n">head</span><span class="err">&gt;</span>
+     <span class="err">&lt;</span><span class="n">meta</span> <span class="n">http-equiv</span><span class="err">=</span><span class="s1">"Content-type"</span> <span class="n">content</span><span class="err">=</span><span class="s1">"text/html; charset=utf-8"</span><span class="err">&gt;</span>
+     <span class="err">&lt;</span><span class="n">title</span><span class="err">&gt;</span><span class="n">mycal</span><span class="err">&lt;</span><span class="p">/</span><span class="n">title</span><span class="err">&gt;</span>
+     <span class="err">&lt;</span><span class="n">style</span> <span class="n">type</span><span class="err">=</span><span class="s1">"text/css"</span> <span class="n">media</span><span class="err">=</span><span class="s1">"screen"</span><span class="err">&gt;</span>
+       <span class="err">*</span> <span class="p">{</span> <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span> <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;}</span>
+       <span class="nt">body</span> <span class="p">{</span><span class="nl">background</span><span class="p">:</span><span class="m">#eed</span><span class="p">;}</span>
+       <span class="nf">#banner</span> <span class="p">{</span> <span class="nl">margin</span><span class="p">:</span><span class="m">20px</span><span class="p">;</span> <span class="nl">margin-left</span><span class="p">:</span><span class="nb">auto</span><span class="p">;</span> <span class="nl">margin-right</span><span class="p">:</span><span class="nb">auto</span><span class="p">;</span> <span class="nl">width</span><span class="p">:</span><span class="m">700px</span><span class="p">;</span> <span class="nl">color</span><span class="p">:</span><span class="m">#906</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#title</span> <span class="p">{</span> <span class="nl">margin-left</span><span class="p">:</span><span class="m">250px</span><span class="p">;}</span>
+       <span class="nf">#year_pred</span> <span class="p">{</span> <span class="nl">float</span><span class="p">:</span><span class="nb">left</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#year_next</span> <span class="p">{</span> <span class="nl">float</span><span class="p">:</span><span class="nb">right</span><span class="p">;</span> <span class="p">}</span>
  
-       <span class="nf">#main</span> <span class="p">{</span> <span class="k">position</span><span class="o">:</span><span class="k">absolute</span><span class="p">;</span> <span class="k">left</span><span class="o">:</span><span class="m">50</span><span class="o">%</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">0</span> <span class="m">-360px</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span><span class="m">60</span><span class="o">%</span><span class="p">;}</span>
-       <span class="nc">.ycal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#514</span><span class="p">;</span> <span class="k">font-weight</span><span class="o">:</span><span class="k">bold</span><span class="p">;}</span>
-       <span class="nc">.mon_cal</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">5px</span> <span class="m">10px</span> <span class="m">5px</span> <span class="m">10px</span><span class="p">;}</span>
-       <span class="nf">#mon_5</span><span class="o">,</span> <span class="nf">#mon_9</span> <span class="p">{</span><span class="k">clear</span><span class="o">:</span><span class="k">left</span><span class="p">;}</span>
-       <span class="nf">#mon</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">100px</span><span class="p">;}</span>
-       <span class="nc">.mcal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;</span> <span class="k">font-size</span><span class="o">:</span><span class="m">32pt</span><span class="p">;</span> <span class="k">margin-top</span><span class="o">:</span><span class="m">10px</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
-       <span class="nf">#day</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span><span class="m">250px</span><span class="p">;}</span>
-       <span class="nc">.dcal</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;</span> <span class="k">font-size</span><span class="o">:</span><span class="m">16pt</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
-       <span class="nt">h3</span><span class="nf">#date</span> <span class="p">{</span> <span class="k">font-size</span><span class="o">:</span><span class="m">24pt</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#c06</span><span class="p">;}</span>
-       <span class="nf">#message</span> <span class="p">{</span> <span class="k">font-size</span><span class="o">:</span><span class="m">14pt</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#360</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">30px</span> <span class="m">0</span><span class="p">;}</span>
-       <span class="nf">#target</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#c06</span><span class="p">;}</span>
-       <span class="nt">a</span> <span class="p">{</span><span class="k">text-decoration</span><span class="o">:</span><span class="k">none</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#514</span><span class="p">;}</span>
-       <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:link</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:visited</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#217</span><span class="p">;}</span>
-       <span class="nt">a</span><span class="nd">:hover</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:hover</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#383</span><span class="p">;}</span>
-       <span class="nf">#today</span> <span class="p">{</span> <span class="k">color</span><span class="o">:</span><span class="m">#060</span><span class="p">;}</span>
+       <span class="nf">#main</span> <span class="p">{</span> <span class="nl">position</span><span class="p">:</span><span class="nb">absolute</span><span class="p">;</span> <span class="nl">left</span><span class="p">:</span><span class="m">50</span><span class="err">%</span><span class="p">;</span> <span class="nl">margin</span><span class="p">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">0</span> <span class="m">-360px</span><span class="p">;</span> <span class="nl">height</span><span class="p">:</span><span class="m">60</span><span class="err">%</span><span class="p">;}</span>
+       <span class="nc">.ycal</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#514</span><span class="p">;</span> <span class="nl">font-weight</span><span class="p">:</span><span class="nb">bold</span><span class="p">;}</span>
+       <span class="nc">.mon_cal</span> <span class="p">{</span> <span class="nl">float</span><span class="p">:</span><span class="nb">left</span><span class="p">;</span> <span class="nl">margin</span><span class="p">:</span><span class="m">5px</span> <span class="m">10px</span> <span class="m">5px</span> <span class="m">10px</span><span class="p">;}</span>
+       <span class="nf">#mon_5</span><span class="o">,</span> <span class="nf">#mon_9</span> <span class="p">{</span><span class="nl">clear</span><span class="p">:</span><span class="nb">left</span><span class="p">;}</span>
+       <span class="nf">#mon</span> <span class="p">{</span> <span class="nl">margin-left</span><span class="p">:</span><span class="m">100px</span><span class="p">;}</span>
+       <span class="nc">.mcal</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#217</span><span class="p">;</span> <span class="nl">font-size</span><span class="p">:</span><span class="m">32pt</span><span class="p">;</span> <span class="nl">margin-top</span><span class="p">:</span><span class="m">10px</span><span class="p">;</span> <span class="nl">clear</span><span class="p">:</span><span class="nb">right</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nf">#day</span> <span class="p">{</span> <span class="nl">margin-left</span><span class="p">:</span><span class="m">250px</span><span class="p">;}</span>
+       <span class="nc">.dcal</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#217</span><span class="p">;</span> <span class="nl">font-size</span><span class="p">:</span><span class="m">16pt</span><span class="p">;</span> <span class="nl">clear</span><span class="p">:</span><span class="nb">right</span><span class="p">;</span> <span class="p">}</span>
+       <span class="nt">h3</span><span class="nf">#date</span> <span class="p">{</span> <span class="nl">font-size</span><span class="p">:</span><span class="m">24pt</span><span class="p">;</span> <span class="nl">color</span><span class="p">:</span><span class="m">#c06</span><span class="p">;}</span>
+       <span class="nf">#message</span> <span class="p">{</span> <span class="nl">font-size</span><span class="p">:</span><span class="m">14pt</span><span class="p">;</span> <span class="nl">color</span><span class="p">:</span><span class="m">#360</span><span class="p">;</span> <span class="nl">margin</span><span class="p">:</span><span class="m">30px</span> <span class="m">0</span> <span class="m">30px</span> <span class="m">0</span><span class="p">;}</span>
+       <span class="nf">#target</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#c06</span><span class="p">;}</span>
+       <span class="nt">a</span> <span class="p">{</span><span class="nl">text-decoration</span><span class="p">:</span><span class="nb">none</span><span class="p">;</span> <span class="nl">color</span><span class="p">:</span><span class="m">#514</span><span class="p">;}</span>
+       <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:link</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:visited</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#217</span><span class="p">;}</span>
+       <span class="nt">a</span><span class="nd">:hover</span><span class="o">,</span> <span class="nt">a</span><span class="nc">.days_link</span><span class="nd">:hover</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#383</span><span class="p">;}</span>
+       <span class="nf">#today</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span><span class="m">#060</span><span class="p">;}</span>
      <span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
    <span class="o">&lt;/</span><span class="nt">head</span><span class="o">&gt;</span>
-   <span class="o">&lt;</span><span class="nt">body</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;mycal&quot;</span><span class="o">&gt;</span>
-     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;banner&quot;</span><span class="o">&gt;</span>
-       <span class="o">&lt;</span><span class="nt">h1</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">id</span><span class="o">=</span><span class="s1">&#39;title&#39;</span> <span class="nt">href</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">&gt;</span><span class="nt">Web</span> <span class="nt">Calendar</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">h1</span><span class="o">&gt;</span>
-       <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;year_pred&quot;</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">href</span><span class="o">=</span><span class="s2">&quot;/&lt;%= @year-1 %&gt;&quot;</span><span class="o">&gt;</span><span class="nt">Previous</span> <span class="nt">Year</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
-       <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;year_next&quot;</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">href</span><span class="o">=</span><span class="s2">&quot;/&lt;%= @year+1 %&gt;&quot;</span><span class="o">&gt;</span><span class="nt">Next</span> <span class="nt">Year</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
-     <span class="o">&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
-     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="o">&gt;</span>
-       <span class="o">&lt;%=</span> <span class="nt">yield</span> <span class="o">%&gt;</span>
-     <span class="o">&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
-   <span class="o">&lt;/</span><span class="nt">body</span><span class="o">&gt;</span>
- <span class="o">&lt;/</span><span class="nt">html</span><span class="o">&gt;</span></code></pre></div>
+   <span class="o">&lt;</span><span class="nt">body</span> <span class="nt">id</span><span class="o">=</span><span class="err">"</span><span class="nt">mycal</span><span class="err">"</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="err">"</span><span class="nt">banner</span><span class="err">"</span><span class="o">&gt;</span>
+       <span class="o">&lt;</span><span class="nt">h1</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">id</span><span class="o">=</span><span class="err">'</span><span class="nt">title</span><span class="err">'</span> <span class="nt">href</span><span class="o">=</span><span class="err">'</span><span class="o">/</span><span class="err">'</span><span class="o">&gt;</span><span class="nt">Web</span> <span class="nt">Calendar</span><span class="o">&lt;/</span><span class="nt">a</span><span class="o">&gt;&lt;/</span><span class="nt">h1</span><span class="o">&gt;</span>
+       <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">id</span><span class="o">=</span><span class="err">"</span><span class="nt">year_pred</span><span class="err">"</span><span class="o">&gt;&lt;</span><span class="nt">a</span> <span class="nt">href</span><span class="o">=</span><span class="err">"</span><span class="o">/&lt;%=</span> <span class="k">@year-1</span> <span class="err">%&gt;</span><span class="s1">"&gt;Previous Year&lt;/a&gt;&lt;/div&gt;
+       &lt;div id="</span><span class="n">year_next</span><span class="s1">"&gt;&lt;a href="</span><span class="p">/</span><span class="err">&lt;%=</span> <span class="err">@</span><span class="n">year</span><span class="err">+</span><span class="m">1</span> <span class="err">%&gt;</span><span class="s1">"&gt;Next Year&lt;/a&gt;&lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div id="</span><span class="n">main</span><span class="err">"&gt;</span>
+       <span class="err">&lt;%=</span> <span class="n">yield</span> <span class="err">%&gt;</span>
+     <span class="err">&lt;</span><span class="p">/</span><span class="n">div</span><span class="err">&gt;</span>
+   <span class="err">&lt;</span><span class="p">/</span><span class="n">body</span><span class="err">&gt;</span>
+ <span class="err">&lt;</span><span class="p">/</span><span class="n">html</span><span class="err">&gt;</span></code></pre></div>
 
 <p>http://localhost:4567/にアクセスします。Previous Yearを5回クリックしてAugustをクリックします。2004年8月のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックして、Octoberの15日をクリックします。2007年10月15日のカレンダーが表示されているのを確認します。そこからNext Yearを3回クリックしてMayの3日をクリックします。2010年5月3日のカレンダーが表示されているのを確認します。</p>
 
 <p>カレンダーが完成したのでcommitしてHerokuにpushします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;second commit&quot;</span>
- <span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">push</span> <span class="n">heroku</span>
- <span class="n">mycal</span><span class="o">%</span> <span class="n">heroku</span> <span class="nb">open</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="sx">% git </span><span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">"second commit"</span>
+ <span class="n">mycal</span><span class="sx">% git </span><span class="n">push</span> <span class="n">heroku</span>
+ <span class="n">mycal</span><span class="sx">% heroku </span><span class="nb">open</span></code></pre></div>
 
 <p>以下のようなカレンダーがブラウザに表示されたら成功です。</p>
 

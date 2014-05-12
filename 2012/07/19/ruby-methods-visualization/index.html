@@ -185,41 +185,41 @@
 <h2 id="section">インスタンスメソッドを数える</h2>
 <p>まずは、インスタンスメソッドを数えましょう。グラフ化の対象は、10以上のメソッドを持つクラスです。最初にクラスごとのメソッド数をリストアップします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">klasses</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span><span class="p">(</span><span class="no">Module</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">klasses</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="p">.</span><span class="nf">each_object</span><span class="p">(</span><span class="no">Module</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">live</span><span class="p">(</span><span class="nb">methods</span><span class="p">)</span>
-  <span class="nb">methods</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">start_with?</span> <span class="s1">&#39;_deprecated&#39;</span> <span class="p">}</span>
+  <span class="nb">methods</span><span class="p">.</span><span class="nf">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">start_with?</span> <span class="s1">'_deprecated'</span> <span class="p">}</span>
 <span class="k">end</span>
 
-<span class="nb">methods</span> <span class="o">=</span> <span class="n">klasses</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span>
-  <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="o">]</span>
+<span class="nb">methods</span> <span class="o">=</span> <span class="n">klasses</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span>
+  <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="nf">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)).</span><span class="nf">size</span><span class="p">,</span> <span class="n">live</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="nf">instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)).</span><span class="nf">size</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="c1"># List of Instance Methods</span>
-<span class="n">ims</span> <span class="o">=</span> <span class="nb">methods</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">im</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
+<span class="n">ims</span> <span class="o">=</span> <span class="nb">methods</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">im</span><span class="o">]</span> <span class="p">}.</span><span class="nf">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="p">}.</span><span class="nf">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
 
-<span class="nb">puts</span> <span class="n">ims</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kim</span><span class="o">|</span> <span class="n">kim</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; =&gt; &quot;</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span></code></pre></div>
+<span class="nb">puts</span> <span class="n">ims</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kim</span><span class="o">|</span> <span class="n">kim</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">" =&gt; "</span><span class="p">)</span> <span class="p">}.</span><span class="nf">join</span><span class="p">(</span><span class="s2">", "</span><span class="p">)</span></code></pre></div>
 
 <p>結果は次のようになりました。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">String</span> <span class="o">=&gt;</span> <span class="mi">109</span><span class="p">,</span> <span class="no">Pathname</span> <span class="o">=&gt;</span> <span class="mi">92</span><span class="p">,</span> <span class="nb">Array</span> <span class="o">=&gt;</span> <span class="mi">88</span><span class="p">,</span> <span class="no">IO</span> <span class="o">=&gt;</span> <span class="mi">70</span><span class="p">,</span> <span class="no">Time</span> <span class="o">=&gt;</span> <span class="mi">54</span><span class="p">,</span> <span class="no">Hash</span> <span class="o">=&gt;</span> <span class="mi">53</span><span class="p">,</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span> <span class="o">=&gt;</span> <span class="mi">51</span><span class="p">,</span> <span class="no">Kernel</span> <span class="o">=&gt;</span> <span class="mi">48</span><span class="p">,</span> <span class="no">Enumerable</span> <span class="o">=&gt;</span> <span class="mi">47</span><span class="p">,</span> <span class="no">Module</span> <span class="o">=&gt;</span> <span class="mi">43</span><span class="p">,</span> <span class="nb">Float</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="no">File</span><span class="o">::</span><span class="no">Stat</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="no">Numeric</span> <span class="o">=&gt;</span> <span class="mi">41</span><span class="p">,</span> <span class="no">Complex</span> <span class="o">=&gt;</span> <span class="mi">37</span><span class="p">,</span> <span class="no">Bignum</span> <span class="o">=&gt;</span> <span class="mi">36</span><span class="p">,</span> <span class="no">Fixnum</span> <span class="o">=&gt;</span> <span class="mi">34</span><span class="p">,</span> <span class="no">Thread</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="no">Rational</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="nb">Integer</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">Symbol</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">MatchData</span> <span class="o">=&gt;</span> <span class="mi">19</span><span class="p">,</span> <span class="no">Range</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">,</span> <span class="no">Proc</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="p">,</span> <span class="no">Regexp</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Struct</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Method</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Process</span><span class="o">::</span><span class="no">Status</span> <span class="o">=&gt;</span> <span class="mi">15</span><span class="p">,</span> <span class="no">Encoding</span><span class="o">::</span><span class="no">Converter</span> <span class="o">=&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="no">NilClass</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">Enumerator</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">UnboundMethod</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">File</span> <span class="o">=&gt;</span> <span class="mi">11</span><span class="p">,</span> <span class="no">Dir</span> <span class="o">=&gt;</span> <span class="mi">11</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">String</span> <span class="o">=&gt;</span> <span class="mi">109</span><span class="p">,</span> <span class="no">Pathname</span> <span class="o">=&gt;</span> <span class="mi">92</span><span class="p">,</span> <span class="nb">Array</span> <span class="o">=&gt;</span> <span class="mi">88</span><span class="p">,</span> <span class="no">IO</span> <span class="o">=&gt;</span> <span class="mi">70</span><span class="p">,</span> <span class="no">Time</span> <span class="o">=&gt;</span> <span class="mi">54</span><span class="p">,</span> <span class="no">Hash</span> <span class="o">=&gt;</span> <span class="mi">53</span><span class="p">,</span> <span class="no">ARGF</span><span class="p">.</span><span class="nf">class</span> <span class="o">=&gt;</span> <span class="mi">51</span><span class="p">,</span> <span class="no">Kernel</span> <span class="o">=&gt;</span> <span class="mi">48</span><span class="p">,</span> <span class="no">Enumerable</span> <span class="o">=&gt;</span> <span class="mi">47</span><span class="p">,</span> <span class="no">Module</span> <span class="o">=&gt;</span> <span class="mi">43</span><span class="p">,</span> <span class="nb">Float</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="no">File</span><span class="o">::</span><span class="no">Stat</span> <span class="o">=&gt;</span> <span class="mi">42</span><span class="p">,</span> <span class="no">Numeric</span> <span class="o">=&gt;</span> <span class="mi">41</span><span class="p">,</span> <span class="no">Complex</span> <span class="o">=&gt;</span> <span class="mi">37</span><span class="p">,</span> <span class="no">Bignum</span> <span class="o">=&gt;</span> <span class="mi">36</span><span class="p">,</span> <span class="no">Fixnum</span> <span class="o">=&gt;</span> <span class="mi">34</span><span class="p">,</span> <span class="no">Thread</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="no">Rational</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">,</span> <span class="nb">Integer</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">Symbol</span> <span class="o">=&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="no">MatchData</span> <span class="o">=&gt;</span> <span class="mi">19</span><span class="p">,</span> <span class="no">Range</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">,</span> <span class="no">Proc</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="p">,</span> <span class="no">Regexp</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Struct</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Method</span> <span class="o">=&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="no">Process</span><span class="o">::</span><span class="no">Status</span> <span class="o">=&gt;</span> <span class="mi">15</span><span class="p">,</span> <span class="no">Encoding</span><span class="o">::</span><span class="no">Converter</span> <span class="o">=&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="no">NilClass</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">Enumerator</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">UnboundMethod</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span> <span class="no">File</span> <span class="o">=&gt;</span> <span class="mi">11</span><span class="p">,</span> <span class="no">Dir</span> <span class="o">=&gt;</span> <span class="mi">11</span></code></pre></div>
 
 <p>なるほど、<code>String</code>のインスタンスメソッドは100を超えてるんですね！あれ、なんで<code>Pathname</code>がいるのかな…理由は分かりませんが、メソッド多いですねー。そして、<code>Array</code>, <code>IO</code>, <code>Time</code>, <code>Hash</code>と続きます。</p>
 
 <p>さあ、次にこれをGoogle Chart APIでグラフ化します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">ims</span><span class="o">.</span><span class="n">transpose</span>
-<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">ims</span><span class="p">.</span><span class="nf">transpose</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span><span class="nf">to_a</span>
 
-<span class="nb">puts</span> <span class="no">Gchart</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
+<span class="nb">puts</span> <span class="no">Gchart</span><span class="p">.</span><span class="nf">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
              <span class="ss">:max_value</span> <span class="o">=&gt;</span> <span class="mi">110</span><span class="p">,</span>
-             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">&#39;t,y,x&#39;</span><span class="p">,</span>
-             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
-             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">&#39;390x760&#39;</span><span class="p">,</span>
+             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">'t,y,x'</span><span class="p">,</span>
+             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="nf">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
+             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">'390x760'</span><span class="p">,</span>
              <span class="ss">:bar_width_and_spacing</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="p">,</span>
-             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">&#39;Instance Methods&#39;</span><span class="p">,</span>
-             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">&#39;efefdd&#39;</span><span class="p">,</span>
-             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span>
+             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">'Instance Methods'</span><span class="p">,</span>
+             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">'efefdd'</span><span class="p">,</span>
+             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">'horizontal'</span><span class="p">,</span>
              <span class="p">)</span>
 
 <span class="c1">#&gt;&gt; http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|100|110|1:|Dir|File|UnboundMethod|Enumerator|NilClass|Encoding%3A%3AConverter|Process%3A%3AStatus|Method|Struct|Regexp|Proc|Range|MatchData|Symbol|Integer|Rational|Thread|Fixnum|Bignum|Complex|Numeric|File%3A%3AStat|Float|Module|Enumerable|Kernel|ARGF.class|Hash|Time|IO|Array|Pathname|String|2:|0|10|20|30|40|50|60|70|80|90|100|110&amp;chxt=t,y,x&amp;chbh=17&amp;chf=bg,s,efefdd&amp;chd=s:9zxnedcbaYXXXUUTOONNKKJJJJIHGGGGG&amp;chtt=Instance+Methods&amp;cht=bhs&amp;chs=390x760&amp;chxr=0,109,110</span></code></pre></div>
@@ -234,9 +234,9 @@
 <p>次に、クラスメソッドを数えましょう。グラフ化の対象は、5以上のメソッドを持つクラスです。最初にクラスごとのメソッド数をリストアップします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># List of Class Methods</span>
-<span class="n">cms</span> <span class="o">=</span> <span class="nb">methods</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="p">}</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
+<span class="n">cms</span> <span class="o">=</span> <span class="nb">methods</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">im</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">cm</span><span class="o">]</span> <span class="p">}.</span><span class="nf">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="p">}.</span><span class="nf">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="o">-</span><span class="n">m</span> <span class="p">}</span>
 
-<span class="nb">puts</span> <span class="n">cms</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kcm</span><span class="o">|</span> <span class="n">kcm</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; =&gt; &quot;</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span></code></pre></div>
+<span class="nb">puts</span> <span class="n">cms</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">kcm</span><span class="o">|</span> <span class="n">kcm</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">" =&gt; "</span><span class="p">)</span> <span class="p">}.</span><span class="nf">join</span><span class="p">(</span><span class="s2">", "</span><span class="p">)</span></code></pre></div>
 
 <p>結果は次のようになりました。</p>
 
@@ -246,18 +246,18 @@
 
 <p>さあ、次にこれをGoogle Chart APIでグラフ化します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">transpose</span>
-<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cms</span><span class="p">.</span><span class="nf">transpose</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span><span class="nf">to_a</span>
 
-<span class="nb">puts</span> <span class="no">Gchart</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
+<span class="nb">puts</span> <span class="no">Gchart</span><span class="p">.</span><span class="nf">bar</span><span class="p">(</span><span class="ss">:data</span> <span class="o">=&gt;</span> <span class="n">data</span><span class="p">,</span>
              <span class="ss">:max_value</span> <span class="o">=&gt;</span> <span class="mi">90</span><span class="p">,</span>
-             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">&#39;t,y,x&#39;</span><span class="p">,</span>
-             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
-             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">&#39;600x500&#39;</span><span class="p">,</span>
+             <span class="ss">:axis_with_labels</span> <span class="o">=&gt;</span> <span class="s1">'t,y,x'</span><span class="p">,</span>
+             <span class="ss">:axis_labels</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="nf">reverse</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span><span class="p">,</span>
+             <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="s1">'600x500'</span><span class="p">,</span>
              <span class="ss">:bar_width_and_spacing</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">,</span>
-             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">&#39;Class Methods&#39;</span><span class="p">,</span>
-             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">&#39;efefdd&#39;</span><span class="p">,</span>
-             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span>
+             <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s1">'Class Methods'</span><span class="p">,</span>
+             <span class="ss">:bg</span> <span class="o">=&gt;</span> <span class="s1">'efefdd'</span><span class="p">,</span>
+             <span class="ss">:orientation</span> <span class="o">=&gt;</span> <span class="s1">'horizontal'</span><span class="p">,</span>
              <span class="p">)</span>
 
 <span class="c1">#&gt;&gt; http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|1:|Regexp|ObjectSpace|RubyVM%3A%3AInstructionSequence|Time|GC|GC%3A%3AProfiler|Process%3A%3AGID|Process%3A%3AUID|Encoding|Thread|IO|Process%3A%3ASys|Dir|Math|FileTest|Process|File|Kernel|Gem|2:|0|10|20|30|40|50|60|70|80|90&amp;chxt=t,y,x&amp;chbh=18&amp;chf=bg,s,efefdd&amp;chd=s:9onaRRLKKIHGGEEEEEE&amp;chtt=Class+Methods&amp;cht=bhs&amp;chs=600x500&amp;chxr=0,89,90</span></code></pre></div>
@@ -285,70 +285,70 @@
 <p>まずは重み付けの情報を作ります。インスタンスメソッドから。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># Instance methods for Wordle</span>
-<span class="nb">puts</span> <span class="n">ims</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></code></pre></div>
+<span class="nb">puts</span> <span class="n">ims</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span></code></pre></div>
 
 <p>次のようなデータが得られます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">String</span><span class="p">:</span><span class="mi">109</span>
-<span class="ss">Pathname</span><span class="p">:</span><span class="mi">92</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">String</span><span class="p">:</span><span class="mi">109</span>
+<span class="no">Pathname</span><span class="p">:</span><span class="mi">92</span>
 <span class="nb">Array</span><span class="p">:</span><span class="mi">88</span>
-<span class="ss">IO</span><span class="p">:</span><span class="mi">70</span>
-<span class="ss">Time</span><span class="p">:</span><span class="mi">54</span>
-<span class="ss">Hash</span><span class="p">:</span><span class="mi">53</span>
-<span class="no">ARGF</span><span class="o">.</span><span class="n">class</span><span class="p">:</span><span class="mi">51</span>
-<span class="ss">Kernel</span><span class="p">:</span><span class="mi">48</span>
-<span class="ss">Enumerable</span><span class="p">:</span><span class="mi">47</span>
-<span class="ss">Module</span><span class="p">:</span><span class="mi">43</span>
+<span class="no">IO</span><span class="p">:</span><span class="mi">70</span>
+<span class="no">Time</span><span class="p">:</span><span class="mi">54</span>
+<span class="no">Hash</span><span class="p">:</span><span class="mi">53</span>
+<span class="no">ARGF</span><span class="p">.</span><span class="nf">class</span><span class="p">:</span><span class="mi">51</span>
+<span class="no">Kernel</span><span class="p">:</span><span class="mi">48</span>
+<span class="no">Enumerable</span><span class="p">:</span><span class="mi">47</span>
+<span class="no">Module</span><span class="p">:</span><span class="mi">43</span>
 <span class="nb">Float</span><span class="p">:</span><span class="mi">42</span>
-<span class="no">File</span><span class="o">::</span><span class="ss">Stat</span><span class="p">:</span><span class="mi">42</span>
-<span class="ss">Numeric</span><span class="p">:</span><span class="mi">41</span>
-<span class="ss">Complex</span><span class="p">:</span><span class="mi">37</span>
-<span class="ss">Bignum</span><span class="p">:</span><span class="mi">36</span>
-<span class="ss">Fixnum</span><span class="p">:</span><span class="mi">34</span>
-<span class="ss">Thread</span><span class="p">:</span><span class="mi">25</span>
-<span class="ss">Rational</span><span class="p">:</span><span class="mi">25</span>
+<span class="no">File</span><span class="o">::</span><span class="no">Stat</span><span class="p">:</span><span class="mi">42</span>
+<span class="no">Numeric</span><span class="p">:</span><span class="mi">41</span>
+<span class="no">Complex</span><span class="p">:</span><span class="mi">37</span>
+<span class="no">Bignum</span><span class="p">:</span><span class="mi">36</span>
+<span class="no">Fixnum</span><span class="p">:</span><span class="mi">34</span>
+<span class="no">Thread</span><span class="p">:</span><span class="mi">25</span>
+<span class="no">Rational</span><span class="p">:</span><span class="mi">25</span>
 <span class="nb">Integer</span><span class="p">:</span><span class="mi">24</span>
-<span class="ss">Symbol</span><span class="p">:</span><span class="mi">24</span>
-<span class="ss">MatchData</span><span class="p">:</span><span class="mi">19</span>
-<span class="ss">Range</span><span class="p">:</span><span class="mi">18</span>
-<span class="ss">Proc</span><span class="p">:</span><span class="mi">17</span>
-<span class="ss">Regexp</span><span class="p">:</span><span class="mi">16</span>
-<span class="ss">Struct</span><span class="p">:</span><span class="mi">16</span>
-<span class="ss">Method</span><span class="p">:</span><span class="mi">16</span>
-<span class="no">Process</span><span class="o">::</span><span class="ss">Status</span><span class="p">:</span><span class="mi">15</span>
-<span class="no">Encoding</span><span class="o">::</span><span class="ss">Converter</span><span class="p">:</span><span class="mi">14</span>
-<span class="ss">NilClass</span><span class="p">:</span><span class="mi">12</span>
-<span class="ss">Enumerator</span><span class="p">:</span><span class="mi">12</span>
-<span class="ss">UnboundMethod</span><span class="p">:</span><span class="mi">12</span>
-<span class="ss">File</span><span class="p">:</span><span class="mi">11</span>
-<span class="ss">Dir</span><span class="p">:</span><span class="mi">11</span></code></pre></div>
+<span class="no">Symbol</span><span class="p">:</span><span class="mi">24</span>
+<span class="no">MatchData</span><span class="p">:</span><span class="mi">19</span>
+<span class="no">Range</span><span class="p">:</span><span class="mi">18</span>
+<span class="no">Proc</span><span class="p">:</span><span class="mi">17</span>
+<span class="no">Regexp</span><span class="p">:</span><span class="mi">16</span>
+<span class="no">Struct</span><span class="p">:</span><span class="mi">16</span>
+<span class="no">Method</span><span class="p">:</span><span class="mi">16</span>
+<span class="no">Process</span><span class="o">::</span><span class="no">Status</span><span class="p">:</span><span class="mi">15</span>
+<span class="no">Encoding</span><span class="o">::</span><span class="no">Converter</span><span class="p">:</span><span class="mi">14</span>
+<span class="no">NilClass</span><span class="p">:</span><span class="mi">12</span>
+<span class="no">Enumerator</span><span class="p">:</span><span class="mi">12</span>
+<span class="no">UnboundMethod</span><span class="p">:</span><span class="mi">12</span>
+<span class="no">File</span><span class="p">:</span><span class="mi">11</span>
+<span class="no">Dir</span><span class="p">:</span><span class="mi">11</span></code></pre></div>
 
 <p>クラスメソッドも同様にします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># Class methods for Wordle</span>
-<span class="nb">puts</span> <span class="n">cms</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></code></pre></div>
+<span class="nb">puts</span> <span class="n">cms</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span></code></pre></div>
 
 <p>出力です。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="ss">Gem</span><span class="p">:</span><span class="mi">89</span>
-<span class="ss">Kernel</span><span class="p">:</span><span class="mi">59</span>
-<span class="ss">File</span><span class="p">:</span><span class="mi">57</span>
-<span class="ss">Process</span><span class="p">:</span><span class="mi">39</span>
-<span class="ss">FileTest</span><span class="p">:</span><span class="mi">26</span>
-<span class="ss">Math</span><span class="p">:</span><span class="mi">26</span>
-<span class="ss">Dir</span><span class="p">:</span><span class="mi">16</span>
-<span class="no">Process</span><span class="o">::</span><span class="ss">Sys</span><span class="p">:</span><span class="mi">15</span>
-<span class="ss">IO</span><span class="p">:</span><span class="mi">15</span>
-<span class="ss">Thread</span><span class="p">:</span><span class="mi">13</span>
-<span class="ss">Encoding</span><span class="p">:</span><span class="mi">11</span>
-<span class="no">Process</span><span class="o">::</span><span class="ss">UID</span><span class="p">:</span><span class="mi">9</span>
-<span class="no">Process</span><span class="o">::</span><span class="ss">GID</span><span class="p">:</span><span class="mi">9</span>
-<span class="no">GC</span><span class="o">::</span><span class="ss">Profiler</span><span class="p">:</span><span class="mi">7</span>
-<span class="ss">GC</span><span class="p">:</span><span class="mi">7</span>
-<span class="ss">Time</span><span class="p">:</span><span class="mi">7</span>
-<span class="no">RubyVM</span><span class="o">::</span><span class="ss">InstructionSequence</span><span class="p">:</span><span class="mi">7</span>
-<span class="ss">ObjectSpace</span><span class="p">:</span><span class="mi">6</span>
-<span class="ss">Regexp</span><span class="p">:</span><span class="mi">6</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">Gem</span><span class="p">:</span><span class="mi">89</span>
+<span class="no">Kernel</span><span class="p">:</span><span class="mi">59</span>
+<span class="no">File</span><span class="p">:</span><span class="mi">57</span>
+<span class="no">Process</span><span class="p">:</span><span class="mi">39</span>
+<span class="no">FileTest</span><span class="p">:</span><span class="mi">26</span>
+<span class="no">Math</span><span class="p">:</span><span class="mi">26</span>
+<span class="no">Dir</span><span class="p">:</span><span class="mi">16</span>
+<span class="no">Process</span><span class="o">::</span><span class="no">Sys</span><span class="p">:</span><span class="mi">15</span>
+<span class="no">IO</span><span class="p">:</span><span class="mi">15</span>
+<span class="no">Thread</span><span class="p">:</span><span class="mi">13</span>
+<span class="no">Encoding</span><span class="p">:</span><span class="mi">11</span>
+<span class="no">Process</span><span class="o">::</span><span class="no">UID</span><span class="p">:</span><span class="mi">9</span>
+<span class="no">Process</span><span class="o">::</span><span class="no">GID</span><span class="p">:</span><span class="mi">9</span>
+<span class="no">GC</span><span class="o">::</span><span class="no">Profiler</span><span class="p">:</span><span class="mi">7</span>
+<span class="no">GC</span><span class="p">:</span><span class="mi">7</span>
+<span class="no">Time</span><span class="p">:</span><span class="mi">7</span>
+<span class="no">RubyVM</span><span class="o">::</span><span class="no">InstructionSequence</span><span class="p">:</span><span class="mi">7</span>
+<span class="no">ObjectSpace</span><span class="p">:</span><span class="mi">6</span>
+<span class="no">Regexp</span><span class="p">:</span><span class="mi">6</span></code></pre></div>
 
 <p>Wordleの<code>Advanced</code>タブを開いて、<code>Paste weighted words or phrases here:</code>に出力データを貼り付けます。そしてGoボタンを押せば自動でWordle画像が生成されます。後は、Randomizeボタンを押すなり、そのFont, Layout, Colorを変更するなりして、お好みを作り上げます。</p>
 

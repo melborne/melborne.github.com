@@ -199,41 +199,41 @@ Ross,68.0,33.0</code></pre></div>
 
 <h3 id="filereadtranspose">1. File.readしてtransposeする</h3>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">)</span>
 
-<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">lines</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="p">.</span><span class="nf">chomp</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">scores</span> <span class="c1"># =&gt; [["Alice", "84.0", "79.5"], ["Bob", "20.0", "56.5"], ["Jimmy", "80.0", "31.0"], ["Kent", "90.5", "15.5"], ["Ross", "68.0", "33.0"]]</span>
 
-<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">transpose</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;], [&quot;84.0&quot;, &quot;20.0&quot;, &quot;80.0&quot;, &quot;90.5&quot;, &quot;68.0&quot;], [&quot;79.5&quot;, &quot;56.5&quot;, &quot;31.0&quot;, &quot;15.5&quot;, &quot;33.0&quot;]]</span>
+<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="p">.</span><span class="nf">transpose</span> <span class="c1"># =&gt; [["Alice", "Bob", "Jimmy", "Kent", "Ross"], ["84.0", "20.0", "80.0", "90.5", "68.0"], ["79.5", "56.5", "31.0", "15.5", "33.0"]]</span>
 
-<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
 
 <p>まあ、悪くはないですけど、String#linesして#splitしてってのはどうですかね。空白あっても困るし。正規表現ですか？Array#transposeはなかなかいいアイディアですけどね。</p>
 
 <h3 id="csvread">2. csvライブラリでreadする</h3>
 <p>CSVファイルって言ってるんですから、素直に標準添付ライブラリcsvを使えばいいんですよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
 
-<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+<span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">)</span>
 
-<span class="n">headers</span> <span class="c1"># =&gt; [&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;]</span>
-<span class="n">scores</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+<span class="n">headers</span> <span class="c1"># =&gt; ["player", "gameA", "gameB"]</span>
+<span class="n">scores</span> <span class="c1"># =&gt; [["Alice", "84.0", "79.5"], ["Bob", "20.0", "56.5"], ["Jimmy", "80.0", "31.0"], ["Kent", "90.5", "15.5"], ["Ross", "68.0", "33.0"]]</span>
 
-<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">transpose</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;], [&quot;84.0&quot;, &quot;20.0&quot;, &quot;80.0&quot;, &quot;90.5&quot;, &quot;68.0&quot;], [&quot;79.5&quot;, &quot;56.5&quot;, &quot;31.0&quot;, &quot;15.5&quot;, &quot;33.0&quot;]]</span>
+<span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span> <span class="o">=</span> <span class="n">scores</span><span class="p">.</span><span class="nf">transpose</span> <span class="c1"># =&gt; [["Alice", "Bob", "Jimmy", "Kent", "Ross"], ["84.0", "20.0", "80.0", "90.5", "68.0"], ["79.5", "56.5", "31.0", "15.5", "33.0"]]</span>
 
-<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="n">ab</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_f</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">e</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
 
 <p>ワンステップ少なくなりましたね。それにしても、あなた、多重代入好きですねぇ。</p>
 
 <h3 id="csvtable">3. csvライブラリで.tableする</h3>
 <p>でもね、このライブラリにはすごい必殺技があるんですよ。ヒヒィ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">)</span>
 
-<span class="n">table</span><span class="o">.</span><span class="n">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span>
+<span class="n">table</span><span class="p">.</span><span class="nf">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span>
 
-<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">table</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">table</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
+<span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">table</span><span class="o">[</span><span class="n">e</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">table</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span> <span class="c1"># =&gt; [68.5, 43.1]</span></code></pre></div>
 
 <p>えっ？何が起きたの？</p>
 
@@ -243,34 +243,34 @@ Ross,68.0,33.0</code></pre></div>
 
 <p>先の<code>CSV.read</code>は二次元配列を返しますよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [[&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;], [&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;], [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;], [&quot;Jimmy&quot;, &quot;80.0&quot;, &quot;31.0&quot;], [&quot;Kent&quot;, &quot;90.5&quot;, &quot;15.5&quot;], [&quot;Ross&quot;, &quot;68.0&quot;, &quot;33.0&quot;]]</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">)</span> <span class="c1"># =&gt; [["player", "gameA", "gameB"], ["Alice", "84.0", "79.5"], ["Bob", "20.0", "56.5"], ["Jimmy", "80.0", "31.0"], ["Kent", "90.5", "15.5"], ["Ross", "68.0", "33.0"]]</span>
 
-<span class="n">csv</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Array</span>
-<span class="n">csv</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; [&quot;player&quot;, &quot;gameA&quot;, &quot;gameB&quot;]</span>
-<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;84.0&quot;, &quot;79.5&quot;]</span>
-<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Bob&quot;, &quot;20.0&quot;, &quot;56.5&quot;]</span></code></pre></div>
+<span class="n">csv</span><span class="p">.</span><span class="nf">class</span> <span class="c1"># =&gt; Array</span>
+<span class="n">csv</span><span class="p">.</span><span class="nf">first</span> <span class="c1"># =&gt; ["player", "gameA", "gameB"]</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; ["Alice", "84.0", "79.5"]</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; ["Bob", "20.0", "56.5"]</span></code></pre></div>
 
 <p>でも、<code>CSV.table</code>はCSV::Tableというテーブル向けクラスのインスタンスを返すんですよ。ヘッダー要素には#headersでアクセスできますし。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
-<span class="n">table</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; CSV::Table</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
+<span class="n">table</span><span class="p">.</span><span class="nf">class</span> <span class="c1"># =&gt; CSV::Table</span>
 
-<span class="n">table</span><span class="o">.</span><span class="n">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span></code></pre></div>
+<span class="n">table</span><span class="p">.</span><span class="nf">headers</span> <span class="c1"># =&gt; [:player, :gamea, :gameb]</span></code></pre></div>
 
 <p>で、テーブルの各レコードは、CSV::Rowクラスのインスタンスでラップされとるんですな。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;</span>
-<span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
-<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="p">.</span><span class="nf">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Alice" gamea:84.0 gameb:79.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Bob" gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Jimmy" gamea:80.0 gameb:31.0&gt;</span></code></pre></div>
 
 <p>CSV::Tableのインスタンスは、テーブルのアクセス方向を指定するモード（:row, :column, :col_or_rowの何れか）を持ってて、デフォルトでこれは<code>:col_or_row</code>（ミックスモード）にセットされますですよ。</p>
 
 <p>それでTable#[ ]メソッドに渡される引数に応じて、そのアクセス方向がよしなに判断されるってわけです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
-<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Bob" gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">table</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Jimmy" gamea:80.0 gameb:31.0&gt;</span>
 
-<span class="n">table</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;]</span>
+<span class="n">table</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; ["Alice", "Bob", "Jimmy", "Kent", "Ross"]</span>
 <span class="n">table</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="c1"># =&gt; [84.0, 20.0, 80.0, 90.5, 68.0]</span>
 <span class="n">table</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="c1"># =&gt; [79.5, 56.5, 31.0, 15.5, 33.0]</span></code></pre></div>
 
@@ -285,13 +285,13 @@ Ross,68.0,33.0</code></pre></div>
 
 <p>CSV.readにオプションを渡して、CSV.tableに対抗しますか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">,</span> <span class="ss">headers</span><span class="p">:</span><span class="kp">true</span><span class="p">,</span> <span class="ss">converters</span><span class="p">:</span> <span class="ss">:numeric</span><span class="p">,</span> <span class="n">header_converters</span><span class="p">:</span> <span class="ss">:symbol</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
-<span class="n">csv</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; CSV::Table</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">,</span> <span class="n">headers</span><span class="ss">:true</span><span class="p">,</span> <span class="ss">converters: :numeric</span><span class="p">,</span> <span class="ss">header_converters: :symbol</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:6&gt;</span>
+<span class="n">csv</span><span class="p">.</span><span class="nf">class</span> <span class="c1"># =&gt; CSV::Table</span>
 
-<span class="n">csv</span><span class="o">.</span><span class="n">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;</span>
-<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;</span>
-<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;</span>
-<span class="n">csv</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Jimmy&quot;, &quot;Kent&quot;, &quot;Ross&quot;]</span>
+<span class="n">csv</span><span class="p">.</span><span class="nf">first</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Alice" gamea:84.0 gameb:79.5&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Bob" gamea:20.0 gameb:56.5&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;CSV::Row player:"Jimmy" gamea:80.0 gameb:31.0&gt;</span>
+<span class="n">csv</span><span class="o">[</span><span class="ss">:player</span><span class="o">]</span> <span class="c1"># =&gt; ["Alice", "Bob", "Jimmy", "Kent", "Ross"]</span>
 <span class="n">csv</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="c1"># =&gt; [84.0, 20.0, 80.0, 90.5, 68.0]</span>
 <span class="n">csv</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="c1"># =&gt; [79.5, 56.5, 31.0, 15.5, 33.0]</span></code></pre></div>
 
@@ -339,20 +339,20 @@ Ross    46.00  34.33</code></pre></div>
 
 <h3 id="enumerablegroupby">Enumerable#group_byを使う</h3>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data2.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="s1">'data2.csv'</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
 
-<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Alice&quot;]=&gt;[#&lt;CSV::Row player:&quot;Alice&quot; gamea:84.0 gameb:79.5&gt;, #&lt;CSV::Row player:&quot;Alice&quot; gamea:24.0 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Alice&quot; gamea:64.5 gameb:39.5&gt;], [:player, &quot;Bob&quot;]=&gt;[#&lt;CSV::Row player:&quot;Bob&quot; gamea:20.0 gameb:56.5&gt;, #&lt;CSV::Row player:&quot;Bob&quot; gamea:60.0 gameb:16.5&gt;, #&lt;CSV::Row player:&quot;Bob&quot; gamea:25.0 gameb:50.5&gt;], [:player, &quot;Jimmy&quot;]=&gt;[#&lt;CSV::Row player:&quot;Jimmy&quot; gamea:80.0 gameb:31.0&gt;, #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:85.0 gameb:42.0&gt;, #&lt;CSV::Row player:&quot;Jimmy&quot; gamea:60.0 gameb:61.0&gt;], [:player, &quot;Kent&quot;]=&gt;[#&lt;CSV::Row player:&quot;Kent&quot; gamea:90.5 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Kent&quot; gamea:55.5 gameb:15.5&gt;, #&lt;CSV::Row player:&quot;Kent&quot; gamea:70.5 gameb:25.0&gt;], [:player, &quot;Ross&quot;]=&gt;[#&lt;CSV::Row player:&quot;Ross&quot; gamea:68.0 gameb:33.0&gt;, #&lt;CSV::Row player:&quot;Ross&quot; gamea:22.0 gameb:33.5&gt;, #&lt;CSV::Row player:&quot;Ross&quot; gamea:48.0 gameb:36.5&gt;]}</span>
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, "Alice"]=&gt;[#&lt;CSV::Row player:"Alice" gamea:84.0 gameb:79.5&gt;, #&lt;CSV::Row player:"Alice" gamea:24.0 gameb:15.5&gt;, #&lt;CSV::Row player:"Alice" gamea:64.5 gameb:39.5&gt;], [:player, "Bob"]=&gt;[#&lt;CSV::Row player:"Bob" gamea:20.0 gameb:56.5&gt;, #&lt;CSV::Row player:"Bob" gamea:60.0 gameb:16.5&gt;, #&lt;CSV::Row player:"Bob" gamea:25.0 gameb:50.5&gt;], [:player, "Jimmy"]=&gt;[#&lt;CSV::Row player:"Jimmy" gamea:80.0 gameb:31.0&gt;, #&lt;CSV::Row player:"Jimmy" gamea:85.0 gameb:42.0&gt;, #&lt;CSV::Row player:"Jimmy" gamea:60.0 gameb:61.0&gt;], [:player, "Kent"]=&gt;[#&lt;CSV::Row player:"Kent" gamea:90.5 gameb:15.5&gt;, #&lt;CSV::Row player:"Kent" gamea:55.5 gameb:15.5&gt;, #&lt;CSV::Row player:"Kent" gamea:70.5 gameb:25.0&gt;], [:player, "Ross"]=&gt;[#&lt;CSV::Row player:"Ross" gamea:68.0 gameb:33.0&gt;, #&lt;CSV::Row player:"Ross" gamea:22.0 gameb:33.5&gt;, #&lt;CSV::Row player:"Ross" gamea:48.0 gameb:36.5&gt;]}</span>
 
-<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">rows</span><span class="o">|</span>
-  <span class="n">avgA</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="o">.</span><span class="n">size</span>
-  <span class="n">avgB</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="o">.</span><span class="n">size</span>
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">rows</span><span class="o">|</span>
+  <span class="n">avgA</span> <span class="o">=</span> <span class="n">rows</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gamea</span><span class="o">]</span> <span class="p">}.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="p">.</span><span class="nf">size</span>
+  <span class="n">avgB</span> <span class="o">=</span> <span class="n">rows</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="ss">:gameb</span><span class="o">]</span> <span class="p">}.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">rows</span><span class="p">.</span><span class="nf">size</span>
   <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, 57.5, 44.833333333333336], [&quot;Bob&quot;, 35.0, 41.166666666666664], [&quot;Jimmy&quot;, 75.0, 44.666666666666664], [&quot;Kent&quot;, 72.16666666666667, 18.666666666666668], [&quot;Ross&quot;, 46.0, 34.333333333333336]]</span>
+<span class="n">stat</span> <span class="c1"># =&gt; [["Alice", 57.5, 44.833333333333336], ["Bob", 35.0, 41.166666666666664], ["Jimmy", 75.0, 44.666666666666664], ["Kent", 72.16666666666667, 18.666666666666668], ["Ross", 46.0, 34.333333333333336]]</span>
 
-<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s&quot;</span> <span class="o">%</span> <span class="n">table</span><span class="o">.</span><span class="n">headers</span>
-<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f&quot;</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
+<span class="nb">puts</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s"</span> <span class="o">%</span> <span class="n">table</span><span class="p">.</span><span class="nf">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f"</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
 
 <span class="c1"># &gt;&gt; player  gamea  gameb</span>
 <span class="c1"># &gt;&gt; Alice   57.50  44.83</span>
@@ -368,25 +368,25 @@ Ross    46.00  34.33</code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">CSV</span><span class="o">::</span><span class="no">Table</span>
   <span class="k">def</span> <span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="no">CSV</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
+    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="no">CSV</span><span class="o">::</span><span class="no">Table</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p>さて。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s1">&#39;data2.csv&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">table</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="s1">'data2.csv'</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;CSV::Table mode:col_or_row row_count:16&gt;</span>
 
-<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Alice&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Bob&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Jimmy&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Kent&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Ross&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, "Alice"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Bob"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Jimmy"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Kent"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Ross"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
 
-<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
-  <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span>
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
+  <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="p">.</span><span class="nf">size</span> <span class="p">}</span>
   <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="n">avgA</span><span class="p">,</span> <span class="n">avgB</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Alice&quot;, 57.5, 44.833333333333336], [&quot;Bob&quot;, 35.0, 41.166666666666664], [&quot;Jimmy&quot;, 75.0, 44.666666666666664], [&quot;Kent&quot;, 72.16666666666667, 18.666666666666668], [&quot;Ross&quot;, 46.0, 34.333333333333336]]</span>
+<span class="n">stat</span> <span class="c1"># =&gt; [["Alice", 57.5, 44.833333333333336], ["Bob", 35.0, 41.166666666666664], ["Jimmy", 75.0, 44.666666666666664], ["Kent", 72.16666666666667, 18.666666666666668], ["Ross", 46.0, 34.333333333333336]]</span>
 
-<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s&quot;</span> <span class="o">%</span> <span class="n">table</span><span class="o">.</span><span class="n">headers</span>
-<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f&quot;</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
+<span class="nb">puts</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s"</span> <span class="o">%</span> <span class="n">table</span><span class="p">.</span><span class="nf">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%.02f</span><span class="se">\t</span><span class="s2">%.02f"</span> <span class="o">%</span> <span class="n">d</span> <span class="p">}</span>
 
 <span class="c1"># &gt;&gt; player  gamea  gameb</span>
 <span class="c1"># &gt;&gt; Alice   57.50  44.83</span>
@@ -406,30 +406,30 @@ Ross    46.00  34.33</code></pre></div>
   <p>５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ<strong>data</strong>がある。</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span>
-<span class="sh">player gameA gameB</span>
-<span class="sh">Bob    20    56</span>
-<span class="sh">Ross   68    33</span>
-<span class="sh">Bob    78    55</span>
-<span class="sh">Kent   90    15</span>
-<span class="sh">Alice  84    79</span>
-<span class="sh">Ross   10    15</span>
-<span class="sh">Jimmy  80    31</span>
-<span class="sh">Bob    12    36</span>
-<span class="sh">Kent   88    43</span>
-<span class="sh">Kent   12    33</span>
-<span class="sh">Alice  90    32</span>
-<span class="sh">Ross   67    77</span>
-<span class="sh">Alice  56    92</span>
-<span class="sh">Jimmy  33    88</span>
-<span class="sh">Jimmy  11    87</span>
-<span class="no">EOS</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span><span class="sh">
+player gameA gameB
+Bob    20    56
+Ross   68    33
+Bob    78    55
+Kent   90    15
+Alice  84    79
+Ross   10    15
+Jimmy  80    31
+Bob    12    36
+Kent   88    43
+Kent   12    33
+Alice  90    32
+Ross   67    77
+Alice  56    92
+Jimmy  33    88
+Jimmy  11    87
+</span><span class="no">EOS</span></code></pre></div>
 
 <blockquote>
   <p>結果を集計し以下の標準出力を得よ（totalで降順）。</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="bash">% ruby game_score.rb
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby game_score.rb
 player  gameA gameB total
 Alice   230   203   433
 Jimmy   124   206   330
@@ -439,26 +439,26 @@ Bob     110   147   257</code></pre></div>
 
 <h2 id="section-4">僕の答え</h2>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;csv&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
 <span class="k">class</span> <span class="nc">CSV</span>
   <span class="k">def</span> <span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="no">CSV</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
+    <span class="no">Hash</span><span class="o">[</span> <span class="k">super</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="no">CSV</span><span class="o">::</span><span class="no">Table</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">col_sep</span><span class="ss">:&#39; &#39;</span><span class="p">,</span> <span class="ss">headers</span><span class="p">:</span><span class="kp">true</span><span class="p">,</span> <span class="ss">converters</span><span class="p">:</span> <span class="ss">:numeric</span><span class="p">,</span> <span class="n">header_converters</span><span class="p">:</span> <span class="ss">:symbol</span><span class="p">)</span> <span class="c1"># =&gt; &lt;#CSV io_type:StringIO encoding:UTF-8 lineno:0 col_sep:&quot; &quot; row_sep:&quot;\n&quot; quote_char:&quot;\&quot;&quot; headers:true&gt;</span>
+<span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">col_sep</span><span class="ss">:' '</span><span class="p">,</span> <span class="n">headers</span><span class="ss">:true</span><span class="p">,</span> <span class="ss">converters: :numeric</span><span class="p">,</span> <span class="ss">header_converters: :symbol</span><span class="p">)</span> <span class="c1"># =&gt; &lt;#CSV io_type:StringIO encoding:UTF-8 lineno:0 col_sep:" " row_sep:"\n" quote_char:"\"" headers:true&gt;</span>
 
-<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, &quot;Ross&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Bob&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:3&gt;, [:player, &quot;Kent&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Alice&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, &quot;Jimmy&quot;]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
+<span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">csv</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {[:player, "Ross"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Bob"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:3&gt;, [:player, "Kent"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Alice"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;, [:player, "Jimmy"]=&gt;#&lt;CSV::Table mode:col_or_row row_count:4&gt;}</span>
 
-<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
-  <span class="n">ab</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="p">}</span>
-  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">]</span>
+<span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">player</span><span class="p">),</span> <span class="n">t</span><span class="o">|</span>
+  <span class="n">ab</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:gamea</span><span class="p">,</span> <span class="ss">:gameb</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">t</span><span class="o">[</span><span class="n">e</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">stat</span> <span class="c1"># =&gt; [[&quot;Ross&quot;, 145, 125, 270], [&quot;Bob&quot;, 90, 91, 181], [&quot;Kent&quot;, 190, 91, 281], [&quot;Alice&quot;, 230, 203, 433], [&quot;Jimmy&quot;, 124, 206, 330]]</span>
+<span class="n">stat</span> <span class="c1"># =&gt; [["Ross", 145, 125, 270], ["Bob", 90, 91, 181], ["Kent", 190, 91, 281], ["Alice", 230, 203, 433], ["Jimmy", 124, 206, 330]]</span>
 
-<span class="nb">puts</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total&quot;</span> <span class="o">%</span> <span class="n">csv</span><span class="o">.</span><span class="n">headers</span>
-<span class="nb">puts</span> <span class="n">stat</span><span class="o">.</span><span class="n">sort_by</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="o">-</span><span class="n">s</span><span class="o">.</span><span class="n">last</span> <span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="s2">&quot;%s</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d&quot;</span> <span class="o">%</span> <span class="n">line</span> <span class="p">}</span>
+<span class="nb">puts</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total"</span> <span class="o">%</span> <span class="n">csv</span><span class="p">.</span><span class="nf">headers</span>
+<span class="nb">puts</span> <span class="n">stat</span><span class="p">.</span><span class="nf">sort_by</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="o">-</span><span class="n">s</span><span class="p">.</span><span class="nf">last</span> <span class="p">}.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d"</span> <span class="o">%</span> <span class="n">line</span> <span class="p">}</span>
 
 <span class="c1"># &gt;&gt; player	gamea	gameb	total</span>
 <span class="c1"># &gt;&gt; Alice	230	203	433</span>

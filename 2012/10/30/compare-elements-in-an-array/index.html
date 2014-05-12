@@ -184,22 +184,22 @@
 
 <p>例えば、名前をキーとした住所録のデータベースを考えます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">Charlie</span><span class="p">:</span><span class="s1">&#39;228 Park Ave. NY&#39;</span><span class="p">,</span> <span class="ss">Liz</span><span class="p">:</span><span class="s1">&#39;1419 Westwood Blvd. CA&#39;</span><span class="p">,</span> <span class="ss">Scott</span><span class="p">:</span><span class="s1">&#39;50 Hasler Rd. WA&#39;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="no">Charlie</span><span class="ss">:'228 Park Ave. NY'</span><span class="p">,</span> <span class="no">Liz</span><span class="ss">:'1419 Westwood Blvd. CA'</span><span class="p">,</span> <span class="no">Scott</span><span class="ss">:'50 Hasler Rd. WA'</span> <span class="p">}</span>
 
 <span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
   <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="ss">:Liz</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1419 Westwood Blvd. CA&quot;</span></code></pre></div>
+<span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="ss">:Liz</span><span class="p">)</span> <span class="c1"># =&gt; "1419 Westwood Blvd. CA"</span></code></pre></div>
 
 <p>ここで、<code>find_by_name</code>に渡す名前にそのuniqnessが保証される範囲で柔軟性を持たせる、つまり:lizでも’Liz’でも’LIZ’でも受け付けるよう対応するとします。こんな感じでしょうか。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">capitalize</span><span class="o">.</span><span class="n">intern</span><span class="o">]</span>
+  <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">.</span><span class="nf">intern</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">&#39;Liz&#39;</span><span class="p">,</span> <span class="s1">&#39;LIZ&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">'Liz'</span><span class="p">,</span> <span class="s1">'LIZ'</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
@@ -208,14 +208,14 @@
 
 <p>しかしながらデータベース側のキー値のフォーマットの一貫性が保証されていない場合、これは当然にうまく機能しません<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;charlie&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;228 Park Ave. NY&#39;</span><span class="p">,</span> <span class="ss">Liz</span><span class="p">:</span><span class="s1">&#39;1419 Westwood Blvd. CA&#39;</span><span class="p">,</span> <span class="ss">Scott</span><span class="p">:</span><span class="s1">&#39;50 Hasler Rd. WA&#39;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">'charlie'</span> <span class="o">=&gt;</span> <span class="s1">'228 Park Ave. NY'</span><span class="p">,</span> <span class="no">Liz</span><span class="ss">:'1419 Westwood Blvd. CA'</span><span class="p">,</span> <span class="no">Scott</span><span class="ss">:'50 Hasler Rd. WA'</span> <span class="p">}</span>
 
 <span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">capitalize</span><span class="o">.</span><span class="n">intern</span><span class="o">]</span>
+  <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">.</span><span class="nf">intern</span><span class="o">]</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="s1">&#39;charlie&#39;</span><span class="p">,</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="ss">:Charlie</span><span class="p">,</span> <span class="ss">:charlie</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="s1">'charlie'</span><span class="p">,</span> <span class="s1">'Charlie'</span><span class="p">,</span> <span class="ss">:Charlie</span><span class="p">,</span> <span class="ss">:charlie</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="c1"># &gt;&gt; </span>
 <span class="c1"># &gt;&gt; </span>
@@ -226,18 +226,18 @@
 
 <p>次のように対応するのでしょうか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;charlie&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;228 Park Ave. NY&#39;</span><span class="p">,</span> <span class="ss">Liz</span><span class="p">:</span><span class="s1">&#39;1419 Westwood Blvd. CA&#39;</span><span class="p">,</span> <span class="ss">Scott</span><span class="p">:</span><span class="s1">&#39;50 Hasler Rd. WA&#39;</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">ADDRESS</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">'charlie'</span> <span class="o">=&gt;</span> <span class="s1">'228 Park Ave. NY'</span><span class="p">,</span> <span class="no">Liz</span><span class="ss">:'1419 Westwood Blvd. CA'</span><span class="p">,</span> <span class="no">Scott</span><span class="ss">:'50 Hasler Rd. WA'</span> <span class="p">}</span>
 
 <span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="n">res</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
-    <span class="n">kname</span><span class="p">,</span> <span class="nb">name</span> <span class="o">=</span> <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">intern</span> <span class="p">}</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
+    <span class="n">kname</span><span class="p">,</span> <span class="nb">name</span> <span class="o">=</span> <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">intern</span> <span class="p">}</span>
     <span class="n">kname</span> <span class="o">==</span> <span class="nb">name</span>
   <span class="k">end</span>
-  <span class="n">res</span> <span class="p">?</span> <span class="n">res</span><span class="o">.</span><span class="n">last</span> <span class="p">:</span> <span class="kp">nil</span> 
+  <span class="n">res</span> <span class="p">?</span> <span class="n">res</span><span class="p">.</span><span class="nf">last</span> <span class="p">:</span> <span class="kp">nil</span> 
 <span class="k">end</span>
 
-<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">&#39;Liz&#39;</span><span class="p">,</span> <span class="s1">&#39;LIZ&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">'Liz'</span><span class="p">,</span> <span class="s1">'LIZ'</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
@@ -245,8 +245,8 @@
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
 
-<span class="o">[</span><span class="s1">&#39;charlie&#39;</span><span class="p">,</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="ss">:Charlie</span><span class="p">,</span> <span class="ss">:charlie</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="s1">'charlie'</span><span class="p">,</span> <span class="s1">'Charlie'</span><span class="p">,</span> <span class="ss">:Charlie</span><span class="p">,</span> <span class="ss">:charlie</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1"># &gt;&gt; 228 Park Ave. NY</span>
@@ -264,21 +264,21 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
   <span class="k">def</span> <span class="nf">same?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="nb">self</span><span class="o">.</span><span class="n">uniq</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="o">==</span><span class="mi">1</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">uniq</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">).</span><span class="nf">size</span><span class="o">==</span><span class="mi">1</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p><code>same?</code>を使うと先のコードは次のように簡潔になります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="n">res</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
-    <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">].</span><span class="n">same?</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">intern</span> <span class="p">}</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
+    <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">]</span><span class="p">.</span><span class="nf">same?</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">intern</span> <span class="p">}</span>
   <span class="k">end</span>
-  <span class="n">res</span> <span class="p">?</span> <span class="n">res</span><span class="o">.</span><span class="n">last</span> <span class="p">:</span> <span class="kp">nil</span> 
+  <span class="n">res</span> <span class="p">?</span> <span class="n">res</span><span class="p">.</span><span class="nf">last</span> <span class="p">:</span> <span class="kp">nil</span> 
 <span class="k">end</span>
 
-<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">&#39;Liz&#39;</span><span class="p">,</span> <span class="s1">&#39;LIZ&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">'Liz'</span><span class="p">,</span> <span class="s1">'LIZ'</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
@@ -289,13 +289,13 @@
 <p><code>res ? res.last : nil</code>もまどろっこしいという人は、「<a href="http://melborne.github.com/2012/10/29/rubys-new-control-structure-by-tap-and-break/" title="TapがRubyの新たな制御構造の世界を開く">前回</a>」紹介した<code>tap+break</code>でさらに..</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">ADDRESS</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">self</span><span class="o">.</span><span class="n">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
-    <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">].</span><span class="n">same?</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">intern</span> <span class="p">}</span>
-  <span class="k">end</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="k">break</span> <span class="n">s</span><span class="o">.</span><span class="n">last</span> <span class="k">if</span> <span class="n">s</span> <span class="p">}</span>
+  <span class="nb">self</span><span class="p">.</span><span class="nf">detect</span> <span class="k">do</span> <span class="o">|</span><span class="n">kname</span><span class="p">,</span> <span class="n">_</span><span class="o">|</span>
+    <span class="o">[</span><span class="n">kname</span><span class="p">,</span> <span class="nb">name</span><span class="o">]</span><span class="p">.</span><span class="nf">same?</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">intern</span> <span class="p">}</span>
+  <span class="k">end</span><span class="p">.</span><span class="nf">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="k">break</span> <span class="n">s</span><span class="p">.</span><span class="nf">last</span> <span class="k">if</span> <span class="n">s</span> <span class="p">}</span>
 <span class="k">end</span>
 
-<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">&#39;Liz&#39;</span><span class="p">,</span> <span class="s1">&#39;LIZ&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
-  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="o">[</span><span class="ss">:Liz</span><span class="p">,</span> <span class="ss">:liz</span><span class="p">,</span> <span class="s1">'Liz'</span><span class="p">,</span> <span class="s1">'LIZ'</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="no">ADDRESS</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>
 <span class="c1"># &gt;&gt; 1419 Westwood Blvd. CA</span>

@@ -190,7 +190,7 @@
 
 <p>本書ではRubyによるInterpreterパターンの実装例として、ファイル検索用インタープリタが紹介されています。このインタープリタでは最終的に以下のような書き方でファイル検索が行えます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">&#39;*.mp3&#39;</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">'*.mp3'</span><span class="p">)</span></code></pre></div>
 
 <p>説明は不要と思いますが、この記述で1KB以上の書き込み可能ファイルと、mp3ファイルの集合が表現されています。Rubyをよく知っている人なら、このプログラムを構文解析するのにパーサは不要であることに気づくでしょう。</p>
 
@@ -198,8 +198,8 @@
 
 <p>そして特定のディレクトリでこの集合を評価することで、該当ディレクトリに含まれるファイルリストが得られます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">file_exp</span> <span class="o">=</span> <span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">&#39;*.mp3&#39;</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">file_exp</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;~/target_directory&#39;</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">file_exp</span> <span class="o">=</span> <span class="p">(</span><span class="n">bigger</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">writable</span><span class="p">)</span> <span class="o">|</span> <span class="n">file_name</span><span class="p">(</span><span class="s1">'*.mp3'</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">file_exp</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="s1">'~/target_directory'</span><span class="p">)</span></code></pre></div>
 
 <p>この専用言語を構築する具体的な手順は本書を参照してくださいね。もっとも実装コードだけなら、以下のサイトから取得することもできます<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
@@ -216,49 +216,49 @@
 
 <p>早速先のファイル検索用インタープリタをInterpreterBuilderライブラリを使って書き直してみます<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;find&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;interpreter_builder&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"find"</span>
+<span class="nb">require</span> <span class="s2">"interpreter_builder"</span>
 <span class="k">module</span> <span class="nn">FileSelect</span>
   <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>    <span class="c1"># (1)</span>
   <span class="k">class</span> <span class="nc">Expression</span>      <span class="c1"># (2)</span>
     <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
-      <span class="n">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
+      <span class="n">files</span><span class="p">(</span><span class="n">dir</span><span class="p">).</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
-      <span class="n">dir</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
-      <span class="no">Find</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">file?</span> <span class="n">f</span> <span class="p">}</span>
+      <span class="n">dir</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
+      <span class="no">Find</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">dir</span><span class="p">).</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="p">.</span><span class="nf">file?</span> <span class="n">f</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">terminals</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">all</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
-    <span class="n">file_name</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">pattern</span><span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">fnmatch</span> <span class="n">pattern</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">},</span>
-    <span class="ss">bigger</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">size</span><span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">size</span> <span class="p">},</span>
-    <span class="ss">writable</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">writable?</span> <span class="n">f</span> <span class="p">}</span>
+    <span class="ss">all: </span><span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
+    <span class="ss">file_name: </span><span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">pattern</span><span class="p">{</span> <span class="no">File</span><span class="p">.</span><span class="nf">fnmatch</span> <span class="n">pattern</span><span class="p">,</span> <span class="no">File</span><span class="p">.</span><span class="nf">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">},</span>
+    <span class="ss">bigger: </span><span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">size</span><span class="p">{</span> <span class="no">File</span><span class="p">.</span><span class="nf">size</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">size</span> <span class="p">},</span>
+    <span class="ss">writable: </span><span class="o">-&gt;</span><span class="n">f</span> <span class="p">{</span> <span class="no">File</span><span class="p">.</span><span class="nf">writable?</span> <span class="n">f</span> <span class="p">}</span>
   <span class="p">}</span>
   
-  <span class="n">terminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
-    <span class="n">converter</span> <span class="o">=-&gt;</span><span class="n">dir</span><span class="p">{</span> <span class="no">Expression</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">terminals</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
+    <span class="n">converter</span> <span class="o">=-&gt;</span><span class="n">dir</span><span class="p">{</span> <span class="no">Expression</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">files</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
     <span class="n">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>  <span class="c1"># (3)</span>
   <span class="k">end</span>
   
   <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">except</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
-    <span class="ow">or</span><span class="p">:</span> <span class="ss">:|</span><span class="p">,</span>
-    <span class="ow">and</span><span class="p">:</span> <span class="ss">:&amp;</span>
+    <span class="ss">except: </span><span class="p">:</span><span class="o">-</span><span class="p">,</span>
+    <span class="ss">or: :|</span><span class="p">,</span>
+    <span class="ss">and: :&amp;</span>
   <span class="p">}</span>
   
-  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+  <span class="n">nonterminals</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
     <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>   <span class="c1"># (4)</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+    <span class="no">Except</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">All</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -285,35 +285,35 @@
 <span class="k">class</span> <span class="nc">String</span>
   <span class="k">alias</span> <span class="n">_capitalize</span> <span class="n">capitalize</span>
   <span class="k">def</span> <span class="nf">capitalize</span>
-    <span class="nb">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:_capitalize</span><span class="p">)</span><span class="o">.</span><span class="n">join</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:_capitalize</span><span class="p">).</span><span class="nf">join</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">module</span> <span class="nn">InterpreterBuilder</span>
   <span class="k">def</span> <span class="nf">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">converter</span><span class="o">=-&gt;</span><span class="nb">p</span><span class="p">{</span><span class="nb">p</span><span class="p">},</span> <span class="n">function</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
     <span class="n">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">dir</span><span class="o">|</span>
-      <span class="n">converter</span><span class="o">[*</span><span class="n">dir</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="k">yield</span> <span class="n">item</span><span class="p">,</span> <span class="o">*</span><span class="vi">@attrs</span> <span class="p">}</span>
+      <span class="n">converter</span><span class="o">[*</span><span class="n">dir</span><span class="o">]</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="k">yield</span> <span class="n">item</span><span class="p">,</span> <span class="o">*</span><span class="vi">@attrs</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
     <span class="n">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">dir</span><span class="o">|</span>
-      <span class="n">f1</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span> <span class="o">=</span> <span class="vi">@attrs</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="kp">attr</span><span class="o">|</span> <span class="kp">attr</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target_meth</span><span class="p">,</span> <span class="o">*</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
-      <span class="n">f1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span><span class="p">)</span>
+      <span class="n">f1</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span> <span class="o">=</span> <span class="vi">@attrs</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="kp">attr</span><span class="o">|</span> <span class="kp">attr</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">target_meth</span><span class="p">,</span> <span class="o">*</span><span class="n">dir</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">f1</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">f2</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">define_node</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">target_meth</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="n">klass</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">superclass</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">klass</span> <span class="o">=</span> <span class="no">Class</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">superclass</span><span class="p">)</span> <span class="k">do</span>
       <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">)</span>
         <span class="o">*</span><span class="vi">@attrs</span> <span class="o">=</span> <span class="n">attrs</span>
       <span class="k">end</span>
       <span class="n">define_method</span><span class="p">(</span><span class="n">target_meth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="k">end</span>
-    <span class="nb">const_set</span><span class="p">(</span><span class="nb">name</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+    <span class="nb">const_set</span><span class="p">(</span><span class="nb">name</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
     <span class="n">define_function</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">function</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">define_function</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-    <span class="nb">self</span><span class="o">.</span><span class="n">class_eval</span> <span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">class_eval</span> <span class="p">{</span>
       <span class="n">define_method</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span>
-        <span class="no">Module</span><span class="o">.</span><span class="n">const_get</span><span class="p">(</span><span class="nb">name</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">)</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="no">Module</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="nb">name</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">).</span><span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="p">}</span>
   <span class="k">end</span>
@@ -337,50 +337,50 @@ Naomi, 16, F, FR, Student</code></pre></div>
 <p>ユーザ調査用インタープリタはこのユーザ情報を読み取り、以下のような簡単なクエリー言語を使って対象ユーザの抽出を行えるようにします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">except</span><span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:JP</span><span class="p">))</span>  <span class="c1"># 日本人以外のユーザ</span>
- <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>   <span class="c1"># 30歳以上の男性ユーザ</span>
- <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">&#39;Programmer&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
+ <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>   <span class="c1"># 30歳以上の男性ユーザ</span>
+ <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">'Programmer'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
  <span class="c1"># 30歳未満の米国またはドイツのプログラマー</span></code></pre></div>
 
 <p>最初にInterpreterBuilderを使わずに、このクエリー言語を構築するコードを示します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="k">module</span> <span class="nn">Census</span>
-  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
+  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
   
   <span class="k">class</span> <span class="nc">Expression</span>
     <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="n">people</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
+      <span class="n">people</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">yield</span> <span class="n">f</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">module</span> <span class="nn">Interface</span>
     <span class="k">def</span> <span class="nf">all</span>
-      <span class="no">All</span><span class="o">.</span><span class="n">new</span>
+      <span class="no">All</span><span class="p">.</span><span class="nf">new</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">sex</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
-      <span class="no">Sex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
+      <span class="no">Sex</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">sex</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">age</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-      <span class="no">Age</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+      <span class="no">Age</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">nationality</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-      <span class="no">Nationality</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+      <span class="no">Nationality</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
-      <span class="no">Job</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+      <span class="no">Job</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-      <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+      <span class="no">Except</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">All</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="kp">include</span> <span class="no">Interface</span>
@@ -395,7 +395,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">sex</span> <span class="o">==</span> <span class="vi">@sex</span> <span class="p">}</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="p">.</span><span class="nf">sex</span> <span class="o">==</span> <span class="vi">@sex</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Age</span> <span class="o">&lt;</span> <span class="no">Expression</span>
@@ -404,7 +404,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="vi">@op</span><span class="p">,</span> <span class="vi">@age</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="p">.</span><span class="nf">age</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="vi">@op</span><span class="p">,</span> <span class="vi">@age</span><span class="p">)</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Nationality</span> <span class="o">&lt;</span> <span class="no">Expression</span>
@@ -413,7 +413,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">nationality</span> <span class="o">==</span> <span class="vi">@nationality</span> <span class="p">}</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="p">.</span><span class="nf">nationality</span> <span class="o">==</span> <span class="vi">@nationality</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Job</span> <span class="o">&lt;</span> <span class="no">Expression</span>
@@ -422,7 +422,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="o">.</span><span class="n">job</span> <span class="o">==</span> <span class="vi">@job</span> <span class="p">}</span>
+      <span class="k">super</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="nb">p</span><span class="p">.</span><span class="nf">job</span> <span class="o">==</span> <span class="vi">@job</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Except</span> <span class="o">&lt;</span> <span class="no">Expression</span>
@@ -432,7 +432,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">-</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">-</span> <span class="vi">@expression2</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
   
@@ -442,7 +442,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">|</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">|</span> <span class="vi">@expression2</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
   
@@ -452,7 +452,7 @@ Naomi, 16, F, FR, Student</code></pre></div>
     <span class="k">end</span>
   
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="vi">@expression1</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">&amp;</span> <span class="vi">@expression2</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+      <span class="vi">@expression1</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span> <span class="o">&amp;</span> <span class="vi">@expression2</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
@@ -462,45 +462,45 @@ Naomi, 16, F, FR, Student</code></pre></div>
 <p>次にこれと等価なコードをInterpreterBuilderを使って構築してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
-<span class="nb">require</span> <span class="s2">&quot;../lib/interpreter_builder&quot;</span>
+<span class="nb">require</span> <span class="s2">"../lib/interpreter_builder"</span>
 <span class="k">module</span> <span class="nn">Census</span>
   <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>
     
-  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
+  <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:sex</span><span class="p">,</span> <span class="ss">:nationality</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>  
   <span class="k">class</span> <span class="nc">Expression</span>
     <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">Or</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">Or</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-      <span class="no">And</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+      <span class="no">And</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
     <span class="k">end</span>
     
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="s2">&quot;override this method in the subclass&quot;</span>
+      <span class="k">raise</span> <span class="s2">"override this method in the subclass"</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="n">terminals</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">all</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
-    <span class="ss">sex</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">sex</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">sex</span> <span class="o">==</span> <span class="n">sex</span> <span class="p">},</span>
-    <span class="ss">age</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">op</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="p">},</span>
-    <span class="ss">nationality</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span> <span class="n">nation</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">nationality</span> <span class="o">==</span> <span class="n">nation</span> <span class="p">},</span>
-    <span class="ss">job</span><span class="p">:</span> <span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">job</span> <span class="p">{</span> <span class="n">person</span><span class="o">.</span><span class="n">job</span> <span class="o">==</span> <span class="n">job</span> <span class="p">}</span>
+    <span class="ss">all: </span><span class="o">-&gt;</span><span class="n">person</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">},</span>
+    <span class="ss">sex: </span><span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">sex</span> <span class="p">{</span> <span class="n">person</span><span class="p">.</span><span class="nf">sex</span> <span class="o">==</span> <span class="n">sex</span> <span class="p">},</span>
+    <span class="ss">age: </span><span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">op</span> <span class="p">{</span> <span class="n">person</span><span class="p">.</span><span class="nf">age</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="p">},</span>
+    <span class="ss">nationality: </span><span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span> <span class="n">nation</span> <span class="p">{</span> <span class="n">person</span><span class="p">.</span><span class="nf">nationality</span> <span class="o">==</span> <span class="n">nation</span> <span class="p">},</span>
+    <span class="ss">job: </span><span class="o">-&gt;</span><span class="n">person</span><span class="p">,</span><span class="n">job</span> <span class="p">{</span> <span class="n">person</span><span class="p">.</span><span class="nf">job</span> <span class="o">==</span> <span class="n">job</span> <span class="p">}</span>
   <span class="p">}</span>
   
-  <span class="n">terminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
+  <span class="n">terminals</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">blk</span><span class="o">|</span>
     <span class="n">define_terminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">except</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
-    <span class="ow">or</span><span class="p">:</span> <span class="ss">:|</span><span class="p">,</span>
-    <span class="ow">and</span><span class="p">:</span> <span class="ss">:&amp;</span>
+    <span class="ss">except: </span><span class="p">:</span><span class="o">-</span><span class="p">,</span>
+    <span class="ss">or: :|</span><span class="p">,</span>
+    <span class="ss">and: :&amp;</span>
   <span class="p">}</span>
   
-  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+  <span class="n">nonterminals</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
     <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:evaluate</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">except</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="no">Except</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">All</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+    <span class="no">Except</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">All</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -508,46 +508,46 @@ Naomi, 16, F, FR, Student</code></pre></div>
 
 <p>では先のユーザ情報を読み取ってクエリーを実行してみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;./sample/census&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"./sample/census"</span>
 <span class="kp">include</span> <span class="no">Census</span>
-<span class="n">people</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
-  <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">sex</span><span class="p">,</span> <span class="n">nationality</span><span class="p">,</span> <span class="n">job</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span>
-  <span class="no">Person</span><span class="o">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> <span class="n">sex</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">nationality</span><span class="o">.</span><span class="n">intern</span><span class="p">,</span> <span class="n">job</span><span class="o">]</span>
+<span class="n">people</span> <span class="o">=</span> <span class="no">DATA</span><span class="p">.</span><span class="nf">lines</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">sex</span><span class="p">,</span> <span class="n">nationality</span><span class="p">,</span> <span class="n">job</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span>
+  <span class="no">Person</span><span class="o">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span> <span class="n">sex</span><span class="p">.</span><span class="nf">intern</span><span class="p">,</span> <span class="n">nationality</span><span class="p">.</span><span class="nf">intern</span><span class="p">,</span> <span class="n">job</span><span class="o">]</span>
 <span class="k">end</span>
 <span class="n">none_japanese</span> <span class="o">=</span> <span class="n">except</span><span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:JP</span><span class="p">))</span>
-<span class="nb">puts</span> <span class="n">none_japanese</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="n">over30men</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>
-<span class="nb">puts</span> <span class="n">over30men</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="n">under30_us_or_de_programmer</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">&#39;Programmer&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
-<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="cp">__END__</span>
-<span class="cp">Joe, 25, M, US, Programmer</span>
-<span class="cp">Armstrong, 28, M, US, Teacher</span>
-<span class="cp">Karen, 43, F, US, Programmer</span>
-<span class="cp">Ken, 38, M, JP, Doctor</span>
-<span class="cp">Yui, 18, F, JP, Student</span>
-<span class="cp">Paku, 33, M, KO, RestaurantOwner</span>
-<span class="cp">Soh, 51, M, KO, Teacher</span>
-<span class="cp">Ralf, 29, M, DE, Programmer</span>
-<span class="cp">Naomi, 16, F, FR, Student</span></code></pre></div>
+<span class="nb">puts</span> <span class="n">none_japanese</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="n">over30men</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">sex</span><span class="p">(</span><span class="ss">:M</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">over30men</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="n">under30_us_or_de_programmer</span> <span class="o">=</span> <span class="n">age</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="ss">:&lt;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">job</span><span class="p">(</span><span class="s1">'Programmer'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nationality</span><span class="p">(</span><span class="ss">:US</span><span class="p">)</span> <span class="o">|</span> <span class="n">nationality</span><span class="p">(</span><span class="ss">:DE</span><span class="p">))</span>
+<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="cp">__END__
+Joe, 25, M, US, Programmer
+Armstrong, 28, M, US, Teacher
+Karen, 43, F, US, Programmer
+Ken, 38, M, JP, Doctor
+Yui, 18, F, JP, Student
+Paku, 33, M, KO, RestaurantOwner
+Soh, 51, M, KO, Teacher
+Ralf, 29, M, DE, Programmer
+Naomi, 16, F, FR, Student</span></code></pre></div>
 
 <p>ここでは__END__以下のデータを読み取って、各ユーザ毎にPersonオブジェクトを生成してpeople変数に格納し、これを先のクエリー言語で評価しています。結果は以下のとおりです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">none_japanese</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Joe&quot;, age=25, sex=:M, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Armstrong&quot;, age=28, sex=:M, nationality=:US, job=&quot;Teacher&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Karen&quot;, age=43, sex=:F, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Paku&quot;, age=33, sex=:M, nationality=:KO, job=&quot;RestaurantOwner&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Soh&quot;, age=51, sex=:M, nationality=:KO, job=&quot;Teacher&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Ralf&quot;, age=29, sex=:M, nationality=:DE, job=&quot;Programmer&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Naomi&quot;, age=16, sex=:F, nationality=:FR, job=&quot;Student&quot;&gt;</span>
-<span class="nb">puts</span> <span class="n">over30men</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Ken&quot;, age=38, sex=:M, nationality=:JP, job=&quot;Doctor&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Paku&quot;, age=33, sex=:M, nationality=:KO, job=&quot;RestaurantOwner&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Soh&quot;, age=51, sex=:M, nationality=:KO, job=&quot;Teacher&quot;&gt;</span>
-<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Joe&quot;, age=25, sex=:M, nationality=:US, job=&quot;Programmer&quot;&gt;</span>
-<span class="c1">#&lt;struct Census::Person name=&quot;Ralf&quot;, age=29, sex=:M, nationality=:DE, job=&quot;Programmer&quot;&gt;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">none_japanese</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name="Joe", age=25, sex=:M, nationality=:US, job="Programmer"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Armstrong", age=28, sex=:M, nationality=:US, job="Teacher"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Karen", age=43, sex=:F, nationality=:US, job="Programmer"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Paku", age=33, sex=:M, nationality=:KO, job="RestaurantOwner"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Soh", age=51, sex=:M, nationality=:KO, job="Teacher"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Ralf", age=29, sex=:M, nationality=:DE, job="Programmer"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Naomi", age=16, sex=:F, nationality=:FR, job="Student"&gt;</span>
+<span class="nb">puts</span> <span class="n">over30men</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name="Ken", age=38, sex=:M, nationality=:JP, job="Doctor"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Paku", age=33, sex=:M, nationality=:KO, job="RestaurantOwner"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Soh", age=51, sex=:M, nationality=:KO, job="Teacher"&gt;</span>
+<span class="nb">puts</span> <span class="n">under30_us_or_de_programmer</span><span class="p">.</span><span class="nf">evaluate</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+<span class="c1">#&lt;struct Census::Person name="Joe", age=25, sex=:M, nationality=:US, job="Programmer"&gt;</span>
+<span class="c1">#&lt;struct Census::Person name="Ralf", age=29, sex=:M, nationality=:DE, job="Programmer"&gt;</span></code></pre></div>
 
 <p>うまくいっているようですね！</p>
 
@@ -555,12 +555,12 @@ Naomi, 16, F, FR, Student</code></pre></div>
 <p>あまり意味が無いのですがInterpreterBuilderの活用例として以下のような構文を実現する算術演算インタープリタを実装してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">exp</span> <span class="o">=</span> <span class="n">divide</span><span class="p">(</span> <span class="n">plus</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">multiple</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span> <span class="mi">3</span> <span class="p">)</span>
- <span class="n">exp</span><span class="o">.</span><span class="n">to_i</span> <span class="c1"># =&gt; 4</span></code></pre></div>
+ <span class="n">exp</span><span class="p">.</span><span class="nf">to_i</span> <span class="c1"># =&gt; 4</span></code></pre></div>
 
 <p>算術演算では終端は数字になるので、selfを返すFixnum#to_iをiterpretメソッドとして使います。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
-<span class="n">require_relative</span> <span class="s2">&quot;../lib/interpreter_builder&quot;</span>
+<span class="n">require_relative</span> <span class="s2">"../lib/interpreter_builder"</span>
 <span class="k">module</span> <span class="nn">Calc</span>
   <span class="kp">extend</span> <span class="no">InterpreterBuilder</span>
   
@@ -568,13 +568,13 @@ Naomi, 16, F, FR, Student</code></pre></div>
   <span class="k">end</span>
   
   <span class="n">nonterminals</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">plus</span><span class="p">:</span> <span class="ss">:+</span><span class="p">,</span>
-    <span class="ss">minus</span><span class="p">:</span> <span class="ss">:-</span><span class="p">,</span>
-    <span class="ss">multiple</span><span class="p">:</span> <span class="ss">:*</span><span class="p">,</span>
-    <span class="ss">divide</span><span class="p">:</span> <span class="ss">:/</span>
+    <span class="ss">plus: </span><span class="p">:</span><span class="o">+</span><span class="p">,</span>
+    <span class="ss">minus: </span><span class="p">:</span><span class="o">-</span><span class="p">,</span>
+    <span class="ss">multiple: </span><span class="p">:</span><span class="o">*</span><span class="p">,</span>
+    <span class="ss">divide: :/</span>
   <span class="p">}</span>
   
-  <span class="n">nonterminals</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
+  <span class="n">nonterminals</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">op</span><span class="o">|</span>
     <span class="n">define_nonterminal</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="no">Expression</span><span class="p">,</span> <span class="ss">:to_i</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>

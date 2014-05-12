@@ -198,11 +198,11 @@
 
 <p><code>gem install ctoD</code>でインストールすると、<code>ctoD</code>ターミナルコマンドが使えるようになります。サブコマンドを渡さなければそのヘルプが表示されます。</p>
 
-<div class="highlight"><pre><code class="bash">% ctoD
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ctoD
 Commands:
   ctoD create_table CSV DATABASE  <span class="c"># Create a database table for CSV</span>
   ctoD <span class="nb">export </span>CSV DATABASE        <span class="c"># Export CSV data to DATABASE</span>
-  ctoD <span class="nb">help</span> <span class="o">[</span>COMMAND<span class="o">]</span>             <span class="c"># Describe available commands or one specific command</span>
+  ctoD <span class="nb">help</span> <span class="o">[</span>COMMAND]             <span class="c"># Describe available commands or one specific command</span>
   ctoD version                    <span class="c"># Show CtoD version</span></code></pre></div>
 
 <p><code>create_table</code>サブコマンドは、引数で渡したDATABASEにテーブルを生成します。テーブルの名称およびスキーマは第1引数で渡すCSVデータの内容に基づき構築されます。第1引数のCSVにはそのファイルパスを指定し、第2引数のDATABASEにはデータベースURLアドレスを指定します。</p>
@@ -276,10 +276,10 @@ sqlite3://localhost//Users/username/path/to/file
 
 <p><code>export</code>サブコマンドを実行します。</p>
 
-<div class="highlight"><pre><code class="bash">/plangs% ctoD <span class="nb">export </span>langs.csv sqlite3://localhost/<span class="nv">$PWD</span>/langs.sqlite3
-Table <span class="s1">&#39;langs&#39;</span> created at sqlite3://localhost//Users/keyes/plangs/langs.sqlite3.
+<div class="highlight"><pre><code class="bash"><span class="gp">/plangs% </span>ctoD <span class="nb">export </span>langs.csv sqlite3://localhost/<span class="nv">$PWD</span>/langs.sqlite3
+Table <span class="s1">'langs'</span> created at sqlite3://localhost//Users/keyes/plangs/langs.sqlite3.
 CSV data exported successfully.
-/plangs% ls
+<span class="gp">/plangs% </span>ls
 langs.csv     langs.sqlite3</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
@@ -330,8 +330,8 @@ keyes=# \l
 
 <p><code>ctoD export</code>サブコマンドを実行します。</p>
 
-<div class="highlight"><pre><code class="bash">/plangs% ctoD <span class="nb">export </span>langs.csv postgres://localhost/langs
-Table <span class="s1">&#39;langs&#39;</span> created at postgresql://localhost/langs.
+<div class="highlight"><pre><code class="bash"><span class="gp">/plangs% </span>ctoD <span class="nb">export </span>langs.csv postgres://localhost/langs
+Table <span class="s1">'langs'</span> created at postgresql://localhost/langs.
 CSV data exported successfully.</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
@@ -397,8 +397,8 @@ mysql&gt; show databases;
 
 <p><code>ctoD export</code>サブコマンドを実行します。</p>
 
-<div class="highlight"><pre><code class="bash">/plangs% ctoD <span class="nb">export </span>langs.csv mysql://root:xxxx@localhost/langs
-Table <span class="s1">&#39;langs&#39;</span> created at mysql://root:xxxx@localhost/langs.
+<div class="highlight"><pre><code class="bash"><span class="gp">/plangs% </span>ctoD <span class="nb">export </span>langs.csv mysql://root:xxxx@localhost/langs
+Table <span class="s1">'langs'</span> created at mysql://root:xxxx@localhost/langs.
 CSV data exported successfully.</code></pre></div>
 
 <p>テーブルが生成されているか確かめてみます。</p>
@@ -454,33 +454,33 @@ mysql&gt; show create table langs;
 
 <p><code>CtoD</code>は<code>CtoD::DB.connect</code>というデータベースに接続するためのメソッドをもっており、かつActiveRecordをrequireしているので、Rubyからデータベースにアクセスするのは簡単です。irbを立ち上げてアクセスしてみます。</p>
 
-<div class="highlight"><pre><code class="irb"><span class="go">/plangs% irb -rctoD</span>
-<span class="go">IRB on Ruby2.0.0</span>
-<span class="gp">&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="no">CtoD</span><span class="o">::</span><span class="no">DB</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;postgres://localhost/langs&quot;</span><span class="p">)</span> <span class="c1">#=&gt; #&lt;URI::Generic:0x007f81f330c4e8 URL:postgresql://localhost/langs&gt;</span>
-<span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">Lang</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">;</span> <span class="k">end</span> <span class="c1">#=&gt; nil</span>
-<span class="gp">&gt;&gt; </span><span class="no">Lang</span><span class="o">.</span><span class="n">all</span>
-<span class="go">┌-------------------------------------------------------------------------------</span>
-<span class="go">│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │</span>
-<span class="go">┌-------------------------------------------------------------------------------</span>
-<span class="go">│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │</span>
-<span class="go">│ 2  ╎ 1959 ╎ LISP       ╎ John McCarthy       ╎ IPL                         |</span>
-<span class="go">│ 3  ╎ 1972 ╎ Smalltalk  ╎ Daniel Henry Holmes ╎ Simula 67                   |</span>
-<span class="go">│ 4  ╎ 1990 ╎ Haskell    ╎ Simon Peyton Jones  ╎ Miranda                     |</span>
-<span class="go">│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |</span>
-<span class="go">│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎</span>
-<span class="go">│ 7  ╎ 1993 ╎ Lua        ╎ Roberto Ierusalimsch╎ Scheme / SNOBOL / Modula / C╎</span>
-<span class="go">│ 8  ╎ 1987 ╎ Erlang     ╎ Joe Armstrong       ╎ Prolog                      | </span>
-<span class="go">└-------------------------------------------------------------------------------</span>
-<span class="go">8 rows in set</span>
-<span class="gp">&gt;&gt; </span><span class="no">Lang</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">year</span><span class="p">:</span><span class="mi">1995</span><span class="p">)</span>
-<span class="go">┌-------------------------------------------------------------------------------</span>
-<span class="go">│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │</span>
-<span class="go">┌-------------------------------------------------------------------------------</span>
-<span class="go">│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │</span>
-<span class="go">│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |</span>
-<span class="go">│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎</span>
-<span class="go">└-------------------------------------------------------------------------------</span>
-<span class="go">3 rows in set</span></code></pre></div>
+<div class="highlight"><pre><code class="irb">/plangs% irb -rctoD
+IRB on Ruby2.0.0
+&gt;&gt; conn = CtoD::DB.connect("postgres://localhost/langs") #=&gt; #&lt;URI::Generic:0x007f81f330c4e8 URL:postgresql://localhost/langs&gt;
+&gt;&gt; class Lang &lt; ActiveRecord::Base; end #=&gt; nil
+&gt;&gt; Lang.all
+┌-------------------------------------------------------------------------------
+│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │
+┌-------------------------------------------------------------------------------
+│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │
+│ 2  ╎ 1959 ╎ LISP       ╎ John McCarthy       ╎ IPL                         |
+│ 3  ╎ 1972 ╎ Smalltalk  ╎ Daniel Henry Holmes ╎ Simula 67                   |
+│ 4  ╎ 1990 ╎ Haskell    ╎ Simon Peyton Jones  ╎ Miranda                     |
+│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |
+│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎
+│ 7  ╎ 1993 ╎ Lua        ╎ Roberto Ierusalimsch╎ Scheme / SNOBOL / Modula / C╎
+│ 8  ╎ 1987 ╎ Erlang     ╎ Joe Armstrong       ╎ Prolog                      | 
+└-------------------------------------------------------------------------------
+8 rows in set
+&gt;&gt; Lang.where(year:1995)
+┌-------------------------------------------------------------------------------
+│ id ╎ year ╎ name       ╎ designer            ╎ predecessor                 │
+┌-------------------------------------------------------------------------------
+│ 1  ╎ 1995 ╎ Ruby       ╎ Yukihiro Matsumoto  ╎ Smalltalk / Perl            │
+│ 5  ╎ 1995 ╎ JavaScript ╎ Brendan Eich        ╎ LiveScript                  |
+│ 6  ╎ 1995 ╎ Java       ╎ James Gosling       ╎ C / Simula 67 / C++ / Smallt╎
+└-------------------------------------------------------------------------------
+3 rows in set</code></pre></div>
 
 <p>以上です。</p>
 

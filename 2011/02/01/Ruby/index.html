@@ -207,7 +207,7 @@
    <span class="kp">loop</span> <span class="k">do</span>
      <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
      <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span>           <span class="c1"># 次の近似値</span>
-     <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;</span> <span class="n">eps</span>
+     <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">).</span><span class="nf">abs</span> <span class="o">&lt;</span> <span class="n">eps</span>
    <span class="k">end</span>
  <span class="k">end</span>
  <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
@@ -221,7 +221,7 @@
 <p>まず次の近似値を計算するnext_valを定義しよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">next_val</span>
-   <span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">{</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+   <span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">{</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}.</span><span class="nf">curry</span>
  <span class="k">end</span></code></pre></div>
 
 <p>next_val<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>は、求める平方根の数値nと近似値xを取って次の近似値を返すが、これをcurry化されたProcオブジェクトを返すように実装する。これによって、２つの引数を渡すタイミングをコントロールできるようになる。つまり数値nだけを先に渡すことによってnext_valは、１つの引数xを受ける関数に変わる。</p>
@@ -237,7 +237,7 @@
 <p>次に初期値に任意の関数を繰り返し適用して、その結果のリストを返す汎用関数repeatを定義しよう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-   <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+   <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
  <span class="k">end</span></code></pre></div>
 
 <p>repeat関数は１つの引数を取って１つの結果を返す関数ｆと、ｆの初期値となるxを取りEnumeratorオブジェクトを返す。Enumeratorのブロックの中ではloopによってxを関数ｆに適用した結果が、繰り返しｙつまりEnumerator::Yielderオブジェクトに渡されるが、これはEnumeratorオブジェクトが呼び出されるまで実行されず、そのため無限ループにはならない。</p>
@@ -246,7 +246,7 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">approxs</span> <span class="o">=</span> <span class="n">repeat</span> <span class="n">next_val</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x0a4aec&gt;:each&gt;</span>
  <span class="n">ls</span> <span class="o">=</span> <span class="o">[]</span>
- <span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">ls</span> <span class="o">&lt;&lt;</span> <span class="n">approxs</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+ <span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="p">{</span> <span class="n">ls</span> <span class="o">&lt;&lt;</span> <span class="n">approxs</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span>
  <span class="n">ls</span> <span class="c1"># =&gt; [1.0, 3.0, 2.3333333333333335, 2.238095238095238, 2.2360688956433634]</span></code></pre></div>
 
 <p>Enumeratorオブジェクトはその呼び出し<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>の度にループを１つ回して結果を１つ返す。repeatはその出力を利用する関数と同期して、それが必要とされる分だけ評価される。つまりrepeatそれ自体は繰り返し回数の制限を持たない。</p>
@@ -254,8 +254,8 @@
 <p>次に関数with_inを定義しよう。with_inは許容誤差と近似値のリスト<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>を引数に取り、許容誤差よりも小さい２つの連続する近似値を探す。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
-   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
-   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="nf">next</span><span class="p">,</span> <span class="n">enum</span><span class="p">.</span><span class="nf">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">).</span><span class="nf">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span>
    <span class="n">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
  <span class="k">end</span></code></pre></div>
 
@@ -282,8 +282,8 @@
 <p>この目的を達成するには、関数with_inに代わる関数relativeを定義するだけでよい。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
-   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
-   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">abs</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="nf">next</span><span class="p">,</span> <span class="n">enum</span><span class="p">.</span><span class="nf">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">).</span><span class="nf">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="nf">abs</span>
    <span class="n">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
  <span class="k">end</span>
  <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="no">EPS</span><span class="p">)</span>

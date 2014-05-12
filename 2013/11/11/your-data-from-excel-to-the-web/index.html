@@ -277,7 +277,7 @@ keyes=#\q
 
 <p><code>CtoD gem</code>をインストールします。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% gem install ctoD
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>gem install ctoD
 Fetching: ctoD-0.0.1.gem <span class="o">(</span>100%<span class="o">)</span>
 Successfully installed ctoD-0.0.1
 1 gem installed</code></pre></div>
@@ -286,8 +286,8 @@ Successfully installed ctoD-0.0.1
 
 <p><code>ctoD</code>コマンドで表示されるhelpを確認した上で、<code>export</code>サブコマンドを実行します。exportサブコマンドは引数で渡されたcsvファイルを読み取って、ターゲットデータベース上にテーブルを作成し、そこにcsvのデータをエクスポートします。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% ctoD <span class="nb">export </span>movies.csv postgres://localhost/movies
-Table <span class="s1">&#39;movies&#39;</span> created at postgresql://localhost/movies.
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>ctoD <span class="nb">export </span>movies.csv postgres://localhost/movies
+Table <span class="s1">'movies'</span> created at postgresql://localhost/movies.
 CSV data exported successfully.</code></pre></div>
 
 <p>上で見るようにデータベースの指定は、そのスキーマ、ホスト、DB名を含むアドレスで行います。データベースへのログイン情報が必要な場合は以下のようにします。</p>
@@ -361,38 +361,38 @@ movies=# \q
 <p><code>app.rb</code>という名称で以下のようなコードを書きます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1">#app.rb</span>
-<span class="nb">require</span> <span class="s1">&#39;sinatra&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;haml&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;ctoD&#39;</span>
+<span class="nb">require</span> <span class="s1">'sinatra'</span>
+<span class="nb">require</span> <span class="s1">'haml'</span>
+<span class="nb">require</span> <span class="s1">'ctoD'</span>
 
 <span class="k">class</span> <span class="nc">Movie</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
 <span class="k">end</span>
 
 <span class="n">configure</span> <span class="ss">:production</span> <span class="k">do</span>
-  <span class="no">CtoD</span><span class="o">::</span><span class="no">DB</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="o">]</span><span class="p">)</span>
+  <span class="no">CtoD</span><span class="o">::</span><span class="no">DB</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">'DATABASE_URL'</span><span class="o">]</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">configure</span> <span class="ss">:development</span> <span class="k">do</span>
-  <span class="no">CtoD</span><span class="o">::</span><span class="no">DB</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;postgres://localhost/movies&#39;</span><span class="p">)</span>
+  <span class="no">CtoD</span><span class="o">::</span><span class="no">DB</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="s1">'postgres://localhost/movies'</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span>
-  <span class="n">redirect</span> <span class="s1">&#39;/movie&#39;</span>
+<span class="n">get</span> <span class="s1">'/'</span> <span class="k">do</span>
+  <span class="n">redirect</span> <span class="s1">'/movie'</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/movie&#39;</span> <span class="k">do</span>
-  <span class="vi">@movies</span> <span class="o">=</span> <span class="no">Movie</span><span class="o">.</span><span class="n">all</span>
+<span class="n">get</span> <span class="s1">'/movie'</span> <span class="k">do</span>
+  <span class="vi">@movies</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">all</span>
   <span class="n">haml</span> <span class="ss">:index</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/movie/:id&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
-  <span class="vi">@movie</span> <span class="o">=</span> <span class="no">Movie</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+<span class="n">get</span> <span class="s1">'/movie/:id'</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+  <span class="vi">@movie</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
   <span class="n">haml</span> <span class="ss">:movie</span>
 <span class="k">end</span>
 
 <span class="n">helpers</span> <span class="k">do</span>
   <span class="k">def</span> <span class="nf">columns</span>
-    <span class="no">Movie</span><span class="o">.</span><span class="n">column_names</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">match</span> <span class="sr">/_at$/</span> <span class="p">}</span>
+    <span class="no">Movie</span><span class="p">.</span><span class="nf">column_names</span><span class="p">.</span><span class="nf">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">match</span> <span class="sr">/_at$/</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -400,42 +400,42 @@ movies=# \q
 
 <p>ここではテンプレートはinline templateを使います。同じファイルの<code>__END__</code>以下に次のコードを書き足します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="cp">__END__</span>
-<span class="cp">@@layout</span>
-<span class="cp">!!!</span>
-<span class="cp">%html</span>
-<span class="cp">  %head</span>
-<span class="cp">    %meta{charset:&#39;utf-8&#39;}</span>
-<span class="cp">    %title Movie Reviews</span>
-<span class="cp">    %link{:href=&gt;&quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css&quot;, :rel=&gt;&quot;stylesheet&quot;}</span>
-<span class="cp">    %script{:src=&gt;&quot;//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js&quot;}</span>
-<span class="cp">  %body</span>
-<span class="cp">    .container</span>
-<span class="cp">      != yield</span>
+<div class="highlight"><pre><code class="ruby"><span class="cp">__END__
+@@layout
+!!!
+%html
+  %head
+    %meta{charset:'utf-8'}
+    %title Movie Reviews
+    %link{:href=&gt;"//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css", :rel=&gt;"stylesheet"}
+    %script{:src=&gt;"//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"}
+  %body
+    .container
+      != yield
 
-<span class="cp">@@index</span>
-<span class="cp">%h2 Movie Reviews</span>
-<span class="cp">%table.table.table-striped.table-hover.table-bordered</span>
-<span class="cp">  %thead.header</span>
-<span class="cp">    - columns.each do |t|</span>
-<span class="cp">      %th= t</span>
-<span class="cp">  %tbody</span>
-<span class="cp">    - @movies.each do |st|</span>
-<span class="cp">      %tr</span>
-<span class="cp">        - columns.each do |t|</span>
-<span class="cp">          - if t==&#39;title&#39;</span>
-<span class="cp">            %td</span>
-<span class="cp">              %a{href:&quot;/movie/#{st.id}&quot;}= st[t]</span>
-<span class="cp">          - else</span>
-<span class="cp">            %td= st[t]</span>
+@@index
+%h2 Movie Reviews
+%table.table.table-striped.table-hover.table-bordered
+  %thead.header
+    - columns.each do |t|
+      %th= t
+  %tbody
+    - @movies.each do |st|
+      %tr
+        - columns.each do |t|
+          - if t=='title'
+            %td
+              %a{href:"/movie/#{st.id}"}= st[t]
+          - else
+            %td= st[t]
 
-<span class="cp">@@movie</span>
-<span class="cp">%h3= @movie.title</span>
-<span class="cp">%table.table</span>
-<span class="cp">  - columns.each do |t|</span>
-<span class="cp">    %tr</span>
-<span class="cp">      %td= t</span>
-<span class="cp">      %td= @movie[t]</span></code></pre></div>
+@@movie
+%h3= @movie.title
+%table.table
+  - columns.each do |t|
+    %tr
+      %td= t
+      %td= @movie[t]</span></code></pre></div>
 
 <p>Twitter bootstrapを読み込んでいます。</p>
 
@@ -447,11 +447,11 @@ movies=# \q
 
 <p>用意ができたのでまずはローカルで起動してみます。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% ruby app.rb
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>ruby app.rb
 <span class="o">==</span> Sinatra/1.4.4 has taken the stage on 4567 <span class="k">for </span>development with backup from Thin
-&gt;&gt; Thin web server <span class="o">(</span>v1.5.1 codename Straight Razor<span class="o">)</span>
-&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on localhost:4567, CTRL+C to stop</code></pre></div>
+<span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.5.1 codename Straight Razor<span class="o">)</span>
+<span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
+<span class="gp">&gt;&gt; </span>Listening on localhost:4567, CTRL+C to stop</code></pre></div>
 
 <p>まずはトップページ。</p>
 
@@ -468,16 +468,16 @@ movies=# \q
 <p>さて、引き続きHerokuにデプロイするためのファイルを用意します。デプロイには<code>Gemfile</code>と<code>Procfile</code>が必要です。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1">#Gemfile</span>
-<span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
-<span class="n">ruby</span> <span class="s1">&#39;2.0.0&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;haml&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;ctoD&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;pg&#39;</span></code></pre></div>
+<span class="n">source</span> <span class="s1">'https://rubygems.org'</span>
+<span class="n">ruby</span> <span class="s1">'2.0.0'</span>
+<span class="n">gem</span> <span class="s1">'sinatra'</span>
+<span class="n">gem</span> <span class="s1">'haml'</span>
+<span class="n">gem</span> <span class="s1">'ctoD'</span>
+<span class="n">gem</span> <span class="s1">'pg'</span></code></pre></div>
 
 <p><code>pg</code>はPostgreのインタフェースです。<code>bundle install</code>します。</p>
 
-<div class="highlight"><pre><code class="bash">mymovie% bundle install
+<div class="highlight"><pre><code class="bash"><span class="gp">mymovie% </span>bundle install
 Fetching gem metadata from https://rubygems.org/...........
 Fetching gem metadata from https://rubygems.org/..
 Resolving dependencies...
@@ -499,27 +499,27 @@ Using rack-protection <span class="o">(</span>1.5.1<span class="o">)</span>
 Using sinatra <span class="o">(</span>1.4.4<span class="o">)</span>
 Using bundler <span class="o">(</span>1.3.5<span class="o">)</span>
 Your bundle is <span class="nb">complete</span>!
-Use <span class="sb">`</span>bundle show <span class="o">[</span>gemname<span class="o">]</span><span class="sb">`</span> to see where a bundled gem is installed.</code></pre></div>
+Use <span class="sb">`</span>bundle show <span class="o">[</span>gemname]<span class="sb">`</span> to see where a bundled gem is installed.</code></pre></div>
 
 <p>次にProcfileを作ります。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1">#Procfile</span>
-<span class="ss">web</span><span class="p">:</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">ruby</span> <span class="n">app</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="nb">p</span> <span class="vg">$PORT</span></code></pre></div>
+<span class="ss">web: </span><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">ruby</span> <span class="n">app</span><span class="p">.</span><span class="nf">rb</span> <span class="o">-</span><span class="nb">p</span> <span class="vg">$PORT</span></code></pre></div>
 
 <p>このファイルにより<code>foreman start</code>でローカルで起動するようになります。デフォルトポートは5000番です。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% foreman start
-21:38:45 web.1  <span class="p">|</span> started with pid 84425
-21:38:48 web.1  <span class="p">|</span> <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  WEBrick 1.3.1
-21:38:48 web.1  <span class="p">|</span> <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  ruby 2.0.0 <span class="o">(</span>2013-02-24<span class="o">)</span> <span class="o">[</span>x86_64-darwin12.2.0<span class="o">]</span>
-21:38:48 web.1  <span class="p">|</span> <span class="o">==</span> Sinatra/1.4.4 has taken the stage on 5000 <span class="k">for </span>development with backup from WEBrick
-21:38:48 web.1  <span class="p">|</span> <span class="o">[</span>2013-11-10 21:38:48<span class="o">]</span> INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>84425 <span class="nv">port</span><span class="o">=</span>5000</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>foreman start
+21:38:45 web.1  | started with pid 84425
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48] INFO  WEBrick 1.3.1
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48] INFO  ruby 2.0.0 <span class="o">(</span>2013-02-24<span class="o">)</span> <span class="o">[</span>x86_64-darwin12.2.0]
+21:38:48 web.1  | <span class="o">==</span> Sinatra/1.4.4 has taken the stage on 5000 <span class="k">for </span>development with backup from WEBrick
+21:38:48 web.1  | <span class="o">[</span>2013-11-10 21:38:48] INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>84425 <span class="nv">port</span><span class="o">=</span>5000</code></pre></div>
 
 <h2 id="step8-heroku">STEP8: Herokuにデプロイする</h2>
 
 <p>作成したファイルを確認します。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% tree
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>tree
 .
 ├── Gemfile
 ├── Gemfile.lock
@@ -531,30 +531,30 @@ Use <span class="sb">`</span>bundle show <span class="o">[</span>gemname<span cl
 
 <p>これらのファイルをgitで管理します。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% git init
-/mymovie% git add .
-/mymovie% git commit -m <span class="s1">&#39;init&#39;</span></code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>git init
+<span class="gp">/mymovie% </span>git add .
+<span class="gp">/mymovie% </span>git commit -m <span class="s1">'init'</span></code></pre></div>
 
 <p><code>heroku create</code>コマンドでHerokuにアプリを作ります。アプリ名を渡さなければHerokuが自動生成します。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% heroku create
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>heroku create
 Creating serene-retreat-5896... <span class="k">done</span>, stack is cedar
-http://serene-retreat-5896.herokuapp.com/ <span class="p">|</span> git@heroku.com:serene-retreat-5896.git
+http://serene-retreat-5896.herokuapp.com/ | git@heroku.com:serene-retreat-5896.git
 Git remote heroku added</code></pre></div>
 
 <p>デプロイします。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% git push heroku master
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>git push heroku master
 Counting objects: 7, <span class="k">done</span>.
 Delta compression using up to 2 threads.
 Compressing objects: 100% <span class="o">(</span>6/6<span class="o">)</span>, <span class="k">done</span>.
 Writing objects: 100% <span class="o">(</span>7/7<span class="o">)</span>, 4.18 KiB, <span class="k">done</span>.
 Total 7 <span class="o">(</span>delta 0<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
 
------&gt; Ruby app detected
------&gt; Compiling Ruby/Rack
------&gt; Using Ruby version: ruby-2.0.0
------&gt; Installing dependencies using Bundler version 1.3.2
+<span class="gp">-----&gt; </span>Ruby app detected
+<span class="gp">-----&gt; </span>Compiling Ruby/Rack
+<span class="gp">-----&gt; </span>Using Ruby version: ruby-2.0.0
+<span class="gp">-----&gt; </span>Installing dependencies using Bundler version 1.3.2
        New app detected loading default bundler cache
        Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin --deployment
        Fetching gem metadata from https://rubygems.org/..........
@@ -565,7 +565,7 @@ Total 7 <span class="o">(</span>delta 0<span class="o">)</span>, reused 0 <span 
 
 <p>この段階ではまだデータの準備ができていないのでサイトを開いても<code>Internal Server Error</code>になりますが、データベースの下準備ができていることは<code>heroku config</code>で確認できます。</p>
 
-<div class="highlight"><pre><code class="bash">% heroku <span class="nv">config</span>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>heroku config
 <span class="o">===</span> serene-retreat-5896 Config Vars
 DATABASE_URL:                postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j
 HEROKU_POSTGRESQL_IVORY_URL: postgres://kdgrmzoforanpf:uyoucPUDBztg_3mlx9RGTnAJw8@ec2-107-20-214-225.compute-1.amazonaws.com:5432/da7n8egah2mc0j</code></pre></div>
@@ -604,7 +604,7 @@ exit
 
 <p>さあ、これでmovieデータがデータベースに収まりました。完成したサイトを見てみます。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% heroku open
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>heroku open
 Opening serene-retreat-5896... <span class="k">done</span></code></pre></div>
 
 <p><img src="/assets/images/2013/11/movie3.png" alt="movie noshadow" /></p>
@@ -629,11 +629,11 @@ Opening serene-retreat-5896... <span class="k">done</span></code></pre></div>
 
 <p>まずは<code>pg_dump</code>コマンドを使ってデータをダンプします。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% pg_dump -Fc --no-acl --no-owner -h localhost  movies &gt; movies.dump</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>pg_dump -Fc --no-acl --no-owner -h localhost  movies &gt; movies.dump</code></pre></div>
 
 <p>Heroku側からこのダンプファイルにHTTPアクセスできるようにします。ここではDropboxを使います。ファイルをDropboxのPublicフォルダに移動します。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% mv movies.dump ~/Dropbox/Public</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>mv movies.dump ~/Dropbox/Public</code></pre></div>
 
 <p>DropboxのWebサイトに行き該当ファイルを右クリックしてCopy public linkをコピーしておきます。</p>
 
@@ -643,25 +643,25 @@ Opening serene-retreat-5896... <span class="k">done</span></code></pre></div>
 
 <p>Herokuへデータを取り込むため<code>PG Backups add-on</code>を使います。<code>heroku addons:add</code>コマンドで使えるようにします。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% heroku addons:add pgbackups
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>heroku addons:add pgbackups
 Adding pgbackups on serene-retreat-5896... <span class="k">done</span>, v6 <span class="o">(</span>free<span class="o">)</span>
-You can now use <span class="s2">&quot;pgbackups&quot;</span> to backup your databases or import an external backup.
+You can now use <span class="s2">"pgbackups"</span> to backup your databases or import an external backup.
 Use <span class="sb">`</span>heroku addons:docs pgbackups<span class="sb">`</span> to view documentation.</code></pre></div>
 
 <p>先ほど取得したDropbox上のurlを引数にしてそのデータをHeroku上のデータベースにリストアします。途中で確認がでますので、アプリ名を入れて対応します。</p>
 
-<div class="highlight"><pre><code class="bash">/mymovie% heroku pgbackups:restore DATABASE_URL <span class="s1">&#39;https://dl.dropboxusercontent.com/u/xxxxx/movies.dump&#39;</span>
+<div class="highlight"><pre><code class="bash"><span class="gp">/mymovie% </span>heroku pgbackups:restore DATABASE_URL <span class="s1">'https://dl.dropboxusercontent.com/u/xxxxx/movies.dump'</span>
 
 HEROKU_POSTGRESQL_IVORY_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>  &lt;---restore---  movies.dump
 
  !    WARNING: Destructive Action
  !    This <span class="nb">command </span>will affect the app: serene-retreat-5896
- !    To proceed, <span class="nb">type</span> <span class="s2">&quot;serene-retreat-5896&quot;</span> or re-run this <span class="nb">command </span>with --confirm serene-retreat-5896
+ !    To proceed, <span class="nb">type</span> <span class="s2">"serene-retreat-5896"</span> or re-run this <span class="nb">command </span>with --confirm serene-retreat-5896
 
-&gt; serene-retreat-5896
+<span class="gp">&gt; </span>serene-retreat-5896
 
-Retrieving... <span class="k">done</span>
-Restoring... <span class="k">done</span></code></pre></div>
+Retrieving... <span class="k">done
+</span>Restoring... <span class="k">done</span></code></pre></div>
 
 <p>これでHeroku上にデータが移管されました。</p>
 

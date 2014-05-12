@@ -188,34 +188,34 @@
 <h2 id="singleton">あるときはSingletonメソッド・ジェネレータになる</h2>
 <p>Rubyのブロックはメソッドと同じように手続きの塊を作り、それはlambdaでオブジェクト(Procオブジェクト)化できる。このときProcオブジェクトは外側の変数の参照を自身の状態として取りこめる。ブロック内の手続きは、Proc#callメソッドを呼ぶことによって実行される。こんな感じだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">"taro"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"jimin"</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
    <span class="nb">puts</span> <span class="nb">name</span>
    <span class="nb">puts</span> <span class="n">party</span>
-   <span class="nb">puts</span> <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">party</span><span class="si">}</span><span class="s2">&quot;</span>
+   <span class="nb">puts</span> <span class="s2">"Hello, I'm </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">party</span><span class="si">}</span><span class="s2">"</span>
  <span class="k">end</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">call</span>
  
  <span class="c1"># &gt;&gt; taro</span>
  <span class="c1"># &gt;&gt; jimin</span>
- <span class="c1"># &gt;&gt; Hello, I&#39;m taro of jimin</span>
+ <span class="c1"># &gt;&gt; Hello, I'm taro of jimin</span>
  
- <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">"yukio"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"minshu"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">call</span>
  
  <span class="c1"># &gt;&gt; yukio</span>
  <span class="c1"># &gt;&gt; minshu</span>
- <span class="c1"># &gt;&gt; Hello, I&#39;m yukio of minshu</span></code></pre></div>
+ <span class="c1"># &gt;&gt; Hello, I'm yukio of minshu</span></code></pre></div>
 
 <p>外側の変数(name,party)の参照先が変わると、それに合わせてProcオブジェクト(pm)の状態も変わる。</p>
 
 <p>pmはオブジェクトだからユーザがメソッドを追加してもいい。こんなときsingletonクラス(特異クラス)が使える。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">"taro"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"jimin"</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span>
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">pm</span>
@@ -224,31 +224,31 @@
        <span class="vi">@name</span><span class="p">,</span> <span class="vi">@party</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">party</span>
      <span class="k">end</span>
      <span class="k">def</span> <span class="nf">greeting</span>
-       <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">&quot;</span>
+       <span class="s2">"Hello, I'm </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">"</span>
      <span class="k">end</span>
    <span class="k">end</span>
-   <span class="n">pm</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+   <span class="n">pm</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
  <span class="k">end</span>
  
- <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;taro&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;jimin&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m taro of jimin&quot;</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">call</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "taro"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">party</span> <span class="c1"># =&gt; "jimin"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">greeting</span> <span class="c1"># =&gt; "Hello, I'm taro of jimin"</span>
  
- <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">"yukio"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"minshu"</span>
  
- <span class="n">pm</span><span class="o">.</span><span class="n">call</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span></code></pre></div>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">call</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "yukio"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">party</span> <span class="c1"># =&gt; "minshu"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">greeting</span> <span class="c1"># =&gt; "Hello, I'm yukio of minshu"</span></code></pre></div>
 
 <p>例では先の例のブロック内の各文をメソッドで呼べるようにしている。singletonクラスの参照オブジェクトをpmとしメソッドを定義して、Proc#callでinitメソッドが実行されるようにする。</p>
 
 <p>ただ上のコードはブロックの内部で変数pmを参照しているので、pmの参照先が変わると問題が起きる。ブロックの引数として対象のオブジェクトを渡して問題を解決しよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;taro&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;jimin&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">name</span> <span class="o">=</span> <span class="s2">"taro"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"jimin"</span>
  
  <span class="n">pm</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="o">|</span>
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
@@ -257,24 +257,24 @@
        <span class="vi">@name</span><span class="p">,</span> <span class="vi">@party</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">party</span>
      <span class="k">end</span>
      <span class="k">def</span> <span class="nf">greeting</span>
-       <span class="s2">&quot;Hello, I&#39;m </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">&quot;</span>
+       <span class="s2">"Hello, I'm </span><span class="si">#@name</span><span class="s2"> of </span><span class="si">#@party</span><span class="s2">"</span>
      <span class="k">end</span>
    <span class="k">end</span>
-   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
+   <span class="n">obj</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">party</span><span class="p">)</span>
  <span class="k">end</span>
  
  <span class="n">pm</span><span class="o">[</span><span class="n">pm</span><span class="o">]</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;taro&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;jimin&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m taro of jimin&quot;</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "taro"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">party</span> <span class="c1"># =&gt; "jimin"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">greeting</span> <span class="c1"># =&gt; "Hello, I'm taro of jimin"</span>
  
- <span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;yukio&quot;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s2">&quot;minshu&quot;</span>
+ <span class="nb">name</span> <span class="o">=</span> <span class="s2">"yukio"</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s2">"minshu"</span>
  
  <span class="n">pm</span><span class="o">[</span><span class="n">pm</span><span class="o">]</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;yukio&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;minshu&quot;</span>
- <span class="n">pm</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m yukio of minshu&quot;</span></code></pre></div>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "yukio"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">party</span> <span class="c1"># =&gt; "minshu"</span>
+ <span class="n">pm</span><span class="p">.</span><span class="nf">greeting</span> <span class="c1"># =&gt; "Hello, I'm yukio of minshu"</span></code></pre></div>
 
 <p>ブロックを実行するpm[pm]（これはpm.call(pm)と等価）のところがちょっと変な感じがする。</p>
 
@@ -282,14 +282,14 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
  <span class="k">end</span>
- <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span>
- <span class="nb">name</span> <span class="o">=</span> <span class="s1">&#39;Charlie&#39;</span>
- <span class="n">party</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+ <span class="n">me</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span>
+ <span class="nb">name</span> <span class="o">=</span> <span class="s1">'Charlie'</span>
+ <span class="n">party</span> <span class="o">=</span> <span class="s1">'N/A'</span>
  
  <span class="n">pm</span><span class="o">[</span><span class="n">me</span><span class="o">]</span>
- <span class="n">me</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Charlie&quot;</span>
- <span class="n">me</span><span class="o">.</span><span class="n">party</span> <span class="c1"># =&gt; &quot;N/A&quot;</span>
- <span class="n">me</span><span class="o">.</span><span class="n">greeting</span> <span class="c1"># =&gt; &quot;Hello, I&#39;m Charlie of N/A&quot;</span></code></pre></div>
+ <span class="n">me</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "Charlie"</span>
+ <span class="n">me</span><span class="p">.</span><span class="nf">party</span> <span class="c1"># =&gt; "N/A"</span>
+ <span class="n">me</span><span class="p">.</span><span class="nf">greeting</span> <span class="c1"># =&gt; "Hello, I'm Charlie of N/A"</span></code></pre></div>
 
 <p>Personクラスのオブジェクトmeに先のメソッドが追加された。</p>
 
@@ -299,14 +299,14 @@
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
      <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
        <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
-       <span class="n">meta</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
-         <span class="n">properties</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
-           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
+       <span class="n">meta</span><span class="p">.</span><span class="nf">class_eval</span> <span class="k">do</span>
+         <span class="n">properties</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
+           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">"@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
          <span class="k">end</span>
        <span class="k">end</span>
      <span class="k">end</span>
    <span class="k">end</span>
-   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+   <span class="n">obj</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
  <span class="k">end</span>
  
  <span class="k">class</span> <span class="nc">Person</span>
@@ -315,11 +315,11 @@
      <span class="vi">@fname</span><span class="p">,</span> <span class="vi">@lname</span> <span class="o">=</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lname</span>
    <span class="k">end</span>
  <span class="k">end</span>
- <span class="n">usp</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Barack&#39;</span><span class="p">,</span> <span class="s1">&#39;Obama&#39;</span><span class="p">)</span>
+ <span class="n">usp</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Barack'</span><span class="p">,</span> <span class="s1">'Obama'</span><span class="p">)</span>
  
- <span class="n">singleton_generator</span><span class="o">[</span><span class="n">usp</span><span class="p">,</span> <span class="ss">:mname</span> <span class="o">=&gt;</span> <span class="s1">&#39;Hussein&#39;</span><span class="p">,</span> <span class="ss">:party</span> <span class="o">=&gt;</span> <span class="s1">&#39;Democratic&#39;</span><span class="o">]</span>
+ <span class="n">singleton_generator</span><span class="o">[</span><span class="n">usp</span><span class="p">,</span> <span class="ss">:mname</span> <span class="o">=&gt;</span> <span class="s1">'Hussein'</span><span class="p">,</span> <span class="ss">:party</span> <span class="o">=&gt;</span> <span class="s1">'Democratic'</span><span class="o">]</span>
  
- <span class="nb">puts</span> <span class="s2">&quot;44th President of the United States is </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">mname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">lname</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">usp</span><span class="o">.</span><span class="n">party</span><span class="si">}</span><span class="s2"> party.&quot;</span>
+ <span class="nb">puts</span> <span class="s2">"44th President of the United States is </span><span class="si">#{</span><span class="n">usp</span><span class="p">.</span><span class="nf">fname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="p">.</span><span class="nf">mname</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">usp</span><span class="p">.</span><span class="nf">lname</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">usp</span><span class="p">.</span><span class="nf">party</span><span class="si">}</span><span class="s2"> party."</span>
  
   <span class="c1">#&gt;&gt; 44th President of the United States is Barack Hussein Obama of Democratic party.</span></code></pre></div>
 
@@ -331,14 +331,14 @@
    <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span>
      <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
        <span class="n">meta</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
-       <span class="n">meta</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
-         <span class="n">properties</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
-           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
+       <span class="n">meta</span><span class="p">.</span><span class="nf">class_eval</span> <span class="k">do</span>
+         <span class="n">properties</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
+           <span class="n">define_method</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">{</span> <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">"@</span><span class="si">#{</span><span class="nb">p</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="p">}</span>
          <span class="k">end</span>
        <span class="k">end</span>
      <span class="k">end</span>
    <span class="k">end</span>
-   <span class="n">obj</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+   <span class="n">obj</span><span class="p">.</span><span class="nf">init</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
  <span class="k">end</span></code></pre></div>
 
 <h2 id="section">あるときは再帰オブジェクトになる</h2>
@@ -349,7 +349,7 @@
 <p>解説はとても丁寧になされていてとてもためになる。でもY-Combinatorについてはどうにも僕の頭がついていってくれないので、別の方法がないか考えてみた。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
@@ -361,7 +361,7 @@
 <p>ここでブロック内の変数を無くすために、手続きオブジェクトをブロック引数として渡すようにする。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
@@ -377,12 +377,12 @@
 <p>これが使えるかもしれない。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
    <span class="k">end</span>
- <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ <span class="k">end</span><span class="p">.</span><span class="nf">curry</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
  <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
@@ -392,27 +392,27 @@
 <p>でもまだブロック内のelse節でProcオブジェクトを渡してる。これも消したい。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
    <span class="k">end</span>
- <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ <span class="k">end</span><span class="p">.</span><span class="nf">curry</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="n">fact</span><span class="o">[</span><span class="n">fact</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x5becf8 (lambda)&gt;</span>
- <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; TypeError:Proc can&#39;t be coerced into Fixnum</span></code></pre></div>
+ <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1">#=&gt; TypeError:Proc can't be coerced into Fixnum</span></code></pre></div>
 
 <p>もちろんエラーが出る。エラーがでないようにするためにはブロックに渡す引数は、factオブジェクトじゃなくて既にfactを渡して生成したProcオブジェクトつまりfact_makerじゃなくちゃいけない。</p>
 
 <p>そこでバリケンさんにあったアイディアをもらって、fact_makerを次のようにしてみる。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
    <span class="k">end</span>
- <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+ <span class="k">end</span><span class="p">.</span><span class="nf">curry</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
    <span class="n">fact</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
@@ -423,7 +423,7 @@
 <p>うまくいった。さらにfactにつけたcurryをfact_maker内に移動する。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span>
-   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span>
+   <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span>
      <span class="mi">1</span>
    <span class="k">else</span>
      <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span>
@@ -431,17 +431,17 @@
  <span class="k">end</span>
  
  <span class="n">fact_maker</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-   <span class="n">fact</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
+   <span class="n">fact</span><span class="p">.</span><span class="nf">curry</span><span class="o">[</span><span class="n">fact_maker</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span>
  <span class="k">end</span>
  
  <span class="n">fact_maker</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800</span></code></pre></div>
 
 <p>fact_makerをY-Combinatorのようにメソッドにしてみる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">zero?</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">fact</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">zero?</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">*</span> <span class="n">f</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span>
  
  <span class="k">def</span> <span class="nf">my_combinator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
+   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="p">.</span><span class="nf">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
  <span class="k">end</span>
  
  <span class="n">fact</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
@@ -458,7 +458,7 @@
  <span class="k">end</span>
  
  <span class="k">def</span> <span class="nf">my_combinator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
+   <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">func</span><span class="p">.</span><span class="nf">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
  <span class="k">end</span>
  
  <span class="n">fib</span> <span class="o">=</span> <span class="n">my_combinator</span><span class="p">(</span><span class="n">fib</span><span class="p">)</span>
@@ -471,9 +471,9 @@
      <span class="n">f</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">curry</span><span class="o">[</span><span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="o">]</span> <span class="p">}</span>
    <span class="k">end</span>
  <span class="k">end</span>
- <span class="n">fact</span> <span class="o">=</span> <span class="n">fact</span><span class="o">.</span><span class="n">recur</span>
+ <span class="n">fact</span> <span class="o">=</span> <span class="n">fact</span><span class="p">.</span><span class="nf">recur</span>
  <span class="n">fact</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 3628800 </span>
- <span class="n">fib</span> <span class="o">=</span> <span class="n">fib</span><span class="o">.</span><span class="n">recur</span>
+ <span class="n">fib</span> <span class="o">=</span> <span class="n">fib</span><span class="p">.</span><span class="nf">recur</span>
  <span class="n">fib</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; 55</span></code></pre></div>
 
 <p>トンチンカンなことやってないか心配だ…</p>
@@ -483,7 +483,7 @@
 
 <p><a href="http://pragdave.blogs.pragprog.com/pragdave/2008/09/fun-with-procs.html">PragDave: Fun with Procs in Ruby 1.9</a></p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">is_weekday</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">day_of_week</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="n">time</span><span class="o">.</span><span class="n">wday</span> <span class="o">==</span> <span class="n">day_of_week</span><span class="p">}</span><span class="o">.</span><span class="n">curry</span>  
+<div class="highlight"><pre><code class="ruby"><span class="n">is_weekday</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">day_of_week</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="n">time</span><span class="p">.</span><span class="nf">wday</span> <span class="o">==</span> <span class="n">day_of_week</span><span class="p">}.</span><span class="nf">curry</span>  
    
  <span class="n">sunday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>  
  <span class="n">monday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>  
@@ -493,53 +493,53 @@
  <span class="n">friday</span>    <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span>  
  <span class="n">saturday</span>  <span class="o">=</span> <span class="n">is_weekday</span><span class="o">[</span><span class="mi">6</span><span class="o">]</span>  
    
- <span class="k">case</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>  
+ <span class="k">case</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>  
  <span class="k">when</span> <span class="n">sunday</span>   
-   <span class="nb">puts</span> <span class="s2">&quot;Day of rest&quot;</span>  
+   <span class="nb">puts</span> <span class="s2">"Day of rest"</span>  
  <span class="k">when</span> <span class="n">monday</span><span class="p">,</span> <span class="n">tuesday</span><span class="p">,</span> <span class="n">wednesday</span><span class="p">,</span> <span class="n">thursday</span><span class="p">,</span> <span class="n">friday</span>  
-   <span class="nb">puts</span> <span class="s2">&quot;Work&quot;</span>  
+   <span class="nb">puts</span> <span class="s2">"Work"</span>  
  <span class="k">when</span> <span class="n">saturday</span>  
-   <span class="nb">puts</span> <span class="s2">&quot;chores&quot;</span>  
+   <span class="nb">puts</span> <span class="s2">"chores"</span>  
  <span class="k">end</span></code></pre></div>
 
 <p>sunday, monday..はis_weekdayに曜日数値だけを適用して生成されたProcオブジェクトだ。これをcaseの条件におくと、Proc#===つまりcallメソッドが呼ばれて、Time.nowを引数としてis_weekdayのブロックが評価される。そしてブロックの評価結果はcaseの条件になる。</p>
 
 <p>case式において比較条件の詳細が隠ぺいされていて簡潔だ。自分でも何か書いてみよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:height</span><span class="p">,</span> <span class="ss">:weight</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:height</span><span class="p">,</span> <span class="ss">:weight</span><span class="p">)</span>
  
- <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;ichiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">75</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
- <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;jiro&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">65</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
- <span class="n">p3</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;saburo&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">90</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span>
+ <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'ichiro'</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">75</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+ <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'jiro'</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">65</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+ <span class="n">p3</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'saburo'</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">90</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span>
  
  <span class="no">BMI</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">min</span><span class="p">,</span> <span class="n">max</span><span class="p">,</span> <span class="n">person</span><span class="o">|</span>
-    <span class="p">(</span><span class="n">min</span><span class="o">.</span><span class="n">.max</span><span class="p">)</span><span class="o">.</span><span class="n">cover?</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">weight</span> <span class="o">/</span> <span class="n">person</span><span class="o">.</span><span class="n">height</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
- <span class="k">end</span><span class="o">.</span><span class="n">curry</span>
+    <span class="p">(</span><span class="n">min</span><span class="p">.</span><span class="nf">.</span><span class="n">max</span><span class="p">).</span><span class="nf">cover?</span><span class="p">(</span><span class="n">person</span><span class="p">.</span><span class="nf">weight</span> <span class="sr">/ person.height**2)
+ end.curry
  
- <span class="n">upper</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">23</span><span class="p">,</span> <span class="mi">25</span><span class="o">]</span>
- <span class="n">middle</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">23</span><span class="o">]</span>
- <span class="n">lower</span> <span class="o">=</span> <span class="no">BMI</span><span class="o">[</span><span class="mi">18</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">21</span><span class="o">]</span>
+ upper = BMI[23, 25]
+ middle = BMI[21, 23]
+ lower = BMI[18.5, 21]
  
- <span class="n">messages</span> <span class="o">=</span> <span class="o">[</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="n">p3</span><span class="o">].</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">testee</span><span class="o">|</span>
-   <span class="n">result</span> <span class="o">=</span> 
-     <span class="k">case</span> <span class="n">testee</span>
-     <span class="k">when</span> <span class="n">upper</span>
-       <span class="s2">&quot;You are in upper&quot;</span>
-     <span class="k">when</span> <span class="n">middle</span>
-       <span class="s2">&quot;You are great!&quot;</span>
-     <span class="k">when</span> <span class="n">lower</span>
-       <span class="s2">&quot;You are in lower&quot;</span>
-     <span class="k">else</span>
-       <span class="s2">&quot;Problem!&quot;</span>
-     <span class="k">end</span>
-     <span class="p">{</span><span class="n">testee</span><span class="o">.</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="n">result</span><span class="p">}</span>
- <span class="k">end</span>
+ messages = [p1,p2,p3].map do |testee|
+   result = 
+     case testee
+     when upper
+       "You are in upper"
+     when middle
+       "You are great!"
+     when lower
+       "You are in lower"
+     else
+       "Problem!"
+     end
+     {testee.name =&gt; result}
+ end
  
- <span class="nb">puts</span> <span class="n">messages</span>
+ puts messages
  
- <span class="c1">#&gt;&gt; {&quot;ichiro&quot;=&gt;&quot;You are in lower&quot;}</span>
- <span class="c1">#&gt;&gt; {&quot;jiro&quot;=&gt;&quot;Problem!&quot;}</span>
- <span class="c1">#&gt;&gt; {&quot;saburo&quot;=&gt;&quot;You are great!&quot;}</span></code></pre></div>
+ #&gt;&gt; {"ichiro"=&gt;"You are in lower"}
+ #&gt;&gt; {"jiro"=&gt;"Problem!"}
+ #&gt;&gt; {"saburo"=&gt;"You are great!"}</span></code></pre></div>
 
 <p>upper,middle,lowerはBMIオブジェクトにそれぞれの許容範囲の最大値、最小値を部分適用したProcオブジェクトだ。それらはcase式において各testeeの身長と体重を参照して各許容範囲と比較し結果を返す。</p>
 

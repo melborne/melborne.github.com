@@ -184,29 +184,29 @@
 
 <p>こう書けばいいところを、</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ybur si citsatnaf egaugnal)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="n">str</span><span class="o">.</span><span class="n">reverse</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;ruby&quot;, &quot;is&quot;, &quot;fantastic&quot;, &quot;language&quot;]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ybur si citsatnaf egaugnal)</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="n">str</span><span class="p">.</span><span class="nf">reverse</span> <span class="p">}</span> <span class="c1"># =&gt; ["ruby", "is", "fantastic", "language"]</span></code></pre></div>
 
 <p>こう書いて、</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ybur si citsatnaf egaugnal)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:reverse</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;ruby&quot;, &quot;is&quot;, &quot;fantastic&quot;, &quot;language&quot;]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ybur si citsatnaf egaugnal)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:reverse</span><span class="p">)</span> <span class="c1"># =&gt; ["ruby", "is", "fantastic", "language"]</span></code></pre></div>
 
 <p>堕落していきます。</p>
 
 <p>いや、mapだけじゃありません。ブロック取るメソッド全般にそれは蔓延しています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;prime&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"prime"</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">100</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]</span>
 
-<span class="sx">%w(red yellow green white blue black)</span><span class="o">.</span><span class="n">uniq</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;]</span></code></pre></div>
+<span class="sx">%w(red yellow green white blue black)</span><span class="p">.</span><span class="nf">uniq</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span> <span class="c1"># =&gt; ["red", "yellow", "green", "blue"]</span></code></pre></div>
 
 <p>で、更に落ちていって引数を渡そうと試み、</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ruby violin novel)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:+</span><span class="p">,</span> <span class="s1">&#39;ist&#39;</span><span class="p">)</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:1: syntax error, unexpected &#39;,&#39;, expecting &#39;)&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(ruby violin novel)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">,</span> <span class="s1">'ist'</span><span class="p">)</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected ',', expecting ')'</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:&gt;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:1: syntax error, unexpected &#39;,&#39;, expecting &#39;)&#39;</span></code></pre></div>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected ',', expecting ')'</span></code></pre></div>
 
 <p>死ぬのです..。</p>
 
@@ -216,7 +216,7 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Methop</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">[]</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-    <span class="kp">new</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span><span class="o">.</span><span class="n">build</span>
+    <span class="kp">new</span><span class="p">(</span><span class="nb">method</span><span class="p">).</span><span class="nf">build</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
@@ -224,7 +224,7 @@
   <span class="k">end</span>
   
   <span class="k">def</span> <span class="nf">build</span>
-    <span class="o">-&gt;</span><span class="n">arg</span><span class="p">,</span> <span class="n">obj</span><span class="p">{</span> <span class="n">obj</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="vi">@method</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+    <span class="o">-&gt;</span><span class="n">arg</span><span class="p">,</span> <span class="n">obj</span><span class="p">{</span> <span class="n">obj</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="vi">@method</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="p">}.</span><span class="nf">curry</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -232,21 +232,21 @@
 
 <p>このように使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Plus</span> <span class="o">=</span> <span class="no">Methop</span><span class="o">[</span><span class="ss">:+</span><span class="o">]</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">Plus</span> <span class="o">=</span> <span class="no">Methop</span><span class="o">[</span><span class="p">:</span><span class="o">+]</span>
 
-<span class="sx">%w(ruby violin novel)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Plus</span><span class="o">[</span><span class="s1">&#39;ist&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;rubyist&quot;, &quot;violinist&quot;, &quot;novelist&quot;]</span>
+<span class="sx">%w(ruby violin novel)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Plus</span><span class="o">[</span><span class="s1">'ist'</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; ["rubyist", "violinist", "novelist"]</span>
 
-<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Plus</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [3, 7, 12]</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Plus</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [3, 7, 12]</span>
 
-<span class="no">Bigger</span> <span class="o">=</span> <span class="no">Methop</span><span class="o">[</span><span class="ss">:&gt;</span><span class="o">]</span>
+<span class="no">Bigger</span> <span class="o">=</span> <span class="no">Methop</span><span class="o">[</span><span class="p">:</span><span class="o">&gt;]</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Bigger</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [6, 7, 8, 9, 10]</span></code></pre></div>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Bigger</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [6, 7, 8, 9, 10]</span></code></pre></div>
 
 <p>もちろん、直接渡してもいいです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Methop</span><span class="o">[</span><span class="ss">:**</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span>
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Methop</span><span class="o">[</span><span class="ss">:**</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span>
 
-<span class="sx">%w(red yellow green white blue black)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Methop</span><span class="o">[</span><span class="ss">:match</span><span class="o">][</span><span class="sr">/bl/</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;blue&quot;, &quot;black&quot;]</span></code></pre></div>
+<span class="sx">%w(red yellow green white blue black)</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="no">Methop</span><span class="o">[</span><span class="ss">:match</span><span class="o">][</span><span class="sr">/bl/</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; ["blue", "black"]</span></code></pre></div>
 
 <p>いや、ブロック書こうよ..。</p>
 

@@ -194,8 +194,8 @@
 
 <span class="n">sq</span> <span class="o">=</span> <span class="n">square</span> <span class="c1"># squareメソッドを変数sqに代入してみる</span>
 
-<span class="c1"># ~&gt; -:1:in `square&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
-<span class="c1"># ~&gt; 	from -:5:in `&lt;main&gt;&#39;</span></code></pre></div>
+<span class="c1"># ~&gt; -:1:in `square': wrong number of arguments (0 for 1) (ArgumentError)</span>
+<span class="c1"># ~&gt; 	from -:5:in `&lt;main&gt;'</span></code></pre></div>
 
 <p>Rubyではメソッドの呼び出しには括弧を省略できるので、代入時にsquareと書いた時点でこれが引数なしのメソッド呼び出しだと評価されてしまうのです。</p>
 
@@ -211,8 +211,8 @@
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">square</span><span class="p">)</span> <span class="c1"># squareメソッドを引数として渡してみる</span>
 
-<span class="c1"># ~&gt; -:1:in `square&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
-<span class="c1"># ~&gt; 	from -:9:in `&lt;main&gt;&#39;</span></code></pre></div>
+<span class="c1"># ~&gt; -:1:in `square': wrong number of arguments (0 for 1) (ArgumentError)</span>
+<span class="c1"># ~&gt; 	from -:9:in `&lt;main&gt;'</span></code></pre></div>
 
 <p>でも、がっかりする必要はありません。Rubyにはこれをファーストクラス化する手段、つまりメソッドをオブジェクトとしてラップする手段が代わりにあります。それがMethodオブジェクトです。</p>
 
@@ -232,7 +232,7 @@
 
 <span class="n">sq</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 括弧で引数を渡して呼んでみる</span>
 
-<span class="c1"># ~&gt; -:7:in `&lt;main&gt;&#39;: undefined method `sq&#39; for main:Object (NoMethodError)</span></code></pre></div>
+<span class="c1"># ~&gt; -:7:in `&lt;main&gt;': undefined method `sq' for main:Object (NoMethodError)</span></code></pre></div>
 
 <p>このオブジェクトにラップされたメソッドを実行するつまりその評価を開始させるにはMethod#callを呼ぶ必要があります。メソッドに引数がある場合はcallにそれを渡します。</p>
 
@@ -242,10 +242,10 @@
 
 <span class="n">sq</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:square</span><span class="p">)</span>
 
-<span class="n">sq</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 9</span>
+<span class="n">sq</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 9</span>
 
 <span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">sq</span><span class="p">)</span>
@@ -267,7 +267,7 @@
 <p>さて、Rubyにはご存知「ブロック」という構文があります。ブロックはdo … endまたは{ … }で囲まれた手続きの塊です。先にRubyではメソッド引数にメソッドを直接渡すことはできないと書きましたが、このブロックをメソッドに付することは特別にできるようになっています。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span>
@@ -298,7 +298,7 @@
 
 <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1"># =&gt; #&lt;Proc:0x007f89a18526b8@-:14&gt;</span>
 
-<span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1"># =&gt; #&lt;Proc:0x007f89a1852438@-:15&gt;</span>
+<span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1"># =&gt; #&lt;Proc:0x007f89a1852438@-:15&gt;</span>
 
 <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1"># =&gt; #&lt;Proc:0x007f89a1852190@-:16 (lambda)&gt;</span></code></pre></div>
 
@@ -308,10 +308,10 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="n">square</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span>
 
-<span class="n">square</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 9</span>
+<span class="n">square</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 9</span>
 
 <span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">square</span><span class="p">)</span> 
@@ -321,7 +321,7 @@
 <p>Procオブジェクトは、Methodオブジェクトと異なり、それ自体には名前がないのでこれを<strong>無名関数</strong>と呼んでもいいでしょう。Procオブジェクトをメソッドの引数に直接引き渡すことで、無名であることがよりはっきりします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">})</span> 
@@ -333,7 +333,7 @@
 <p>さて、ここでこの例を先のメソッドにブロックを付する例と比較してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span>
@@ -343,7 +343,7 @@
 <p>メソッド定義における違いに注目してください。違いはメソッド引数における<code>&amp;</code>だけです。そしてこの差異から、「メソッドに付けられたブロックは、&amp;仮引数に渡されるとここでProcオブジェクトに変換されているのではないか」という推測が生まれます。確かめて見ましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-<span class="o">+</span> <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">class</span>
+<span class="o">+</span> <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">class</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span>
@@ -355,12 +355,12 @@
 <p>では、ブロック以外のものをこの呪文にかけたらどうなるでしょうか。試しに数字の<code>3</code>を渡してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="c1"># ~&gt; -:22:in `&lt;main&gt;&#39;: wrong argument type Fixnum (expected Proc) (TypeError)</span></code></pre></div>
+<span class="c1"># ~&gt; -:22:in `&lt;main&gt;': wrong argument type Fixnum (expected Proc) (TypeError)</span></code></pre></div>
 
 <p>引数としてProcが期待されているとのエラーメッセージが吐かれました。しかしこれで終わらないのがRubyです。Rubyは&amp;に渡されたものがブロックであろうと何であろうと、そのProcオブジェクトへの変換をまずは試みる、つまりそのオブジェクトを<code>to_proc</code>してみるのです。</p>
 
@@ -373,7 +373,7 @@
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="mi">3</span><span class="p">)</span>
@@ -391,7 +391,7 @@
 <span class="n">sq</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:square</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">print_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fun</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="n">fun</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">fun</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">print_func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sq</span><span class="p">)</span>
@@ -402,17 +402,17 @@
 
 <p>Rubyではメソッドにブロックを付する代わりに、<code>&amp; + Symbolオブジェクト</code>を引数として渡すテクニックが広く使われています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(charlie liz george)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;Charlie&quot;, &quot;Liz&quot;, &quot;George&quot;]</span>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(charlie liz george)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">)</span> <span class="c1"># =&gt; ["Charlie", "Liz", "George"]</span>
 
-<span class="nb">require</span> <span class="s2">&quot;prime&quot;</span>
+<span class="nb">require</span> <span class="s2">"prime"</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">50</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:prime?</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
 
 <p>これらは次のショートカットです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(charlie liz george)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">name</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;Charlie&quot;, &quot;Liz&quot;, &quot;George&quot;]</span>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(charlie liz george)</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span> <span class="p">}</span> <span class="c1"># =&gt; ["Charlie", "Liz", "George"]</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">prime?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">50</span><span class="p">).</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="p">.</span><span class="nf">prime?</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
 
 <p>なぜこのようなことができるのでしょうか。ここまでの説明が正しいのなら、次のような推測ができるはずです。</p>
 
@@ -429,7 +429,7 @@
 
 <p>では、確かめてみましょう。pryのshow-sourceを叩いてCRubyの実装を見てみます。</p>
 
-<div class="highlight"><pre><code class="bash">pry<span class="o">(</span>main<span class="o">)</span>&gt; show-source Symbol#to_proc
+<div class="highlight"><pre><code class="bash"><span class="gp">pry(main)&gt; </span>show-source Symbol#to_proc
 
 From: string.c <span class="o">(</span>C Method<span class="o">)</span>:
 Owner: Symbol
@@ -439,32 +439,32 @@ Number of lines: 29
 static VALUE
 sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 <span class="o">{</span>
-    static VALUE <span class="nv">sym_proc_cache</span> <span class="o">=</span> Qfalse<span class="p">;</span>
-    enum <span class="o">{</span><span class="nv">SYM_PROC_CACHE_SIZE</span> <span class="o">=</span> 67<span class="o">}</span><span class="p">;</span>
-    VALUE proc<span class="p">;</span>
-    long id, index<span class="p">;</span>
-    VALUE *aryp<span class="p">;</span>
+    static VALUE sym_proc_cache <span class="o">=</span> Qfalse;
+    enum <span class="o">{</span>SYM_PROC_CACHE_SIZE <span class="o">=</span> 67<span class="o">}</span>;
+    VALUE proc;
+    long id, index;
+    VALUE <span class="k">*</span>aryp;
 
     <span class="k">if</span> <span class="o">(</span>!sym_proc_cache<span class="o">)</span> <span class="o">{</span>
-        <span class="nv">sym_proc_cache</span> <span class="o">=</span> rb_ary_tmp_new<span class="o">(</span>SYM_PROC_CACHE_SIZE * 2<span class="o">)</span><span class="p">;</span>
-        rb_gc_register_mark_object<span class="o">(</span>sym_proc_cache<span class="o">)</span><span class="p">;</span>
-        rb_ary_store<span class="o">(</span>sym_proc_cache, SYM_PROC_CACHE_SIZE*2 - 1, Qnil<span class="o">)</span><span class="p">;</span>
+        sym_proc_cache <span class="o">=</span> rb_ary_tmp_new<span class="o">(</span>SYM_PROC_CACHE_SIZE <span class="k">*</span> 2<span class="o">)</span>;
+        rb_gc_register_mark_object<span class="o">(</span>sym_proc_cache<span class="o">)</span>;
+        rb_ary_store<span class="o">(</span>sym_proc_cache, SYM_PROC_CACHE_SIZE<span class="k">*</span>2 - 1, Qnil<span class="o">)</span>;
     <span class="o">}</span>
 
-    <span class="nv">id</span> <span class="o">=</span> SYM2ID<span class="o">(</span>sym<span class="o">)</span><span class="p">;</span>
-    <span class="nv">index</span> <span class="o">=</span> <span class="o">(</span>id % SYM_PROC_CACHE_SIZE<span class="o">)</span> <span class="s">&lt;&lt; 1;</span>
+    id <span class="o">=</span> SYM2ID<span class="o">(</span>sym<span class="o">)</span>;
+    index <span class="o">=</span> <span class="o">(</span>id % SYM_PROC_CACHE_SIZE<span class="o">)</span> <span class="sh">&lt;&lt; 1;
 
-<span class="s">    aryp = RARRAY_PTR(sym_proc_cache);</span>
-<span class="s">    if (aryp[index] == sym) {</span>
-<span class="s">        return aryp[index + 1</span><span class="o">]</span><span class="p">;</span>
-    <span class="o">}</span>
-    <span class="k">else</span> <span class="o">{</span>
-        <span class="nv">proc</span> <span class="o">=</span> rb_proc_new<span class="o">(</span>sym_call, <span class="o">(</span>VALUE<span class="o">)</span>id<span class="o">)</span><span class="p">;</span>
-        aryp<span class="o">[</span>index<span class="o">]</span> <span class="o">=</span> sym<span class="p">;</span>
-        aryp<span class="o">[</span>index + 1<span class="o">]</span> <span class="o">=</span> proc<span class="p">;</span>
-        <span class="k">return </span>proc<span class="p">;</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
+    aryp = RARRAY_PTR(sym_proc_cache);
+    if (aryp[index] == sym) {
+        return aryp[index + 1];
+    }
+    else {
+        proc = rb_proc_new(sym_call, (VALUE)id);
+        aryp[index] = sym;
+        aryp[index + 1] = proc;
+        return proc;
+    }
+</span><span class="err">}</span></code></pre></div>
 
 <p>えー、残念ながら僕はCは読めないので、こういうときはRubiniusに頼ります。</p>
 
@@ -476,9 +476,9 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
   <span class="k">def</span> <span class="nf">to_proc</span>
     <span class="n">sym</span> <span class="o">=</span> <span class="nb">self</span>
-    <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="o">|</span>
-      <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">&quot;no receiver given&quot;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">empty?</span>
-      <span class="n">args</span><span class="o">.</span><span class="n">shift</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span>
+    <span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="o">|</span>
+      <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">"no receiver given"</span> <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="nf">empty?</span>
+      <span class="n">args</span><span class="p">.</span><span class="nf">shift</span><span class="p">.</span><span class="nf">__send__</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
@@ -489,25 +489,25 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">to_proc</span>
-    <span class="o">-&gt;</span><span class="n">obj</span><span class="p">{</span> <span class="n">obj</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">}</span>
+    <span class="o">-&gt;</span><span class="n">obj</span><span class="p">{</span> <span class="n">obj</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="sx">%w(charlie liz george)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">&#39;capitalize&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;Charlie&quot;, &quot;Liz&quot;, &quot;George&quot;]</span>
+<span class="sx">%w(charlie liz george)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">'capitalize'</span><span class="p">)</span> <span class="c1"># =&gt; ["Charlie", "Liz", "George"]</span>
 
-<span class="nb">require</span> <span class="s2">&quot;prime&quot;</span>
+<span class="nb">require</span> <span class="s2">"prime"</span>
 
-<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">&#39;prime?&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
+<span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">50</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="s1">'prime?'</span><span class="p">)</span> <span class="c1"># =&gt; [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]</span></code></pre></div>
 
 <p>いいですね。</p>
 
 <p>Symbol#to_procを明示的に呼び出すことは普通ありませんが、このユニークなメソッドを使って次のようなこともできます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="ss">:**</span><span class="o">.</span><span class="n">to_proc</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="o">]</span> <span class="c1"># =&gt; 256</span>
+<div class="highlight"><pre><code class="ruby"><span class="ss">:**</span><span class="p">.</span><span class="nf">to_proc</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="o">]</span> <span class="c1"># =&gt; 256</span>
 
-<span class="ss">:+</span><span class="o">.</span><span class="n">to_proc</span><span class="o">[</span><span class="s1">&#39;ruby&#39;</span><span class="p">,</span> <span class="s1">&#39;ist&#39;</span><span class="o">]</span> <span class="c1"># =&gt; &quot;rubyist&quot;</span>
+<span class="p">:</span><span class="o">+</span><span class="p">.</span><span class="nf">to_proc</span><span class="o">[</span><span class="s1">'ruby'</span><span class="p">,</span> <span class="s1">'ist'</span><span class="o">]</span> <span class="c1"># =&gt; "rubyist"</span>
 
-<span class="ss">:grep</span><span class="o">.</span><span class="n">to_proc</span><span class="o">[[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span><span class="o">]</span><span class="p">,</span> <span class="sr">/ll/</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;hello&quot;]</span></code></pre></div>
+<span class="ss">:grep</span><span class="p">.</span><span class="nf">to_proc</span><span class="o">[[</span><span class="s1">'hello'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="o">]</span><span class="p">,</span> <span class="sr">/ll/</span><span class="o">]</span> <span class="c1"># =&gt; ["hello"]</span></code></pre></div>
 
 <h2 id="proc-">Procの特徴その１: クロージャ</h2>
 
@@ -517,7 +517,7 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">X</span>
   <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
-  <span class="sx">%w(a b c)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="sx">%w(a b c)</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
     <span class="n">define_method</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">do</span>
       <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">end</span>
@@ -526,23 +526,23 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <p>クラスXにおいてeachイテレータとdefine_methodを使ってインスタンスメソッドa, b, cを定義しています。何れのメソッドもnを１インクリメントする実装です。一方でeachの外側にはローカル変数nが定義され2が代入されています。これを実行すると以下のような結果になります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">new</span>
-<span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 3</span>
-<span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 4</span>
-<span class="n">x</span><span class="o">.</span><span class="n">c</span> <span class="c1"># =&gt; 5</span>
-<span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 6</span>
-<span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 7</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 3</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 4</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">c</span> <span class="c1"># =&gt; 5</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 6</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 7</span>
 
-<span class="n">x2</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">new</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 8</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 9</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">c</span> <span class="c1"># =&gt; 10</span></code></pre></div>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 8</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 9</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">c</span> <span class="c1"># =&gt; 10</span></code></pre></div>
 
 <p>ローカル変数nがすべてのメソッド（さらには生成されたすべてのオブジェクト）で共有されていることが分かります。次にこれらメソッド定義の後でnに別の値を代入した例を見てみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">X</span>
   <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
-  <span class="sx">%w(a b c)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="sx">%w(a b c)</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
     <span class="n">define_method</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">do</span>
       <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">end</span>
@@ -550,17 +550,17 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
   <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="k">end</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">new</span>
-<span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 11</span>
-<span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 12</span>
-<span class="n">x</span><span class="o">.</span><span class="n">c</span> <span class="c1"># =&gt; 13</span>
-<span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 14</span>
-<span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 15</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 11</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 12</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">c</span> <span class="c1"># =&gt; 13</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 14</span>
+<span class="n">x</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 15</span>
 
-<span class="n">x2</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">new</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">a</span> <span class="c1"># =&gt; 16</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">b</span> <span class="c1"># =&gt; 17</span>
-<span class="n">x2</span><span class="o">.</span><span class="n">c</span> <span class="c1"># =&gt; 18</span></code></pre></div>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">a</span> <span class="c1"># =&gt; 16</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">b</span> <span class="c1"># =&gt; 17</span>
+<span class="n">x2</span><span class="p">.</span><span class="nf">c</span> <span class="c1"># =&gt; 18</span></code></pre></div>
 
 <p>変化がありました。つまりこれらメソッドはその周囲環境（コンテキスト）によって影響を受けるということです。ここでの例でメソッド内の変数nはeachとdefine_methodにおける二重のブロックを超えてその周囲の影響を受けていることになります。</p>
 
@@ -571,15 +571,15 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 <p>まずは、文字列に３種類の接尾語<code>ist</code>, <code>er</code>, <code>ian</code>を付ける３つのメソッドを考えます。こんな感じでしょうか。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">join_ist</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;ist&#39;</span>
+  <span class="n">body</span> <span class="o">+</span> <span class="s1">'ist'</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">join_er</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;er&#39;</span>
+  <span class="n">body</span> <span class="o">+</span> <span class="s1">'er'</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">join_ian</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;ian&#39;</span>
+  <span class="n">body</span> <span class="o">+</span> <span class="s1">'ian'</span>
 <span class="k">end</span></code></pre></div>
 
 <p>これはDRY原則に反しますから共通の機能を一つのメソッドに括りだします。</p>
@@ -589,34 +589,34 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">join_ist</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">join</span><span class="p">(</span><span class="s1">&#39;ist&#39;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+  <span class="n">join</span><span class="p">(</span><span class="s1">'ist'</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">join_er</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">join</span><span class="p">(</span><span class="s1">&#39;er&#39;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+  <span class="n">join</span><span class="p">(</span><span class="s1">'er'</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">join_ian</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-  <span class="n">join</span><span class="p">(</span><span class="s1">&#39;ian&#39;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+  <span class="n">join</span><span class="p">(</span><span class="s1">'ian'</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
 <span class="k">end</span></code></pre></div>
 
 <p>これを複数の文字に適用してみましょう。各メソッドをMethodオブジェクト化してmapに渡します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(real social ruby)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_ist</span><span class="p">))</span> <span class="c1"># =&gt; [&quot;realist&quot;, &quot;socialist&quot;, &quot;rubyist&quot;]</span>
-<span class="sx">%w(sell climb haskell)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_er</span><span class="p">))</span> <span class="c1"># =&gt; [&quot;seller&quot;, &quot;climber&quot;, &quot;haskeller&quot;]</span>
-<span class="sx">%w(music physic Janis)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_ian</span><span class="p">))</span> <span class="c1"># =&gt; [&quot;musician&quot;, &quot;physician&quot;, &quot;Janisian&quot;]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="sx">%w(real social ruby)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_ist</span><span class="p">))</span> <span class="c1"># =&gt; ["realist", "socialist", "rubyist"]</span>
+<span class="sx">%w(sell climb haskell)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_er</span><span class="p">))</span> <span class="c1"># =&gt; ["seller", "climber", "haskeller"]</span>
+<span class="sx">%w(music physic Janis)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:join_ian</span><span class="p">))</span> <span class="c1"># =&gt; ["musician", "physician", "Janisian"]</span></code></pre></div>
 
 <p>おなじことをProcのカリー化を使って書いてみます。カリー化には<code>Proc#curry</code>を呼びます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">join</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">suffix</span><span class="p">,</span><span class="n">body</span><span class="p">{</span> <span class="n">body</span> <span class="o">+</span> <span class="n">suffix</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span> <span class="c1">#Procオブジェクトをカリー化する</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">join</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">suffix</span><span class="p">,</span><span class="n">body</span><span class="p">{</span> <span class="n">body</span> <span class="o">+</span> <span class="n">suffix</span> <span class="p">}.</span><span class="nf">curry</span> <span class="c1">#Procオブジェクトをカリー化する</span>
 
 <span class="c1"># カリー化されたProcオブジェクトに一部の引数を部分適用する。</span>
 <span class="c1"># これにより残りの引数を受けるProcオブジェクトが生成される。</span>
-<span class="n">join</span><span class="o">[</span><span class="s1">&#39;ist&#39;</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x007fdf011ce1b0 (lambda)&gt;</span>
+<span class="n">join</span><span class="o">[</span><span class="s1">'ist'</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x007fdf011ce1b0 (lambda)&gt;</span>
 
-<span class="sx">%w(real social ruby)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">&#39;ist&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;realist&quot;, &quot;socialist&quot;, &quot;rubyist&quot;]</span>
-<span class="sx">%w(sell climb haskell)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">&#39;er&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;seller&quot;, &quot;climber&quot;, &quot;haskeller&quot;]</span>
-<span class="sx">%w(music physic Janis)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">&#39;ian&#39;</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;musician&quot;, &quot;physician&quot;, &quot;Janisian&quot;]</span></code></pre></div>
+<span class="sx">%w(real social ruby)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">'ist'</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; ["realist", "socialist", "rubyist"]</span>
+<span class="sx">%w(sell climb haskell)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">'er'</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; ["seller", "climber", "haskeller"]</span>
+<span class="sx">%w(music physic Janis)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">join</span><span class="o">[</span><span class="s1">'ian'</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; ["musician", "physician", "Janisian"]</span></code></pre></div>
 
 <p>カリー化を使うとすべての引数を同時に渡す必要がなくなり自由度が高まります。</p>
 
@@ -624,10 +624,10 @@ sym_to_proc<span class="o">(</span>VALUE sym<span class="o">)</span>
 
 <p>Proc#callのエイリアスとして<code>Proc#===</code>が定義されています。これによってcase式のwhen節にProcオブジェクトが渡されると、そこで比較オブジェクトを引数に取ってブロックが評価されることになります。例を見てみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">is_escape</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">chr</span><span class="p">{</span> <span class="n">chr</span><span class="o">.</span><span class="n">ord</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">}</span>
-<span class="n">is_back</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">chr</span><span class="p">{</span> <span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">8</span><span class="o">].</span><span class="n">include?</span><span class="p">(</span><span class="n">chr</span><span class="o">.</span><span class="n">ord</span><span class="p">)</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">is_escape</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">chr</span><span class="p">{</span> <span class="n">chr</span><span class="p">.</span><span class="nf">ord</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">}</span>
+<span class="n">is_back</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">chr</span><span class="p">{</span> <span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">8</span><span class="o">]</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">chr</span><span class="p">.</span><span class="nf">ord</span><span class="p">)</span> <span class="p">}</span>
 
-<span class="n">chr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\e</span><span class="s2">&quot;</span>
+<span class="n">chr</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">"</span>
 
 <span class="k">case</span> <span class="n">chr</span>
 <span class="k">when</span> <span class="n">is_escape</span> <span class="k">then</span> <span class="nb">puts</span> <span class="ss">:escape</span>

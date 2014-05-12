@@ -240,35 +240,35 @@
 
 <p>はてなダイアリーのブログエクスポート機能を使って、<code>はてなの日記データ形式</code>でdownloadをおこない、username.xmlファイルを取得します。そしてこのファイルを次のようにしてhateda2mdで処理します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;hateda2md&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"hateda2md"</span>
 
-<span class="n">mdb</span> <span class="o">=</span> <span class="no">HateDa</span><span class="o">::</span><span class="no">MdBuilder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;hatena-diary.xml&#39;</span><span class="p">)</span>
+<span class="n">mdb</span> <span class="o">=</span> <span class="no">HateDa</span><span class="o">::</span><span class="no">MdBuilder</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'hatena-diary.xml'</span><span class="p">)</span>
 
 <span class="c1"># 定義済みフィルタをセットする</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="ss">:title</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="ss">:subtitle</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="ss">:link</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="ss">:amazon</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">set</span> <span class="ss">:title</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">set</span> <span class="ss">:subtitle</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">set</span> <span class="ss">:link</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">set</span> <span class="ss">:amazon</span>
 
 <span class="c1"># 変換を実行する</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">run</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">run</span>
 
 <span class="c1"># 変換後のデータを各エントリーに対応した複数のMarkdownファイルに保存する</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">save_to_files</span></code></pre></div>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">save_to_files</span></code></pre></div>
 
 <p>本処理により<code>md</code>ディレクトリ以下に、（各エントリではなく）各日記に対応した複数のmarkdownファイルが生成されます。そのファイル名は各日記の日付とタイトルで構成されます。ASCII以外の文字はファイル名のタイトル部分から除去されます。</p>
 
 <p>すべての定義済みフィルタをセットするには、<code>MdBuilder#pre_defined_filters</code>または<code>HateDa::Converter.pre_defined_filters</code>メソッドを呼びます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># すべての定義済みフィルタを呼ぶ</span>
-<span class="n">filters</span> <span class="o">=</span> <span class="n">mdb</span><span class="o">.</span><span class="n">pre_defined_filters</span>
+<span class="n">filters</span> <span class="o">=</span> <span class="n">mdb</span><span class="p">.</span><span class="nf">pre_defined_filters</span>
 <span class="c1"># =&gt; [:title, :subtitle, :subsubtitle, :order_list, :unorder_list, :blockquote, :pre, :super_pre, :footnote, :br, :link, :hatebu, :amazon, :youtube, :image, :gist]</span>
 
 <span class="c1"># すべての定義済みフィルタをセットする</span>
-<span class="n">filters</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">mdb</span><span class="o">.</span><span class="n">set</span> <span class="n">f</span> <span class="p">}</span>
+<span class="n">filters</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">mdb</span><span class="p">.</span><span class="nf">set</span> <span class="n">f</span> <span class="p">}</span>
 
-<span class="n">mdb</span><span class="o">.</span><span class="n">run</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">save_to_files</span></code></pre></div>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">run</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">save_to_files</span></code></pre></div>
 
 <p>定義済みフィルタのうち、:super_pre, :footnote, :hatebu, :amazon, :youtube, :gistの各フィルタは、liquid tagへの変換を行うので、対応するRuby script pluginが必要となります。</p>
 
@@ -279,8 +279,8 @@
 <p>また、<code>MdBuilder#filter</code>メソッドを使って、独自フィルタを定義することができます。次のようにします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># はてな記法によるwikipediaタグをliquid tagに変換するフィルタを定義する</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="sr">/\[wikipedia:(.*?)\]/</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span>
-  <span class="s2">&quot;{ % wikipedia </span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2"> % }&quot;</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="sr">/\[wikipedia:(.*?)\]/</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">md</span><span class="o">|</span>
+  <span class="s2">"{ % wikipedia </span><span class="si">#{</span><span class="n">md</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2"> % }"</span>
 <span class="k">end</span></code></pre></div>
 
 <p>フィルタ定義のやり方はhateda2mdが依存している<a href="https://github.com/melborne/gsub-filter" title="melborne/gsub-filter">gsub-filter</a>のreadmeと、HateDa::Converterで定義しているfilterの内容を参照してください。</p>
@@ -288,13 +288,13 @@
 <p>また、<code>MdBuilder#run</code>に引数を渡すことで、特定のエントリだけを変換することができます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># 20番目のエントリだけを変換</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="c1"># 100番から最後のエントリを変換</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">100</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="mi">100</span><span class="p">.</span><span class="nf">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># 10番から20件を変換</span>
-<span class="n">mdb</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span></code></pre></div>
+<span class="n">mdb</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span></code></pre></div>
 
 <p>Enjoy your Blog life!</p>
 

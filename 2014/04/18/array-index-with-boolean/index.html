@@ -182,32 +182,32 @@
     
 <p>条件分岐の構文としてRubyには「<strong>if-else</strong>」があります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">animal</span> <span class="o">=</span> <span class="s1">&#39;hippopotamus&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">animal</span> <span class="o">=</span> <span class="s1">'hippopotamus'</span>
 
-<span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
-  <span class="nb">puts</span> <span class="s2">&quot;You must be an idiot!&quot;</span>
+<span class="k">if</span> <span class="n">animal</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
+  <span class="nb">puts</span> <span class="s2">"You must be an idiot!"</span>
 <span class="k">else</span>
-  <span class="nb">puts</span> <span class="s2">&quot;You are good in size.&quot;</span>
+  <span class="nb">puts</span> <span class="s2">"You are good in size."</span>
 <span class="k">end</span>
 <span class="c1"># &gt;&gt; You must be an idiot!</span></code></pre></div>
 
 <p>しかし、たかがメッセージの出力にこんなに行数を消費したくはない、と思うのが平均的なRubyistの思考です。そしてRuby唯一の三項演算子を使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">?</span> <span class="s2">&quot;You must be an idiot!&quot;</span> <span class="p">:</span> <span class="s2">&quot;You are good in size.&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="n">animal</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">?</span> <span class="s2">"You must be an idiot!"</span> <span class="p">:</span> <span class="s2">"You are good in size."</span>
 <span class="c1"># &gt;&gt; You must be an idiot!</span></code></pre></div>
 
 <p>短くなりましたが、もう一つ問題があります。それは、手続きブロックとしての結合優先順位が低いということです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="p">(</span><span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">?</span> <span class="s2">&quot;You must be an idiot!&quot;</span> <span class="p">:</span> <span class="s2">&quot;You are good in size.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="p">(</span><span class="n">animal</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">?</span> <span class="s2">"You must be an idiot!"</span> <span class="p">:</span> <span class="s2">"You are good in size."</span><span class="p">).</span><span class="nf">upcase</span>
 <span class="c1"># &gt;&gt; YOU MUST BE AN IDIOT!</span>
 
 <span class="nb">puts</span> <span class="k">begin</span>
-  <span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
-    <span class="s2">&quot;You must be an idiot!&quot;</span>
+  <span class="k">if</span> <span class="n">animal</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">10</span>
+    <span class="s2">"You must be an idiot!"</span>
   <span class="k">else</span>
-    <span class="s2">&quot;You are good in size.&quot;</span>
+    <span class="s2">"You are good in size."</span>
   <span class="k">end</span>
-<span class="k">end</span><span class="o">.</span><span class="n">upcase</span>
+<span class="k">end</span><span class="p">.</span><span class="nf">upcase</span>
 <span class="c1"># &gt;&gt; YOU MUST BE AN IDIOT!</span></code></pre></div>
 
 <p>このようにその返り値をputsする場合、括弧や<strong>begin-end</strong>で括るか一時変数に代入する必要があります。</p>
@@ -219,9 +219,9 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">CoreExt</span>
   <span class="n">refine</span> <span class="nb">Array</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">[]</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span>
-         <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">nil</span><span class="o">].</span><span class="n">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span> <span class="o">==</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span> <span class="p">}</span>
-        <span class="k">super</span><span class="p">(</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span> <span class="p">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">)</span>
+      <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="nf">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span>
+         <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">nil</span><span class="o">]</span><span class="p">.</span><span class="nf">any?</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span> <span class="o">==</span> <span class="n">args</span><span class="p">.</span><span class="nf">first</span> <span class="p">}</span>
+        <span class="k">super</span><span class="p">(</span> <span class="n">args</span><span class="p">.</span><span class="nf">first</span> <span class="p">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">)</span>
       <span class="k">else</span>
         <span class="k">super</span>
       <span class="k">end</span>
@@ -231,13 +231,13 @@
 
 <span class="n">using</span> <span class="no">CoreExt</span>
 
-<span class="n">animal</span> <span class="o">=</span> <span class="s1">&#39;hippopotamus&#39;</span>
+<span class="n">animal</span> <span class="o">=</span> <span class="s1">'hippopotamus'</span>
 
-<span class="nb">puts</span> <span class="o">[</span><span class="s2">&quot;You must be an idiot!&quot;</span><span class="p">,</span> <span class="s2">&quot;You are good in size.&quot;</span><span class="o">][</span><span class="n">animal</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">].</span><span class="n">upcase</span>
+<span class="nb">puts</span> <span class="o">[</span><span class="s2">"You must be an idiot!"</span><span class="p">,</span> <span class="s2">"You are good in size."</span><span class="o">][</span><span class="n">animal</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">]</span><span class="p">.</span><span class="nf">upcase</span>
 <span class="c1"># &gt;&gt; YOU MUST BE AN IDIOT!</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="kp">false</span>
-<span class="sx">%w(success fail)</span><span class="o">[</span><span class="n">result</span><span class="o">]</span> <span class="c1"># =&gt; &quot;fail&quot;</span></code></pre></div>
+<span class="sx">%w(success fail)</span><span class="o">[</span><span class="n">result</span><span class="o">]</span> <span class="c1"># =&gt; "fail"</span></code></pre></div>
 
 <p>つまりArray#[]を弄って、引数にtrueが渡されたらindex 0の要素を返し、falseなら1の要素を返すようにします。</p>
 

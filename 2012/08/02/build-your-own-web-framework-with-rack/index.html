@@ -217,40 +217,40 @@
 
 <p>昨日はドラクエの発売日だったので、<code>draque</code>というディレクトリを作って、ここで<code>rackup</code>を実行します。因みに私はドラクエは一度もやったことはありません。やっぱりそれは不幸なことですか？</p>
 
-<div class="highlight"><pre><code class="bash">% mkdir draque
-% <span class="nb">cd </span>draque
-% rackup
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>mkdir draque
+<span class="gp">% </span><span class="nb">cd </span>draque
+<span class="gp">% </span>rackup
 configuration config.ru not found</code></pre></div>
 
 <p>config.ruという設定ファイルがないと言われました。それでは、これを作って再度rackupします。</p>
 
-<div class="highlight"><pre><code class="bash">% touch config.ru
-% rackup
-~/.rbenv/..../rack/builder.rb:129:in <span class="sb">`</span>to_app<span class="s1">&#39;: missing run or map statement (RuntimeError)</span>
-<span class="s1">        from config.ru:1:in `&lt;main&gt;&#39;</span></code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>touch config.ru
+<span class="gp">% </span>rackup
+~/.rbenv/..../rack/builder.rb:129:in <span class="sb">`</span>to_app<span class="s1">': missing run or map statement (RuntimeError)
+        from config.ru:1:in `&lt;main&gt;'</span></code></pre></div>
 
 <p>今度はrunまたはmapが見つからないと言われたので、config.ruに<code>run</code>と書いてもう一度やってみます。</p>
 
-<div class="highlight"><pre><code class="bash">% <span class="nb">echo </span>run &gt; config.ru 
-% rackup              
-~/.rbenv/.../rack/builder.rb:99:in <span class="sb">`</span>run<span class="s1">&#39;: wrong number of arguments (0 for 1) (ArgumentError)</span>
-<span class="s1">        from config.ru:2:in `block in &lt;main&gt;&#39;</span></code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span><span class="nb">echo </span>run &gt; config.ru 
+<span class="gp">% </span>rackup              
+~/.rbenv/.../rack/builder.rb:99:in <span class="sb">`</span>run<span class="s1">': wrong number of arguments (0 for 1) (ArgumentError)
+        from config.ru:2:in `block in &lt;main&gt;'</span></code></pre></div>
 
 <p>今度は引数が足りないと言われました。<code>run</code>は恐らくWebアプリを走らせるコマンドでしょうから、Webアプリのインスタンスを渡せばよさそうです。試しに<code>1</code>を渡してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="n">run</span> <span class="mi">1</span></code></pre></div>
 
-<div class="highlight"><pre><code class="bash">% rackup      
-&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
-&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup      
+<span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+<span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
+<span class="gp">&gt;&gt; </span>Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
 
 <p>ポート9292でThin Webサーバが立ち上がりました。</p>
 
 <p>Browserでhttp://localhost:9292 にアクセスしてみます。</p>
 
-<div class="highlight"><pre><code class="bash">NoMethodError: undefined method <span class="sb">`</span>call<span class="err">&#39;</span> <span class="k">for </span>1:Fixnum</code></pre></div>
+<div class="highlight"><pre><code class="bash">NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' for 1:Fixnum</span></code></pre></div>
 
 <p><code>call</code>メソッドがないと言われました。では、Fixnum#callを定義してみます。</p>
 
@@ -265,7 +265,7 @@ configuration config.ru not found</code></pre></div>
 <p>今度はどうでしょう。</p>
 
 <div class="highlight"><pre><code class="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
-        config.ru:3:in <span class="sb">`</span>call<span class="err">&#39;</span></code></pre></div>
+        config.ru:3:in <span class="sb">`</span>call<span class="s1">'</span></code></pre></div>
 
 <p>引数がないと言われました。引数を付けてみます。</p>
 
@@ -294,7 +294,7 @@ configuration config.ru not found</code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn&#39;t (got NilClass as headers)</span></code></pre></div>
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn't (got NilClass as headers)</span></code></pre></div>
 
 <p>headersオブジェクトはNilClassだから<code>#each</code>できないと言われました。では第２返り値として#eachできるオブジェクト<code>[1]</code>を渡してみます。</p>
 
@@ -316,7 +316,7 @@ configuration config.ru not found</code></pre></div>
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">class</span> <span class="nc">Fixnum</span>
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -324,14 +324,14 @@ configuration config.ru not found</code></pre></div>
 
 <p>どうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: a header value must be a String, but the value of <span class="s1">&#39;one&#39;</span> is a Fixnum</code></pre></div>
+<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: a header value must be a String, but the value of <span class="s1">'one'</span> is a Fixnum</code></pre></div>
 
 <p>今度は値も文字列じゃないとダメだと言われたので、これに対応してみます。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">class</span> <span class="nc">Fixnum</span>
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -346,7 +346,7 @@ configuration config.ru not found</code></pre></div>
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">class</span> <span class="nc">Fixnum</span>
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/plain'</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -355,7 +355,7 @@ configuration config.ru not found</code></pre></div>
 <p>どうでしょう。</p>
 
 <div class="highlight"><pre><code class="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
-127.0.0.1 - - <span class="o">[</span>02/Aug/2012 20:38:50<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> 200 - 0.0010</code></pre></div>
+127.0.0.1 - - <span class="o">[</span>02/Aug/2012 20:38:50] <span class="s2">"GET / HTTP/1.1"</span> 200 - 0.0010</code></pre></div>
 
 <p>“<strong>GET / HTTP/1.1” 200</strong>“が返ってきました。しかし、レスポンスボディが<code>each</code>できないと言っています。</p>
 
@@ -364,7 +364,7 @@ configuration config.ru not found</code></pre></div>
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">class</span> <span class="nc">Fixnum</span>
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to ONE&quot;</span><span class="o">.</span><span class="n">chars</span>
+    <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/plain'</span><span class="p">},</span> <span class="s2">"Welcome to ONE"</span><span class="p">.</span><span class="nf">chars</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -395,7 +395,7 @@ configuration config.ru not found</code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to the World of Draque!!&quot;</span><span class="o">.</span><span class="n">chars</span>
+  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/plain'</span><span class="p">},</span> <span class="s2">"Welcome to the World of Draque!!"</span><span class="p">.</span><span class="nf">chars</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
@@ -411,29 +411,29 @@ configuration config.ru not found</code></pre></div>
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
   <span class="nb">p</span> <span class="n">arg</span>
-  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="s2">&quot;Welcome to the World of Draque!!&quot;</span><span class="o">.</span><span class="n">chars</span>
+  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/plain'</span><span class="p">},</span> <span class="s2">"Welcome to the World of Draque!!"</span><span class="p">.</span><span class="nf">chars</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
 <p>コンソールに次のような出力が得られました。</p>
 
-<div class="highlight"><pre><code class="bash">% rackup      
-&gt;&gt; Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
-&gt;&gt; Maximum connections <span class="nb">set </span>to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-<span class="o">{</span><span class="s2">&quot;SERVER_SOFTWARE&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;thin 1.3.1 codename Triple Espresso&quot;</span>, <span class="s2">&quot;SERVER_NAME&quot;</span><span class="o">=</span>&gt;<span class="s2">&quot;localhost&quot;</span>, <span class="s2">&quot;rack.input&quot;</span><span class="o">=</span>&gt;#&lt;Rack::Lint::InputWrapper:0x00000100a156c0 @input<span class="o">=</span><span class="c">#&lt;StringIO:0x000001009dab38&gt;&gt;, &quot;rack.version&quot;=&gt;[1, 0], &quot;rack.errors&quot;=&gt;#&lt;Rack::Lint::ErrorWrapper:0x00000100a15648 @error=#&lt;IO:&lt;STDERR&gt;&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;REQUEST_METHOD&quot;=&gt;&quot;GET&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;/&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:9292&quot;, &quot;HTTP_CONNECTION&quot;=&gt;&quot;keep-alive&quot;, &quot;HTTP_CACHE_CONTROL&quot;=&gt;&quot;max-age=0&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/22.0.1221.0 Safari/537.3&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;, &quot;HTTP_ACCEPT_ENCODING&quot;=&gt;&quot;gzip,deflate,sdch&quot;, &quot;HTTP_ACCEPT_LANGUAGE&quot;=&gt;&quot;ja,en-US;q=0.8,en;q=0.6&quot;, &quot;HTTP_ACCEPT_CHARSET&quot;=&gt;&quot;UTF-8,*;q=0.5&quot;, &quot;HTTP_COOKIE&quot;=&gt;&quot;_gauges_unique_year=1; _gauges_unique=1; _blog_app_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRkkiJTVjMmY2ZDU1ODBiNTUxMDY5NGY3ZDkxNzQ3ZmRkOWVkBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMTQvY1IyYUpOaFBYUXpFYTNXOEU5SHlpYnVEU0ZEaDRxTmUwTzVINThmbmc9BjsARg%3D%3D--f9184f85f7974529836b4bce7c23a5f7132bf8df&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.2&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;9292&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;async.callback&quot;=&gt;#&lt;Method: Thin::Connection#post_process&gt;, &quot;async.close&quot;=&gt;#&lt;EventMachine::DefaultDeferrable:0x00000100a06c38&gt;}127.0.0.1 - - [02/Aug/2012 21:39:21] &quot;GET / HTTP/1.1&quot; 200 - 0.0023</span></code></pre></div>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup      
+<span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
+<span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
+<span class="gp">&gt;&gt; </span>Listening on 0.0.0.0:9292, CTRL+C to stop
+<span class="o">{</span><span class="s2">"SERVER_SOFTWARE"</span><span class="o">=</span>&gt;<span class="s2">"thin 1.3.1 codename Triple Espresso"</span>, <span class="s2">"SERVER_NAME"</span><span class="o">=</span>&gt;<span class="s2">"localhost"</span>, <span class="s2">"rack.input"</span><span class="o">=</span>&gt;#&lt;Rack::Lint::InputWrapper:0x00000100a156c0 @input<span class="o">=</span><span class="c">#&lt;StringIO:0x000001009dab38&gt;&gt;, "rack.version"=&gt;[1, 0], "rack.errors"=&gt;#&lt;Rack::Lint::ErrorWrapper:0x00000100a15648 @error=#&lt;IO:&lt;STDERR&gt;&gt;&gt;, "rack.multithread"=&gt;false, "rack.multiprocess"=&gt;false, "rack.run_once"=&gt;false, "REQUEST_METHOD"=&gt;"GET", "REQUEST_PATH"=&gt;"/", "PATH_INFO"=&gt;"/", "REQUEST_URI"=&gt;"/", "HTTP_VERSION"=&gt;"HTTP/1.1", "HTTP_HOST"=&gt;"localhost:9292", "HTTP_CONNECTION"=&gt;"keep-alive", "HTTP_CACHE_CONTROL"=&gt;"max-age=0", "HTTP_USER_AGENT"=&gt;"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.3 (KHTML, like Gecko) Chrome/22.0.1221.0 Safari/537.3", "HTTP_ACCEPT"=&gt;"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "HTTP_ACCEPT_ENCODING"=&gt;"gzip,deflate,sdch", "HTTP_ACCEPT_LANGUAGE"=&gt;"ja,en-US;q=0.8,en;q=0.6", "HTTP_ACCEPT_CHARSET"=&gt;"UTF-8,*;q=0.5", "HTTP_COOKIE"=&gt;"_gauges_unique_year=1; _gauges_unique=1; _blog_app_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRkkiJTVjMmY2ZDU1ODBiNTUxMDY5NGY3ZDkxNzQ3ZmRkOWVkBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMTQvY1IyYUpOaFBYUXpFYTNXOEU5SHlpYnVEU0ZEaDRxTmUwTzVINThmbmc9BjsARg%3D%3D--f9184f85f7974529836b4bce7c23a5f7132bf8df", "GATEWAY_INTERFACE"=&gt;"CGI/1.2", "SERVER_PORT"=&gt;"9292", "QUERY_STRING"=&gt;"", "SERVER_PROTOCOL"=&gt;"HTTP/1.1", "rack.url_scheme"=&gt;"http", "SCRIPT_NAME"=&gt;"", "REMOTE_ADDR"=&gt;"127.0.0.1", "async.callback"=&gt;#&lt;Method: Thin::Connection#post_process&gt;, "async.close"=&gt;#&lt;EventMachine::DefaultDeferrable:0x00000100a06c38&gt;}127.0.0.1 - - [02/Aug/2012 21:39:21] "GET / HTTP/1.1" 200 - 0.0023</span></code></pre></div>
 
 <p>クライアントの環境情報がWebサーバからハッシュで渡されていました。これらの情報があれば、クライアントの環境に応じたレスポンスが構築できそうです。まずは、これらを一覧表示するレスポンスを書いてみます。Content-Typeも<strong>text/html</strong>に変更します。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">},</span> <span class="n">body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+  <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/html'</span><span class="p">},</span> <span class="n">body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;&quot;</span><span class="o">]</span> <span class="o">+</span>
-  <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+  <span class="o">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="o">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
@@ -450,29 +450,29 @@ configuration config.ru not found</code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">]</span>
+  <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">'PATH_INFO'</span><span class="o">]</span>
   <span class="k">case</span> <span class="n">path</span>
-  <span class="k">when</span> <span class="s1">&#39;/draque&#39;</span> <span class="k">then</span> <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
-  <span class="k">when</span> <span class="s1">&#39;/&#39;</span>       <span class="k">then</span> <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
+  <span class="k">when</span> <span class="s1">'/draque'</span> <span class="k">then</span> <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
+  <span class="k">when</span> <span class="s1">'/'</span>       <span class="k">then</span> <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
   <span class="k">else</span> <span class="o">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="o">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">headers</span>
-  <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">}</span>
+  <span class="p">{</span><span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/html'</span><span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;&quot;</span><span class="o">]</span> <span class="o">+</span>
-  <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+  <span class="o">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="o">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">draque_body</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;http://www.dqx.jp/storage/img/top/main_visual.png&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='http://www.dqx.jp/storage/img/top/main_visual.png'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">not_found</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026'&gt;"</span><span class="p">,</span> <span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
@@ -490,12 +490,12 @@ configuration config.ru not found</code></pre></div>
 <p>さて、ここまで来たら、ルーティングはsinatra風に書きたいです。getメソッドを定義して、パスに応じたレスポンスを登録できるようにします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
-<span class="vi">@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">get</span><span class="p">:{}</span> <span class="p">}</span>
+<span class="vi">@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="n">get</span><span class="p">:{}</span> <span class="p">}</span>
 
 <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">]</span>
+  <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">'PATH_INFO'</span><span class="o">]</span>
   <span class="k">if</span> <span class="n">res</span> <span class="o">=</span> <span class="vi">@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="n">res</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
   <span class="k">else</span>
     <span class="o">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="o">]</span>
   <span class="k">end</span>
@@ -505,29 +505,29 @@ configuration config.ru not found</code></pre></div>
   <span class="vi">@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span> <span class="o">=</span> <span class="n">blk</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/draque&#39;</span> <span class="k">do</span>
+<span class="n">get</span> <span class="s1">'/draque'</span> <span class="k">do</span>
   <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
+<span class="n">get</span> <span class="s1">'/'</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
   <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">headers</span>
-  <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">}</span>
+  <span class="p">{</span><span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/html'</span><span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;&quot;</span><span class="o">]</span> <span class="o">+</span>
-  <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+  <span class="o">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="o">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">draque_body</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;http://www.dqx.jp/storage/img/top/main_visual.png&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='http://www.dqx.jp/storage/img/top/main_visual.png'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">not_found</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026'&gt;"</span><span class="p">,</span> <span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
@@ -536,12 +536,12 @@ configuration config.ru not found</code></pre></div>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
 <span class="k">module</span> <span class="nn">Draque</span>
-  <span class="vc">@@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">get</span><span class="p">:{}</span> <span class="p">}</span>
+  <span class="vc">@@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="n">get</span><span class="p">:{}</span> <span class="p">}</span>
 
   <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">'PATH_INFO'</span><span class="o">]</span>
     <span class="k">if</span> <span class="n">res</span> <span class="o">=</span> <span class="vc">@@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span>
-      <span class="n">res</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+      <span class="n">res</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="o">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="o">]</span>
     <span class="k">end</span>
@@ -552,31 +552,31 @@ configuration config.ru not found</code></pre></div>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">headers</span>
-    <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/html&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'text/html'</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">Object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">Draque</span><span class="p">)</span>
+<span class="no">Object</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">Draque</span><span class="p">)</span>
 
-<span class="n">get</span> <span class="s1">&#39;/draque&#39;</span> <span class="k">do</span>
+<span class="n">get</span> <span class="s1">'/draque'</span> <span class="k">do</span>
   <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
+<span class="n">get</span> <span class="s1">'/'</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
   <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;&quot;</span><span class="o">]</span> <span class="o">+</span>
-  <span class="n">env</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;&lt;p&gt;%s =&gt; %s&lt;/p&gt;&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+  <span class="o">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="o">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">draque_body</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;http://www.dqx.jp/storage/img/top/main_visual.png&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='http://www.dqx.jp/storage/img/top/main_visual.png'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">not_found</span>
-  <span class="o">[</span><span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026&#39;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;img src=&#39;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026&#39;&gt;&quot;</span><span class="o">]</span>
+  <span class="o">[</span><span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026'&gt;"</span><span class="p">,</span> <span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026'&gt;"</span><span class="o">]</span>
 <span class="k">end</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>

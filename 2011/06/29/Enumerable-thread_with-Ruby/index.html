@@ -193,35 +193,35 @@
   <span class="k">def</span> <span class="nf">thread_with</span>
     <span class="n">mem</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="n">map</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="o">|</span>
-      <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
+      <span class="no">Thread</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
         <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="k">yield</span><span class="p">(</span><span class="o">*</span><span class="n">_item</span><span class="p">)</span>
       <span class="k">end</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
     <span class="n">mem</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p>Enumerable#thread_withがあればsleep sortは簡単だよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
+<span class="n">a</span><span class="p">.</span><span class="nf">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
 
 <p>効率を良くしたければ、次のようにすればいいし。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="no">Math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">sort_by</span> <span class="p">{</span> <span class="nb">rand</span> <span class="p">}</span> <span class="c1"># =&gt; [9, 3, 10, 8, 4, 5, 7, 2, 6, 1]</span>
+<span class="n">a</span><span class="p">.</span><span class="nf">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">sleep</span> <span class="no">Math</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></code></pre></div>
 
 <p>もう少し真面目な例を挙げるね。</p>
 
 <p>複数のWebサイトに並列的にアクセスして、そこからimgタグを拾ってくる例を示すよ。ここではベンチマークを取って、スレッドを使わない例と比べているよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;benchmark&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;open-uri&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"benchmark"</span>
+<span class="nb">require</span> <span class="s2">"open-uri"</span>
 <span class="n">a</span> <span class="o">=</span> <span class="sx">%w(www.nintendo.co.jp www.google.com www.yahoo.co.jp www.nikkei.com www.ruby-lang.org)</span>
-<span class="n">blk</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">item</span> <span class="p">{</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://</span><span class="si">#{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/&lt;img .*?&gt;/</span><span class="p">)</span> <span class="p">}</span>
-<span class="no">Benchmark</span><span class="o">.</span><span class="n">bmbm</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
-  <span class="n">x</span><span class="o">.</span><span class="n">report</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>  <span class="p">}</span>
-  <span class="n">x</span><span class="o">.</span><span class="n">report</span> <span class="p">{</span> <span class="n">a</span><span class="o">.</span><span class="n">thread_with</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">blk</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">item</span> <span class="p">{</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"http://</span><span class="si">#{</span><span class="n">item</span><span class="si">}</span><span class="s2">"</span><span class="p">).</span><span class="nf">read</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/&lt;img .*?&gt;/</span><span class="p">)</span> <span class="p">}</span>
+<span class="no">Benchmark</span><span class="p">.</span><span class="nf">bmbm</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
+  <span class="n">x</span><span class="p">.</span><span class="nf">report</span> <span class="p">{</span> <span class="n">a</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>  <span class="p">}</span>
+  <span class="n">x</span><span class="p">.</span><span class="nf">report</span> <span class="p">{</span> <span class="n">a</span><span class="p">.</span><span class="nf">thread_with</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="p">}</span>
 <span class="k">end</span>
 <span class="c1"># &gt;&gt; Rehearsal ------------------------------------</span>
 <span class="c1"># &gt;&gt;    0.110000   0.040000   0.150000 (  1.112704)</span>
@@ -236,8 +236,8 @@
 
 <p>ただ先の実装には１つ問題があるよ。それはもとの配列の順位がthread_withの返り値として保証されないことだよ<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="p">).</span><span class="nf">thread_with</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; false</span></code></pre></div>
 
 <p>でも以下のようにすれば一応もとの順位は保証できるんだ。</p>
@@ -245,17 +245,17 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">thread_with</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
     <span class="n">mem</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="n">map</span><span class="o">.</span><span class="n">with_index</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
-      <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
+    <span class="n">map</span><span class="p">.</span><span class="nf">with_index</span> <span class="k">do</span> <span class="o">|*</span><span class="n">item</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
+      <span class="no">Thread</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">_item</span><span class="o">|</span>
         <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="k">yield</span><span class="p">(</span><span class="o">*</span><span class="n">_item</span><span class="p">)</span><span class="o">]</span>
       <span class="k">end</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">order</span> <span class="p">?</span> <span class="n">mem</span><span class="o">.</span><span class="n">sort</span> <span class="p">:</span> <span class="n">mem</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">order</span> <span class="p">?</span> <span class="n">mem</span><span class="p">.</span><span class="nf">sort</span> <span class="p">:</span> <span class="n">mem</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="p">).</span><span class="nf">thread_with</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="c1"># =&gt; true</span></code></pre></div>
 
 <p>つまりthread_withが引数を取るようにしてtrueを渡せば、最後にもとの配列の順位にソートしてくれる。</p>

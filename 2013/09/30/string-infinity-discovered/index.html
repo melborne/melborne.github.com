@@ -183,28 +183,28 @@
 <p>少し前に、Fixnumに対抗してStringを「<strong>えにゅめらぶる</strong>」する暴挙に出たのです。つまりFixnumで、</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
-<span class="n">st</span> <span class="o">=</span> <span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span>
+<span class="n">st</span> <span class="o">=</span> <span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">to_enum</span>
 <span class="n">st</span> <span class="c1"># =&gt; #&lt;Enumerator: 37..Infinity:each&gt;</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">st</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span></code></pre></div>
 
 <p>とできるのが羨ましくてStringで、</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">EnuString</span>
   <span class="k">def</span> <span class="nf">to_enum</span>
-    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+    <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
       <span class="n">myself</span> <span class="o">=</span> <span class="nb">self</span>
-      <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">myself</span><span class="p">;</span> <span class="n">myself</span> <span class="o">=</span> <span class="n">myself</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">myself</span><span class="p">;</span> <span class="n">myself</span> <span class="o">=</span> <span class="n">myself</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="nb">String</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">EnuString</span><span class="p">)</span>
+<span class="no">String</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">EnuString</span><span class="p">)</span>
 
-<span class="n">st</span> <span class="o">=</span> <span class="s2">&quot;abc37&quot;</span><span class="o">.</span><span class="n">to_enum</span>
+<span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span><span class="p">.</span><span class="nf">to_enum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">st</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;abc37&quot;, &quot;abc38&quot;, &quot;abc39&quot;, &quot;abc40&quot;, &quot;abc41&quot;, &quot;abc42&quot;, &quot;abc43&quot;, &quot;abc44&quot;, &quot;abc45&quot;, &quot;abc46&quot;, &quot;abc47&quot;, &quot;abc48&quot;, &quot;abc49&quot;, &quot;abc50&quot;, &quot;abc51&quot;, &quot;abc52&quot;, &quot;abc53&quot;, &quot;abc54&quot;, &quot;abc55&quot;, &quot;abc56&quot;, &quot;abc57&quot;, &quot;abc58&quot;, &quot;abc59&quot;, &quot;abc60&quot;, &quot;abc61&quot;, &quot;abc62&quot;, &quot;abc63&quot;, &quot;abc64&quot;, &quot;abc65&quot;, &quot;abc66&quot;]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>めでたし、めでたし。</p>
 
@@ -236,34 +236,34 @@
 
 <p>遂に、<code>String::INFINITY</code>というものを発見しまして…。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span> <span class="c1"># =&gt; Infinity</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span> <span class="c1"># =&gt; Infinity</span></code></pre></div>
 
 <p>これを使って、こういうことができるようになりました。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;abc37&#39;</span><span class="p">,</span> <span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x007faadc04be40&gt;:each&gt;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="no">Range</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'abc37'</span><span class="p">,</span> <span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">).</span><span class="nf">to_enum</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x007faadc04be40&gt;:each&gt;</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">str</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;abc37&quot;, &quot;abc38&quot;, &quot;abc39&quot;, &quot;abc40&quot;, &quot;abc41&quot;, &quot;abc42&quot;, &quot;abc43&quot;, &quot;abc44&quot;, &quot;abc45&quot;, &quot;abc46&quot;, &quot;abc47&quot;, &quot;abc48&quot;, &quot;abc49&quot;, &quot;abc50&quot;, &quot;abc51&quot;, &quot;abc52&quot;, &quot;abc53&quot;, &quot;abc54&quot;, &quot;abc55&quot;, &quot;abc56&quot;, &quot;abc57&quot;, &quot;abc58&quot;, &quot;abc59&quot;, &quot;abc60&quot;, &quot;abc61&quot;, &quot;abc62&quot;, &quot;abc63&quot;, &quot;abc64&quot;, &quot;abc65&quot;, &quot;abc66&quot;]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">str</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>Fixnumと同じように、Rangeの最大値にInfinityをセットすることで無限文字列のRangeが作られます。</p>
 
 <p><code>Range.new</code>がお好みでない、ということなら次のようにします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s1">&#39;abc37&#39;</span><span class="p">,</span> <span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x007faadc04be40&gt;:each&gt;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s1">'abc37'</span><span class="p">,</span> <span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">).</span><span class="nf">to_enum</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x007faadc04be40&gt;:each&gt;</span></code></pre></div>
 
 <p>まあこれはただのエイリアスです。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
-  <span class="no">Range</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+  <span class="no">Range</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 <span class="k">end</span></code></pre></div>
 
 <p>で、当然の疑問として、</p>
 
 <p>「リテラルはどうした」ということです。やってみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;abc37&#39;</span><span class="o">.</span><span class="n">.</span><span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:67:in `&lt;main&gt;&#39;: bad value for range (ArgumentError)</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'abc37'</span><span class="p">.</span><span class="nf">.</span><span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:67:in `&lt;main&gt;': bad value for range (ArgumentError)</span></code></pre></div>
 
 <p>orz…。</p>
 
@@ -276,40 +276,40 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">RangeExtension</span>
   <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">obj</span> <span class="o">=</span> <span class="n">allocate</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:initialize</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="n">obj</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:initialize</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">obj</span>
   <span class="k">rescue</span> <span class="no">ArgumentError</span>
     <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">args</span>
-    <span class="k">if</span> <span class="n">first</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="nb">String</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">last</span><span class="o">==</span><span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span>
-      <span class="no">EnuString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">first</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">String</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">last</span><span class="o">==</span><span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span>
+      <span class="no">EnuString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="k">super</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="no">Range</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="no">RangeExtension</span><span class="p">)</span></code></pre></div>
+<span class="no">Range</span><span class="p">.</span><span class="nf">extend</span><span class="p">(</span><span class="no">RangeExtension</span><span class="p">)</span></code></pre></div>
 
 <p><code>Range.new</code>でArgumentErrorが起きた場合、その第１および第２引数をチェックして、第１が文字列、第２が<code>String::INFINITY</code>の場合には、EnuStringオブジェクトなるものを生成しています。</p>
 
 <p>EnuStringの実装を見てみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">EnuString</span> <span class="o">&lt;</span> <span class="nb">String</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">EnuString</span> <span class="o">&lt;</span> <span class="no">String</span>
   <span class="k">def</span> <span class="nf">to_enum</span>
-    <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
+    <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
       <span class="n">myself</span> <span class="o">=</span> <span class="nb">self</span>
-      <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">myself</span><span class="p">;</span> <span class="n">myself</span> <span class="o">=</span> <span class="n">myself</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">myself</span><span class="p">;</span> <span class="n">myself</span> <span class="o">=</span> <span class="n">myself</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">to_s</span>
-    <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="si">}</span><span class="s2">..Infinity&quot;</span>
+    <span class="s2">"</span><span class="si">#{</span><span class="nb">self</span><span class="si">}</span><span class="s2">..Infinity"</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p>これは前回のEnuStringモジュールと同じです。で、String::INFINITYの正体ですが…。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span> <span class="o">=</span> <span class="nb">Float</span><span class="o">::</span><span class="no">INFINITY</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span> <span class="o">=</span> <span class="nb">Float</span><span class="o">::</span><span class="no">INFINITY</span></code></pre></div>
 
 <p>詐欺！</p>
 
@@ -327,24 +327,24 @@
 
 <p>これにヒントを得て、終端が<code>INFINITY</code>であるRangeリテラルではドットが１つの範囲演算子<code>.</code>を使うようにしたのです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;abc37&#39;</span><span class="o">.</span><span class="n">INFINITY</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'abc37'</span><span class="o">.</span><span class="no">INFINITY</span><span class="p">).</span><span class="nf">to_enum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">str</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;abc37&quot;, &quot;abc38&quot;, &quot;abc39&quot;, &quot;abc40&quot;, &quot;abc41&quot;, &quot;abc42&quot;, &quot;abc43&quot;, &quot;abc44&quot;, &quot;abc45&quot;, &quot;abc46&quot;, &quot;abc47&quot;, &quot;abc48&quot;, &quot;abc49&quot;, &quot;abc50&quot;, &quot;abc51&quot;, &quot;abc52&quot;, &quot;abc53&quot;, &quot;abc54&quot;, &quot;abc55&quot;, &quot;abc56&quot;, &quot;abc57&quot;, &quot;abc58&quot;, &quot;abc59&quot;, &quot;abc60&quot;, &quot;abc61&quot;, &quot;abc62&quot;, &quot;abc63&quot;, &quot;abc64&quot;, &quot;abc65&quot;, &quot;abc66&quot;]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">str</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>ドットが１つじゃ心もとないという人向けに、<code>._</code>（ドットアンダーバー）も用意しました。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;abc37&#39;</span><span class="o">.</span><span class="n">_INFINITY</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'abc37'</span><span class="p">.</span><span class="nf">_INFINITY</span><span class="p">).</span><span class="nf">to_enum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">str</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;abc37&quot;, &quot;abc38&quot;, &quot;abc39&quot;, &quot;abc40&quot;, &quot;abc41&quot;, &quot;abc42&quot;, &quot;abc43&quot;, &quot;abc44&quot;, &quot;abc45&quot;, &quot;abc46&quot;, &quot;abc47&quot;, &quot;abc48&quot;, &quot;abc49&quot;, &quot;abc50&quot;, &quot;abc51&quot;, &quot;abc52&quot;, &quot;abc53&quot;, &quot;abc54&quot;, &quot;abc55&quot;, &quot;abc56&quot;, &quot;abc57&quot;, &quot;abc58&quot;, &quot;abc59&quot;, &quot;abc60&quot;, &quot;abc61&quot;, &quot;abc62&quot;, &quot;abc63&quot;, &quot;abc64&quot;, &quot;abc65&quot;, &quot;abc66&quot;]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">str</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>これらが今ひとつ範囲に見えないという人向けに、さらに<code>-</code>演算子も用意しています（この場合はString::INFINITYを使います）。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;abc37&#39;</span> <span class="o">-</span> <span class="nb">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">)</span><span class="o">.</span><span class="n">to_enum</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'abc37'</span> <span class="o">-</span> <span class="no">String</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">).</span><span class="nf">to_enum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="n">n</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">str</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;abc37&quot;, &quot;abc38&quot;, &quot;abc39&quot;, &quot;abc40&quot;, &quot;abc41&quot;, &quot;abc42&quot;, &quot;abc43&quot;, &quot;abc44&quot;, &quot;abc45&quot;, &quot;abc46&quot;, &quot;abc47&quot;, &quot;abc48&quot;, &quot;abc49&quot;, &quot;abc50&quot;, &quot;abc51&quot;, &quot;abc52&quot;, &quot;abc53&quot;, &quot;abc54&quot;, &quot;abc55&quot;, &quot;abc56&quot;, &quot;abc57&quot;, &quot;abc58&quot;, &quot;abc59&quot;, &quot;abc60&quot;, &quot;abc61&quot;, &quot;abc62&quot;, &quot;abc63&quot;, &quot;abc64&quot;, &quot;abc65&quot;, &quot;abc66&quot;]</span></code></pre></div>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">str</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>…。</p>
 
@@ -355,17 +355,17 @@
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">StringExtension</span>
   <span class="no">INFINITY</span> <span class="o">=</span> <span class="nb">Float</span><span class="o">::</span><span class="no">INFINITY</span>
   <span class="k">def</span> <span class="nf">INFINITY</span>
-    <span class="no">EnuString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="no">EnuString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="k">alias</span> <span class="ss">:_INFINITY</span> <span class="ss">:INFINITY</span>
 
   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">&#39;bad value for range&#39;</span> <span class="k">unless</span> <span class="n">other</span><span class="o">==</span><span class="no">INFINITY</span>
-    <span class="no">EnuString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">'bad value for range'</span> <span class="k">unless</span> <span class="n">other</span><span class="o">==</span><span class="no">INFINITY</span>
+    <span class="no">EnuString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="nb">String</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">StringExtension</span><span class="p">)</span></code></pre></div>
+<span class="no">String</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">StringExtension</span><span class="p">)</span></code></pre></div>
 
 <p>単なるStringオブジェクトのメソッド呼び出しでしたm(__)m</p>
 

@@ -182,35 +182,35 @@
     
 <p>Rubyにはシングルトンメソッドと呼ばれる機能があります。これは、特定のオブジェクトにだけ実装されるメソッドのことです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="n">charlie</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
-<span class="n">liz</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;Liz&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span>
-<span class="n">dick</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;Dick&quot;</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="ss">:doctor</span><span class="p">)</span>
+<span class="n">charlie</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
+<span class="n">liz</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Liz"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span>
+<span class="n">dick</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Dick"</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="ss">:doctor</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nc">charlie</span><span class="o">.</span><span class="nf">passcode</span>
-  <span class="s1">&#39;22360679&#39;</span>
+  <span class="s1">'22360679'</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nc">liz</span><span class="o">.</span><span class="nf">passcode</span>
-  <span class="s1">&#39;17320508&#39;</span>
+  <span class="s1">'17320508'</span>
 <span class="k">end</span>
 
-<span class="n">charlie</span><span class="o">.</span><span class="n">passcode</span> <span class="c1"># =&gt; &quot;22360679&quot;</span>
-<span class="n">liz</span><span class="o">.</span><span class="n">passcode</span> <span class="c1"># =&gt; &quot;17320508&quot;</span>
-<span class="n">dick</span><span class="o">.</span><span class="n">passcode</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:18:in `&lt;main&gt;&#39;: undefined method `passcode&#39; for #&lt;struct User name=&quot;Dick&quot;, age=31, job=:doctor&gt; (NoMethodError)</span></code></pre></div>
+<span class="n">charlie</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; "22360679"</span>
+<span class="n">liz</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; "17320508"</span>
+<span class="n">dick</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:18:in `&lt;main&gt;': undefined method `passcode' for #&lt;struct User name="Dick", age=31, job=:doctor&gt; (NoMethodError)</span></code></pre></div>
 
 <p><code>passcode</code>メソッドは個々のUserオブジェクトごとに実装され、そのオブジェクト固有の値を返します。またそれが実装されないオブジェクトにおいては呼び出すことができません。これを「<code>passcode</code>の名前空間は、それが定義されたオブジェクトに限定される」と表現することもできます。</p>
 
 <p>しかしRubyの世界はミンコフスキー時空であり、そこには「空間」の次元に加え「時間」の次元が存在します。そして、残念ながらシングルトンメソッドではこの時間つまり「名前時間」を限定することができないのです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="c1"># =&gt; 2014-03-15 14:12:15 +0900</span>
-<span class="n">charlie</span><span class="o">.</span><span class="n">passcode</span> <span class="c1"># =&gt; &quot;22360679&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="c1"># =&gt; 2014-03-15 14:12:15 +0900</span>
+<span class="n">charlie</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; "22360679"</span>
 
-<span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="c1"># =&gt; 2015-03-15 14:12:15 +0900</span>
-<span class="n">charlie</span><span class="o">.</span><span class="n">passcode</span> <span class="c1"># =&gt; &quot;22360679&quot;</span></code></pre></div>
+<span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="c1"># =&gt; 2015-03-15 14:12:15 +0900</span>
+<span class="n">charlie</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; "22360679"</span></code></pre></div>
 
 <p>一年後において<code>charlie.passcode</code>を実行しましたが、呼べてしまいました..。</p>
 
@@ -229,10 +229,10 @@
 <p>実装です。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">CoreExt</span>
-  <span class="n">refine</span> <span class="nb">String</span> <span class="k">do</span>
+  <span class="n">refine</span> <span class="no">String</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">~</span>
-      <span class="n">margin</span> <span class="o">=</span> <span class="nb">scan</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span><span class="o">.</span><span class="n">min</span>
-      <span class="nb">gsub</span><span class="p">(</span><span class="sr">/^ {</span><span class="si">#{</span><span class="n">margin</span><span class="si">}</span><span class="sr">}/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="n">margin</span> <span class="o">=</span> <span class="nb">scan</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">).</span><span class="nf">min</span>
+      <span class="nb">gsub</span><span class="p">(</span><span class="sr">/^ {</span><span class="si">#{</span><span class="n">margin</span><span class="si">}</span><span class="sr">}/</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -241,38 +241,38 @@
   <span class="n">using</span> <span class="no">CoreExt</span>
 
   <span class="k">def</span> <span class="nf">mission_exist?</span>
-    <span class="o">!!</span><span class="nb">methods</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">==</span><span class="ss">:mission</span> <span class="p">}</span>
+    <span class="o">!!</span><span class="nb">methods</span><span class="p">.</span><span class="nf">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">==</span><span class="ss">:mission</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">mission</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
     <span class="n">mission_template</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span>
-      <span class="ss">status</span><span class="p">:</span> <span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span>
-<span class="sh">        昨夜、プロジェクトX内において</span>
-<span class="sh">        NullObjectモジュールなる不審物を発見。</span>
-<span class="sh">        調査の結果、これが我軍の勝利に深刻な影響を及ぼす</span>
-<span class="sh">        危険因子であることが判明した。</span>
-<span class="no">      ST</span>
-      <span class="ss">mission</span><span class="p">:</span> <span class="o">~&lt;&lt;-</span><span class="no">MS</span>
-<span class="sh">        このモジュールをプロジェクトXより速やかに撤去し、</span>
-<span class="sh">        その安全を確保することにある。</span>
-<span class="no">      MS</span>
+      <span class="ss">status: </span><span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span><span class="sh">
+        昨夜、プロジェクトX内において
+        NullObjectモジュールなる不審物を発見。
+        調査の結果、これが我軍の勝利に深刻な影響を及ぼす
+        危険因子であることが判明した。
+</span><span class="no">      ST</span>
+      <span class="ss">mission: </span><span class="o">~&lt;&lt;-</span><span class="no">MS</span><span class="sh">
+        このモジュールをプロジェクトXより速やかに撤去し、
+        その安全を確保することにある。
+</span><span class="no">      MS</span>
   <span class="k">end</span>
 
   <span class="kp">private</span>
-  <span class="k">def</span> <span class="nf">mission_template</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="ss">status</span><span class="p">:,</span> <span class="ss">mission</span><span class="p">:)</span>
-    <span class="nb">puts</span> <span class="o">~&lt;&lt;-</span><span class="no">MISSION</span>
-<span class="sh">      おはよう#{name}君。</span>
+  <span class="k">def</span> <span class="nf">mission_template</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">status</span><span class="p">:,</span> <span class="n">mission</span><span class="p">:)</span>
+    <span class="nb">puts</span> <span class="o">~&lt;&lt;-</span><span class="no">MISSION</span><span class="sh">
+      おはよう</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="sh">君。
 
-<span class="sh">      #{status}</span>
-<span class="sh">      そこで今回の君の使命だが、</span>
-<span class="sh">      #{mission}</span>
-<span class="sh">      例によって、君もしくはメンバーが捕らえられ、</span>
-<span class="sh">      あるいは殺されても当局はいっさい関知しないからそのつもりで。</span>
+      </span><span class="si">#{</span><span class="n">status</span><span class="si">}</span><span class="sh">
+      そこで今回の君の使命だが、
+      </span><span class="si">#{</span><span class="n">mission</span><span class="si">}</span><span class="sh">
+      例によって、君もしくはメンバーが捕らえられ、
+      あるいは殺されても当局はいっさい関知しないからそのつもりで。
 
-<span class="sh">      なお、このメソッドは自動的に消滅する。</span>
-<span class="sh">      成功を祈る。</span>
+      なお、このメソッドは自動的に消滅する。
+      成功を祈る。
 
-<span class="no">    MISSION</span>
+</span><span class="no">    MISSION</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -280,14 +280,14 @@
 
 <p>やってみましょう。</p>
 
-<div class="highlight"><pre><code class="bash">% irb
-&gt; require <span class="s1">&#39;./mission_impossible&#39;</span>
-<span class="o">=</span>&gt; <span class="nb">true</span>
-&gt; <span class="nv">mi</span> <span class="o">=</span> MissionImpossible.new
-<span class="o">=</span>&gt; <span class="c">#&lt;MissionImpossible:0x007fc49a912b00&gt;</span>
-&gt; mi.mission_exist?
-<span class="o">=</span>&gt; <span class="nb">true</span>
-&gt; mi.mission<span class="o">(</span><span class="s2">&quot;フェルプス&quot;</span><span class="o">)</span>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>irb
+<span class="gp">&gt; </span>require <span class="s1">'./mission_impossible'</span>
+<span class="gp">=&gt; </span><span class="nb">true</span>
+<span class="gp">&gt; </span>mi <span class="o">=</span> MissionImpossible.new
+<span class="gp">=&gt; </span><span class="c">#&lt;MissionImpossible:0x007fc49a912b00&gt;</span>
+<span class="gp">&gt; </span>mi.mission_exist?
+<span class="gp">=&gt; </span><span class="nb">true</span>
+<span class="gp">&gt; </span>mi.mission<span class="o">(</span><span class="s2">"フェルプス"</span><span class="o">)</span>
 おはようフェルプス君。
 
 昨夜、プロジェクトX内において
@@ -305,19 +305,19 @@ NullObjectモジュールなる不審物を発見。
 なお、このメソッドは自動的に消滅する。
 成功を祈る。
 
-<span class="o">=</span>&gt; nil</code></pre></div>
+<span class="gp">=&gt; </span>nil</code></pre></div>
 
 <p>当然に<code>mission</code>メソッドは何度も呼ぶことができてしまいます。</p>
 
 <p>そこで<code>OneTime</code>モジュールで制約を掛けます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">+</span> <span class="nb">require</span> <span class="s2">&quot;./onetime&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="o">+</span> <span class="nb">require</span> <span class="s2">"./onetime"</span>
 
 <span class="k">module</span> <span class="nn">CoreExt</span>
-  <span class="n">refine</span> <span class="nb">String</span> <span class="k">do</span>
+  <span class="n">refine</span> <span class="no">String</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">~</span>
-      <span class="n">margin</span> <span class="o">=</span> <span class="nb">scan</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">)</span><span class="o">.</span><span class="n">min</span>
-      <span class="nb">gsub</span><span class="p">(</span><span class="sr">/^ {</span><span class="si">#{</span><span class="n">margin</span><span class="si">}</span><span class="sr">}/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="n">margin</span> <span class="o">=</span> <span class="nb">scan</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">).</span><span class="nf">min</span>
+      <span class="nb">gsub</span><span class="p">(</span><span class="sr">/^ {</span><span class="si">#{</span><span class="n">margin</span><span class="si">}</span><span class="sr">}/</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -327,39 +327,39 @@ NullObjectモジュールなる不審物を発見。
 <span class="o">+</span> <span class="kp">extend</span> <span class="no">OneTime</span>
 
   <span class="k">def</span> <span class="nf">mission_exist?</span>
-    <span class="o">!!</span><span class="nb">methods</span><span class="o">.</span><span class="n">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">==</span><span class="ss">:mission</span> <span class="p">}</span>
+    <span class="o">!!</span><span class="nb">methods</span><span class="p">.</span><span class="nf">detect</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">==</span><span class="ss">:mission</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">mission</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
     <span class="n">mission_template</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span>
-      <span class="ss">status</span><span class="p">:</span> <span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span>
-<span class="sh">        昨夜、プロジェクトX内において</span>
-<span class="sh">        NullObjectモジュールなる不審物を発見。</span>
-<span class="sh">        調査の結果、これが我軍の勝利に深刻な影響を及ぼす</span>
-<span class="sh">        危険因子であることが判明した。</span>
-<span class="no">      ST</span>
-      <span class="ss">mission</span><span class="p">:</span> <span class="o">~&lt;&lt;-</span><span class="no">MS</span>
-<span class="sh">        このモジュールをプロジェクトXより速やかに撤去し、</span>
-<span class="sh">        その安全を確保することにある。</span>
-<span class="no">      MS</span>
+      <span class="ss">status: </span><span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span><span class="sh">
+        昨夜、プロジェクトX内において
+        NullObjectモジュールなる不審物を発見。
+        調査の結果、これが我軍の勝利に深刻な影響を及ぼす
+        危険因子であることが判明した。
+</span><span class="no">      ST</span>
+      <span class="ss">mission: </span><span class="o">~&lt;&lt;-</span><span class="no">MS</span><span class="sh">
+        このモジュールをプロジェクトXより速やかに撤去し、
+        その安全を確保することにある。
+</span><span class="no">      MS</span>
   <span class="k">end</span>
 <span class="o">+</span> <span class="n">onetime</span> <span class="ss">:mission</span>
 
   <span class="kp">private</span>
-  <span class="k">def</span> <span class="nf">mission_template</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="ss">status</span><span class="p">:,</span> <span class="ss">mission</span><span class="p">:)</span>
-    <span class="nb">puts</span> <span class="o">~&lt;&lt;-</span><span class="no">MISSION</span>
-<span class="sh">      おはよう#{name}君。</span>
+  <span class="k">def</span> <span class="nf">mission_template</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">status</span><span class="p">:,</span> <span class="n">mission</span><span class="p">:)</span>
+    <span class="nb">puts</span> <span class="o">~&lt;&lt;-</span><span class="no">MISSION</span><span class="sh">
+      おはよう</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="sh">君。
 
-<span class="sh">      #{status}</span>
-<span class="sh">      そこで今回の君の使命だが、</span>
-<span class="sh">      #{mission}</span>
-<span class="sh">      例によって、君もしくはメンバーが捕らえられ、</span>
-<span class="sh">      あるいは殺されても当局はいっさい関知しないからそのつもりで。</span>
+      </span><span class="si">#{</span><span class="n">status</span><span class="si">}</span><span class="sh">
+      そこで今回の君の使命だが、
+      </span><span class="si">#{</span><span class="n">mission</span><span class="si">}</span><span class="sh">
+      例によって、君もしくはメンバーが捕らえられ、
+      あるいは殺されても当局はいっさい関知しないからそのつもりで。
 
-<span class="sh">      なお、このメソッドは自動的に消滅する。</span>
-<span class="sh">      成功を祈る。</span>
+      なお、このメソッドは自動的に消滅する。
+      成功を祈る。
 
-<span class="no">    MISSION</span>
+</span><span class="no">    MISSION</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -367,14 +367,14 @@ NullObjectモジュールなる不審物を発見。
 
 <p>さて、<code>mission</code>メソッドを２度続けて呼んでみます。</p>
 
-<div class="highlight"><pre><code class="bash">% irb
-&gt; require <span class="s1">&#39;./mission_impossible&#39;</span>
-<span class="o">=</span>&gt; <span class="nb">true</span>
-&gt; <span class="nv">mi</span> <span class="o">=</span> MissionImpossible.new
-<span class="o">=</span>&gt; <span class="c">#&lt;MissionImpossible:0x007f98da6f3018&gt;</span>
-&gt; mi.mission_exist?
-<span class="o">=</span>&gt; <span class="nb">true</span>
-&gt; mi.mission<span class="o">(</span><span class="s2">&quot;フェルプス&quot;</span><span class="o">)</span>
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span>irb
+<span class="gp">&gt; </span>require <span class="s1">'./mission_impossible'</span>
+<span class="gp">=&gt; </span><span class="nb">true</span>
+<span class="gp">&gt; </span>mi <span class="o">=</span> MissionImpossible.new
+<span class="gp">=&gt; </span><span class="c">#&lt;MissionImpossible:0x007f98da6f3018&gt;</span>
+<span class="gp">&gt; </span>mi.mission_exist?
+<span class="gp">=&gt; </span><span class="nb">true</span>
+<span class="gp">&gt; </span>mi.mission<span class="o">(</span><span class="s2">"フェルプス"</span><span class="o">)</span>
 おはようフェルプス君。
 
 昨夜、プロジェクトX内において
@@ -392,12 +392,12 @@ NullObjectモジュールなる不審物を発見。
 なお、このメソッドは自動的に消滅する。
 成功を祈る。
 
-<span class="o">=</span>&gt; nil
-&gt; mi.mission<span class="o">(</span><span class="s2">&quot;フェルプス&quot;</span><span class="o">)</span>
-NoMethodError: undefined method <span class="sb">`</span>mission<span class="s1">&#39; for #&lt;MissionImpossible:0x007f98da6f3018&gt;</span>
-<span class="s1">from (pry):5:in `__pry__&#39;</span>
-&gt; mi.mission_exist?
-<span class="o">=</span>&gt; <span class="nb">false</span></code></pre></div>
+<span class="gp">=&gt; </span>nil
+<span class="gp">&gt; </span>mi.mission<span class="o">(</span><span class="s2">"フェルプス"</span><span class="o">)</span>
+NoMethodError: undefined method <span class="sb">`</span>mission<span class="s1">' for #&lt;MissionImpossible:0x007f98da6f3018&gt;
+from (pry):5:in `__pry__'</span>
+<span class="gp">&gt; </span>mi.mission_exist?
+<span class="gp">=&gt; </span><span class="nb">false</span></code></pre></div>
 
 <p>２度めの呼び出しは期待通り失敗しました。</p>
 

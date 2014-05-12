@@ -242,19 +242,19 @@ f1== f2!
 
 <p>しかしこの問題は<code>require 'mathn'</code>することで解決します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;mathn&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'mathn'</span>
 <span class="mi">10</span> <span class="o">/</span> <span class="mi">3</span> <span class="c1"># =&gt; (10/3)</span></code></pre></div>
 
 <p>次にfactorialメソッドってのがダサいですね。こうしましょう。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Integer</span>
   <span class="k">def</span> <span class="o">!</span>
-    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.self</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:*</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="nb">self</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">*</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="mi">4</span><span class="o">.!</span> <span class="c1"># =&gt; 24</span></code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;mathn&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'mathn'</span>
 <span class="n">f1</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">{</span>  <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>  <span class="o">/</span> <span class="n">c</span> <span class="p">}</span>
 <span class="n">f2</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">{</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span> <span class="p">}</span>
 <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span>
@@ -264,75 +264,75 @@ f1== f2!
 
 <p>次にa b c についての10億の組み合わせを作ります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">set</span> <span class="o">=</span> <span class="o">[*</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="o">].</span><span class="n">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Enumerator: [2, 3, 4..]:repeated_permutation(3)&gt;</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">set</span> <span class="o">=</span> <span class="o">[*</span><span class="mi">2</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="o">]</span><span class="p">.</span><span class="nf">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;Enumerator: [2, 3, 4..]:repeated_permutation(3)&gt;</span></code></pre></div>
 
 <p>そこから先の条件に見合うものだけ、セレクトします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">selected</span> <span class="o">=</span> <span class="n">set</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span> <span class="o">==</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">].!</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">selected</span> <span class="o">=</span> <span class="n">set</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span> <span class="o">==</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">].!</span> <span class="p">}</span></code></pre></div>
 
 <p>結果をプリントします。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="n">pp</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">abc</span><span class="p">{</span>
-  <span class="nb">print</span> <span class="s2">&quot;(%i - %i) / %i = %i</span><span class="se">\n</span><span class="s2">&quot;</span>         <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
-  <span class="nb">print</span> <span class="s2">&quot; %i - %i  / %i = %i! = %i</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span><span class="p">,</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
+  <span class="nb">print</span> <span class="s2">"(%i - %i) / %i = %i</span><span class="se">\n</span><span class="s2">"</span>         <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
+  <span class="nb">print</span> <span class="s2">" %i - %i  / %i = %i! = %i</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span><span class="p">,</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
 <span class="p">}</span>
-<span class="n">selected</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
+<span class="n">selected</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
 
 <p>さあこれらを組み合わせて!</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;mathn&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"mathn"</span>
 <span class="k">class</span> <span class="nc">Integer</span>
   <span class="k">def</span> <span class="o">!</span>
-    <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.self</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:*</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="nb">self</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">*</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="n">f1</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">{</span>  <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>  <span class="o">/</span> <span class="n">c</span> <span class="p">}</span>
 <span class="n">f2</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">{</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span> <span class="p">}</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">abc</span><span class="p">{</span>
-  <span class="nb">print</span> <span class="s2">&quot;(%i - %i) / %i = %i</span><span class="se">\n</span><span class="s2">&quot;</span>         <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
-  <span class="nb">print</span> <span class="s2">&quot; %i - %i  / %i = %i! = %i</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span><span class="p">,</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
+  <span class="nb">print</span> <span class="s2">"(%i - %i) / %i = %i</span><span class="se">\n</span><span class="s2">"</span>         <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
+  <span class="nb">print</span> <span class="s2">" %i - %i  / %i = %i! = %i</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">%</span> <span class="o">[*</span><span class="n">abc</span><span class="p">,</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span><span class="p">,</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]]</span>
 <span class="p">}</span>
-<span class="o">[*</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="o">].</span><span class="n">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span> <span class="o">==</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">].!</span> <span class="p">}</span>
-          <span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
+<span class="o">[*</span><span class="mi">2</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="o">]</span><span class="p">.</span><span class="nf">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+          <span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">f1</span><span class="o">[*</span><span class="n">abc</span><span class="o">]</span> <span class="o">==</span> <span class="n">f2</span><span class="o">[*</span><span class="n">abc</span><span class="o">].!</span> <span class="p">}</span>
+          <span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
 
 <p>完成です! exclamation.rbで保存して実行してみましょう!いきなり1000もなんですから、まずは[*2..100]から..</p>
 
-<div class="highlight"><pre><code class="bash">% <span class="nb">time </span>ruby exclamation.rb
-<span class="o">(</span>25 - 5<span class="o">)</span> / <span class="nv">5</span> <span class="o">=</span> 4
- 25 - 5  / <span class="nv">5</span> <span class="o">=</span> 4! <span class="o">=</span> 24
-<span class="o">(</span>30 - 18<span class="o">)</span> / <span class="nv">3</span> <span class="o">=</span> 4
- 30 - 18  / <span class="nv">3</span> <span class="o">=</span> 4! <span class="o">=</span> 24
-<span class="o">(</span>40 - 32<span class="o">)</span> / <span class="nv">2</span> <span class="o">=</span> 4
- 40 - 32  / <span class="nv">2</span> <span class="o">=</span> 4! <span class="o">=</span> 24
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span><span class="nb">time </span>ruby exclamation.rb
+<span class="o">(</span>25 - 5<span class="o">)</span> / 5 <span class="o">=</span> 4
+ 25 - 5  / 5 <span class="o">=</span> 4! <span class="o">=</span> 24
+<span class="o">(</span>30 - 18<span class="o">)</span> / 3 <span class="o">=</span> 4
+ 30 - 18  / 3 <span class="o">=</span> 4! <span class="o">=</span> 24
+<span class="o">(</span>40 - 32<span class="o">)</span> / 2 <span class="o">=</span> 4
+ 40 - 32  / 2 <span class="o">=</span> 4! <span class="o">=</span> 24
 ruby exclamation.rb  3.25s user 0.03s system 99% cpu 3.287 total</code></pre></div>
 
 <p>おおっ、良い感じじゃないですか!</p>
 
 <p>では1000で..</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">% time </span><span class="n">ruby</span> <span class="n">exclamation</span><span class="o">.</span><span class="n">rb</span>
+<div class="highlight"><pre><code class="ruby"><span class="sx">% time </span><span class="n">ruby</span> <span class="n">exclamation</span><span class="p">.</span><span class="nf">rb</span>
 
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="p">.</span><span class="nf">.</span><span class="o">.</span>
 
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="p">.</span><span class="nf">.</span><span class="o">.</span>
 
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span></code></pre></div>
+  <span class="p">.</span><span class="nf">.</span><span class="o">.</span></code></pre></div>
 
 <p>全く反応ありません^ ^;</p>
 
 <p>仕方が無いので、require ‘mathn’ はやめて、<code>a &lt;= b, (b % c) != 0, ((a - b) % c) != 0</code>の条件だけ入れて足切りします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">[*</span><span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">1000</span><span class="o">].</span><span class="n">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">|</span>
-            <span class="k">next</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span> <span class="o">||</span> <span class="p">(</span><span class="n">b</span> <span class="o">%</span> <span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">%</span> <span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+<div class="highlight"><pre><code class="ruby"><span class="o">[*</span><span class="mi">2</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="o">]</span><span class="p">.</span><span class="nf">repeated_permutation</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+          <span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">|</span>
+            <span class="k">next</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span> <span class="o">||</span> <span class="p">(</span><span class="n">b</span> <span class="sx">% c) </span><span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">%</span> <span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
             <span class="n">f1</span><span class="o">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">]</span> <span class="o">==</span> <span class="n">f2</span><span class="o">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">].!</span>
            <span class="p">}</span>
-          <span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
+          <span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">abc</span><span class="o">|</span> <span class="n">pp</span><span class="o">[</span><span class="n">abc</span><span class="o">]</span> <span class="p">}</span></code></pre></div>
 
 <p>いざ!</p>
 
-<div class="highlight"><pre><code class="bash">% <span class="nb">time </span>ruby exclamation.rb
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span><span class="nb">time </span>ruby exclamation.rb
 
   ...
 
@@ -340,7 +340,7 @@ ruby exclamation.rb  3.25s user 0.03s system 99% cpu 3.287 total</code></pre></d
 
 <p>ちょっとトイレ行ってきます..</p>
 
-<div class="highlight"><pre><code class="bash">% <span class="nb">time </span>ruby exclamation.rb
+<div class="highlight"><pre><code class="bash"><span class="gp">% </span><span class="nb">time </span>ruby exclamation.rb
 
   ...
 
@@ -380,7 +380,7 @@ ruby exclamation.rb  3.25s user 0.03s system 99% cpu 3.287 total</code></pre></d
  <span class="mi">833</span> <span class="o">-</span> <span class="mi">791</span>  <span class="o">/</span> <span class="mi">7</span> <span class="o">=</span> <span class="mi">6</span><span class="o">!</span> <span class="o">=</span> <span class="mi">720</span>
 <span class="p">(</span><span class="mi">952</span> <span class="o">-</span> <span class="mi">928</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">=</span> <span class="mi">6</span>
  <span class="mi">952</span> <span class="o">-</span> <span class="mi">928</span>  <span class="o">/</span> <span class="mi">4</span> <span class="o">=</span> <span class="mi">6</span><span class="o">!</span> <span class="o">=</span> <span class="mi">720</span>
-<span class="n">ruby</span> <span class="n">exclamation</span><span class="o">.</span><span class="n">rb</span>  <span class="mi">349</span><span class="o">.</span><span class="mi">56</span><span class="n">s</span> <span class="n">user</span> <span class="mi">0</span><span class="o">.</span><span class="mi">72</span><span class="n">s</span> <span class="nb">system</span> <span class="mi">99</span><span class="o">%</span> <span class="n">cpu</span> <span class="mi">5</span><span class="p">:</span><span class="mi">51</span><span class="o">.</span><span class="mi">87</span> <span class="n">total</span></code></pre></div>
+<span class="n">ruby</span> <span class="n">exclamation</span><span class="p">.</span><span class="nf">rb</span>  <span class="mi">349</span><span class="o">.</span><span class="mi">56</span><span class="n">s</span> <span class="n">user</span> <span class="mi">0</span><span class="o">.</span><span class="mi">72</span><span class="n">s</span> <span class="nb">system</span> <span class="mi">99</span><span class="o">%</span> <span class="n">cpu</span> <span class="mi">5</span><span class="p">:</span><span class="mi">51</span><span class="o">.</span><span class="mi">87</span> <span class="n">total</span></code></pre></div>
 
 <p>6分!!!</p>
 

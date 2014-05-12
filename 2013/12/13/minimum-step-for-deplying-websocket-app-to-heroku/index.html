@@ -412,46 +412,46 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 <p>backend.rbはRackのミドルウェアとして構成されています。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="c1"># backend.rb</span>
-<span class="nb">require</span> <span class="s1">&#39;faye/websocket&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
+<span class="nb">require</span> <span class="s1">'faye/websocket'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
 
 <span class="k">module</span> <span class="nn">HelloChat</span>
   <span class="k">class</span> <span class="nc">Backend</span>
-    <span class="no">KEEPALIVE_TIME</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="nc">KEEPALIVE_TIME</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
       <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
       <span class="vi">@clients</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-      <span class="k">if</span> <span class="no">Faye</span><span class="o">::</span><span class="no">WebSocket</span><span class="o">.</span><span class="n">websocket?</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="n">ws</span> <span class="o">=</span> <span class="no">Faye</span><span class="o">::</span><span class="no">WebSocket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">ping</span><span class="p">:</span> <span class="no">KEEPALIVE_TIME</span><span class="p">)</span>
+      <span class="k">if</span> <span class="no">Faye</span><span class="o">::</span><span class="no">WebSocket</span><span class="p">.</span><span class="nf">websocket?</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">ws</span> <span class="o">=</span> <span class="no">Faye</span><span class="o">::</span><span class="no">WebSocket</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">ping: </span><span class="no">KEEPALIVE_TIME</span><span class="p">)</span>
         
-        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:open</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:open</span><span class="p">,</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span><span class="o">]</span>
+        <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:open</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:open</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="o">]</span>
           <span class="vi">@clients</span> <span class="o">&lt;&lt;</span> <span class="n">ws</span>
-          <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">you</span><span class="p">:</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
-          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">count</span><span class="p">:</span> <span class="vi">@clients</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
+          <span class="n">ws</span><span class="p">.</span><span class="nf">send</span><span class="p">({</span> <span class="ss">you: </span><span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span> <span class="p">}.</span><span class="nf">to_json</span><span class="p">)</span>
+          <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
+            <span class="n">client</span><span class="p">.</span><span class="nf">send</span><span class="p">({</span> <span class="ss">count: </span><span class="vi">@clients</span><span class="p">.</span><span class="nf">size</span> <span class="p">}.</span><span class="nf">to_json</span><span class="p">)</span>
           <span class="k">end</span>
         <span class="k">end</span>
 
-        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:message</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:message</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">]</span>
-          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span> <span class="n">client</span><span class="o">.</span><span class="n">send</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span> <span class="p">}</span>
+        <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:message</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:message</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">data</span><span class="o">]</span>
+          <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span> <span class="n">client</span><span class="p">.</span><span class="nf">send</span> <span class="n">event</span><span class="p">.</span><span class="nf">data</span> <span class="p">}</span>
         <span class="k">end</span>
 
-        <span class="n">ws</span><span class="o">.</span><span class="n">on</span> <span class="ss">:close</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:close</span><span class="p">,</span> <span class="n">ws</span><span class="o">.</span><span class="n">object_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">code</span><span class="o">]</span>
-          <span class="vi">@clients</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
-          <span class="vi">@clients</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">({</span> <span class="ss">count</span><span class="p">:</span> <span class="vi">@clients</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span>
+        <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:close</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+          <span class="nb">p</span> <span class="o">[</span><span class="ss">:close</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">code</span><span class="o">]</span>
+          <span class="vi">@clients</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+          <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
+            <span class="n">client</span><span class="p">.</span><span class="nf">send</span><span class="p">({</span> <span class="ss">count: </span><span class="vi">@clients</span><span class="p">.</span><span class="nf">size</span> <span class="p">}.</span><span class="nf">to_json</span><span class="p">)</span>
           <span class="k">end</span>
           <span class="n">ws</span> <span class="o">=</span> <span class="kp">nil</span>
         <span class="k">end</span>
-        <span class="n">ws</span><span class="o">.</span><span class="n">rack_response</span>
+        <span class="n">ws</span><span class="p">.</span><span class="nf">rack_response</span>
       <span class="k">else</span>
-        <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
@@ -461,31 +461,31 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 
 <p>次に、<code>application.js</code>のコードを見ます。</p>
 
-<div class="highlight"><pre><code class="javascript"><span class="c1">// application.js</span>
-<span class="kd">function</span> <span class="nx">counterRefresh</span> <span class="p">(</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#user-counter&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">count</span><span class="p">);</span>
+<div class="highlight"><pre><code class="javascript"><span class="c1">// application.js
+</span><span class="kd">function</span> <span class="nx">counterRefresh</span> <span class="p">(</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">"#user-counter"</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">count</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kd">function</span> <span class="nx">appendMessage</span> <span class="p">(</span><span class="nx">userid</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#message-box&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;&lt;div class=&#39;message&#39;&gt;&lt;span class=&#39;user-id&#39;&gt;&quot;</span> <span class="o">+</span> <span class="nx">userid</span> <span class="o">+</span> <span class="s2">&quot;:&lt;/span&gt; &quot;</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span><span class="p">);</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">"#message-box"</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">"&lt;div class='message'&gt;&lt;span class='user-id'&gt;"</span> <span class="o">+</span> <span class="nx">userid</span> <span class="o">+</span> <span class="s2">":&lt;/span&gt; "</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#count-button&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">$</span><span class="p">(</span><span class="s2">"#count-button"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">innerHTML</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">userid</span><span class="o">:</span> <span class="nx">myid</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span> <span class="p">});</span>
+  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="na">userid</span><span class="p">:</span> <span class="nx">myid</span><span class="p">,</span> <span class="na">text</span><span class="p">:</span> <span class="nx">text</span> <span class="p">});</span>
   <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
 
 <span class="kd">var</span> <span class="nx">myid</span><span class="p">;</span>
 
-<span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^http/</span><span class="p">,</span> <span class="s1">&#39;ws&#39;</span><span class="p">));</span>
+<span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^http/</span><span class="p">,</span> <span class="s1">'ws'</span><span class="p">));</span>
 
 <span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">you</span><span class="p">)</span> <span class="p">{</span> <span class="nx">myid</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span> <span class="p">}</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">id</span><span class="p">;</span>
-    <span class="nx">myid</span><span class="o">==</span><span class="nx">data</span><span class="p">.</span><span class="nx">userid</span> <span class="o">?</span> <span class="nx">id</span> <span class="o">=</span> <span class="s1">&#39;my-message&#39;</span> <span class="o">:</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">userid</span><span class="p">;</span>
+    <span class="nx">myid</span><span class="o">==</span><span class="nx">data</span><span class="p">.</span><span class="nx">userid</span> <span class="p">?</span> <span class="nx">id</span> <span class="o">=</span> <span class="s1">'my-message'</span> <span class="p">:</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">userid</span><span class="p">;</span>
     <span class="nx">appendMessage</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">text</span><span class="p">);</span>
   <span class="p">}</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span> <span class="nx">counterRefresh</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span> <span class="p">}</span>

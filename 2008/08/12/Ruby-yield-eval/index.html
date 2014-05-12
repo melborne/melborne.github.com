@@ -199,13 +199,13 @@
 
 <p>instance_evalメソッドは文字列オブジェクトを引数として取ることができる。しかし、このメソッドは他の一般的なメソッドとは異なり、これを文字列オブジェクトとしては扱わない。これをRubyの手続きとして扱う。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">instance_eval</span> <span class="s2">&quot;print &#39;Hello&#39;&quot;</span>   <span class="c1"># =&gt; Hello</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print 'Hello'"</span>   <span class="c1"># =&gt; Hello</span></code></pre></div>
 
 <p>ここでprintは、トップレベルで実行されているように見えるけれども、”print ‘Hello’“はinstance_evalの引数として、配列オブジェクト[1,2,3]に渡されているから、この配列オブジェクト内で実行されている、ということを理解しなければならない。</p>
 
 <p>そのことはこうするとよく分かるかもしれない。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">instance_eval</span> <span class="s2">&quot;print reverse&quot;</span>    <span class="c1"># =&gt; [3,2,1]</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print reverse"</span>    <span class="c1"># =&gt; [3,2,1]</span></code></pre></div>
 
 <p>文字列中のreverseは明らかに、メッセージを受け取る配列オブジェクトに適用されている。</p>
 
@@ -220,8 +220,8 @@
       <span class="vc">@@bank_money</span> <span class="o">+=</span> <span class="vi">@balance</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance = @balance * 100&quot;</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print @balance = @balance * 100"</span>
         <span class="c1"># =&gt;1000000</span></code></pre></div>
 
 <p>インスタンス変数@balanceは、my_accountオブジェクトの内部状態を保持する。通常この値にアクセスするには、クラスにそのアクセッサメソッドを用意し、これを介さなければならない。</p>
@@ -241,12 +241,12 @@
 
 <p>instance_evalを使えばメソッド定義も難なくできてしまう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;def transfer_all_to_me; @balance += @@bank_money; end&quot;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"def transfer_all_to_me; @balance += @@bank_money; end"</span>
    <span class="c1">#メソッドを定義する</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">transfer_all_to_me</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print @balance"</span>
       <span class="c1"># =&gt; 50000</span></code></pre></div>
 
 <p>transfer_all_to_meは
@@ -256,21 +256,17 @@
 
 <p>行指向の文字列にはヒアドキュメントを使った方が見栄えがいい。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="o">&lt;&lt;</span><span class="no">DEF</span>
-<span class="err">    def transfer_all_to_me</span>
-<span class="err">      @balance += @@bank_money</span>
-<span class="err">    end</span>
-<span class="err">  DEF</span>
-    <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
-      <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
-    <span class="k">end</span>
-  <span class="no">DEF</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="o">&lt;&lt;</span><span class="no">DEF</span><span class="sh">
+    def transfer_all_to_me
+      @balance += @@bank_money
+    end
+  DEF</span></code></pre></div>
 
 <p>こうすると、まるでブロックを渡しているように見える。</p>
 
 <p>期待に違わず、instance_evalはブロックも受け取る。ブロックの中身を受け取ったオブジェクトのコンテキストでRubyコードとして評価する。だから上のコードはこうも書ける。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">transfer_me_all</span>
       <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
     <span class="k">end</span>
@@ -278,14 +274,14 @@
 
 <p>当然にブロックには引数を渡したくなる。それが人情というものだ。Ruby1.9ではinstance_execがそれを可能にする。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="o">.</span><span class="n">instance_exec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">arg</span><span class="o">|</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span><span class="p">.</span><span class="nf">instance_exec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">arg</span><span class="o">|</span>
     <span class="vc">@@bank_money</span> <span class="o">*=</span> <span class="n">arg</span>
     <span class="k">def</span> <span class="nf">transfer_me_all_with_double</span>
       <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_me_all_with_double</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">transfer_me_all_with_double</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print @balance"</span>
       <span class="c1"># =&gt; 90000</span></code></pre></div>
 
 <p>僕の口座が倍になった！</p>
@@ -295,17 +291,17 @@
 
 <p>class_evalは、そのクラスのコンテキストで文字列やブロックを評価する。だからブロックでメソッド定義をすれば、そのメソッドはクラスのインスタンスメソッドになる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
-  <span class="no">Account</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="no">Account</span><span class="p">.</span><span class="nf">class_eval</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
       <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
-  <span class="n">his_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>  <span class="c1"># =&gt; 50000</span>
-  <span class="n">his_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>  <span class="c1"># =&gt; 70000</span></code></pre></div>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">transfer_all_to_me</span>
+  <span class="n">his_account</span><span class="p">.</span><span class="nf">transfer_all_to_me</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print @balance"</span>  <span class="c1"># =&gt; 50000</span>
+  <span class="n">his_account</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print @balance"</span>  <span class="c1"># =&gt; 70000</span></code></pre></div>
 
 <p>これでみんながハッピーになれる！</p>
 
@@ -314,12 +310,12 @@
 <h2 id="eval">eval</h2>
 <p>Rubyにはオブジェクトを意識しないで使える、evalも用意されている。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">eval</span> <span class="s2">&quot;print &#39;Hello&#39;&quot;</span>  <span class="c1"># =&gt; Hello</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="nb">eval</span> <span class="s2">"print 'Hello'"</span>  <span class="c1"># =&gt; Hello</span></code></pre></div>
 
 <p>evalはRubyの組み込み関数、つまりObjectクラスのインスタンスメソッドだ。これはトップレベルオブジェクトmainのinstance_evalと等価になる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">eval</span> <span class="s2">&quot;print self&quot;</span>     <span class="c1"># =&gt; main</span>
-  <span class="nb">self</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print self&quot;</span>  <span class="c1"># =&gt; main</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="nb">eval</span> <span class="s2">"print self"</span>     <span class="c1"># =&gt; main</span>
+  <span class="nb">self</span><span class="p">.</span><span class="nf">instance_eval</span> <span class="s2">"print self"</span>  <span class="c1"># =&gt; main</span></code></pre></div>
 
 <p>つまりデフォルトでevalはmainオブジェクトのコンテキストで文字列を評価する。</p>
 
@@ -335,24 +331,17 @@
       <span class="nb">binding</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
   <span class="c1"># evalの第２引数にBindingオブジェクトを渡す</span>
   <span class="c1"># ヒアドキュメントはこういうときでも便利に使える</span>
-  <span class="nb">eval</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="no">DEF</span><span class="p">,</span> <span class="n">my_account</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
-<span class="err">   def transfer_all_to_me</span>
-<span class="err">     @balance += @@bank_money</span>
-<span class="err">   end</span>
-<span class="err">  DEF</span>
-<span class="err">  my_account.transfer_all_to_me</span>
-<span class="err">  my_account.instance_eval &quot;print @balance&quot;</span>
-<span class="err">     # =&gt; 20000</span>
-   <span class="k">def</span> <span class="nf">transfer_all_to_me</span>
-     <span class="vi">@balance</span> <span class="o">+=</span> <span class="vc">@@bank_money</span>
-   <span class="k">end</span>
-  <span class="no">DEF</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">transfer_all_to_me</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">instance_eval</span> <span class="s2">&quot;print @balance&quot;</span>
-     <span class="c1"># =&gt; 20000</span></code></pre></div>
+  <span class="nb">eval</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="no">DEF</span><span class="p">,</span> <span class="n">my_account</span><span class="p">.</span><span class="nf">bind</span><span class="p">)</span><span class="sh">
+   def transfer_all_to_me
+     @balance += @@bank_money
+   end
+  DEF
+  my_account.transfer_all_to_me
+  my_account.instance_eval "print @balance"
+     # =&gt; 20000</span></code></pre></div>
 
 <p>これは先の例のinstance_evalの使い方と等価である。evalの第２引数にmy_accountオブジェクトのコンテキストを渡すことにより、そのコンテキストでブロックを評価する。</p>
 
@@ -368,7 +357,7 @@
       <span class="k">yield</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="s2">&quot;hello&quot;</span> <span class="p">}</span>  <span class="c1"># =&gt; hello</span></code></pre></div>
+  <span class="s2">"Charlie"</span><span class="p">.</span><span class="nf">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="s2">"hello"</span> <span class="p">}</span>  <span class="c1"># =&gt; hello</span></code></pre></div>
 
 <p>ブロックが評価されるコンテキストは基本的にそれが置かれたコンテキストだけれど、yieldに引数を取ることによってこれを変えることができる。</p>
 
@@ -380,8 +369,8 @@
       <span class="k">yield</span> <span class="nb">self</span>   <span class="c1"># selfを引数に取る</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="nb">self</span> <span class="p">}</span>  <span class="c1"># =&gt; main</span>
-  <span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">talk</span> <span class="p">{</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span> <span class="nb">print</span> <span class="n">this</span> <span class="p">}</span>  <span class="c1"># =&gt; Charlie</span></code></pre></div>
+  <span class="s2">"Charlie"</span><span class="p">.</span><span class="nf">speak</span> <span class="p">{</span> <span class="nb">print</span> <span class="nb">self</span> <span class="p">}</span>  <span class="c1"># =&gt; main</span>
+  <span class="s2">"Charlie"</span><span class="p">.</span><span class="nf">talk</span> <span class="p">{</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span> <span class="nb">print</span> <span class="n">this</span> <span class="p">}</span>  <span class="c1"># =&gt; Charlie</span></code></pre></div>
 
 <p>ブロックには当然メソッド定義を置くこともできるので、コンテキストの切替えと共にこれを用いれば、先に示したAccountクラスのインスタンス変数にもアクセスできるようになる。</p>
 
@@ -393,28 +382,28 @@
       <span class="k">yield</span> <span class="nb">self</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">yield_eval</span> <span class="k">do</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span>
+  <span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">yield_eval</span> <span class="k">do</span> <span class="o">|</span><span class="n">this</span><span class="o">|</span>
     <span class="k">def</span> <span class="nc">this</span><span class="o">.</span><span class="nf">add_money</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
       <span class="vi">@balance</span> <span class="o">+=</span> <span class="n">i</span>
     <span class="k">end</span>
   <span class="k">end</span>
-  <span class="nb">p</span> <span class="n">my_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>    <span class="c1"># =&gt; 20000</span></code></pre></div>
+  <span class="nb">p</span> <span class="n">my_account</span><span class="p">.</span><span class="nf">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>    <span class="c1"># =&gt; 20000</span></code></pre></div>
 
 <p>ここでadd_moneyメソッドは、my_accountオブジェクトのSingletonメソッドである。だからブロックを受ける汎用メソッドを予め用意しておけば、先の例のinstance_eval相当のことができるようになる<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
 
 <p>class_eval相当の処理をyieldで実現することもできる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
-  <span class="n">my_account</span><span class="o">.</span><span class="n">yield_eval</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">my_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+  <span class="n">his_account</span> <span class="o">=</span> <span class="no">Account</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+  <span class="n">my_account</span><span class="p">.</span><span class="nf">yield_eval</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">add_money</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
       <span class="vi">@balance</span> <span class="o">+=</span> <span class="n">i</span>
     <span class="k">end</span>
     <span class="kp">public</span> <span class="ss">:add_money</span>
   <span class="k">end</span>
-  <span class="nb">p</span> <span class="n">my_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 20000</span>
-  <span class="nb">p</span> <span class="n">his_account</span><span class="o">.</span><span class="n">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 40000</span></code></pre></div>
+  <span class="nb">p</span> <span class="n">my_account</span><span class="p">.</span><span class="nf">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 20000</span>
+  <span class="nb">p</span> <span class="n">his_account</span><span class="p">.</span><span class="nf">add_money</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>   <span class="c1"># =&gt; 40000</span></code></pre></div>
 
 <p>ここでyield_evalメソッドはAccountクラスにadd_moneyメソッドを追加する。これでみんながハッピーになれる！</p>
 

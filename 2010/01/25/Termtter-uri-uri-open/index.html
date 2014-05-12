@@ -198,9 +198,9 @@ uri-openという便利なpluginがある</p>
 良く使うcommandにはaliasを割り当てるのが便利だ
 .termtter/configファイルで以下のようにする</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">alias</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="ss">:o</span> <span class="o">=&gt;</span> <span class="s1">&#39;uri-open&#39;</span><span class="p">,</span>
-  <span class="ss">:ul</span> <span class="o">=&gt;</span> <span class="s1">&#39;uri-open list&#39;</span><span class="p">,</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="p">.</span><span class="nf">plugins</span><span class="p">.</span><span class="nf">alias</span><span class="p">.</span><span class="nf">aliases</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">:o</span> <span class="o">=&gt;</span> <span class="s1">'uri-open'</span><span class="p">,</span>
+  <span class="ss">:ul</span> <span class="o">=&gt;</span> <span class="s1">'uri-open list'</span><span class="p">,</span>
 <span class="p">}</span></code></pre></div>
 
 <p>また各statusには$amのようなIDが付いているので</p>
@@ -230,20 +230,20 @@ listに大量のuriが入っている場合大変なことになる
 そこで僕はuri-openを少しいじって
 いくつかのuriをopenするsomeコマンドを追加してみた</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">uri</span><span class="o">-</span><span class="nb">open</span><span class="o">.</span><span class="n">rb</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">uri</span><span class="o">-</span><span class="nb">open</span><span class="p">.</span><span class="nf">rb</span>
 <span class="mi">7</span><span class="n">d6</span>
-<span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">uri_open</span><span class="o">.</span><span class="n">set_default</span> <span class="ss">:some</span><span class="p">,</span> <span class="mi">5</span>
+<span class="o">&lt;</span> <span class="n">config</span><span class="p">.</span><span class="nf">plugins</span><span class="p">.</span><span class="nf">uri_open</span><span class="p">.</span><span class="nf">set_default</span> <span class="ss">:some</span><span class="p">,</span> <span class="mi">5</span>
 <span class="mi">46</span><span class="p">,</span><span class="mi">51</span><span class="n">d44</span>
 <span class="o">&lt;</span>   <span class="k">when</span> <span class="sr">/^some\s*(\d*)$/</span>
-<span class="o">&lt;</span>     <span class="n">some</span> <span class="o">=</span> <span class="vg">$1</span><span class="o">.</span><span class="n">empty?</span> <span class="p">?</span> <span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">uri_open</span><span class="o">.</span><span class="n">some</span> <span class="p">:</span> <span class="vg">$1</span><span class="o">.</span><span class="n">to_i</span>
-<span class="o">&lt;</span>     <span class="n">some</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-<span class="o">&lt;</span>       <span class="k">return</span> <span class="k">unless</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">public_storage</span><span class="o">[</span><span class="ss">:uris</span><span class="o">].</span><span class="n">shift</span>
+<span class="o">&lt;</span>     <span class="n">some</span> <span class="o">=</span> <span class="vg">$1</span><span class="p">.</span><span class="nf">empty?</span> <span class="p">?</span> <span class="n">config</span><span class="p">.</span><span class="nf">plugins</span><span class="p">.</span><span class="nf">uri_open</span><span class="p">.</span><span class="nf">some</span> <span class="p">:</span> <span class="vg">$1</span><span class="p">.</span><span class="nf">to_i</span>
+<span class="o">&lt;</span>     <span class="n">some</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+<span class="o">&lt;</span>       <span class="k">return</span> <span class="k">unless</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">public_storage</span><span class="o">[</span><span class="ss">:uris</span><span class="o">]</span><span class="p">.</span><span class="nf">shift</span>
 <span class="o">&lt;</span>       <span class="n">open_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
 <span class="o">&lt;</span>     <span class="k">end</span>
 <span class="mi">83</span><span class="n">c75</span>
-<span class="o">&lt;</span>   <span class="sx">%w(all list delete clear in some)</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">/^</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">quote</span> <span class="n">arg</span><span class="si">}</span><span class="sr">/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+<span class="o">&lt;</span>   <span class="sx">%w(all list delete clear in some)</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="sr">/^</span><span class="si">#{</span><span class="no">Regexp</span><span class="p">.</span><span class="nf">quote</span> <span class="n">arg</span><span class="si">}</span><span class="sr">/</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
 <span class="o">---</span>
-<span class="o">&gt;</span>   <span class="sx">%w(all list delete clear in)</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">/^</span><span class="si">#{</span><span class="no">Regexp</span><span class="o">.</span><span class="n">quote</span> <span class="n">arg</span><span class="si">}</span><span class="sr">/</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="o">|</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></code></pre></div>
+<span class="o">&gt;</span>   <span class="sx">%w(all list delete clear in)</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="sr">/^</span><span class="si">#{</span><span class="no">Regexp</span><span class="p">.</span><span class="nf">quote</span> <span class="n">arg</span><span class="si">}</span><span class="sr">/</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span></code></pre></div>
 
 <p>これにより</p>
 
@@ -257,13 +257,13 @@ listに大量のuriが入っている場合大変なことになる
 
 <p>.termtter/configに</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">uri_open</span><span class="o">.</span><span class="n">some</span> <span class="o">=</span> <span class="mi">3</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="p">.</span><span class="nf">plugins</span><span class="p">.</span><span class="nf">uri_open</span><span class="p">.</span><span class="nf">some</span> <span class="o">=</span> <span class="mi">3</span></code></pre></div>
 
 <p>とすればdefaultの5つを変更できる
 またconfigに</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">alias</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="ss">:some</span><span class="o">=</span> <span class="o">=&gt;</span> <span class="s1">&#39;eval config.plugins.uri_open.some=&#39;</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">config</span><span class="p">.</span><span class="nf">plugins</span><span class="p">.</span><span class="nf">alias</span><span class="p">.</span><span class="nf">aliases</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">:some</span><span class="o">=</span> <span class="o">=&gt;</span> <span class="s1">'eval config.plugins.uri_open.some='</span>
 <span class="p">}</span></code></pre></div>
 
 <p>とaliasを追加すれば</p>
@@ -279,9 +279,9 @@ $を省略して</p>
 
 <p>と打てるようにもしてみた</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">uri</span><span class="o">-</span><span class="nb">open</span><span class="o">.</span><span class="n">rb</span>
+<div class="highlight"><pre><code class="ruby"><span class="n">uri</span><span class="o">-</span><span class="nb">open</span><span class="p">.</span><span class="nf">rb</span>
 <span class="mi">68</span><span class="n">d60</span>
-<span class="o">&lt;</span>    <span class="nb">id</span> <span class="o">=</span> <span class="no">Termtter</span><span class="o">::</span><span class="no">Client</span><span class="o">.</span><span class="n">typable_id_to_data</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">unless</span> <span class="nb">id</span> <span class="o">=~</span> <span class="sr">/\d+/</span></code></pre></div>
+<span class="o">&lt;</span>    <span class="nb">id</span> <span class="o">=</span> <span class="no">Termtter</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">typable_id_to_data</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">unless</span> <span class="nb">id</span> <span class="o">=~</span> <span class="sr">/\d+/</span></code></pre></div>
 
 <p>Termtterはこういった改良を簡単にできるので
 便利だし勉強にもなる</p>

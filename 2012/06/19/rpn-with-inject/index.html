@@ -188,42 +188,42 @@
 <p>逆ポーランド記法では演算子が数字の後にきます。</p>
 
 <div class="highlight"><pre><code class="bash">3 4 + <span class="c"># =&gt; 7</span>
-3 4 + 5 * <span class="c"># =&gt; 35</span></code></pre></div>
+3 4 + 5 <span class="k">*</span> <span class="c"># =&gt; 35</span></code></pre></div>
 
 <p>この演算をプログラムで実現するには、（１）数式を構成するトークンを先頭からスタックに入れていき、（２）演算子が出てきたところで、前の2つの数字を取り出して演算を実行し、（３）結果をスタックに戻す、という操作を繰り返せばいいです。</p>
 
 <h2 id="ruby">Rubyのコード</h2>
 <p>RPNクラスを用意し、そのクラスメソッドrunで引数に渡した計算式を含む文字列に対する演算を実行するようにしましょう。次のようなイメージです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 35</span></code></pre></div>
+<div class="highlight"><pre><code class="ruby"><span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5 *"</span><span class="p">)</span> <span class="c1"># =&gt; 35</span></code></pre></div>
 
 <p>受け取った文字列をトークンに分割し、injectのブロック内でcaseで処理を切り分けます。まずは四則演算に対応して。</p>
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">RPN</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
+    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
       <span class="k">case</span> <span class="n">token</span>
       <span class="k">when</span> <span class="sr">/^[-+*\/]$/</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>
       <span class="k">when</span> <span class="sr">/^[\d.]+$/</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="vg">$&amp;</span><span class="o">.</span><span class="n">to_f</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="vg">$&amp;</span><span class="p">.</span><span class="nf">to_f</span>
       <span class="k">else</span>
-        <span class="k">raise</span> <span class="no">ARgumentError</span><span class="p">,</span> <span class="s2">&quot;operator `</span><span class="si">#{</span><span class="n">token</span><span class="si">}</span><span class="s2">` not defined&quot;</span>
+        <span class="k">raise</span> <span class="no">ARgumentError</span><span class="p">,</span> <span class="s2">"operator `</span><span class="si">#{</span><span class="n">token</span><span class="si">}</span><span class="s2">` not defined"</span>
       <span class="k">end</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">shift</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">shift</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">split</span>
+    <span class="n">s</span><span class="p">.</span><span class="nf">split</span>
   <span class="k">end</span>
   <span class="nb">private_class_method</span> <span class="ss">:tokenize</span>
 <span class="k">end</span>
 
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 +&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 7.0</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5.5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 38.5</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 * 6 7 / -&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 **&quot;</span><span class="p">)</span> <span class="c1"># =&gt; </span>
-<span class="c1"># ~&gt; -:36:in `block in run&#39;: operator `**` not defined (ArgumentError)</span></code></pre></div>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 +"</span><span class="p">)</span> <span class="c1"># =&gt; 7.0</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5.5 *"</span><span class="p">)</span> <span class="c1"># =&gt; 38.5</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5 * 6 7 / -"</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 **"</span><span class="p">)</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:36:in `block in run': operator `**` not defined (ArgumentError)</span></code></pre></div>
 
 <p>case式では数字ならスタックmに挿入し、演算子ならスタックから2つの数字をpopして演算し、結果をスタックに挿入します。渡された式が文法的に正しいならinjectを出た後スタックには1つの値が残っているはずなので、それを結果としてshiftします。</p>
 
@@ -231,34 +231,34 @@
 
 <div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">RPN</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
+    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
       <span class="k">case</span> <span class="n">token</span>
       <span class="k">when</span> <span class="sr">/^[-+\/]|\*{1,2}$/</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>
-      <span class="k">when</span> <span class="s1">&#39;ln&#39;</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="no">Math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">pop</span><span class="p">)</span>
-      <span class="k">when</span> <span class="s1">&#39;sum&#39;</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span><span class="o">.</span><span class="n">tap</span><span class="p">{</span> <span class="n">m</span><span class="o">.</span><span class="n">clear</span> <span class="p">}</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>
+      <span class="k">when</span> <span class="s1">'ln'</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="no">Math</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="nf">pop</span><span class="p">)</span>
+      <span class="k">when</span> <span class="s1">'sum'</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">).</span><span class="nf">tap</span><span class="p">{</span> <span class="n">m</span><span class="p">.</span><span class="nf">clear</span> <span class="p">}</span>
       <span class="k">when</span> <span class="sr">/^[\d.]+$/</span>
-        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="vg">$&amp;</span><span class="o">.</span><span class="n">to_f</span>
+        <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="vg">$&amp;</span><span class="p">.</span><span class="nf">to_f</span>
       <span class="k">else</span>
-        <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">&quot;operator `</span><span class="si">#{</span><span class="n">token</span><span class="si">}</span><span class="s2">` not defined&quot;</span>
+        <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">"operator `</span><span class="si">#{</span><span class="n">token</span><span class="si">}</span><span class="s2">` not defined"</span>
       <span class="k">end</span>
-    <span class="k">end</span><span class="o">.</span><span class="n">shift</span>
+    <span class="k">end</span><span class="p">.</span><span class="nf">shift</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">split</span>
+    <span class="n">s</span><span class="p">.</span><span class="nf">split</span>
   <span class="k">end</span>
   <span class="nb">private_class_method</span> <span class="ss">:tokenize</span>
 <span class="k">end</span>
 
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 +&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 7.0</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5.5 *&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 38.5</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 + 5 * 6 7 / -&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;3 4 **&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 81.0</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;2.7 ln&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 0.9932517730102834</span>
-<span class="no">RPN</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;1 2 3 4 5 sum 5 /&quot;</span><span class="p">)</span> <span class="c1"># =&gt; 3.0</span></code></pre></div>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 +"</span><span class="p">)</span> <span class="c1"># =&gt; 7.0</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5.5 *"</span><span class="p">)</span> <span class="c1"># =&gt; 38.5</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5 * 6 7 / -"</span><span class="p">)</span> <span class="c1"># =&gt; 34.142857142857146</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 **"</span><span class="p">)</span> <span class="c1"># =&gt; 81.0</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"2.7 ln"</span><span class="p">)</span> <span class="c1"># =&gt; 0.9932517730102834</span>
+<span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"1 2 3 4 5 sum 5 /"</span><span class="p">)</span> <span class="c1"># =&gt; 3.0</span></code></pre></div>
 
 <p>いいですね！</p>
 
