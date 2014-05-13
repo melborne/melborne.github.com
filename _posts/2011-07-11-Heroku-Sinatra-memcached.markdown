@@ -179,6 +179,7 @@ NoSQLってなんかもっと難しいものをイメージしてたけど、全
 (追記：2011-7-11)Dalli::Client.newの引数を修正しました。{% fn_ref 5 %}
 
 <script src="https://gist.github.com/1075425.js"> </script>
+
 {% footnotes %}
    {% fn http://devcenter.heroku.com/articles/memcache %}
    {% fn http://addons.heroku.com/memcache %}

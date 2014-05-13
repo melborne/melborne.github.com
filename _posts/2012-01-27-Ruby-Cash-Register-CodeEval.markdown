@@ -15,6 +15,7 @@ tags: [ruby, codeeval]
 
 
 Double Squaresを残してModerate終了。できそうもない..
+
 ##RubyでPrime Numbersを解く-CodeEval
 Enumeratorをtake_whileして。
 

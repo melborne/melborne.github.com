@@ -62,7 +62,7 @@ puts Gchart.bar(:data => data,
 
 前回同様、[Google Chart API](https://developers.google.com/chart/ 'Google Chart Tools — Google Developers')を使って、次のグラフが得られました。
 
-![instance methods noshadow](http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|100|110|1:|Dir|File|UnboundMethod|Enumerator|NilClass|Encoding%3A%3AConverter|Process%3A%3AStatus|Method|Struct|Regexp|Proc|Range|MatchData|Symbol|Integer|Rational|Thread|Fixnum|Bignum|Complex|Numeric|File%3A%3AStat|Float|Module|Enumerable|Kernel|ARGF.class|Hash|Time|IO|Array|Pathname|String|2:|0|10|20|30|40|50|60|70|80|90|100|110&chxt=t,y,x&chbh=17&chf=bg,s,efefdd&chd=s:9zxnedcbaYXXXUUTOONNKKJJJJIHGGGGG&chtt=Instance+Methods&cht=bhs&chs=390x760&chxr=0,109,110)
+![instance methods noshadow](http://chart.apis.google.com/chart?chxl=0:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90\|100\|110\|1:\|Dir\|File\|UnboundMethod\|Enumerator\|NilClass\|Encoding%3A%3AConverter\|Process%3A%3AStatus\|Method\|Struct\|Regexp\|Proc\|Range\|MatchData\|Symbol\|Integer\|Rational\|Thread\|Fixnum\|Bignum\|Complex\|Numeric\|File%3A%3AStat\|Float\|Module\|Enumerable\|Kernel\|ARGF.class\|Hash\|Time\|IO\|Array\|Pathname\|String\|2:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90\|100\|110&chxt=t,y,x&chbh=17&chf=bg,s,efefdd&chd=s:9zxnedcbaYXXXUUTOONNKKJJJJIHGGGGG&chtt=Instance+Methods&cht=bhs&chs=390x760&chxr=0,109,110)
 
 個人的には、Symbolのメソッド数が少ないな、という印象です。
 
@@ -71,6 +71,7 @@ puts Gchart.bar(:data => data,
 次に、クラスメソッドを数えましょう。グラフ化の対象は、5以上のメソッドを持つクラスです。最初にクラスごとのメソッド数をリストアップします。
 
 {% highlight ruby %}
+
 # List of Class Methods
 cms = methods.map { |k, cm, im| [k, cm] }.reject { |k, m| m < 5 }.sort_by { |k, m| -m }
 
@@ -106,7 +107,7 @@ puts Gchart.bar(:data => data,
 
 結果は次の通り。
 
-![class methods noshadow](http://chart.apis.google.com/chart?chxl=0:|0|10|20|30|40|50|60|70|80|90|1:|Regexp|ObjectSpace|RubyVM%3A%3AInstructionSequence|Time|GC|GC%3A%3AProfiler|Process%3A%3AGID|Process%3A%3AUID|Encoding|Thread|IO|Process%3A%3ASys|Dir|Math|FileTest|Process|File|Kernel|Gem|2:|0|10|20|30|40|50|60|70|80|90&chxt=t,y,x&chbh=18&chf=bg,s,efefdd&chd=s:9onaRRLKKIHGGEEEEEE&chtt=Class+Methods&cht=bhs&chs=600x500&chxr=0,89,90)
+![class methods noshadow](http://chart.apis.google.com/chart?chxl=0:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90\|1:\|Regexp\|ObjectSpace\|RubyVM%3A%3AInstructionSequence\|Time\|GC\|GC%3A%3AProfiler\|Process%3A%3AGID\|Process%3A%3AUID\|Encoding\|Thread\|IO\|Process%3A%3ASys\|Dir\|Math\|FileTest\|Process\|File\|Kernel\|Gem\|2:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90&chxt=t,y,x&chbh=18&chf=bg,s,efefdd&chd=s:9onaRRLKKIHGGEEEEEE&chtt=Class+Methods&cht=bhs&chs=600x500&chxr=0,89,90)
 
 ５以下のメソッドを削ってますが、ロングテールといった感じでしょうか。まあ、あまり感想はありません..
 
@@ -124,6 +125,7 @@ Wordleではテキストを渡して画像を生成させるのが基本です�
 
 まずは重み付けの情報を作ります。インスタンスメソッドから。
 {% highlight ruby %}
+
 # Instance methods for Wordle
 puts ims.map { |k, m| "#{k}:#{m}" }
 {% endhighlight %}

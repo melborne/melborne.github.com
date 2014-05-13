@@ -177,21 +177,21 @@ published: true
 
 > ![Alt noshadow]({{ site.url }}/assets/images/2012/books/orm_agile.png)
 
-> [RailsによるアジャイルWebアプリケーション開発 第4版 | オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406866P 'RailsによるアジャイルWebアプリケーション開発 第4版 | オーム社eStore(β)')
+> [RailsによるアジャイルWebアプリケーション開発 第4版 \| オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406866P 'RailsによるアジャイルWebアプリケーション開発 第4版 \| オーム社eStore(β)')
 PDF/2,560円
 
 ---
 
 > ![Alt noshadow]({{ site.url }}/assets/images/2012/books/orm_druby.png)
 
-> [dRubyによる分散・Webプログラミング | オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406609P 'dRubyによる分散・Webプログラミング | オーム社eStore(β)')
+> [dRubyによる分散・Webプログラミング \| オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406609P 'dRubyによる分散・Webプログラミング \| オーム社eStore(β)')
 PDF/2,560円
 
 ---
 
 > ![Alt noshadow]({{ site.url }}/assets/images/2012/books/orm_ruby.png)
 
-> [プログラミングRuby 1.9 言語編 | オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406809P 'プログラミングRuby 1.9 言語編 | オーム社eStore(β)')
+> [プログラミングRuby 1.9 言語編 \| オーム社eStore(β)](http://estore.ohmsha.co.jp/titles/978427406809P 'プログラミングRuby 1.9 言語編 \| オーム社eStore(β)')
 PDF/3,040円
 
 ---

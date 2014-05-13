@@ -9,7 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
-[前の記事](http://melborne.github.io/2013/12/24/why-not-start-ruby/ "")でも紹介しましたが改めて。
+[前の記事](http://melborne.github.io/2013/12/24/why-not-start-ruby/)でも紹介しましたが改めて。
 
 ---
 

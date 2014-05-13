@@ -15,7 +15,7 @@ published: true
 
 ---
 
-[Graphviz](http://www.graphviz.org/ 'Graphviz | Graphviz - Graph Visualization Software')は楽しいです。簡単なコードで複雑なグラフを一瞬で生成してくれます。ノードやエッジの形を変えたり色を付けたりそれらの属性を調整することで、グラフは一層リッチになります。
+[Graphviz](http://www.graphviz.org/ 'Graphviz \| Graphviz - Graph Visualization Software')は楽しいです。簡単なコードで複雑なグラフを一瞬で生成してくれます。ノードやエッジの形を変えたり色を付けたりそれらの属性を調整することで、グラフは一層リッチになります。
 
 でもこの属性が余りにも多岐にわたるので、その選択は時に困難を極めます。そのたびにGraphvizのサイトに逝って使える属性を確認する必要がでてきます。せめて使える属性の一覧が手元にほしいと切に思います。
 
@@ -23,7 +23,7 @@ published: true
 
 RubyによるGraphvizラッパー`Gviz`の、そんな機能を含んだversion0.1.1を公開しましたのでお知らせします。
 
-> [Gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
+> [Gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')
 
 
 ## 属性情報の一覧表示
@@ -114,7 +114,7 @@ Node attributes (type|default|minimum|notes):
   z (double | 0.0 | -MAXFLOAT-1000 | )
 {% endhighlight %}
 
-これらのデータは[Documentation | Graphviz - Graph Visualization Software](http://www.graphviz.org/Documentation.php 'Documentation | Graphviz - Graph Visualization Software')を元にしています。
+これらのデータは[Documentation \| Graphviz - Graph Visualization Software](http://www.graphviz.org/Documentation.php 'Documentation \| Graphviz - Graph Visualization Software')を元にしています。
 
 ローカルで`gviz`コマンドを叩けば属性情報が得られるので、そのたびにGraphvizのサイトにアクセスしないで済みます。助かりますね！
 

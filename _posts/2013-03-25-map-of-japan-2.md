@@ -35,14 +35,14 @@ published: true
 
 そんなわけで...
 
-今回は、この都道府県市区町村の位置情報に基いて日本地図を描いてみようと思います。ツールはいつものように[gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")を使います。
+今回は、この都道府県市区町村の位置情報に基いて日本地図を描いてみようと思います。ツールはいつものように[gviz](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")を使います。
 
 ノードの位置情報を使ってGraphvizを描くことは既に、「[東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/ "東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く")」で経験しているので、今回はスムーズにいくと思います。では、ステップ・バイ・ステップで。
 
 ## インストール
 Graphvizが必要です。自分のプラットフォームに合ったものを以下から入手して下さい。
 
-> [Download. | Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php 'Download. | Graphviz - Graph Visualization Software')
+> [Download. \| Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php 'Download. \| Graphviz - Graph Visualization Software')
 
 Gvizのインストールは`gem install gviz`でＯＫです。Rubyは1.9.3以降が必要となります。
 

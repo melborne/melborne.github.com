@@ -22,6 +22,7 @@ module Enumerable
 end
 puts (1..100).fizzbuzz(3 => 'Fizz', 5 => 'Buzz', 15 => 'FizzBuzz')
 {% endhighlight %}
+
 {% footnotes %}
    {% fn [どうしてプログラマに・・・プログラムが書けないのか?](http://www.aoky.net/articles/jeff_atwood/why_cant_programmers_program.htm %}
 {% endfootnotes %}

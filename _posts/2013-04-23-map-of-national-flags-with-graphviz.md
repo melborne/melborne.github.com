@@ -21,7 +21,7 @@ antlaboさんが世界の国旗の類似度を可視化した作品を公開し�
 >
 > [世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）](http://d.hatena.ne.jp/antlabo/20130421/1366526239 "世界の国旗の類似度を可視化＆似ている国旗TOP30 （今回はデータ付き ） - 蟻の実験工房（別館ラボ）")
 
-これは[LIRE（Lucene Image Retrieval）](http://www.lire-project.net/ "LIRE – Lucene Image Retrieval | The Java visual information retrieval library")というJAVAの画像類似検索向けライブラリを使って、204の国旗の類似度を計算したデータに基いて作られているそうです。国旗画像下の緑の十字をクリックするとその国旗を中心にした類似国旗が順に辿れるようになっています。やあ、スバラシイ。
+これは[LIRE（Lucene Image Retrieval）](http://www.lire-project.net/ "LIRE – Lucene Image Retrieval \| The Java visual information retrieval library")というJAVAの画像類似検索向けライブラリを使って、204の国旗の類似度を計算したデータに基いて作られているそうです。国旗画像下の緑の十字をクリックするとその国旗を中心にした類似国旗が順に辿れるようになっています。やあ、スバラシイ。
 
 ちなみに画像自体の特徴量（色、形状、テクスチャなど）をベースに類似検索をする方式をCBIR（Content-Based Image Retrieval）というそうですが、LIREはその方式で画像を比較します。
 
@@ -29,7 +29,7 @@ antlaboさんが世界の国旗の類似度を可視化した作品を公開し�
 
 そんなわけで...
 
-ここでは、[Gviz（RubyによるGraphvizのインタフェースライブラリ）](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")を使った簡単な国旗の類似度可視化をやってみたいと思います。意味ある出力が得られればいいんですが...
+ここでは、[Gviz（RubyによるGraphvizのインタフェースライブラリ）](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")を使った簡単な国旗の類似度可視化をやってみたいと思います。意味ある出力が得られればいいんですが...
 
 
 ## CSVデータの読み込み
@@ -44,7 +44,9 @@ id,sim,name1,path1,name2,path2
 id, 類似度（sim）に続き、対比する国の国名と画像パスが並びます。
 
 データを展開したフォルダにおいて`graph.ru`のファイル名でデータを読み出します。
-####graph.ru
+
+#### graph.ru
+
 {% highlight ruby %}
 require "csv"
 
@@ -62,7 +64,9 @@ d[:name2] # => "Monaco"
 では、graphviz上に画像を読み込んで表示してみましょう。
 
 データにおける国旗の類似度は10.0〜99.3まで幅がありますが、まずは何も考えずにすべての対比される国旗をエッジで結んだグラフを書いてみます。グラフのレイアウトには**fdp**を使ってみます。
-####graph.ru
+
+#### graph.ru
+
 {% highlight ruby %}
 require "csv"
 

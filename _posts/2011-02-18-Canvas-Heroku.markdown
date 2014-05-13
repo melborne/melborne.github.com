@@ -278,6 +278,7 @@ Ruby1.9.2でshotgunを利用する場合、カレントパスをロードする�
 [2011-02-18 18:28:47] INFO  ruby 1.9.2 (2010-12-25) [i386-darwin8.11.1]
 [2011-02-18 18:28:47] INFO  WEBrick::HTTPServer#start: pid=1613 port=9393
 {% endhighlight %}
+
 ##Herokuへのデプロイ
 http://localhost:4567で問題なくアプリケーションが起動したら、Herokuにデプロイするためにconfig.ruとGemfileを用意します。
 

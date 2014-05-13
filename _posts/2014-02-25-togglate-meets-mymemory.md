@@ -13,7 +13,7 @@ published: true
 
 翻訳ドキュメント作成支援ツール「`togglate`」というものがありまして。これは単に、翻訳ドキュメント内に原文をそのセンテンスごとに埋め込んで、翻訳ドキュメントを作るためのベースとなるものを出力するだけの極めて単純なミニツールです。
 
-> [togglate | RubyGems.org | your community gem host](https://rubygems.org/gems/togglate "togglate | RubyGems.org | your community gem host")
+> [togglate \| RubyGems.org \| your community gem host](https://rubygems.org/gems/togglate "togglate \| RubyGems.org \| your community gem host")
 > 
 > [melborne/togglate](https://github.com/melborne/togglate "melborne/togglate")
 

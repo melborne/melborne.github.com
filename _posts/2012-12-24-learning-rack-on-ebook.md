@@ -57,7 +57,7 @@ published: true
 
 なお、EPUBは[Amazon Kindle](http://www.amazon.co.jp/gp/product/B007OZO03M/ref=bb1_ads_cel_1121?ie=UTF8&nav_sdd=aps&pf_rd_m=AN1VRQENFRJN5&pf_rd_s=center-1&pf_rd_r=1Z9P3B1C879AW391AVRT&pf_rd_t=101&pf_rd_p=122583989&pf_rd_i=489986 'Kindle Paperwhite - ライト内蔵の電子書籍リーダー')では読めないので、mobiなどへの変換が必要です。変換には「[calibre](http://calibre-ebook.com/ 'calibre - E-book management')」が便利です。
 
-また、本電子書籍の作成には拙作「[Maliq](https://rubygems.org/gems/maliq 'maliq | RubyGems.org | your community gem host')」を使っています。Markdownで書かれた原稿からEPUBを作ることに興味のある方は、以下の記事を参考にしてください。
+また、本電子書籍の作成には拙作「[Maliq](https://rubygems.org/gems/maliq 'maliq \| RubyGems.org \| your community gem host')」を使っています。Markdownで書かれた原稿からEPUBを作ることに興味のある方は、以下の記事を参考にしてください。
 
 
 > [RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ](http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/ 'RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ')

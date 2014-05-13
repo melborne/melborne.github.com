@@ -52,7 +52,7 @@ gem_project
 
 <br/>
 
-「[DirFriend](https://rubygems.org/gems/dir_friend "dir_friend | RubyGems.org | your community gem host")があります。」
+「[DirFriend](https://rubygems.org/gems/dir_friend "dir_friend \| RubyGems.org \| your community gem host")があります。」
 
 <br/>
 
@@ -62,13 +62,13 @@ gem_project
 
 `DirFriend`というディレクトリ構造を簡単に視覚化できるツールを作りましたので紹介します:-)
 
-> [dir_friend | RubyGems.org | your community gem host](https://rubygems.org/gems/dir_friend "dir_friend | RubyGems.org | your community gem host")
+> [dir_friend \| RubyGems.org \| your community gem host](https://rubygems.org/gems/dir_friend "dir_friend \| RubyGems.org \| your community gem host")
 > 
 > [melborne/dir_friend](https://github.com/melborne/dir_friend "melborne/dir_friend")
 
-なお、DirFriendで生成されるDOTファイルを見るには[Graphviz](http://www.graphviz.org/ "Graphviz | Graphviz - Graph Visualization Software")が必要です。
+なお、DirFriendで生成されるDOTファイルを見るには[Graphviz](http://www.graphviz.org/ "Graphviz \| Graphviz - Graph Visualization Software")が必要です。
 
-> [Download. | Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php "Download. | Graphviz - Graph Visualization Software")
+> [Download. \| Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php "Download. \| Graphviz - Graph Visualization Software")
 
 対象Rubyバージョンは`>= 2.0.0`です。最新のMac OS（Mavericks）を使っているなら`gem install dir_friend`で準備は完了です。
 
@@ -153,7 +153,7 @@ Dot file created: `a.dot`
 
 ディレクトリの深さに応じて色がグラデーションします。colorschemeにセットできる色は以下で確認できます。
 
-> [Color Names | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/color-names "Color Names | Graphviz - Graph Visualization Software")
+> [Color Names \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/color-names "Color Names \| Graphviz - Graph Visualization Software")
 
 このとき色数を表す末尾の数字を省略するとDirFriend側でよしなに処理します。DirFriendと一緒にインストールされる`Gviz`のコマンドを使っても色を知ることができます。
 
@@ -201,7 +201,7 @@ Dot file created: `a.dot`
 
 rankdir:LRはグラフの向きをLeft->Rightにし、splines:orthoはエッジのカーブを直交(orthogonal)にします。Graphvizで指定可能な属性は以下を参考にします。
 
-> [attrs | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/attrs#dsplines "attrs | Graphviz - Graph Visualization Software")
+> [attrs \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/attrs#dsplines "attrs \| Graphviz - Graph Visualization Software")
 
 
 出力です。

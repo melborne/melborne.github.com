@@ -12,7 +12,7 @@ published: true
 flippy gemに`Kernel#stnd`を追加しましたので、お知らせします。versionは0.0.3です。
 
 
-> [flippy | RubyGems.org | your community gem host](https://rubygems.org/gems/flippy 'flippy | RubyGems.org | your community gem host')
+> [flippy \| RubyGems.org \| your community gem host](https://rubygems.org/gems/flippy 'flippy \| RubyGems.org \| your community gem host')
 
 
 ##Kernel#stndの使い方

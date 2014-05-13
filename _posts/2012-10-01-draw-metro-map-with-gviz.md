@@ -19,7 +19,7 @@ published: true
 
 そんなわけで...
 
-今回は[Gviz](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')を使って、東京の地下鉄、すなわち東京メトロ＋都営（東京都交通局）の路線図に挑戦してみます。
+今回は[Gviz](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')を使って、東京の地下鉄、すなわち東京メトロ＋都営（東京都交通局）の路線図に挑戦してみます。
 
 
 ## 駅データの取得
@@ -46,6 +46,7 @@ published: true
 
 ## 地下鉄データの抽出
 次にこのデータをRubyで読み出して、東京の地下鉄の駅情報だけを抽出します。ファイル名は`metro.rb`とします。
+
 #### \#metro.rb
 {% highlight ruby %}
 # encoding: UTF-8

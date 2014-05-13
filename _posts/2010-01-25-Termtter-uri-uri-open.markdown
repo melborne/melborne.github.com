@@ -116,6 +116,7 @@ uri-open.rb
 
 Termtterはこういった改良を簡単にできるので
 便利だし勉強にもなる
+
 {% footnotes %}
    {% fn someと=の間にspaceを空けない %}
 {% endfootnotes %}

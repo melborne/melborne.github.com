@@ -70,6 +70,7 @@ WikipediaはEPUBについて次のように書いています。
 
 front.md
 {% highlight xml %}
+
 # チャーリーの本の冒険
 
 ## チャーリー　著
@@ -760,13 +761,12 @@ No errors or warnings detected.
 
 ファイルを開きます。
 
+<p><img src="{{ BASE_PATH }}/assets/images/2012/book01.png" alt="book" width='320' />
+<img src="{{ BASE_PATH }}/assets/images/2012/book02.png" alt="book" width='320' /></p>
 
-<p><img src="{{ site.url }}/assets/images/2012/book01.png" alt="book" width=320 />
-<img src="{{ site.url }}/assets/images/2012/book02.png" alt="book" width=320 /></p>
 
-
-<p><img src="{{ site.url }}/assets/images/2012/book03.png" alt="book" width=320 />
-<img src="{{ site.url }}/assets/images/2012/book04.png" alt="book" width=320 /></p>
+<p><img src="/assets/images/2012/book03.png" alt="book" width='320' />
+<img src="{{ site.url }}/assets/images/2012/book04.png" alt="book" width='320' /></p>
 
 スバラシイ！
 
@@ -777,8 +777,8 @@ No errors or warnings detected.
 EPUB3に対応した[iBooks](https://itunes.apple.com/jp/app/ibooks/id364709193?mt=8 'iTunes App Store で見つかる iPhone、iPod touch、iPad 対応 iBooks')に送って見てみましょう。
 
 
-<p><img src="{{ site.url }}/assets/images/2012/book05.png" alt="book" width=320 />
-<img src="{{ site.url }}/assets/images/2012/book06.png" alt="book" width=320 /></p>
+<p><img src="{{ site.url }}/assets/images/2012/book05.png" alt="book" width='320' />
+<img src="{{ site.url }}/assets/images/2012/book06.png" alt="book" width='320' /></p>
 
 いいですね！
 

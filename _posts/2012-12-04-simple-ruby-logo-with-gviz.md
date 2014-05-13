@@ -17,7 +17,7 @@ published: true
 
 ええ、まあなんとか。
 
-ここではGraphvizのRubyラッパー「[Gviz](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')」を使います。
+ここではGraphvizのRubyラッパー「[Gviz](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')」を使います。
 
 まずはgraph.ruに`route`を使ってノードとエッジの繋がりを書きます。
 

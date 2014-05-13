@@ -20,35 +20,42 @@ categories:
 
 秋葉原にて[日立GST Travelstar 5K250 120G](http://www.hitachigst.com/portal/site/jp/menuitem.4afe41246e0efb6f4415a653eac4f0a0/)を7,500円ほどで購入し
 お好み焼き返しとドライバセットで用意万端
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175231.jpg)
 
 
 端から順にぎりぎりと開いていけば
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175229.jpg)
 
 
 2つに割れるMac mini
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175227.jpg)
 
 
 アンテナを下からプチッと外した後
 四隅のねじと前にあるジャンパー外せば
 またしても2つに割れるMac mini
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175225.jpg)
 
 
 遂に登場HDD
 壊れたばかりのHDD
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175223.jpg)
 
 
 4つのねじを外してから
 指先で後ろにずらせばほら取れた
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175429.jpg)
 
 
 T字のクッション付け替えて
 逆をたどれば元通り
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20080213/20080213175221.jpg)
 
 

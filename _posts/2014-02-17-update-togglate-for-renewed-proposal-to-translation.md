@@ -22,7 +22,7 @@ published: true
 
 それでそのときのtogglateのデフォルトの仕様としては原文をセンテンスごとに特別なコードブロック`` ```original``, `` ``` ``で囲み、そのブロックをトグル表示させるJavaScriptのコードをmarkdownに埋め込むものとなっていたんだけれど、これに対して`togglate`のissueの方に`Pro Git`の日本語訳をされている@harupongさんから、原文をコードブロックで囲むこともJavaScriptコードを埋め込むことも本家プロジェクト側では受け入れ難いだろうから原文をコードブロックではなくHTMLコメントタグで囲みJavaScriptコードを埋め込まないオプションがあったほうがいいという提案をもらって、提案を頂けただけでも嬉しかったんだけどその提案がまた正にその通りでまあ辛うじてオプションでできなくはなかったんだけど基本設計としてコードブロックどうなのよと思い至ったので、togglateの仕様を見直して上記点を反映させたversion0.03を公開したのでここであらためて紹介しますので今後ともどうぞよろしくお願いします。
 
-> [togglate | RubyGems.org | your community gem host](https://rubygems.org/gems/togglate "togglate | RubyGems.org | your community gem host")
+> [togglate \| RubyGems.org \| your community gem host](https://rubygems.org/gems/togglate "togglate \| RubyGems.org \| your community gem host")
 > 
 > [melborne/togglate](https://github.com/melborne/togglate "melborne/togglate")
 

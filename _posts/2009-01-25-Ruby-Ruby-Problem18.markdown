@@ -9,16 +9,25 @@ categories:
 
 
 [Problem 18 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=18)
-> 
+ 
 > By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.
+>
 >        <span style="color:#FF0000;">3</span>
+>
 >      <span style="color:#FF0000;">7</span> 5
+>
 >    2 <span style="color:#FF0000;">4</span> 6
+>
 >  8 5 <span style="color:#FF0000;">9</span> 3
+>
 > That is, 3 + 7 + 4 + 9 = 23.
+>
 > Find the maximum total from top to bottom of the triangle below:
+>
 > 次の三角形の頂点から始めて、隣接するその下の列の番号に移動していく場合、頂点から底辺までの合計の最大値は23である。
+>
 > つまり、3 + 7 + 4 + 9 = 23である。
+>
 > 次の三角形の頂点から底辺までの合計の最大値を求めよ。
 
 

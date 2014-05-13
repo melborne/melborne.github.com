@@ -16,7 +16,7 @@ published: true
 
 ###- A1 -
 
-> コマンドラインツールなら標準添付の「ri」とか、日本語対応の「[ReFe](http://doc.ruby-lang.org/ja/2.0.0/doc/ReFe.html "ReFe")」とかを使って下さい。Webツールなら「[るりまサーチ](http://doc.ruby-lang.org/ja/search/ "最速Rubyリファレンスマニュアル検索！ | るりまサーチ")」があります。
+> コマンドラインツールなら標準添付の「ri」とか、日本語対応の「[ReFe](http://doc.ruby-lang.org/ja/2.0.0/doc/ReFe.html "ReFe")」とかを使って下さい。Webツールなら「[るりまサーチ](http://doc.ruby-lang.org/ja/search/ "最速Rubyリファレンスマニュアル検索！ \| るりまサーチ")」があります。
 
 ###- Q2 -
 

@@ -26,7 +26,7 @@ Graphvizではfdpレイアウトにおいて、subgraph（cluster）を結ぶエ
 
 ![Alt title noshadow]({{ BASE_PATH }}/assets/images/2014/02/gviz_subgraph02.png)
 
-> [Graphviz Example: Undirected Graph Clusters | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/fdpclust "Graphviz Example: Undirected Graph Clusters | Graphviz - Graph Visualization Software")
+> [Graphviz Example: Undirected Graph Clusters \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/fdpclust "Graphviz Example: Undirected Graph Clusters \| Graphviz - Graph Visualization Software")
 
 Gvizでは、subgraphの名前は自動で付けられてしまう（cluster+0からの連番）のでこれができませんでした。またこの検証に際して、無向グラフ（undirected graph）にもちゃんと対応していなかったことも発覚しました。これは実に有難いリクエストになりました。
 
@@ -34,7 +34,7 @@ Gvizでは、subgraphの名前は自動で付けられてしまう（cluster+0�
 
 早々これらに対応したversion0.3.4をリリースしました。
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")
 > 
 > [melborne/Gviz](https://github.com/melborne/Gviz "melborne/Gviz")
 

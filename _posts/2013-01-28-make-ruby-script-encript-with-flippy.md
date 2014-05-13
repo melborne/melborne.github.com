@@ -16,7 +16,7 @@ published: true
 
 Gem化もしたので、`gem install flippy`で使うことができます。
 
-> [flippy | RubyGems.org | your community gem host](https://rubygems.org/gems/flippy 'flippy | RubyGems.org | your community gem host')
+> [flippy \| RubyGems.org \| your community gem host](https://rubygems.org/gems/flippy 'flippy \| RubyGems.org \| your community gem host')
 >
 > [melborne/flippy · GitHub](https://github.com/melborne/flippy 'melborne/flippy · GitHub')
 

@@ -9,10 +9,13 @@ categories:
 
 
 [Problem 4 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=4)
-> 
+ 
 > A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91  99.
+>
 > Find the largest palindrome made from the product of two 3-digit numbers.
+>
 > 回文数はどちらからでも同じに読める。2つの二桁の数の積からできる最大の回文数は9009 = 91 × 99である。
+>
 > 2つの三桁の数の積からできる最大の回文数を求めよ。
 
 

@@ -16,7 +16,7 @@ published: true
 
 ここでは`iTunesTrack`の詳細を説明します。対象バージョンは0.0.1です。
 
-> [itunes_track | RubyGems.org | your community gem host](https://rubygems.org/gems/itunes_track "itunes_track | RubyGems.org | your community gem host")
+> [itunes_track \| RubyGems.org \| your community gem host](https://rubygems.org/gems/itunes_track "itunes_track \| RubyGems.org \| your community gem host")
 > 
 > [melborne/itunes_track](https://github.com/melborne/itunes_track "melborne/itunes_track")
 

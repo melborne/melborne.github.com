@@ -44,7 +44,7 @@ published: true
 ## hateda2mdの紹介
 で、このscriptをもう少しまともな形に作りなおして`hateda2md`としてgem化しました。良かったら試してみてください。果たしてこんな所に需要があるかは分かりませんけど。
 
-[hateda2md | RubyGems.org](https://rubygems.org/gems/hateda2md 'hateda2md | RubyGems.org | your community gem host')
+[hateda2md \| RubyGems.org](https://rubygems.org/gems/hateda2md 'hateda2md \| RubyGems.org \| your community gem host')
 
 [melborne/hateda2md](https://github.com/melborne/hateda2md 'melborne/hateda2md')
 
@@ -83,6 +83,7 @@ mdb.save_to_files
 すべての定義済みフィルタをセットするには、`MdBuilder#pre_defined_filters`または`HateDa::Converter.pre_defined_filters`メソッドを呼びます。
 
 {% highlight ruby %}
+
 # すべての定義済みフィルタを呼ぶ
 filters = mdb.pre_defined_filters
 # => [:title, :subtitle, :subsubtitle, :order_list, :unorder_list, :blockquote, :pre, :super_pre, :footnote, :br, :link, :hatebu, :amazon, :youtube, :image, :gist]
@@ -103,6 +104,7 @@ mdb.save_to_files
 また、`MdBuilder#filter`メソッドを使って、独自フィルタを定義することができます。次のようにします。
 
 {% highlight ruby %}
+
 # はてな記法によるwikipediaタグをliquid tagに変換するフィルタを定義する
 mdb.filter(/\[wikipedia:(.*?)\]/) do |md|
   "{ % wikipedia #{md[1]} % }"

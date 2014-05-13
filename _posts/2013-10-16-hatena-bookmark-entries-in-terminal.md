@@ -31,7 +31,7 @@ published: true
 
 > [melborne/hatebu_entry](https://github.com/melborne/hatebu_entry "melborne/hatebu_entry")
 > 
-> [hatebu_entry | RubyGems.org | your community gem host](https://rubygems.org/gems/hatebu_entry "hatebu_entry | RubyGems.org | your community gem host")
+> [hatebu_entry \| RubyGems.org \| your community gem host](https://rubygems.org/gems/hatebu_entry "hatebu_entry \| RubyGems.org \| your community gem host")
 
 ## ターミナルでの使い方
 
@@ -179,7 +179,7 @@ puts merged
 
 > [melborne/hatebu_entry](https://github.com/melborne/hatebu_entry "melborne/hatebu_entry")
 > 
-> [hatebu_entry | RubyGems.org | your community gem host](https://rubygems.org/gems/hatebu_entry "hatebu_entry | RubyGems.org | your community gem host")
+> [hatebu_entry \| RubyGems.org \| your community gem host](https://rubygems.org/gems/hatebu_entry "hatebu_entry \| RubyGems.org \| your community gem host")
 
 ---
 

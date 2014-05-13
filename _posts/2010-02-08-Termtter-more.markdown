@@ -40,6 +40,7 @@ moreを繰り返せば
 直接Termtterのコードを書き換えることで行った
 
 [Termtterでuriを開こう！ - uri-openの紹介と改良]({{ site.url }}/2010/01/25/Termtter-uri-uri-open/)
+
 [Termtterで検索しよう!]({{ site.url }}/2010/02/03/Termtter/)
 
 だけどこの方法はよくない
@@ -56,6 +57,7 @@ default_replaceというpluginファイルにまとめて
 これをpluginの最後で読み込むようにした
 
 変更点は以下の通り
+
 - searchコマンドで search ruby #2 などと次頁以降の結果を表示
 - hashtag addしたときqueryなしでsearchするとそのhashtagをqueryとして検索
 - search wordのハイライト表示をunderlineに変更
@@ -63,6 +65,8 @@ default_replaceというpluginファイルにまとめて
 - uri-openコマンドで some あるいは some 10 などとして5あるいは10のuriのみを開く
 
 [gist: 297408 - Termtter plugins- GitHub](http://gist.github.com/297408)
+
 {% footnotes %}
    {% fn 時系列ではそれ以前 %}
 {% endfootnotes %}
+

@@ -9,7 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
-Rubyは`内部DSL`(Domain Specific Language)に向いている言語と言われます。[Rake](https://rubygems.org/gems/rake 'rake | RubyGems.org | your community gem host'), [RSpec](https://rubygems.org/gems/rspec 'rspec | RubyGems.org | your community gem host'), [Rack](http://rack.github.com/ 'Rack: a Ruby Webserver Interface'), [Sinatra](http://www.sinatrarb.com/ 'Sinatra')などは内部DSL on Rubyの代表的なサンプルです。Rubyの構文のユルさとメタプログラミングが内部DSLを容易にするんですね。
+Rubyは`内部DSL`(Domain Specific Language)に向いている言語と言われます。[Rake](https://rubygems.org/gems/rake 'rake \| RubyGems.org \| your community gem host'), [RSpec](https://rubygems.org/gems/rspec 'rspec \| RubyGems.org \| your community gem host'), [Rack](http://rack.github.com/ 'Rack: a Ruby Webserver Interface'), [Sinatra](http://www.sinatrarb.com/ 'Sinatra')などは内部DSL on Rubyの代表的なサンプルです。Rubyの構文のユルさとメタプログラミングが内部DSLを容易にするんですね。
 
 しかし正直僕は、何が内部DSLで、何が内部DSLでないのかがわかっていません。人が何をさして「これは内部DSLである」と言っているのかがよくわかりません。
 

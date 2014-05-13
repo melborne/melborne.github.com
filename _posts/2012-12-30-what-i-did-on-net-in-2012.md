@@ -38,24 +38,24 @@ published: true
 
 graphvizのRubyラッパーである`gviz`が2000超DLで一番人気だけど、`hateda2md`が1700もDLされてるって、どういうことなんだろうね。でもまあ作ったものに関心を持ってくれる人がいるっていうのは、うれしいもんだよね。RubyGems.orgへのリンクとこのブログにおける紹介ページを公開順に挙げておくよ。
 
-### [gsub_filter](https://rubygems.org/gems/gsub_filter 'gsub_filter | RubyGems.org | your community gem host')
+### [gsub_filter](https://rubygems.org/gems/gsub_filter 'gsub_filter \| RubyGems.org \| your community gem host')
 > 
 > {% hatebu http://melborne.github.com/2012/03/24/gsub_filter/ 'RubyのGsubチェーンはイケてない?' %}
 
-### [hateda2md](https://rubygems.org/gems/hateda2md 'hateda2md | RubyGems.org | your community gem host')
+### [hateda2md](https://rubygems.org/gems/hateda2md 'hateda2md \| RubyGems.org \| your community gem host')
 > 
 > {% hatebu http://melborne.github.com/2012/05/05/to-be-hatena-notation-or-to-be-markdown/ '一生涯はてな記法しますか？それともMarkdownしますか？' %}
 
 
-### [gviz](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
+### [gviz](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')
 > 
 > {% hatebu http://melborne.github.com/2012/09/25/ruby-plus-graphviz-should-eql-gviz/ 'Yet Another Ruby Graphviz Interfaceを作ったからみんなで大量のグラフを作って遊ぼうよ！' %}
 
-### [colorable](https://rubygems.org/gems/colorable 'colorable | RubyGems.org | your community gem host')
+### [colorable](https://rubygems.org/gems/colorable 'colorable \| RubyGems.org \| your community gem host')
 > 
 > {% hatebu http://melborne.github.com/2012/11/07/play-gviz-with-colorable/ 'Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く' %}
 
-### [maliq](https://rubygems.org/gems/maliq 'maliq | RubyGems.org | your community gem host')
+### [maliq](https://rubygems.org/gems/maliq 'maliq \| RubyGems.org \| your community gem host')
 > 
 > {% hatebu http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/ 'RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ' %}
 
@@ -63,7 +63,7 @@ graphvizのRubyラッパーである`gviz`が2000超DLで一番人気だけど�
 ##４月　JekyllとGithub Pagesでブログをはじめる
 僕のブログは６年間はてだにお世話になってたんだけど([hp12c](http://d.hatena.ne.jp/keyesberry/ 'hp12c'))、まあいろいろと不満もあったよ。その一方でなんかGithub上でブログを運営できる[GitHub Pages](http://pages.github.com/ 'GitHub Pages')というのがあって、そこでブログをやってるとHackerっぽくてクール見えるって噂が流れてきたんだ。で、まあ僕はそーゆうのに弱いから一念発起して移転することにしたんだよ。
 
-ブログは[jekyll](http://jekyllrb.com/ 'jekyll')と[Jekyll-Bootstrap](http://jekyllbootstrap.com/ 'Blogging with Jekyll Tutorial | Jekyll-Bootstrap')を使って構築したんだ。移転は容易ならざるものだったけど、その過程でいろいろと勉強になることがあったよ。移転の工程は記事にできてないんだけど、関連記事として次のものを書いているよ。
+ブログは[jekyll](http://jekyllrb.com/ 'jekyll')と[Jekyll-Bootstrap](http://jekyllbootstrap.com/ 'Blogging with Jekyll Tutorial \| Jekyll-Bootstrap')を使って構築したんだ。移転は容易ならざるものだったけど、その過程でいろいろと勉強になることがあったよ。移転の工程は記事にできてないんだけど、関連記事として次のものを書いているよ。
 
 > {% hatebu http://melborne.github.com/2012/05/13/first-step-of-jekyll/ 30分のチュートリアルでJekyllを理解する %}
 > 
@@ -109,7 +109,7 @@ Rubyの機能に対するはじめてのFeature Requestを[Ruby Issue Tracking S
 １０月に入ってからこのブログにGoogleのAdSenseを貼らせてもらっているよ。申し込みから２、３日で設置が完了したのであまりの簡単さに拍子抜けしたよ。まあこの手のブログにおける収益は高が知れてるだろうけど、手間なしで稼げるってやっぱいいよね。
 
 ##１２月　はじめて電子書籍を作成し出版する
-gemのところで出てきたけれどもMarkdownのドキュメントからepubを作る[maliq](https://rubygems.org/gems/maliq 'maliq | RubyGems.org | your community gem host')というツールを作ったんだ。
+gemのところで出てきたけれどもMarkdownのドキュメントからepubを作る[maliq](https://rubygems.org/gems/maliq 'maliq \| RubyGems.org \| your community gem host')というツールを作ったんだ。
 
 > {% hatebu http://melborne.github.com/2012/12/03/when-bloggers-become-publishers/ 'RubyによるMarkdownをベースにしたEPUB電子書籍の作り方と出版のお知らせ' %}
 

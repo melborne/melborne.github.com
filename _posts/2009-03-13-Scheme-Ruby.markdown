@@ -51,18 +51,31 @@ Schemeではクオート(｀)を使ってデータオブジェクトを記号と
 このコードはまだ未定義の以下のサブ手続きを含んでいる。
 
 > (variable? e)  ｅは変数か
+>
 > (same_variable? v1 v2)  v1, v2は同じ変数か
+>
 > (sum? e)  eは和か
+>
 > (addend e)  eの加数
+>
 > (augend e)  eの被加数
+>
 > (make_sum a1 a2)  a1, a2の和を構成
+>
 > (product? e)  eは積か
+>
 > (multiplier e)  eの乗数
+>
 > (multiplicand e)  eの被乗数
+>
 > (make_product m1 m2)  m1, m2の積を構成
+>
 > (exponentiation? e)  eは累乗か
+>
 > (base e)  eの基数
+>
 > (exponent e)  eの指数
+>
 > (make_exponentiation e1 e2)  e1, e2の累乗を構成
 
 

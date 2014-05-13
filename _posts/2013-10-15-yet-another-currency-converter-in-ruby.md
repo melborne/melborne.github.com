@@ -21,7 +21,7 @@ Web上には無数の通貨換算ツールがあるけれどもやっぱりタ�
 
 >[melborne/money_exchange](https://github.com/melborne/money_exchange "melborne/money_exchange")
 >
->[money_exchange | RubyGems.org | your community gem host](https://rubygems.org/gems/money_exchange "money_exchange | RubyGems.org | your community gem host")
+>[money_exchange \| RubyGems.org \| your community gem host](https://rubygems.org/gems/money_exchange "money_exchange \| RubyGems.org \| your community gem host")
 
 一応gemにもしたから`gem i money_exchange`でインストールもできるよ。
 
@@ -179,7 +179,7 @@ GoogleのこのAPIも僕のコードも信用ならないから真面目な用�
 
 >[melborne/money_exchange](https://github.com/melborne/money_exchange "melborne/money_exchange")
 >
->[money_exchange | RubyGems.org | your community gem host](https://rubygems.org/gems/money_exchange "money_exchange | RubyGems.org | your community gem host")
+>[money_exchange \| RubyGems.org \| your community gem host](https://rubygems.org/gems/money_exchange "money_exchange \| RubyGems.org \| your community gem host")
 
 
 ---

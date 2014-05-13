@@ -32,7 +32,7 @@ Atomにはパッケージ(Package)という拡張機能があり、コアの相�
 
 1. [Pandoc](http://johnmacfarlane.net/pandoc/index.html "Pandoc - About pandoc")で原文を取得およびMarkdown変換する。
 
-2. 拙作[togglate](https://rubygems.org/gems/togglate "togglate | RubyGems.org | your community gem host")で訳文のベースドキュメントを生成する。
+2. 拙作[togglate](https://rubygems.org/gems/togglate "togglate \| RubyGems.org \| your community gem host")で訳文のベースドキュメントを生成する。
 
 3. エディタ([Vim](http://www.vim.org/ "welcome home : vim online"))で翻訳文を仕上げる。
 

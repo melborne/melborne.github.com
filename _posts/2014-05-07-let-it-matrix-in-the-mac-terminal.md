@@ -41,7 +41,7 @@ published: true
 辛いことがあったときに、どうぞ。
 
 
-> [let_it_fall | RubyGems.org | your community gem host](https://rubygems.org/gems/let_it_fall "let_it_fall | RubyGems.org | your community gem host")
+> [let_it_fall](https://rubygems.org/gems/let_it_fall "let_it_fall")
 >
 > [melborne/let_it_fall](https://github.com/melborne/let_it_fall "melborne/let_it_fall")
 

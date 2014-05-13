@@ -9,10 +9,13 @@ categories:
 
 
 [Problem 5 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=5)
-> 
+ 
 > 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+>
 > What is the smallest number that is evenly divisible by all of the numbers from 1 to 20?
+>
 > 2520は1から10の各数字で割り切れる数の中で最小のものである。
+>
 > 同様に1から20の全ての数字で割り切れる最小の数は何か。
 
 
@@ -45,13 +48,14 @@ categories:
 要するに最小公倍数のことだよね？
 
 [最小公倍数](http://ja.wikipedia.org/wiki/%E6%9C%80%E5%B0%8F%E5%85%AC%E5%80%8D%E6%95%B0) - Wikipediaより
-> 
+ 
 > 二つの整数に対して、どちらの倍数にもなっている最小の自然数をいう。
 
 じゃあその求め方は？
-> 
+ 
 > 最小公倍数の計算には、最大公約数 GCD (Greatest Common Divisor) を用いて行う。どちらも 0 でない整数 a, b に対して、最小公倍数は、最大公約数 gcd(a, b) を用いて、
-> ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090115/20090115082304.png)
+
+![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090115/20090115082304.png)
 
 > 二つの数に限らず、より多くの数の最小公倍数を求めたい場合は、上記のlcm関数を入れ子にすればよい。
 

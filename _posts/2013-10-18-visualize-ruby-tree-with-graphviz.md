@@ -23,7 +23,7 @@ published: true
 
 > [melborne/Gviz](https://github.com/melborne/Gviz "melborne/Gviz")
 > 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")
 
 そしてRubyをグラフ化するならやっぱりRuby自身に書いてもらうのが一番だと思った。彼女も20才になったことだし。
 

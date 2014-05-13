@@ -11,7 +11,7 @@ published: true
 
 Rubyで色を扱う[Colorable gem](https://rubygems.org/gems/colorable "colorable")をアップデートして大幅に機能強化しましたので、改めて紹介します。versionは0.2.0です。
 
-> [colorable | RubyGems.org | your community gem host](https://rubygems.org/gems/colorable "colorable | RubyGems.org | your community gem host")
+> [colorable \| RubyGems.org \| your community gem host](https://rubygems.org/gems/colorable "colorable \| RubyGems.org \| your community gem host")
 > 
 > [melborne/colorable · GitHub](https://github.com/melborne/colorable "melborne/colorable · GitHub")
 

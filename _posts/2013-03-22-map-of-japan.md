@@ -26,7 +26,7 @@ antlaboさんがGraphvizを使って、北海道の市町村の隣接を可視�
 で、記事の中で全国可視化はデータ量が多くて上手くいかなかった旨が書かれていたので、自分も試してみたところ、無事出力できましたのでここに公開したいと思います。
 
 ##日本全国を可視化する
-ここではGraphvizのRubyラッパーである拙作「[gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")」を使います。
+ここではGraphvizのRubyラッパーである拙作「[gviz](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")」を使います。
 
 ###隣接データの読み出し
 まずは先のサイトから全国市町村隣接データ[city_rinsetsu_utf8.csv](http://spnene.antlabo.jp/data/city_rinsetsu_utf8.csv "")を取得します。このデータのフォーマットは以下のようになっています。
@@ -114,7 +114,7 @@ Graphのブロックの中で、グラフを生成します。globalでグラフ
 
 ###カラー化
 
-さて、やっぱりモノクログラフは寂しいので、県ごとに色付けしてみます。ここではカラー化に拙作「[colorable](https://rubygems.org/gems/colorable "colorable | RubyGems.org | your community gem host")」を使います。colorableでは`Color.new`で色を生成して、`Color#next`で順次次の色を出力できるのでこれを使って、県ごとにノードの色を作ります。出力フォーマットとしてSVGも指定しましょう。
+さて、やっぱりモノクログラフは寂しいので、県ごとに色付けしてみます。ここではカラー化に拙作「[colorable](https://rubygems.org/gems/colorable "colorable \| RubyGems.org \| your community gem host")」を使います。colorableでは`Color.new`で色を生成して、`Color#next`で順次次の色を出力できるのでこれを使って、県ごとにノードの色を作ります。出力フォーマットとしてSVGも指定しましょう。
 
 {% highlight ruby %}
 # encoding: UTF-8

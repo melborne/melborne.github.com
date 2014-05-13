@@ -15,7 +15,7 @@ published: true
 
 で、そのときに書いたコードを手直しして「なんでもGem化プロジェクト{% fn_ref 1 %}」に則ってこの度Gem化しましたので、お知らせいたします。まあ、また小石（tiny gem）を一つ増やしただけですが。
 
-> [matreska | RubyGems.org | your community gem host](https://rubygems.org/gems/matreska "matreska | RubyGems.org | your community gem host")
+> [matreska \| RubyGems.org \| your community gem host](https://rubygems.org/gems/matreska "matreska \| RubyGems.org \| your community gem host")
 >
 > [melborne/matreska](https://github.com/melborne/matreska "melborne/matreska")
 

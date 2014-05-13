@@ -9,7 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
-Herokuで[Pusher](http://pusher.com/ "Pusher | HTML5 WebSocket Powered Realtime Messaging Service")を使わずにWebSocketが利用できるということを知ったので[ここ](https://devcenter.heroku.com/articles/ruby-websockets "Using WebSockets on Heroku with Ruby | Heroku Dev Center")を参考に面白いものできないかと弄ってたらなんか不思議なチャットシステム？が出来上がったので暇で誰か知らない人と匿名でチャットというかタイピングのやりとりというか邪魔し合いというかまあ恐らく未体験な人と人との繋がりの類を経験したい方居られましたら是非とも来て見て触ってみてできたら感想などをTwitterとかでつぶやいてくれたら大変にうれしく思います。VimperatorとかのExtensionをOFFにして。
+Herokuで[Pusher](http://pusher.com/ "Pusher \| HTML5 WebSocket Powered Realtime Messaging Service")を使わずにWebSocketが利用できるということを知ったので[ここ](https://devcenter.heroku.com/articles/ruby-websockets "Using WebSockets on Heroku with Ruby \| Heroku Dev Center")を参考に面白いものできないかと弄ってたらなんか不思議なチャットシステム？が出来上がったので暇で誰か知らない人と匿名でチャットというかタイピングのやりとりというか邪魔し合いというかまあ恐らく未体験な人と人との繋がりの類を経験したい方居られましたら是非とも来て見て触ってみてできたら感想などをTwitterとかでつぶやいてくれたら大変にうれしく思います。VimperatorとかのExtensionをOFFにして。
 
 > [Typewr](http://typewr.herokuapp.com/ "Typewr")
 

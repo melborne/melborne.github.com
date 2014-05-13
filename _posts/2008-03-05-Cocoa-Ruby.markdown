@@ -11,14 +11,14 @@ requireでロードされるライブラリファイルは
 Rubyのロードパスに置かれる必要がある
 
 現在のロードパスは以下で調べられる
-> 
+ 
 > ruby -e 'puts $:'
 
 
 独自のパスを追加したいときは
 環境変数RUBYLIBに設定する
 例えば、.zshrcに以下を記述する
-> 
+ 
 > export RUBYLIB="$HOME/mylib"
 
 
@@ -30,7 +30,7 @@ Rubyスクリプトを実行できるけど
 CotEditorなどのCocoaアプリでRubyのロードパスを通すには
 ~/.MacOSX/environment.plistでRUBYLIBにパスを設定する必要がある
 environment.plistが存在しなければ作成する
-> 
+ 
 > <key>RUBYLIB</key> 
 > <string>~/mylib</string>
 

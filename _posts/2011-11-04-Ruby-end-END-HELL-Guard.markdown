@@ -78,6 +78,7 @@ heads.map(&:size).inject(:+)/heads.size.to_f # => 4.181818181818182
 
 ##END HELLの回避方法
 具体的なコードによってEND HELLの回避方法は変わるが、ここでは先のコードにおけるEND HELLの回避方法をいくつか示すに留める。
+
 ###その１: 三項条件演算子
 if else end式に代えて?:三項条件演算子を使う。
 {% highlight ruby %}
@@ -91,6 +92,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その２: { }(curly braces:波括弧)
 do endに代えて{ }を使う。
 {% highlight ruby %}
@@ -102,6 +104,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その３:メソッド呼び出し
 if else end式に代えてメソッド呼び出しを使う。
 {% highlight ruby %}
@@ -113,6 +116,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その４:メソッド分割
 メソッドを分割する。
 {% highlight ruby %}
@@ -129,6 +133,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その５:ガード文
 if else end式に代えてガード文を使う(ここではnext)。
 {% highlight ruby %}
@@ -143,6 +148,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その６:ポリモーフィズム
 if else end式に代えてポリモーフィズムを使う。
 {% highlight ruby %}
@@ -161,6 +167,7 @@ module MyModule
   end
 end
 {% endhighlight %}
+
 ###その７:定数スコープ演算子
 定数のスコープ演算子::を使う。
 {% highlight ruby %}

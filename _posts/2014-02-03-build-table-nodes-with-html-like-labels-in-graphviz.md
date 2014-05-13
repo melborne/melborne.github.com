@@ -24,13 +24,13 @@ GraphvizのラベルにHTML風の記法が使えるなんて、知らなかっ�
 
 @otahiさんに感謝しつつ早々本体に取り込ませて頂き、その対応版v0.3.3をリリースしました。
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")
 
 ## 表型ノード
 
 HTML風ラベル（HTML-like Labels）は、`<TABLE>`タグを使って表のようなノードを作ることが主たる用途になります。
 
-> [Node Shapes | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/node-shapes#html "Node Shapes | Graphviz - Graph Visualization Software")
+> [Node Shapes \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/node-shapes#html "Node Shapes \| Graphviz - Graph Visualization Software")
 
 実はごく簡単な表型ノードは、`Record`形(またはMrecord)で`{}`と`|`を使った特殊な記法でラベルを書くことで実現できます。
 
@@ -90,7 +90,7 @@ save :record
 
 ---
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")
 > 
 > [melborne/Gviz](https://github.com/melborne/Gviz "melborne/Gviz")
 

@@ -9,7 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
-[AngularJS](http://angularjs.org/ "AngularJS — Superheroic JavaScript MVW Framework")というものを眺めていたらその中にビューテンプレートなどで使える[フィルター](http://js.studio-kingdom.com/angularjs/guide/filter "フィルターについて | AngularJS 1.2 日本語リファレンス | js STUDIO")という概念がでてきて、あーこれLiquidにもあったけどUNIXのパイプラインみたいで面白いなあRubyでできないかなあ、ということでちょっと試してみましたという内容の投稿です。
+[AngularJS](http://angularjs.org/ "AngularJS — Superheroic JavaScript MVW Framework")というものを眺めていたらその中にビューテンプレートなどで使える[フィルター](http://js.studio-kingdom.com/angularjs/guide/filter "フィルターについて \| AngularJS 1.2 日本語リファレンス \| js STUDIO")という概念がでてきて、あーこれLiquidにもあったけどUNIXのパイプラインみたいで面白いなあRubyでできないかなあ、ということでちょっと試してみましたという内容の投稿です。
 
 まあ、メソッドチェーンでいいよ、って話で終わりなんですが。
 

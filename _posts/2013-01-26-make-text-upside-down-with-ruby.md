@@ -67,7 +67,7 @@ TextUpDown#textで反転文字列が、TextUpDown#codeでそのコードポイ�
 
 作りがいい加減です。ブラッシュアップしてくれる人、お願いしますm(__)m
 
-[Termtter](https://rubygems.org/gems/termtter 'termtter | RubyGems.org | your community gem host')ユーザ向けpluginも作りました。Termtterで逆さ文字ツイートしましょう！
+[Termtter](https://rubygems.org/gems/termtter 'termtter \| RubyGems.org \| your community gem host')ユーザ向けpluginも作りました。Termtterで逆さ文字ツイートしましょう！
 
 {% gist 4642105 %}
 

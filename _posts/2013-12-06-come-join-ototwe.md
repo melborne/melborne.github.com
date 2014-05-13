@@ -75,7 +75,7 @@ published: true
 
 ![ototwe noshadow]({{ BASE_PATH }}/assets/images/2013/12/ototwe1.png)
 
-OtoTweはHTML5における[Server-sent events](https://developer.mozilla.org/ja/docs/Server-sent_events "Server-sent events | MDN")というしくみを使っています。Server-sent eventsでは、サーバーとクライアントのコネクションは維持され、これによりクライアントからのリクエストを待たずに任意のタイミングでサーバー側からデータを投げられるようになります。OtoTweではTwitterのStreaming APIからデータが送られてきたタイミングで全クライアントに向けてデータをブロードキャストしています。
+OtoTweはHTML5における[Server-sent events](https://developer.mozilla.org/ja/docs/Server-sent_events "Server-sent events \| MDN")というしくみを使っています。Server-sent eventsでは、サーバーとクライアントのコネクションは維持され、これによりクライアントからのリクエストを待たずに任意のタイミングでサーバー側からデータを投げられるようになります。OtoTweではTwitterのStreaming APIからデータが送られてきたタイミングで全クライアントに向けてデータをブロードキャストしています。
 
 音の再生はWeb Audio APIを使ってmp3またはoggファイルを読みだして再生しています。もっとスムーズな再生を実現するにはここを工夫する必要があるんでしょうね（JavaScriptむずかしぃ...）。音は初めてのGarageBandでシコシコと作りました。
 

@@ -286,7 +286,7 @@ x = [1,2,3] * ([4, 5] * '6')
 以上で先のRuby Quizが出来上がります。
 
 
-> [togglate | RubyGems.org | your community gem host](https://rubygems.org/gems/togglate "togglate | RubyGems.org | your community gem host")
+> [togglate \| RubyGems.org \| your community gem host](https://rubygems.org/gems/togglate "togglate \| RubyGems.org \| your community gem host")
 > 
 > [melborne/togglate](https://github.com/melborne/togglate "melborne/togglate")
 

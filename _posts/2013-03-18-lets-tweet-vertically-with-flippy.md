@@ -31,7 +31,7 @@ Ruby使いたる者、流行に乗り遅れるわけにはいきませんよね�
 
 flippyに縦書きを実現する`Flippy#vertical`を追加しましたので、お知らせいたします :-)
 
-> [flippy | RubyGems.org | your community gem host](https://rubygems.org/gems/flippy "flippy | RubyGems.org | your community gem host")
+> [flippy \| RubyGems.org \| your community gem host](https://rubygems.org/gems/flippy "flippy \| RubyGems.org \| your community gem host")
 > 
 > [melborne/flippy · GitHub](https://github.com/melborne/flippy "melborne/flippy · GitHub")
 

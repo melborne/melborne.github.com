@@ -57,7 +57,7 @@ end
 
 ## DartとCoffeeScriptの場合
 
-グーグルが開発したプログラミング言語「[Dart](https://www.dartlang.org/ "Dart: Structured web apps")」では、[Automatic field initialization](https://www.dartlang.org/articles/idiomatic-dart/#automatic-field-initialization "Idiomatic Dart | Dart: Structured web apps")という機能によって、以下のコードを、
+グーグルが開発したプログラミング言語「[Dart](https://www.dartlang.org/ "Dart: Structured web apps")」では、[Automatic field initialization](https://www.dartlang.org/articles/idiomatic-dart/#automatic-field-initialization "Idiomatic Dart \| Dart: Structured web apps")という機能によって、以下のコードを、
 
 {% highlight dart %}
 class User {

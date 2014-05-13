@@ -9,6 +9,7 @@ categories:
 なかなかいいですね。さてこれでもう完成でしょうか...
 
 いいえ！問題が発生しました！先のコードはDRY原則に反します！！
+
 ##DRY原則
 「DON'T REPEAT YOURSELF!」{% fn_ref 1 %}
 
@@ -36,6 +37,7 @@ categories:
 {% endhighlight %}
 
 「-」記号１つの差はありますが...確かに...そっくりです。Yes, I repeat myself...
+
 ##Version10
 Hashクラスにtake_by_valueというメソッドを作って、上のコードを1ヶ所に集約します。
 {% highlight ruby %}
@@ -56,7 +58,7 @@ Hashクラスにtake_by_valueというメソッドを作って、上のコード
 {% endhighlight %}
 差し当たりtake_by_valueはクラスの中から呼ぶだけなので、その可視性をprivateにします。
 
-take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、{|v| -v}または{|v| v}をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。
+take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、`{|v| -v}`または`{|v| v}`をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。
 
 またtop_by_valueおよびbottom_by_valueでは、受け取るブロックをtake_by_valueに引き渡すために、&blkでブロックを一旦オブジェクト化する必要があります。
 
@@ -78,6 +80,7 @@ take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの�
 {% endhighlight %}
 
 ブロックを渡さない場合は、範囲を限定しない結果を返すべきです。
+
 ##Version11
 ブロックがあるか無いかを判定するメソッドとしてblock_given?があります。それを使ってブロックがない場合、代わりのブロックをtake_by_valueに渡してあげます。
 {% highlight ruby %}
@@ -123,12 +126,13 @@ take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの�
  end
 {% endhighlight %}
 
-lambda {|v| v }が4回も！
+`lambda {|v| v }`が4回も！
 Don't Repeat Yourself! Yes, I repeat myself!!
 
 達人...大至急直しますから...
+
 ##Version12
-lambda {|v| v }という手続きを返すoptというメソッドを定義しましょう。
+`lambda {|v| v }`という手続きを返すoptというメソッドを定義しましょう。
 {% highlight ruby %}
  class Hash
    def top_by_value(nth, &blk)
@@ -157,6 +161,7 @@ optメソッドのflag引数にデフォルトでtrueをセットしておきま
 果たしてこれでコードが読みやすくなったのか、わたしにはわかりません。これはちょっとやり過ぎかもしれませんが、達人に怒られないということがここでは重要なのです。
 
 と...ここまでやってミスに気が付きました。Version11のところでblock_given?の判定を、top_by_valueとbottom_by_valueのところでしました。でもこれをtake_by_valueのところでやればいいんです。そうすれば上のような手間は不要です。Version12はこんなやり方もあるんだという、ご理解でお願いします...
+
 ##Version13
 {% highlight ruby %}
  class Hash
@@ -176,6 +181,7 @@ optメソッドのflag引数にデフォルトでtrueをセットしておきま
 take_by_value内で条件演算子(条件 ? 真 : 偽)を使って、ブロックの有無でyieldするかしないか分けています。
 
 （[次回に続く]({{ site.url }}/2009/04/17/Ruby-11/))
+
 {% footnotes %}
    {% fn [Don't repeat yourself - Wikipedia](http://ja.wikipedia.org/wiki/Don't_repeat_yourself %}
 {% endfootnotes %}

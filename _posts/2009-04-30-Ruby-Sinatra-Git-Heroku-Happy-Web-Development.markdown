@@ -27,7 +27,7 @@ Linusさんにそう言われれば返す言葉は何もありません。でも
 ##Heroku
 [Heroku](http://heroku.com/)は「Her-OH-koo」と発音します。Google App Engineほどつまらない名前はないですが、その意味に辿り着けないというのもまたつまらないものです。でも、わたしはその答えにおそらく辿り着けました。ヒントはプライスリストです。
 
-[Heroku | Pricing](http://heroku.com/pricing#blossom-2)
+[Heroku \| Pricing](http://heroku.com/pricing#blossom-2)
 
 彼らもまた東洋の神秘に見せられていたのです！でも答えは「奥歯」じゃありません。韓流にハマっている妻に付き合っていた意味が、今顕在化したのです...
 
@@ -304,7 +304,7 @@ Gitのインストールはこの辺を参考にします。
 
 [hikariworks::blog&#160;&#187;&#160; MacPortsでgitをインストール](http://hikariworks.jp/blog/2008/06/18/macports%E3%81%A7git%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB/)
 
-[Heroku | Using Git](http://docs.heroku.com/git#installing)
+[Heroku \| Using Git](http://docs.heroku.com/git#installing)
 
 Webサーバを止めてGitをセットアップします。
 {% highlight ruby %}
@@ -349,7 +349,7 @@ Herokuではsshを使うので、ssh keyが無ければ作っておきます。
 
 この辺を参考にします。
 
-[Heroku | Using Git](http://docs.heroku.com/git#setting-up-ssh-public-keys)
+[Heroku \| Using Git](http://docs.heroku.com/git#setting-up-ssh-public-keys)
 
 [＠IT：Linuxでsshの鍵を作成するには](http://www.atmarkit.co.jp/flinux/rensai/linuxtips/432makesshkey.html)
 
@@ -384,7 +384,7 @@ Herokuにレポジトリを作ります。
 
 [sinatra's heroku-sinatra-app at master - GitHub](http://github.com/sinatra/heroku-sinatra-app/tree/master)
 
-[Heroku | Heroku Documentation](http://docs.heroku.com/)
+[Heroku \| Heroku Documentation](http://docs.heroku.com/)
 
 [Heroku & Sinatra](http://www.slideshare.net/myles_byrne/heroku-sinatra)
 

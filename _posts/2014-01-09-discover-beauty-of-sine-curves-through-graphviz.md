@@ -23,7 +23,7 @@ published: true
 今回は、GvizのDraw系メソッドを使ってサインカーブを描いたら、その美しさに癒やされたという話です。
 
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')
 >
 > [melborne/Gviz](https://github.com/melborne/Gviz 'melborne/Gviz')
 

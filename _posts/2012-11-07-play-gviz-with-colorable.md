@@ -30,7 +30,7 @@ Rubyで「色」というものを扱う機会はそう多くはないでしょ�
 
 `Colorable`というRGBとかHSBとかの色を扱うライブラリを作りました^ ^; ちょっとまだ中途半端な出来ですが。
 
-> [colorable | RubyGems.org | your community gem host](https://rubygems.org/gems/colorable 'colorable | RubyGems.org | your community gem host')
+> [colorable \| RubyGems.org \| your community gem host](https://rubygems.org/gems/colorable 'colorable \| RubyGems.org \| your community gem host')
 
 ----
 

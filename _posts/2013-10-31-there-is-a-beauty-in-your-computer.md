@@ -31,7 +31,7 @@ published: true
 ディレクトリ構造をGraphvizで視覚化するためのツール「DirFriend」をバージョンアップしましたのでお知らせします（ver0.1.1）。
 
 
-> [dir_friend | RubyGems.org | your community gem host](https://rubygems.org/gems/dir_friend "dir_friend | RubyGems.org | your community gem host")
+> [dir_friend \| RubyGems.org \| your community gem host](https://rubygems.org/gems/dir_friend "dir_friend \| RubyGems.org \| your community gem host")
 
 DirFriend自体の説明については前回の記事を参照してください。
 

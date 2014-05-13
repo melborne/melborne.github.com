@@ -659,7 +659,7 @@ end
 
 えっ？もっと先は無いのかって？
 
-なら、`gem i case`してくださいよ、僕はもういっぱいですから。そうですよ、そのまんま[case gem](https://rubygems.org/gems/case "case | RubyGems.org | your community gem host")。Rubyでパターンマッチ頑張ってるって感じですよ...
+なら、`gem i case`してくださいよ、僕はもういっぱいですから。そうですよ、そのまんま[case gem](https://rubygems.org/gems/case "case \| RubyGems.org \| your community gem host")。Rubyでパターンマッチ頑張ってるって感じですよ...
 
 <br />
 

@@ -401,6 +401,7 @@ method_makerに可変長引数を渡せるようにすれば、もう少しよ�
 1. method_missingを使って自動的にメソッドが生成されるようにできる。
 
 追記2008-10-26：Countryクラスでclass_variable_setでなくinstance_variable_setを使うよう修正。
+
 {% footnotes %}
    {% fn 適切じゃないけど理解を容易にするために %}
 {% endfootnotes %}

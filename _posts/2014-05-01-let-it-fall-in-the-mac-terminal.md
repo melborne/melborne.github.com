@@ -20,7 +20,7 @@ published: true
 
 ---
 
-> [let_it_fall | RubyGems.org | your community gem host](https://rubygems.org/gems/let_it_fall "let_it_fall | RubyGems.org | your community gem host")
+> [let_it_fall \| RubyGems.org \| your community gem host](https://rubygems.org/gems/let_it_fall "let_it_fall \| RubyGems.org \| your community gem host")
 > 
 > [melborne/let_it_fall](https://github.com/melborne/let_it_fall "melborne/let_it_fall")
 
@@ -73,7 +73,7 @@ Macのターミナルを開いて、`gem install let_it_fall`と打ってイン�
 
 > [Macのターミナルで顔が降る](http://melborne.github.io/2014/04/30/let-it-smile-in-the-terminal/ "Macのターミナルで顔が降る")
 
-> [Macのターミナルでビールが降る | SOTA](http://deeeet.com/writing/2014/04/30/beer-on-terminal/ "Macのターミナルでビールが降る | SOTA")
+> [Macのターミナルでビールが降る  SOTA](http://deeeet.com/writing/2014/04/30/beer-on-terminal/ "Macのターミナルでビールが降る SOTA")
 
 ---
 

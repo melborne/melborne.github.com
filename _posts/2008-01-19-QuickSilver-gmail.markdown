@@ -13,7 +13,7 @@ QSを起動、gsと入力してGmail Searchを起動して、投稿した内容�
 
 ところが数日前からQSからgmailの作成画面が開かない。調べたらgmailのEnglish(US)バージョンに問題があるようで、Google Notifierからのcompose Mailでも動かないことがわかった。日本語バージョンではその問題は生じない。gmailのEnglishバージョンはNew versionがあって、カラーラベルなどが使えて重宝していたのにちょっと残念だ。それに英語の方が見た目もいいのにな。でもQSが使える便利さにはやはり敵わないから、gmailは日本語バージョンを暫く使おうと思う。
 
-参考：[Compose Mail does not load in Gmail Newer Version - The ABCs of Gmail | Google グループ](http://groups.google.com/group/Gmail-ABCs/browse_thread/thread/78382b7f1d3e4e65/973e059de5760ece)
+参考：[Compose Mail does not load in Gmail Newer Version - The ABCs of Gmail \| Google グループ](http://groups.google.com/group/Gmail-ABCs/browse_thread/thread/78382b7f1d3e4e65/973e059de5760ece)
 
 >ＳＳＬでログインしてみたら。<br>https://mail.google.com/mail/
 >>通りすがりさん<br>アドバイスありがとうございます。ただ、やってみましたが同じようにうまくいきませんでした。

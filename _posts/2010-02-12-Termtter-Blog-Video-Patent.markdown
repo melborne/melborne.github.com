@@ -8,21 +8,27 @@ categories:
 
 
 gsearch pluginを改良して以下のGoogle検索に対応させました
--Google Web Search
--Google Blog Search
--Google Book Search
--Google Image Search
--Google Video Search
--Google News Search
--Google Patent Search
+
+- Google Web Search
+- Google Blog Search
+- Google Book Search
+- Google Image Search
+- Google Video Search
+- Google News Search
+- Google Patent Search
+
 <del datetime="2010-02-15T09:22:46+09:00">なお日本語検索ができないという致命的な問題があります</del>
 (追記：2009/2/15)日本語検索に対応しました
-##使い方
-##*Google Web Search
+
+#使い方
+
+##Google Web Search
+
 Web検索は以下のようにする
 {% highlight ruby %}
 > google_web ruby または google ruby または gs ruby
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095148.png)
 
 
@@ -31,6 +37,7 @@ Web検索は以下のようにする
 > gs -l en -v true -p small ruby
 {% endhighlight %}
 とすると結果は以下のようになる
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095138.png)
 
 
@@ -38,6 +45,7 @@ site指定もできる
 {% highlight ruby %}
 > gs termtter site:d.hatena.ne.jp/keyesberry
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095139.png)
 
 
@@ -49,18 +57,22 @@ site指定もできる
 {% highlight ruby %}
 > gs termtter --site
 {% endhighlight %}
+
 もちろんTermtterのaliasを使ってサイト指定してもいい
+
 {% highlight ruby %}
  config.plugins.alias.aliases = {
     :amazon => 'gs site:www.amazon.co.jp',
     :wiki      => 'gs site:ja.wikipedia.org'
  }
 {% endhighlight %}
+
 こうしておけばAmazonコマンドでAmazonの書籍検索が
 wikiコマンドでwikipediaの検索ができるようになる
 
 結果のリストはuri-open pluginで開くことができるが
 以下に添付のdefault_replace pluginを使えば
+
 {% highlight ruby %}
 > 3
 {% endhighlight %}
@@ -69,11 +81,14 @@ wikiコマンドでwikipediaの検索ができるようになる
 > some 5
 {% endhighlight %}
 として0～4を一度に開くことができる
-##*Google Blog Search
+
+##Google Blog Search
+
 Blog検索は以下のようにする
 {% highlight ruby %}
 > google_blog google buzz または gb google buzz
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095147.png)
 
 
@@ -81,11 +96,14 @@ Blog検索は以下のようにする
 {% highlight ruby %}
 > gb -l ch -v true -p small google buzz
 {% endhighlight %}
-##*Google Book Search
+
+##Google Book Search
+
 Book検索は以下のようにする
 {% highlight ruby %}
 > google_book ruby または gbk ruby
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095141.png)
 
 
@@ -93,14 +111,17 @@ Book検索は以下のようにする
 {% highlight ruby %}
 > gbk -l en -p small ruby
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095142.png)
 
 
-##*Google Image Search
+##Google Image Search
+
 Image検索は以下のようにする
 {% highlight ruby %}
 > google_image flower または gi flower
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095146.png)
 
 
@@ -108,6 +129,7 @@ Image検索は以下のようにする
 {% highlight ruby %}
 > gi flower -c blue -t clipart -f gif -s large
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095144.png)
 
 
@@ -117,20 +139,25 @@ Image検索は以下のようにする
   # :image_type = :face, :photo, :clipart, :lineart
   # :file_type = :jpg, :png, :gif, :bmp
 {% endhighlight %}
-##*Google Video Search
+
+##Google Video Search
+
 Video検索は以下のようにする
 {% highlight ruby %}
 > google_video rubyconf または gv rubyconf
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212102205.png)
 
 
 起動optionは -lvp
-##*Google News Search
+
+##Google News Search
 News検索は以下のようにする
 {% highlight ruby %}
 > google_news google buzz または gn google buzz
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095140.png)
 
 
@@ -138,6 +165,7 @@ News検索は以下のようにする
 {% highlight ruby %}
 > gn -e us -t entertainment -r NY people
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095143.png)
 
 
@@ -148,11 +176,14 @@ News検索は以下のようにする
   #               :elections, :politics, :entertainment, :sports, :health
   # :news_relative_to = ex. city, state, province, zipcode..
 {% endhighlight %}
-##*Google Patent Search
+
+##Google Patent Search
+
 Patent検索は以下のようにする
 {% highlight ruby %}
 > google_patent programmig multithread または gp programmig multithread
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095145.png)
 
 
@@ -160,7 +191,9 @@ Patent検索は以下のようにする
 {% highlight ruby %}
 > gp multithread -i true
 {% endhighlight %}
-##*設定
+
+##設定
+
 検索のdefault設定は以下のようになっている
 {% highlight ruby %}
   :verbose            => false
@@ -180,6 +213,7 @@ Patent検索は以下のようにする
         :
         :
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100212/20100212095149.png)
 
 
@@ -188,3 +222,4 @@ Patent検索は以下のようにする
 (追記：2010/2/21)aliasについての記述を追加しました
 
 [gist: 297408 - Termtter plugins- GitHub](http://gist.github.com/297408)
+

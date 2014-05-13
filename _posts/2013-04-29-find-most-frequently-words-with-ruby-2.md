@@ -472,7 +472,7 @@ Hashクラスにtake_by_valueというメソッドを作って、上のコード
 {% endhighlight %}
 差し当たりtake_by_valueはクラスの中から呼ぶだけなので、その可視性をprivateにします。
 
-take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、{|v| -v}または{|v| v}をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。
+take_by_valueはtop_by_valueおよびbottom_by_valueに渡される引数nthの他、手続きオブジェクトsort_optを引数に取ります。top_by_valueおよびbottom_by_value側では、`{|v| -v}`または`{|v| v}`をlambdaでオブジェクト化して渡します。take_by_valueのsort_opt[val]は受け取った手続きオブジェクトを実行します。これはsort_opt.call(val)でもいいです。
 
 またtop_by_valueおよびbottom_by_valueでは、受け取るブロックをtake_by_valueに引き渡すために、&blkでブロックを一旦オブジェクト化する必要があります。
 

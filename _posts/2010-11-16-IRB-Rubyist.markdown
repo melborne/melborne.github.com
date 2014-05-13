@@ -509,6 +509,7 @@ user.rbを読み込んでhtmlを生成します。
  >> system('open', 'user.html') #=> true
  >> 
 {% endhighlight %}
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20101117/20101117191617.png)
 
 いいですね。
@@ -864,6 +865,7 @@ irbtoolsライブラリを入れることで、irbはかなり強力なものに
 (追記：2010-11-20) .irbrcへのメソッド定義についての記述を追加しました。
 
 (参考)：[IRB Wikipedia](http://ja.wikipedia.org/wiki/IRB)
+
 {% footnotes %}
    {% fn 内側のローカル変数はできないみたいです %}
    {% fn fancy_irbは出力の態様によって問題が出るときがあります %}

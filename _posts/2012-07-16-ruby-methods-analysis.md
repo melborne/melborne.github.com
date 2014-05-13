@@ -62,7 +62,7 @@ puts Gchart.bar(:data => data,
 {% endhighlight %}
 
 このコードで生成されるリクエストURLから、次のようなグラフが得られます。横軸がメソッド名の文字数、縦軸が該当メソッド数です。
-![length noshadow](http://chart.apis.google.com/chart?chxl=0:|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|29|31|1:|0|10|20|30|40|50|60|70|80|90|100|110|120|130&chxt=x,y&chbh=16&chf=bg,s,efefdd&chd=s:HHX9641fiWULHKLHHECDCBCABAAA&chtt=Methods+by+Name+Length&cht=bvs&chs=600x400&chxr=0,15,130)
+![length noshadow](http://chart.apis.google.com/chart?chxl=0:\|1\|2\|3\|4\|5\|6\|7\|8\|9\|10\|11\|12\|13\|14\|15\|16\|17\|18\|19\|20\|21\|22\|23\|24\|25\|26\|29\|31\|1:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90\|100\|110\|120\|130&chxt=x,y&chbh=16&chf=bg,s,efefdd&chd=s:HHX9641fiWULHKLHHECDCBCABAAA&chtt=Methods+by+Name+Length&cht=bvs&chs=600x400&chxr=0,15,130)
 
 大半は3文字から11文字の間に集中しているのがわかります。一方で、20を超える長さのメソッドもそれなりにあるんですね。
 
@@ -135,7 +135,7 @@ puts Gchart.bar(:data => data,
 
 大文字アルファベットと記号はぞれぞれ一つのグループにまとめています。グラフは次のようになりました。
 
-![beginning noshadow](http://chart.apis.google.com/chart?chxl=0:|A-Z|Sym|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|y|z|1:|0|10|20|30|40|50|60|70|80|90&chxt=x,y&chbh=17&chf=bg,s,efefdd&chd=s:DSYKtbkUUEUADWUJFlBo9ZRDJBB&chtt=Methods+by+Beginning+Character+Type&cht=bvs&chs=600x400&chxr=0,7,120)
+![beginning noshadow](http://chart.apis.google.com/chart?chxl=0:\|A-Z\|Sym\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|y\|z\|1:\|0\|10\|20\|30\|40\|50\|60\|70\|80\|90&chxt=x,y&chbh=17&chf=bg,s,efefdd&chd=s:DSYKtbkUUEUADWUJFlBo9ZRDJBB&chtt=Methods+by+Beginning+Character+Type&cht=bvs&chs=600x400&chxr=0,7,120)
 
 `s`で始まるメソッドが最も多く、`c`,`r`,`p`,`e`,`d`と続きます。
 
@@ -181,7 +181,7 @@ puts Gchart.pie(:data => data,
 
 結果は次のとおりです。
 
-![end noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:9JDC&chl=%28763%29|%3F%28116%29|%3D%2843%29|%21%2834%29&chtt=End+Character+Types&cht=p&chs=500x320&chxr=0,763,763)
+![end noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:9JDC&chl=%28763%29\|%3F%28116%29\|%3D%2843%29\|%21%2834%29&chtt=End+Character+Types&cht=p&chs=500x320&chxr=0,763,763)
 
 終端が`!`, `?`, `=`で終わるものが全体の2割を占めます。それらをリスト表示しておきましょう。
 
@@ -235,7 +235,7 @@ puts Gchart.pie(:data => data,
 
 結果は次のとおりです。
 
-![words noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:9UEAA&chl=one+word%28675%29|two+words%28225%29|three+words%2853%29|four+words%281%29|five+words%282%29&chtt=Words+in+a+Method+Name&cht=p&chs=500x320&chxr=0,675,675)
+![words noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:9UEAA&chl=one+word%28675%29\|two+words%28225%29\|three+words%2853%29\|four+words%281%29\|five+words%282%29&chtt=Words+in+a+Method+Name&cht=p&chs=500x320&chxr=0,675,675)
 
 １単語によるメソッドが70％以上を占めていることがわかります。
 
@@ -287,7 +287,7 @@ puts Gchart.pie(:data => data,
 
 結果は次のとおりです。
 
-![words in name noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:993ssppllffbb&chl=each%2818%29|to%2818%29|default%2816%29|method%2813%29|instance%2813%29|encoding%2812%29|path%2812%29|load%2811%29|class%2811%29|post%289%29|methods%289%29|public%288%29|by%288%29&chtt=Words+used+in+Methods&cht=p&chs=500x320&chxr=0,18,18)
+![words in name noshadow](http://chart.apis.google.com/chart?chf=bg,s,efefdd&chd=s:993ssppllffbb&chl=each%2818%29\|to%2818%29\|default%2816%29\|method%2813%29\|instance%2813%29\|encoding%2812%29\|path%2812%29\|load%2811%29\|class%2811%29\|post%289%29\|methods%289%29\|public%288%29\|by%288%29&chtt=Words+used+in+Methods&cht=p&chs=500x320&chxr=0,18,18)
 
 まあ予想通りの結果ですね。`each`,`to`が最多で18種類、`default`が16種類のメソッドで使われているようです。`each`と`to`を持ったメソッドをリストアップしてみましょう。
 

@@ -1240,6 +1240,7 @@ puts DATA.to_a
 __END__
 {% endhighlight %}
 このコードを実行すると、evaluateの結果がgrowl出力されると共に、このコード自身が標準出力されます。
+
 ##51. Rubyのキーワード 
 Rubyのキーワードは予約語ではないので、それが明示的な文脈で使われる限り、メソッド名などにも使えます。ここでは`case`, `if`, `for`をTriviaクラスに定義してみます。
 {% highlight ruby %}

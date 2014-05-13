@@ -15,7 +15,7 @@ published: true
 
 ---
 
-Graphvizには複数のレイアウトフォーマットがありますが、どれも名前が変わっていて生成されるレイアウトを名前から想像することが困難です。幾つかのレイアウトの説明は[Graphvizのサイト](http://www.graphviz.org/ "Graphviz | Graphviz - Graph Visualization Software")に書いてあるのですが、それを読んでもやっぱりピンと来ません。その結果、毎度グラフを作るたびにレイアウトを試行錯誤することになります。
+Graphvizには複数のレイアウトフォーマットがありますが、どれも名前が変わっていて生成されるレイアウトを名前から想像することが困難です。幾つかのレイアウトの説明は[Graphvizのサイト](http://www.graphviz.org/ "Graphviz \| Graphviz - Graph Visualization Software")に書いてあるのですが、それを読んでもやっぱりピンと来ません。その結果、毎度グラフを作るたびにレイアウトを試行錯誤することになります。
 
 でも、レイアウトはやっぱりサンプルを見るのが一番手っ取り早いですよね。
 
@@ -25,7 +25,7 @@ Graphvizには複数のレイアウトフォーマットがありますが、ど
 
 <br/>
 
-Graphvizのレイアウトサンプルを作って、ここに貼っておくことにします。サンプルの作成にはいつもの様に[Gviz](https://rubygems.org/gems/gviz "gviz | RubyGems.org | your community gem host")を使います。ちなみにGviz0.1.2では、gvizコマンドの-mオプションでlayouts一覧を表示できるようになりました。
+Graphvizのレイアウトサンプルを作って、ここに貼っておくことにします。サンプルの作成にはいつもの様に[Gviz](https://rubygems.org/gems/gviz "gviz \| RubyGems.org \| your community gem host")を使います。ちなみにGviz0.1.2では、gvizコマンドの-mオプションでlayouts一覧を表示できるようになりました。
 
 {% highlight bash %}
 % gviz -m layouts
@@ -37,7 +37,7 @@ Layouts:
 
 ##サンプル生成─その１
 
-最初に、１つのノードに対し複数のノードを連結したグラフを書いてみます。コードは次のようになります{% fn_ref 1 %}。ノードの色付けをするために[Colorable gem](https://rubygems.org/gems/colorable "colorable | RubyGems.org | your community gem host")を使っています。
+最初に、１つのノードに対し複数のノードを連結したグラフを書いてみます。コードは次のようになります{% fn_ref 1 %}。ノードの色付けをするために[Colorable gem](https://rubygems.org/gems/colorable "colorable \| RubyGems.org \| your community gem host")を使っています。
 
 
 {% gist 5292308 graph.ru %}

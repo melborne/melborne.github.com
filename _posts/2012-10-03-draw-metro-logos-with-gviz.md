@@ -19,7 +19,7 @@ published: true
 
 > [東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く](http://melborne.github.com/2012/10/02/draw-metro-map-with-gviz/ '東京の地下鉄をGviz（Ruby Graphviz Wrapper）で描く')
 
-こうなると路線サインもほしいです。作りましょう、[Gviz](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')で。
+こうなると路線サインもほしいです。作りましょう、[Gviz](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')で。
 
 ## データの準備
 前回使ったcolorsをそのまま使います。これに各路線のマークを統合します。

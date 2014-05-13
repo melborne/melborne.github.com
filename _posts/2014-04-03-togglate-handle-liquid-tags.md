@@ -62,6 +62,6 @@ published: true
 検証で挙がっている他の事項についてもこれから検討し、対応できるものはしていくつもりですので、togglateを今後ともよろしくお願いします。
 
 
-> [togglate | RubyGems.org | your community gem host](https://rubygems.org/gems/togglate "togglate | RubyGems.org | your community gem host")
+> [togglate \| RubyGems.org \| your community gem host](https://rubygems.org/gems/togglate "togglate \| RubyGems.org \| your community gem host")
 > 
 > [melborne/togglate](https://github.com/melborne/togglate "melborne/togglate")

@@ -42,13 +42,13 @@ published: true
 
 さて、ここからが本題です。ふぅ。
 
-Herokuでは現在試験的機能として、WebSocketを可能にするオプションが用意されています。これを使うと[Pusher](http://pusher.com/ "Pusher | HTML5 WebSocket Powered Realtime Messaging Service")などの外部サービスに頼らずに、HerokuでホスティングされるWebアプリ上でWebSocketの機能を実現できるようになります。
+Herokuでは現在試験的機能として、WebSocketを可能にするオプションが用意されています。これを使うと[Pusher](http://pusher.com/ "Pusher \| HTML5 WebSocket Powered Realtime Messaging Service")などの外部サービスに頼らずに、HerokuでホスティングされるWebアプリ上でWebSocketの機能を実現できるようになります。
 
-> [Heroku Labs: WebSockets | Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-labs-websockets "Heroku Labs: WebSockets | Heroku Dev Center")
+> [Heroku Labs: WebSockets \| Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-labs-websockets "Heroku Labs: WebSockets \| Heroku Dev Center")
 
 加えて、HerokuはRuby（Sinatra）でWebSocketを使ったチャットシステムのサンプル＆デモも公開しています。
 
-> [Using WebSockets on Heroku with Ruby | Heroku Dev Center](https://devcenter.heroku.com/articles/ruby-websockets#deploy "Using WebSockets on Heroku with Ruby | Heroku Dev Center")
+> [Using WebSockets on Heroku with Ruby \| Heroku Dev Center](https://devcenter.heroku.com/articles/ruby-websockets#deploy "Using WebSockets on Heroku with Ruby \| Heroku Dev Center")
 
 で、この記事に従えばWebSocketのアプリを作って公開することが簡単にできるのですが、それでもやっぱり定型的なコードを一つずつ用意するのには骨が折れます。SinatraにはRailsのようなGeneratorもないですし。
 
@@ -56,7 +56,7 @@ Herokuでは現在試験的機能として、WebSocketを可能にするオプ�
 
 SinatraでWebSocketを作る際のスケルトンを生成する`Sinatra-websocket-template`というGemを作りました:-)
 
-> [sinatra_websocket_template | RubyGems.org | your community gem host](https://rubygems.org/gems/sinatra_websocket_template "sinatra_websocket_template | RubyGems.org | your community gem host")
+> [sinatra_websocket_template \| RubyGems.org \| your community gem host](https://rubygems.org/gems/sinatra_websocket_template "sinatra_websocket_template \| RubyGems.org \| your community gem host")
 > 
 > [melborne/sinatra-websocket-template](https://github.com/melborne/sinatra-websocket-template "melborne/sinatra-websocket-template")
 

@@ -106,6 +106,7 @@ token_cache_fileに認証トークンが保存されるようだ
 
 (追記:2009/10/11)撮影日を取得するのにdate_timeではなくdate_time_originalを使うよう修正しました。API KeyをPitを使って管理するようにしました。
 <a href="http://subtech.g.hatena.ne.jp/cho45/20080102/1199257680">アカウント情報を管理するコマンド pit - 冬通りに消え行く制服ガールは、夢物語にリアルを求めない。 - subtech</a>
+
 {% footnotes %}
    {% fn Macでは /opt/local/lib/ruby/gems/1.8/gems/rflickr-2006.02.01/GETTING-STARTED %}
 {% endfootnotes %}

@@ -28,11 +28,13 @@ tags: [ruby]
 def alpha2num(alphabets)
  [*'A'..alphabets].size
 end
+
 def num2alpha(number)
  alpha = 'A'
  (number-1).times { alpha.succ! }
  alpha
 end
+
 alphabets = %w(A B Z AA AB AZ BB AAA IV ZZZ XFD)
 numbers = alphabets.map { |alpha| alpha2num alpha }
   # => [1, 2, 26, 27, 28, 52, 54, 703, 256, 18278, 16384]
@@ -45,6 +47,7 @@ numbers.map { |num| num2alpha num }
 でもなんかこれで解けたっていうのはずるっぽい感じがするから、僕も上司に恥をかかされないように勉強中のrspecを使ってまじめに解いたから、ここに貼っておくよ。
 
 <script src="https://gist.github.com/1534213.js"> </script>
+
 {% footnotes %}
    {% fn Array#rotate! #shuffle #cycleのことです^ ^; %}
 {% endfootnotes %}

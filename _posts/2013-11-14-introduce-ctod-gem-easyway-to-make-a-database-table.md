@@ -15,7 +15,7 @@ published: true
 
 ここでは`CtoD`の詳細を説明します。対象バージョンは0.0.3です。
 
-> [ctoD | RubyGems.org | your community gem host](https://rubygems.org/gems/ctoD "ctoD | RubyGems.org | your community gem host")
+> [ctoD \| RubyGems.org \| your community gem host](https://rubygems.org/gems/ctoD "ctoD \| RubyGems.org \| your community gem host")
 > 
 > [melborne/ctoD](https://github.com/melborne/ctoD "melborne/ctoD")
 

@@ -165,6 +165,7 @@ parse_and_arrange_timelines(timelines) # => {"2012-01-21"=>(1523/9600), "2012-01
 
 
 出力はこんな感じになります!
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20120125/20120125210748.png)
 
 

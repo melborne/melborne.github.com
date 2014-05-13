@@ -17,9 +17,9 @@ published: true
 
 ## Graphvizって何？
 
-[Graphviz](http://www.graphviz.org/ "Graphviz | Graphviz - Graph Visualization Software")はAT&T研究所が開発したオープンソースのグラフ描画ツールパッケージです。ここでいうグラフはExcelでいうところのグラフではなくグラフ理論でいうところのグラフです。ノードという玉とエッジという線を繋いだ体のもので、依然「**?**」な人はフローチャートや家系図をイメージしてください。Excelのグラフは数字を比較可能にビジュアライズします。一方で、Graphvizのグラフは「物事の関係性」をビジュアライズします。
+[Graphviz](http://www.graphviz.org/ "Graphviz \| Graphviz - Graph Visualization Software")はAT&T研究所が開発したオープンソースのグラフ描画ツールパッケージです。ここでいうグラフはExcelでいうところのグラフではなくグラフ理論でいうところのグラフです。ノードという玉とエッジという線を繋いだ体のもので、依然「**?**」な人はフローチャートや家系図をイメージしてください。Excelのグラフは数字を比較可能にビジュアライズします。一方で、Graphvizのグラフは「物事の関係性」をビジュアライズします。
 
-Graphvizは、[**DOT言語**](http://ja.wikipedia.org/wiki/DOT%E8%A8%80%E8%AA%9E "DOT言語 - Wikipedia")という専用言語で記述された物事の関係性を読み込んで、これを描画出力します。png, jpeg, bmp, pdf, svgなど[多様な画像フォーマット](http://www.graphviz.org/content/output-formats "Output Formats | Graphviz - Graph Visualization Software")への変換機能を持っています。プラットフォームに合ったものを[ここから](http://www.graphviz.org/Download..php "Download. | Graphviz - Graph Visualization Software")ダウンロードして、エディタで以下のようなファイルを書きます。
+Graphvizは、[**DOT言語**](http://ja.wikipedia.org/wiki/DOT%E8%A8%80%E8%AA%9E "DOT言語 - Wikipedia")という専用言語で記述された物事の関係性を読み込んで、これを描画出力します。png, jpeg, bmp, pdf, svgなど[多様な画像フォーマット](http://www.graphviz.org/content/output-formats "Output Formats \| Graphviz - Graph Visualization Software")への変換機能を持っています。プラットフォームに合ったものを[ここから](http://www.graphviz.org/Download..php "Download. \| Graphviz - Graph Visualization Software")ダウンロードして、エディタで以下のようなファイルを書きます。
 
 {% highlight text %}
 /* sample.dot */
@@ -41,7 +41,7 @@ Graphvizソフトが立ち上がって、次のような出力が得られます
 
 ![Alt title noshadow]({{ BASE_PATH }}/assets/images/2014/02/graphviz01.png)
 
-任意の画像フォーマットへの変換は[コマンドラインツール](http://www.graphviz.org/content/command-line-invocation "Command-line Invocation | Graphviz - Graph Visualization Software")でも、Graphvizソフトのexport機能を使ってもできます。
+任意の画像フォーマットへの変換は[コマンドラインツール](http://www.graphviz.org/content/command-line-invocation "Command-line Invocation \| Graphviz - Graph Visualization Software")でも、Graphvizソフトのexport機能を使ってもできます。
 
 Graphvizの最大の特徴は、例のように関係性を記述すればその配置はGraphviz側でよしなにやってくれることです。一方でそれがGraphvizの最大の弱点にもなっています。個々のノードの配置を望み通りにコントロールするのは困難です。しかし手段がないわけではありません。
 
@@ -196,7 +196,7 @@ digraph G {
 
 使えるレイアウト、属性、色などの情報は本家サイトのドキュメントを見るのが早いです。
 
-> [Documentation | Graphviz - Graph Visualization Software](http://www.graphviz.org/Documentation.php "Documentation | Graphviz - Graph Visualization Software")
+> [Documentation \| Graphviz - Graph Visualization Software](http://www.graphviz.org/Documentation.php "Documentation \| Graphviz - Graph Visualization Software")
 
 まとまった資料としては以下のPDF（英語版）があります。2006年版ということでちょっと古いです。
 
@@ -215,7 +215,7 @@ GvizはDOT言語を使わずにRubyのコード（DSL）を書くことでGraphv
 
 > [Gvizのサイト](http://melborne.github.io/Gviz/ "Gviz")
 
-Rubyによる同種のプログラムは多数存在します。古くからあって最も人気のあるものは「[ruby-graphviz](https://rubygems.org/gems/ruby-graphviz "ruby-graphviz | RubyGems.org | your community gem host")」です。比較的新しくて人気のあるものにRyan Davisの「[graph](https://rubygems.org/gems/graph "graph | RubyGems.org | your community gem host")」があります。Gvizはgraphにインスパイアされて作りました。私見ですがruby-graphvizはRuby成分が少なくgraphはtoo much DSLなので、Gvizは「**ほどよいDSL**」のインタフェースを目指しました。最新バージョンは0.3.4、Rubyは2.0.0以上が必要です。
+Rubyによる同種のプログラムは多数存在します。古くからあって最も人気のあるものは「[ruby-graphviz](https://rubygems.org/gems/ruby-graphviz "ruby-graphviz \| RubyGems.org \| your community gem host")」です。比較的新しくて人気のあるものにRyan Davisの「[graph](https://rubygems.org/gems/graph "graph \| RubyGems.org \| your community gem host")」があります。Gvizはgraphにインスパイアされて作りました。私見ですがruby-graphvizはRuby成分が少なくgraphはtoo much DSLなので、Gvizは「**ほどよいDSL**」のインタフェースを目指しました。最新バージョンは0.3.4、Rubyは2.0.0以上が必要です。
 
 
 ## Gvizの使い方
@@ -486,7 +486,7 @@ Gvizの他の機能やどんなグラフや図が描けるのかについては�
 
 ### 9. [Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く]({{ BASE_PATH }}/2012/11/07/play-gviz-with-colorable/ "Rubyライブラリ「Colorable」とGvizを使ってGraphvizで綺麗なリングを描く")
 
-この記事では、Rubyで色を扱うライブラリ「[colorable](https://rubygems.org/gems/colorable "colorable | RubyGems.org | your community gem host")」の紹介と、これをGvizと組合せて作ったカラーリングについて書きました。
+この記事では、Rubyで色を扱うライブラリ「[colorable](https://rubygems.org/gems/colorable "colorable \| RubyGems.org \| your community gem host")」の紹介と、これをGvizと組合せて作ったカラーリングについて書きました。
 
 ![usa noshadow]({{ site.url }}/assets/images/2012/color4.png)
 
@@ -579,7 +579,7 @@ Gvizの他の機能やどんなグラフや図が描けるのかについては�
 
 ### 22. [あなたのプロジェクトを美しく視覚化する]({{ BASE_PATH }}/2013/10/28/visualize-your-directory/ "あなたのプロジェクトを美しく視覚化する")
 
-この記事ではディレクトリ構造を簡単にビジュアライズする「[dir_friend](https://rubygems.org/gems/dir_friend "dir_friend | RubyGems.org | your community gem host")」というツールの紹介をしています。dir_friendは内部でGvizを使っています。
+この記事ではディレクトリ構造を簡単にビジュアライズする「[dir_friend](https://rubygems.org/gems/dir_friend "dir_friend \| RubyGems.org \| your community gem host")」というツールの紹介をしています。dir_friendは内部でGvizを使っています。
 
 ![usa noshadow]({{ site.url }}/assets/images/2013/10/prj_tree2.png)
 
@@ -606,7 +606,7 @@ Gvizの他の機能やどんなグラフや図が描けるのかについては�
 
 ### 26. [Rack以外でRackしたいRubyistのためのMatreska]({{ BASE_PATH }}/2014/01/14/matreska-is-rack-for-every-rubyist/ "Rack以外でRackしたいRubyistのためのMatreska")
 
-この記事では、アダプタブルなマルチフィルターバンドラー「[matreska](https://rubygems.org/gems/matreska "matreska | RubyGems.org | your community gem host")」の紹介と、これとGvizを組合せてアニメーションGIFを作る例を紹介しています。
+この記事では、アダプタブルなマルチフィルターバンドラー「[matreska](https://rubygems.org/gems/matreska "matreska \| RubyGems.org \| your community gem host")」の紹介と、これとGvizを組合せてアニメーションGIFを作る例を紹介しています。
 
 ![usa noshadow]({{ site.url }}/assets/images/2014/01/anpan.gif)
 

@@ -32,7 +32,7 @@ published: true
 
 RubyによるGraphvizラッパー`Gviz`をアップデートしました（version 0.2.0）。
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')
 
 > [melborne/Gviz · GitHub](https://github.com/melborne/Gviz "melborne/Gviz · GitHub")
 
@@ -60,7 +60,7 @@ RubyによるGraphvizラッパー`Gviz`をアップデートしました（versi
 ## インストール
 Graphvizが必要です。自分のプラットフォームに合ったものを以下から入手して下さい。
 
-> [Download. | Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php 'Download. | Graphviz - Graph Visualization Software')
+> [Download. \| Graphviz - Graph Visualization Software](http://www.graphviz.org/Download..php 'Download. \| Graphviz - Graph Visualization Software')
 
 Gvizのインストールは`gem install gviz`でＯＫです。Rubyはたぶん1.9.3以降が必要となります。
 
@@ -280,7 +280,7 @@ Graphvizでピクミンでした :-)
 
 {% gist 6192317 %}
 
-> [gviz | RubyGems.org | your community gem host](https://rubygems.org/gems/gviz 'gviz | RubyGems.org | your community gem host')
+> [gviz \| RubyGems.org \| your community gem host](https://rubygems.org/gems/gviz 'gviz \| RubyGems.org \| your community gem host')
 
 > [melborne/Gviz · GitHub](https://github.com/melborne/Gviz "melborne/Gviz · GitHub")
 

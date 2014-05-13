@@ -40,7 +40,7 @@ published: true
 Jekyllを使ったこのブログ記事を電子書籍化するツール「`Maliq`」をRubyで作りました！
 
 
-> rubygems: [Maliq](https://rubygems.org/gems/maliq 'maliq | RubyGems.org | your community gem host')    　　github: [melborne/maliq](https://github.com/melborne/maliq 'melborne/maliq')
+> rubygems: [Maliq](https://rubygems.org/gems/maliq 'maliq \| RubyGems.org \| your community gem host')    　　github: [melborne/maliq](https://github.com/melborne/maliq 'melborne/maliq')
 
 つまり`Maliq`は、Liquid拡張されたMarkdown形式のコンテンツからEPUBパッケージを作るツールです。Liquidにより実現されているコードのsyntax highlightingやAmazonリンク付きのコンテンツを、そのまま電子書籍化できます。「Markdown」と「Liquid」の頭を取って「Maliq」です。Mr. マリック（Maric）とは何の関係もありません。
 

@@ -50,7 +50,7 @@ Shoesのスクリプトで図とマスクを作り
 スクリプトおよび作り方は次回書きます
 
 (参考)
-[絵本ナビでお買い物♪しかけえほん「ギャロップ!!」 | 五感ノート♪](http://gokan-note.jugem.jp/?eid=750)
+[絵本ナビでお買い物♪しかけえほん「ギャロップ!!」 \| 五感ノート♪](http://gokan-note.jugem.jp/?eid=750)
 [昔の子供用絵本　ギャロップ - ５５２２の眼](http://blog.goo.ne.jp/5522eyes/e/e5ef5edfeca340b38fbf4489486c9bc7)
 [らばQ:このアイデアに脱帽、動き出す紙の本『Gallop!』](http://labaq.com/archives/51062608.html)
 

@@ -18,9 +18,12 @@ del.icio.us、Flickr、Blogger使いなら無視できんだろ
 ところが神はいるもんだね
 [ここで](http://www.flock.com/node/4690)答えを教えてくれたさ
 ライブラリ以下にあるgm_scripts/config.xmlのアクセス権限を755にすりゃいいとさ
+
 #Flock+Keyboard Shortcutでどうでぇ
 QuickSilverやってると、Mouseってのは、ほんとにしゃらくせぇなぁ
+
 |*Command |*Shortcut|
+|-----|-----|
 |タブの切替|Ctrl + tab|
 |タブの選択(1 to 9)|Cmd 1,Cmd 2,etc.|
 |新規タブ|Cmd + T|
@@ -45,6 +48,7 @@ QuickSilverやってると、Mouseってのは、ほんとにしゃらくせぇ�
 |.com補完|Cmd + Return|
 |頁情報表示|Cmd + I|
 |頁ソース表示|Cmd + U|
+
 （Mac版抜粋）
 
 {% footnotes %}

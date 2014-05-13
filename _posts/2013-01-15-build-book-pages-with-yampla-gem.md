@@ -21,7 +21,7 @@ published: true
 
 で、便利ついでに汎用性とか実用性とか将来性とかについては全くもって自分には想像できないのだけれども、さりとてどこか遠くの地域の特殊な環境のなかで暮らす幾ばくかの人たちの中の一人が「おーこりゃほら例のあの誰だかのプロジェクトにおいて使ったら便利かもしれん」などと言う可能性を完全に否定することもできず、また一方でRSpecがまともに書けない状態をいつまでも引きずっている自分からなんとか抜け出したくそのためにはコードを衆目の下に晒し恥をかくことしかないとの想いも手伝って、ここは一つ一念発起、YAMLファイルにアイテム情報をリストアップしてLiquidテンプレートを用意したならRubyが勝手にインデックスと個別アイテムのページを生成してくれるって文脈で、そのYAMLとテンプレートとをくっつけて圧縮したような「`yampla`」といった安直な名前を考えついたので、そんなのいらんわカスとか罵られる可能性を右側頭部に感じながらも、これをgem化して公開しましたので皆様にお知らせ致します。
 
-> rubygems: [Yampla](https://rubygems.org/gems/yampla 'yampla | RubyGems.org | your community gem host')
+> rubygems: [Yampla](https://rubygems.org/gems/yampla 'yampla \| RubyGems.org \| your community gem host')
 > github: [melborne/yampla](https://github.com/melborne/yampla 'melborne/yampla · GitHub')
 
 ## Yamplaとは

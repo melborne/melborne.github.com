@@ -119,7 +119,7 @@ gv.save(:sample1, :png)
 
 対応出力フォーマットは以下を見て下さい。
 
-> [Output Formats | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/output-formats 'Output Formats | Graphviz - Graph Visualization Software')
+> [Output Formats \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/output-formats 'Output Formats \| Graphviz - Graph Visualization Software')
 
 この頁のソースを見れば分かりますが、上のグラフはSVG(Scalable Vector Graphics)で出力したものを張り付けています{% fn_ref 2 %}。
 
@@ -155,15 +155,15 @@ gv.save(:sample2, :png)
 
 色見本は以下にあります。
 
-[Color Names | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/color-names 'Color Names | Graphviz - Graph Visualization Software')
+[Color Names \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/color-names 'Color Names \| Graphviz - Graph Visualization Software')
 
 グラフ、ノードおよびエッジの変更可能な属性については、以下を見て下さい。
 
-[attrs | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/attrs 'attrs | Graphviz - Graph Visualization Software')
+[attrs \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/attrs 'attrs \| Graphviz - Graph Visualization Software')
 
 またエッジの矢印の種類については以下を。
 
-[Arrow Shapes | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/arrow-shapes 'Arrow Shapes | Graphviz - Graph Visualization Software')
+[Arrow Shapes \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/arrow-shapes 'Arrow Shapes \| Graphviz - Graph Visualization Software')
 
 ## エッジポート、ノード配置、サブグラフ
 
@@ -212,7 +212,7 @@ gv.save(:sample3, :png)
 
 ノードの形については次を参考にして下さい。
 
-[Node Shapes | Graphviz - Graph Visualization Software](http://www.graphviz.org/content/node-shapes 'Node Shapes | Graphviz - Graph Visualization Software')
+[Node Shapes \| Graphviz - Graph Visualization Software](http://www.graphviz.org/content/node-shapes 'Node Shapes \| Graphviz - Graph Visualization Software')
 
 ## 日本地図を書く
 別の例をやってみます。Gvizで日本地図に挑戦してみます。まずは[都道府県 - Wikipedia](http://ja.wikipedia.org/wiki/%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C '都道府県 - Wikipedia')を参考に、次のようなCSVファイル（pref.csv）を用意します。データは都道府県コード、地方区分、名称、隣接県のコードの順に並んでいます。

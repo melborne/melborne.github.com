@@ -29,7 +29,7 @@ published: true
 テストがないとか自分にデータベース周りの知識がないとかで変なコトやってる可能性大ですが、自分の環境では一応動いているので公開します。
 
 
-> [ctoD | RubyGems.org | your community gem host](https://rubygems.org/gems/ctoD "ctoD | RubyGems.org | your community gem host")
+> [ctoD \| RubyGems.org \| your community gem host](https://rubygems.org/gems/ctoD "ctoD \| RubyGems.org \| your community gem host")
 > 
 > [melborne/ctoD](https://github.com/melborne/ctoD "melborne/ctoD")
 
@@ -69,7 +69,7 @@ Numbersのエクスポート機能を使ってデータをCSV形式にします�
 
 HerokuのデータベースがPostgresなのでローカルの環境にもこれをインストールします。Macで最も簡単な方法は`Postgres.app`をインストール方法でしょう。
 
-> [Postgres.app | the easiest way to run PostgreSQL on the Mac](http://postgresapp.com/ "Postgres.app | the easiest way to run PostgreSQL on the Mac")
+> [Postgres.app \| the easiest way to run PostgreSQL on the Mac](http://postgresapp.com/ "Postgres.app \| the easiest way to run PostgreSQL on the Mac")
 
 Herokuにデプロイせず、ローカルで楽しむだけならsqlite3（Macにプリインストール）、mysqlなどを使うこともできます（その他のデータベースでは試していません）。
 
@@ -473,9 +473,9 @@ Opening serene-retreat-5896... done
 
 次にローカルのmovieデータをHeroku上のデータベースに移管する手順を説明します。詳細はこちらで。
 
-> [Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-postgres-import-export#import "Importing and Exporting Heroku Postgres Databases with PG Backups | Heroku Dev Center")
+> [Importing and Exporting Heroku Postgres Databases with PG Backups \| Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-postgres-import-export#import "Importing and Exporting Heroku Postgres Databases with PG Backups \| Heroku Dev Center")
 >
-> [Heroku Postgres | Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup "Heroku Postgres | Heroku Dev Center")
+> [Heroku Postgres \| Heroku Dev Center](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup "Heroku Postgres \| Heroku Dev Center")
 
 まずは`pg_dump`コマンドを使ってデータをダンプします。
 

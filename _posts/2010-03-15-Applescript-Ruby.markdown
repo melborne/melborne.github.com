@@ -83,7 +83,9 @@ nmap _ :set transparency-=5<CR>
 この設定でnomal modeで+を押す度に透過度が上がり
 _を押す度に透過度が下がるようになります
 やはりVimはただ者ではありません
+
 ##iTerm
+
 ###*Applescriptその１
 iTermはApplescriptをサポートしています
 ですからその透過度をApplescriptを使って変更できそうです
@@ -118,6 +120,7 @@ tell application "iTerm"
     end tell
 end tell
 {% endhighlight %}
+
 ###*scriptのメニュー登録とkeyboard shortcutの割り当て
 次にこれらのscriptをkeyboard shortcutで呼び出せるようにします
 １つの方法はiTermのスクリプトメニューにscriptを登録し
@@ -131,12 +134,14 @@ scriptを置くことで出現します{% fn_ref 2 %}
 次にシステム環境設定>キーボードとマウス>キーボードショートカットを開き
  +ボタンを押してショートカットの登録ダイアログを開きます
 アプリケーション、メニュータイトル、ショートカットを設定します
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094407.png)
 
 
 同様にしてtransparency_to005.scptを登録します
 これによって登録したショートカットで
 iTermの透過度を変えることができるようになります
+
 ###*Applescriptその２
 それにしても固定値のscriptを２つというのは酷過ぎます
 これじゃ単なるマクロです
@@ -192,6 +197,7 @@ iTermをactiveにした状態でアイコンをクリックし
 このメニューからscriptを起動できるようになります
 ちなみにこのフォルダは
 ~/library/Scripts/Applications/iTerm/になります
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094408.png)
 
 
@@ -199,6 +205,7 @@ iTermをactiveにした状態でアイコンをクリックし
 しかしこのフォルダ内のscriptに
 keyboard shortcutを割り当てる方法は
 残念ながら見つかりませんでした
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094409.png)
 
 ##QuickSilverを使う
@@ -214,6 +221,7 @@ keyboard shortcutを割り当てることができます
 script名を打ってitemに設定しtriggerをダブルクリックして
 keyboard shortcutを登録します
 これで無事目的を達成できました
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094410.png)
 
 
@@ -289,6 +297,7 @@ do shell script "ruby ~/path/to/file/iterm_opac.rb -"
 {% endhighlight %}
 そして先ほどと同様にQuickSilverで
 keyboard shortcutを登録すれば完了です
+
 ##Terminal用Ruby Script
 Terminalでも透過度を調整できるように
 rubyのコードを書きました
@@ -311,6 +320,7 @@ end
 {% endhighlight %}
 基本はiTermのものと同じですが
 対象のwindowとその透過度を取得するやり方が違います
+
 ##ASDictionary
 ネットには思いの外rb-appscriptに関する情報がありません
 そのため対象Macアプリで使える
@@ -328,7 +338,7 @@ plain textまたはhtmlのかたちで出力できます
 しかしより有用なのはこのツールをインストールすると
 rb-appscriptはこの辞書に基づいたhelpシステムを構築するのです
 
-[rb-appscript manual | 4. Getting Help](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/04_gettinghelp.html)
+[rb-appscript manual \| 4. Getting Help](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/04_gettinghelp.html)
 
 見てみましょう
 {% highlight ruby %}
@@ -457,19 +467,22 @@ irb> term.windows[0].background_color.get
 irb> term.windows[0].background_color.set([0,0,0,-6718])
 => nil
 {% endhighlight %}
+
 ##ASTranslate
 もしrubyよりもAppscriptに明るいのなら
 ASTranslateが便利です
 
-[rb-appscript manual | 4. Getting Help](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/04_gettinghelp.html)
+[rb-appscript manual \| 4. Getting Help](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/04_gettinghelp.html)
 
 Applescriptを上のペインに貼り付け
 &#8984;+rすれば対応するruby scriptができてしまいます
+
 ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20100315/20100315094411.png)
 
 
 説明がずいぶんと冗長になってしまいました
 より良い方法をご存知ならコメント頂ければ助かります
+
 {% footnotes %}
    {% fn Vimには:winposというウィンドウの位置を変える関数があります。自分のMacVimでは機能しませんでした。 %}
    {% fn Scriptsフォルダがない場合は作ります %}

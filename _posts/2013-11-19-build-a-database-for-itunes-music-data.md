@@ -21,9 +21,9 @@ published: true
 
 次にAppleScriptをブリッジしてMacなアプリを操作するための`rb-appscript`の存在を思い出す。
 
-> [rb-appscript | RubyGems.org | your community gem host](https://rubygems.org/gems/rb-appscript "rb-appscript | RubyGems.org | your community gem host")
+> [rb-appscript \| RubyGems.org \| your community gem host](https://rubygems.org/gems/rb-appscript "rb-appscript \| RubyGems.org \| your community gem host")
 > 
-> [rb-appscript manual | Contents](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/index.html "rb-appscript manual | Contents")
+> [rb-appscript manual \| Contents](http://appscript.sourceforge.net/rb-appscript/doc/appscript-manual/index.html "rb-appscript manual \| Contents")
 
 iTunesを操作できるんだから情報くらいとれるに違いない。
 
@@ -61,7 +61,7 @@ IRB on Ruby2.0.0
 
 `rb-appscript`を使ってiTunesのtrack情報にアクセスする`ItunesTrack`というライブラリを作りました:-)
 
-> [itunes_track | RubyGems.org | your community gem host](https://rubygems.org/gems/itunes_track "itunes_track | RubyGems.org | your community gem host")
+> [itunes_track \| RubyGems.org \| your community gem host](https://rubygems.org/gems/itunes_track "itunes_track \| RubyGems.org \| your community gem host")
 > 
 > [melborne/itunes_track](https://github.com/melborne/itunes_track "melborne/itunes_track")
 

@@ -8,15 +8,17 @@ categories:
 ---
 
 ##Rubyで桁の合計を求める  ～Rubyでオイラープロジェクトを解こう！Problem16
+
 [Problem 16 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=16)
  
-____
-2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
-What is the sum of the digits of the number 2^1000 ?
-____
-2^15 = 32768 の各桁の合計は 3 + 2 + 7 + 6 + 8 = 26である。
-2^1000 の各桁の合計はいくつか。
-____
+>
+> 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+>
+> What is the sum of the digits of the number 2^1000 ?
+>
+> 2^15 = 32768 の各桁の合計は 3 + 2 + 7 + 6 + 8 = 26である。
+>
+> 2^1000 の各桁の合計はいくつか。
 
 算数的でないけど
 {% highlight ruby %}
@@ -41,12 +43,15 @@ ____
 
 ##Rubyで最短ルート数を探す ～Rubyでオイラープロジェクトを解こう！Problem15
 [Problem 15 - Project Eulerより](http://projecteuler.net/index.php?section=problems&id=15)
-> 
+ 
 > Starting in the top left corner of a 2×2 grid, there are 6 routes (without backtracking) to the bottom right corner.
+>
 > ![image](http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20090121/20090121100543.gif)
-
+>
 > How many routes are there through a 20×20 grid?
+>
 > 2×2グリッドの左上の角からスタートした場合、右下の角に至るには6つのルートがある(引き返しはなし)。
+>
 > では20×20のグリッドではいくつのルートがあるか。
 
 
@@ -57,6 +62,7 @@ ____
 
 交点横一列の要素数の配列を作り
 ここに対応する交点に至るルート数を格納する
+
 {% highlight ruby %}
  def routes(x,y)
    points = Array.new(x+1, 1)

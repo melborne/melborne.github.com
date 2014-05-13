@@ -9,7 +9,7 @@ published: true
 ---
 {% include JB/setup %}
 
-[前回](http://melborne.github.com/2013/01/15/build-book-pages-with-yampla-gem/ 'Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？')紹介したRuby製ドキュメント生成ツール「[Yampla](https://rubygems.org/gems/yampla 'yampla | RubyGems.org | your community gem host')」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しますね。
+[前回](http://melborne.github.com/2013/01/15/build-book-pages-with-yampla-gem/ 'Rubyで商品リストのようなものを作るときあなたはいつもどうしていますか？')紹介したRuby製ドキュメント生成ツール「[Yampla](https://rubygems.org/gems/yampla 'yampla \| RubyGems.org \| your community gem host')」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しますね。
 
 対象情報はプログラミング言語にしましょう。まずは以下のサイトから任意に選択した言語についての情報を取得します。
 
@@ -451,7 +451,7 @@ lang% tree
 
 簡単ですね！
 
-「[Yampla](https://rubygems.org/gems/yampla 'yampla | RubyGems.org | your community gem host')」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しました。
+「[Yampla](https://rubygems.org/gems/yampla 'yampla')」を使って、YAMLファイルからXMLファイルを生成する簡単な例を紹介しました。
 
 
 ---

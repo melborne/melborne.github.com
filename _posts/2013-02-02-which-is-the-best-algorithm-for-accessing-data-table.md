@@ -25,6 +25,7 @@ B = ["ᗄ", "ᗺ", "Ɔ", "ᗡ", "Ǝ", "Ⅎ", "⅁", "H", "I", "ᒋ", "丬", "⅂
 
 
 <br />
+
 ##─　僕のやり方１　─
 `Array#index`でＡにおける文字の位置を求め、`Array#at`でＢにおける対応位置の文字を取る。
 
@@ -49,6 +50,7 @@ flipped.chars.map { |chr| unflip chr }.join.reverse # => "Ruby is fun!"
 {% endhighlight %}
 
 <br />
+
 ##─　僕のやり方２　─
 `Array#zip`で対応文字のペアを作り、`Array#assoc`で検索する。unflipでは`Array#rassoc`を使う。
 
@@ -74,6 +76,7 @@ flipped.chars.map { |chr| unflip chr }.join.reverse # => "Ruby is fun!"
 {% endhighlight %}
 
 <br />
+
 ##─　僕のやり方３　─
 `Array#zip`で対応文字のペアを作り、`Enumerable#find`（または#detect）で検索する。
 
@@ -100,6 +103,7 @@ flipped.chars.map { |chr| unflip chr }.join.reverse # => "Ruby is fun!"
 {% endhighlight %}
 
 <br />
+
 ##─　僕のやり方４　─
 `Hash.[]`で対応文字のハッシュを作り、`Hash#[]`で検索する。unflipは`Hash#invert`でデータを反転してから検索する。
 
@@ -126,6 +130,7 @@ flipped.chars.map { |chr| unflip chr }.join.reverse # => "Ruby is fun!"
 {% endhighlight %}
 
 <br />
+
 ##─　僕のやり方５　─
 `Hash.[]`で対応文字のハッシュを作り、`Hash#[]`で検索する。unflipでは`Hash#key`を使う。
 
