@@ -12,7 +12,7 @@ published: true
 
 (追記:2014-5-6) let_it_fallをバージョンアップしました(version0.1.2)。
 
-> [Macのターミナルでマトリックス?]({{ BASE_PATH }}/2014/05/06/let-it-matrix-in-the-mac-terminal/ "Macのターミナルでマトリックス?")
+> [Macのターミナルでマトリックス?]({{ BASE_PATH }}/2014/05/07/let-it-matrix-in-the-mac-terminal/ "Macのターミナルでマトリックス?")
 
 ---
 
