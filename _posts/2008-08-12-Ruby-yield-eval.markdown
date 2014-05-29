@@ -8,7 +8,6 @@ categories:
 
 Yugui著「初めてのRuby」の９章に、Rubyの黒魔術の一つとしてeval族と称されるメソッド群が紹介されている。
 
-{{ 4873113679 | amazon_medium_image }}
 {{ 4873113679 | amazon_link }}
 
 危険らしい。素人が安易に手を出すべきではなさそうだ。でも魅力的らしい。

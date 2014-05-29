@@ -437,6 +437,7 @@ run method(:draque)
 > 1. middlewareの#callでWebアプリの#callを呼んで、ゴニョゴニョする。
 
 従って、リクエストーレスポンスの流れは次のようになります。
+
 > 1. Rack(Webサーバ)はBrowserからリクエストが来ると、useされたmiddleware(UpDwon)の#callを呼ぶ。
 > 1. middlewareの#callはWebアプリ(draque)の#callを呼ぶ。
 > 1. Webアプリは#call呼び出しに対してリクエストに応じた、[status, headers, body]を返す。

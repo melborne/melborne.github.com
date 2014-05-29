@@ -9,7 +9,6 @@ categories:
 
 Yugui著「初めてのRuby」を読んでいる。
 
-{{ 4873113679 | amazon_medium_image }}
 {{ 4873113679 | amazon_link }} by {{ '4873113679' | amazon_authors }}
 
 7章メソッドには、ブロック付きメソッドのことが丁寧に記述されていて大変参考になる。
