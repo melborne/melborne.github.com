@@ -4,13 +4,158 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-06-01T18:13:35+09:00</updated>
+ <updated>2014-06-11T11:07:04+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>RubyのHashの秘密</title>
+   <link href="http://melborne.github.io/2014/06/11/secret-in-rubys-hash"/>
+   <updated>2014-06-11T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/06/11/secret-in-rubys-hash</id>
+   <content type="html">
+&lt;p&gt;巷では個人情報保護の機運が高まっているからぼくもひとつそのための仕組みを考えてみたよ。ぼくのやり方はRubyのHashを使うんだ。&lt;/p&gt;
+
+&lt;p&gt;まずはHashに&lt;code&gt;HashSecret&lt;/code&gt;というモジュールを挿すよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HashSecret&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;このHashは普通のHashのように使えるんだけど、そこに機密情報をセットするための&lt;code&gt;Hash#secret=&lt;/code&gt;というメソッドを追加するんだ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Charlie&#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:job&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Programmer&#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;My-password123&#39;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 機密情報をセット！&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;で、ここからがミソなんだけれども、セットされた機密情報はHashを走査しても見えないんだ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;My-password123&#39;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 機密情報をセット！&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kv&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; [:name, &quot;Charlie&quot;]&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; [:job, &quot;Programmer&quot;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;でも、&lt;code&gt;secret&lt;/code&gt;キーを使えばアクセスできる。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;My-password123&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;複数の機密情報を扱いたい場合は、&lt;code&gt;Hash#secret=&lt;/code&gt;に配列やハッシュをセットすればいいんだ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# 配列で機密情報を管理！&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;My-password123&#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;charlie@secret.com&#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [&quot;My-password123&quot;, &quot;charlie@secret.com&quot;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# ハッシュで機密情報を管理！&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;123-456-789-012&#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;charlie@secret.com&#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;123-456-789-012&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;charlie@secret.com&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;でも、多分これだと、こう言う人がきっといるよね。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;「HashSecret使ってんの分かったら、&lt;code&gt;secret&lt;/code&gt;キーでアクセスされちゃうじゃん。バカなの？」&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;そんなときは&lt;code&gt;secret&lt;/code&gt;キーに別の値をセットして隠蔽すればいいんだよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Nothing here&#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;Nothing here&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:name=&amp;gt;&quot;Charlie&quot;, :job=&amp;gt;&quot;Programmer&quot;, :secret=&amp;gt;&quot;Nothing here&quot;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;今度は、こういう声が聞こえてくるよ。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;「それでどうやって機密情報にアクセスすんの？お前、あほなの？」&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;まあ、落ち着いて。&lt;/p&gt;
+
+&lt;p&gt;まずは、ヨガで言うところの「シッダアーサナ（達人座）」のポーズを取って目を閉じ静かに深く呼吸する。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://yoga-pose.info/img/zai/tatsujinza.jpg&quot; alt=&quot;Alt title noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;出典：&lt;a href=&quot;http://yoga-pose.info/zai/tatsujinza.htm&quot; title=&quot;達人座（シッダ・アーサナ） - ヨガのポーズ大全集&quot;&gt;達人座（シッダ・アーサナ） - ヨガのポーズ大全集&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;で、心の中が「無」になったら、そこに浮かんだ「言葉」を読むんだ。&lt;/p&gt;
+
+&lt;p&gt;ぼくの言葉はこうだった。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;:sekai_no_owari&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;さあ、試してみるよ！&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sekai_no_owari&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {:credit=&amp;gt;&quot;123-456-789-012&quot;, :email=&amp;gt;&quot;charlie@secret.com&quot;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ほら、読めた！&lt;/p&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;p&gt;つまらないネタ思いついちゃったので…。&lt;/p&gt;
+
+&lt;p&gt;まだ？（はてな）な人いるかもしれないから、&lt;code&gt;HashSecret&lt;/code&gt;の実装は下の方に置いておきますm(__)m&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;HashSecret&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;secret&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;Hash#default=&lt;/code&gt;の別名かよ！&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>earthquake.gemで逆さ書きツイートとか縦書きツイートとか</title>
@@ -483,448 +628,6 @@ Commands:
 		&lt;li id=&quot;fn:1&quot;&gt;物語化のため誇張してます。実際はdeeeet.comからのアクセスが最大でした。&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
 	&lt;/ol&gt;
 &lt;/div&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>Let It Go for Rubyists</title>
-   <link href="http://melborne.github.io/2014/05/10/let-it-go-for-rubyists"/>
-   <updated>2014-05-10T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/05/10/let-it-go-for-rubyists</id>
-   <content type="html">
-&lt;p&gt;「&lt;a href=&quot;http://www.railsconf.com/&quot; title=&quot;RailsConf 2014 - April 22-25 in Chicago, IL&quot;&gt;RailsConf 2014&lt;/a&gt;」からのワンシーンです。素敵だなあ。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.confreaks.com/videos/3461-railsconf-let-me-code&quot; title=&quot;Let Me Code - Liana Leahy - RailsConf 2014&quot;&gt;Let Me Code - Liana Leahy - RailsConf 2014&lt;/a&gt;&lt;/p&gt;
-
-&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/kRUS8Zvg3sg?color=white&amp;amp;theme=light&quot;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;彼女はRailsエンジニアで、かつてはプロの歌い手さんだったようです。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://twitter.com/lleahy&quot; title=&quot;Liana Leahy (lleahy) on Twitter&quot;&gt;Liana Leahy (lleahy) on Twitter&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;感動したので歌詞の日本語訳をしてみました。雰囲気が伝わればと。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;(追記：2014-5-13) 対訳版を追加しました。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;let-me-code-lyrics-&quot;&gt;Let Me Code Lyrics 対訳版&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;PCスクリーンが　白く光る夜
-The screen glows white on my laptop tonight  (Let Me Code)
-The snow glows white on the mountain tonight (Let It Go)
-
-RSpecは　グリーンにならない
-And my rspec won&#39;t go green
-Not a footprint to be seen.
-
-私は一人ぼっちで　コーディングしている
-I&#39;m coding in isolation,
-A kingdom of isolation,
-
-だから　私のプルリクは行儀が悪いの
-So my PRs are obscene
-and it looks like I&#39;m the Queen
-
-疑心暗鬼が叫んでる　内なる渦巻く嵐のように
-My doubts are howling like this swirling storm inside
-The wind is howling like this swirling storm inside
-
-もう　抑えることができないの
-Couldn&#39;t keep it in;
-Couldn&#39;t keep it in;
-
-神様は　私が頑張ったこと知っている
-Heaven knows I&#39;ve tried
-Heaven knows I&#39;ve tried
-
-
-誰も入れてはだめ
-Don&#39;t let them in,
-Don&#39;t let them in,
-
-誰に見せてもだめ
-don&#39;t let them see
-don&#39;t let them see
-
-私のGithubレポは　私を落ち込ませる
-my github repos are mortifying me
-Be the good girl you always have to be
-
-隠さなくちゃ　感情さえも
-Conceal, don&#39;t feel,
-Conceal, don&#39;t feel,
-
-知られちゃだめ
-don&#39;t let them know
-don&#39;t let them know
-
-
-でも　もうみんな知っているの！
-Well now they know
-Well now they know
-
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-もう　隠すことなんてできない
-Can&#39;t hold it back anymore
-Can&#39;t hold it back anymore
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-私はRails4.0.4と　戯れていたいの
-I want to play with rails 4.0.4
-Turn away and slam the door
-
-彼らが言うことなんて　もう気にしない
-I don&#39;t care
-what they&#39;re going to say
-I don&#39;t care
-what they&#39;re going to say
-
-モヒカンには　言わせておくわ
-Let the nerds rage on.
-Let the storm rage on.
-
-
-そうよ　荒らしなんて
-気にしたことなかったんだから！
-The trolls never bothered me anyway
-The cold never bothered me anyway
-
-
-笑っちゃうわ　離れてみれば
-It&#39;s funny how some distance
-It&#39;s funny how some distance
-
-すべてが小さく見えるの
-Makes everything seem small
-Makes everything seem small
-
-自信喪失症候群が
-And the impostor syndrome
-And the fears that once controlled me
-
-もう私を苦しめることはないわ
-Can&#39;t get to me at all
-Can&#39;t get to me at all
-
-
-私に何ができるか　試す時がきたの
-It&#39;s time to see what I can do
-It&#39;s time to see what I can do
-
-限界に挑んで　それを超えるのよ
-To test the limits and break through
-To test the limits and break through
-
-私には正しいとか　間違ってるとか
-Sandiの教えとかも　いらないのよ
-No right, no wrong, Sandi&#39;s rules for me,
-No right, no wrong, no rules for me,
-
-私は　自由なの！
-I&#39;m free!
-I&#39;m free!
-
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-Matzが私の好みなの
-Matz is my favorite guy
-I am one with the wind and sky
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-DHHに私の嘆きは見せないわ
-DHH will never see me cry
-You&#39;ll never see me cry
-
-ここが私の居場所
-Here I stand
-Here I stand
-
-そしてこれからもそう
-And here I&#39;ll stay
-And here I&#39;ll stay
-
-モヒカンは言ってなさいよ
-Let the nerds rage on
-Let the storm rage on
-
-私のSQLクエリは　見つけたデータをフェッチする
-My SQL queries fetching data that it found
-My power flurries through the air into the ground
-
-Rubyを使って 一面の凍ったフラクタルを描くの
-I&#39;m using ruby to draw frozen fractals all around
-My soul is spiraling in frozen fractals all around
-
-そして想いは 氷の矢のように確かなものになるの
-And one thought&#39;s solidifying like an icy blast
-And one thought crystallizes like an icy blast
-
-もう戻らないわ　過去は過ぎ去ったのよ
-I&#39;m never going back, the past is in the past
-I&#39;m never going back, the past is in the past
-
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-立ち上がるときよ　日が昇るように
-When I&#39;ll rise like the break of dawn
-And I&#39;ll rise like the break of dawn
-
-ありのままに　コードを書けばいいの
-Let me code, let me code
-Let it go, let it go
-
-完璧な女子なんていない
-That perfect girl is gone
-That perfect girl is gone
-
-私はここにいる
-Here I stand
-Here I stand
-
-作ったばかりのアプリと共に
-With the apps I&#39;ve made
-In the light of day
-
-モヒカンには　言わせておけばいいわ
-Let the nerds rage on
-Let the storm rage on
-
-
-そうよ　荒らしなんて
-気にしたことなかったんだから！
-The trolls never bothered me anyway!
-The cold never bothered me anyway!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;let-me-code-&quot;&gt;Let Me Code 歌詞&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;PCスクリーンが　白く光る夜
-RSpecは　グリーンにならない
-私は一人ぼっちで　コーディングしている
-だから　私のプルリクは行儀が悪いの
-疑心暗鬼が叫んでる　内なる渦巻く嵐のように
-もう　抑えることができないの
-神様は　私が頑張ったこと知っている
-
-誰も入れてはだめ
-誰に見せてもだめ
-私のGithubレポは　私を落ち込ませる
-隠さなくちゃ　感情さえも
-知られちゃだめ
-でも　もうみんな知っているの！
-
-ありのままに　コードを書けばいいの
-もう　隠すことなんてできない
-ありのままに　コードを書けばいいの
-私はRails4.0.4と　戯れていたいの
-彼らが言うことなんて　もう気にしない
-モヒカンには　言わせておくわ
-
-そうよ　荒らしなんて
-気にしたことなかったんだから！
-
-笑っちゃうわ　離れてみれば
-すべてが小さく見えるの
-自信喪失症候群が
-もう私を苦しめることはないわ
-
-私に何ができるか　試す時がきたの
-限界に挑んで　それを超えるのよ
-私には正しいとか　間違ってるとか
-Sandiの教えとかも　いらないのよ
-私は　自由なの！
-
-ありのままに　コードを書けばいいの
-Matzが私の好みなの
-ありのままに　コードを書けばいいの
-DHHに私の嘆きは見せないわ
-ここが私の居場所
-そしてこれからもそう
-モヒカンは言ってなさいよ
-
-私のSQLクエリは　見つけたデータをフェッチする
-Rubyを使って 一面の凍ったフラクタルを描くの
-そして想いは 氷の矢のように確かなものになるの
-もう戻らないわ　過去は過ぎ去ったのよ
-
-ありのままに　コードを書けばいいの
-立ち上がるときよ　日が昇るように
-ありのままに　コードを書けばいいの
-完璧な女子なんていない
-私はここにいる
-作ったばかりのアプリと共に
-モヒカンには　言わせておけばいいわ
-
-そうよ　荒らしなんて
-気にしたことなかったんだから！
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;let-me-code-lyrics&quot;&gt;Let Me Code Lyrics&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://blogs.law.harvard.edu/lianaleahy/2014/04/25/let-me-code-lyrics/&quot; title=&quot;» Let Me Code Lyrics Geek Mama&quot;&gt;» Let Me Code Lyrics Geek Mama&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code&gt;The screen glows white on my laptop tonight
-And my rspec won’t go green
-I’m coding in isolation,
-So my PRs are obscene
-My doubts are howling like this swirling storm inside
-Couldn’t keep it in;
-Heaven knows I’ve tried
-
-Don’t let them in,
-don’t let them see
-my github repos are mortifying me
-Conceal, don’t feel,
-don’t let them know
-Well now they know
-
-Let me code, let me code
-Can’t hold it back anymore
-Let me code, let me code
-I want to play with rails 4.0.4
-I don’t care
-what they’re going to say
-Let the nerds rage on.
-
-The trolls never bothered me anyway
-
-It’s funny how some distance
-Makes everything seem small
-And the impostor syndrome
-Can’t get to me at all
-
-It’s time to see what I can do
-To test the limits and break through
-No right, no wrong, Sandi’s rules for me,
-I’m free!
-
-Let me code, let me code
-Matz is my favorite guy
-Let me code, let me code
-DHH will never see me cry
-Here I stand
-And here I’ll stay
-Let the nerds rage on
-
-My SQL queries fetching data that it found
-I’m using ruby to draw frozen fractals all around
-And one thought’s solidifying like an icy blast
-I’m never going back, the past is in the past
-
-Let me code, let me code
-When I’ll rise like the break of dawn
-Let me code, let me code
-That perfect girl is gone
-Here I stand
-With the apps I’ve made
-Let the nerds rage on
-
-The trolls never bothered me anyway!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;let-it-go-original&quot;&gt;Let It Go (Original)&lt;/h2&gt;
-
-&lt;p&gt;Let Me Codeの歌詞はオリジナルLet It Goのパロディになっているので、オリジナルも載せておきます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;The snow glows white on the mountain tonight
-Not a footprint to be seen.
-A kingdom of isolation,
-and it looks like I&#39;m the Queen
-The wind is howling like this swirling storm inside
-Couldn&#39;t keep it in;
-Heaven knows I&#39;ve tried
-
-Don&#39;t let them in,
-don&#39;t let them see
-Be the good girl you always have to be
-Conceal, don&#39;t feel,
-don&#39;t let them know
-Well now they know
-
-Let it go, let it go
-Can&#39;t hold it back anymore
-
-Let it go, let it go
-Turn away and slam the door
-I don&#39;t care
-what they&#39;re going to say
-Let the storm rage on.
-The cold never bothered me anyway
-
-It&#39;s funny how some distance
-Makes everything seem small
-And the fears that once controlled me
-Can&#39;t get to me at all
-
-It&#39;s time to see what I can do
-To test the limits and break through
-No right, no wrong, no rules for me,
-I&#39;m free!
-
-Let it go, let it go
-I am one with the wind and sky
-Let it go, let it go
-You&#39;ll never see me cry
-Here I stand
-And here I&#39;ll stay
-Let the storm rage on
-
-My power flurries through the air into the ground
-My soul is spiraling in frozen fractals all around
-And one thought crystallizes like an icy blast
-I&#39;m never going back, the past is in the past
-
-Let it go, let it go
-And I&#39;ll rise like the break of dawn
-Let it go, let it go
-That perfect girl is gone
-Here I stand
-In the light of day
-Let the storm rage on
-
-The cold never bothered me anyway!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;併せて、「&lt;a href=&quot;https://rubygems.org/gems/let_it_fall&quot; title=&quot;let_it_fall&quot;&gt;let_it_fall&lt;/a&gt;」もよろしくね！&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/05/12/letitfall-is-not-letitgo/&quot; title=&quot;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&quot;&gt;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2014/05/01/let-it-fall-in-the-mac-terminal/&quot; title=&quot;Macのターミナルで〇〇が降る&quot;&gt;Macのターミナルで〇〇が降る&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;日本語訳参考:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;http://caffe.takat33.com/2014/03/let-it-go-idina-menzel.html&quot; title=&quot;Let it Go - Idina Menzel 歌詞の和訳とちょっとした解説 \| 洋楽カフェ&quot;&gt;Let it Go - Idina Menzel 歌詞の和訳とちょっとした解説 | 洋楽カフェ&lt;/a&gt;&lt;/p&gt;
-
-&lt;/blockquote&gt;
 
 </content>
  </entry>
