@@ -72,6 +72,7 @@ h[:secret][:email] # => "charlie@secret.com"
 h # => {:name=>"Charlie", :job=>"Programmer"}
 {% endhighlight %}
 
+ねっ？
 
 でも、多分これだと、こう言う人がきっといるよね。
 
@@ -156,4 +157,14 @@ end
 {% endhighlight %}
 
 `Hash#default=`の別名かよ！
+
+
+{% highlight ruby %}
+h[:foo] # => {:credit=>"123-456-789-012", :email=>"charlie@secret.com"}
+h[:bar] # => {:credit=>"123-456-789-012", :email=>"charlie@secret.com"}
+h[:blah_blah_blah] # => {:credit=>"123-456-789-012", :email=>"charlie@secret.com"}
+h["秘密のコード教えて"] # => {:credit=>"123-456-789-012", :email=>"charlie@secret.com"}
+{% endhighlight %}
+
+機密情報のブロードキャストみたいな。
 
