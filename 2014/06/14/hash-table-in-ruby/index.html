@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    
+      <title>RubyのHashの秘密 その３</title>
+    
+    <meta name="description" content="" />
+    <meta name="author" content="kyoendo" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter-ext/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/themes/twitter-ext/css/style.css?body=1" rel="stylesheet" type="text/css" media="all" />
+    <link href="/assets/themes/twitter-ext/css/syntax.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/themes/twitter-ext/css/lightbox.css" rel="stylesheet" />
+    <link media="only screen and (max-device-width: 480px)" href="/assets/themes/twitter-ext/css/iphone.css" type="text/css" rel="stylesheet" />
+    <!--<link media="only screen and (device-width: 768px)" href="/assets/themes/twitter-ext/css/ipad.css" type="text/css" rel="stylesheet" />-->
+    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />-->
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png" />-->
+<!--<script type="text/x-mathjax-config">-->
+  <!--MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });-->
+<!--</script>-->
+<!--<script type="text/javascript"-->
+  <!--src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">-->
+<!--</script>-->
+  </head>
+  <body>
+    <div id="fb-root"></div>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="avatar" href="/">
+            <img src="http://gravatar.com/avatar/97aa01a6f87da85251be77792dec1d9c?s=80" height="75" width="75" class="avatar" />
+          </a>
+          <a class="brand" href="/">hp12c</a>
+          <div id='rss'>
+            <!--<a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="" style="border:0"/></a><a href="http://feeds.feedburner.com/github/melborne" title="Subscribe to my feed" rel="alternate" type="application/rss+xml"></a>-->
+            <a href="/atom.xml" id="rss">
+              <img src="/assets/images/site/rss.png" alt="rss" title="RSS" height="22" width="22" />
+            </a>
+          </div>
+          <ul class="nav">
+            <li>
+              <a class="books" href="/books/">Books</a>
+            </li>
+            <li>
+              <a class="mygems" href="https://rubygems.org/profiles/melborne/">Gems</a>
+            </li>
+            <li>
+              <a class="myproducts" href="http://welove.herokuapp.com/users/54">Products</a>
+            </li>
+            
+            
+            
+
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+    	
+      <li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+
+
+
+
+
+            <li class='site'>
+              <a href="https://twitter.com/merborne" id="twitter">
+                <img src="/assets/images/site/twitter.png" alt="twitter" title="@merborne on Twitter" height="32" width="32" />
+              </a>
+            </li>
+            <li class='site'>
+              <a href="https://github.com/melborne" id="github">
+                <img src="/assets/images/site/github.png" alt="github" title="@melborne on GitHub" height="24" width="24" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header span8">
+  <div class="date"><span>14 June 2014</span></div>
+  <h1 class='page-title'><a href="/2014/06/14/hash-table-in-ruby">RubyのHashの秘密 その３</a> <small> ハッシュテーブルの理解 </small></h1>
+</div>
+
+<div class="row">
+  <div class="span9">
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* hp12c */
+      google_ad_slot = "7055414638";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    
+<p>同姓同名のいない1億人の日本人の中から素早く「山田 太郎」を見つけ出して彼と話をしたい。各人の胸には名札が貼ってあるので、「山田 太郎」の名札の付いた人物を見つけ出せばいい。全国を行脚して片っ端に名札を確認していくという手もあるが、恐ろしく時間が掛かることは想像に難くない。最悪で1億人、平均で5000万人の名札の確認が必要となる。したがって事前に彼ら彼女らをなんらかのかたちに整列させるべきだと認識する。かと言って、こちらが持っている情報は彼ら彼女らの名前（姓と名）しかないから順位付けで整列というのは難しい。そこで姓（苗字）によるグループ化を思いつく。つまり各人の名札を「苗字関数」に通して苗字を得、その苗字のために割り当てられた区域に彼ら彼女らを住まわせるのだ。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="err">苗字関数</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">name</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">).</span><span class="nf">first</span>
+<span class="k">end</span>
+
+<span class="nb">name</span> <span class="o">=</span> <span class="s2">"山田 太郎"</span>
+
+<span class="err">苗字関数</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="c1"># =&gt; "山田"</span></code></pre></div>
+
+<p>日本人の苗字は30万種ほどらしいから1億人は30万個のグループに分けられ、各区域には平均330人が住むことになる。この場合「山田 太郎」に辿り着くには、まずは30万の区域の中から「山田」区を見つけ出し、次いで「山田」区の中から「山田 太郎」の名札を持った人物を総当りで探せばいい。「山田」区に辿り着くには平均15万回の区訪問が必要だが、区が見つかればあと平均165回で彼に出会える。</p>
+
+<p>ところがよく調べてみると全国に「山田」姓の日本人は85万人もいることが分かった。これで彼に辿り着くには平均57万5000回(15万 + 42万5000)の照合が必要となった。一方で、「佐村河内」という姓は全国に40人しかいないそうで、その照合は平均15万回ほどだから姓によってそこに辿り着くまでの時間が相当異なることになる。これは安定的でない。ここに至って「苗字関数」の問題に気付く。この関数がグループを平均に分散しないのだ。</p>
+
+<p>明日の予定を気にしながら良い方法がないか考えていたら、目の前にあるカレンダーが1年365日を7つの曜日で均等に分割していることに気付いた。年初からの経過日数を曜日の数で割った余り（剰余）を求めれば、すべての日にちは各曜日に紐付けられた0から6の数字の何れかになる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="err">剰余関数</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+  <span class="n">day</span> <span class="o">%</span> <span class="n">base</span>
+<span class="k">end</span>
+
+<span class="err">剰余関数</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; 5</span>
+<span class="err">剰余関数</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># =&gt; 2</span>
+<span class="err">剰余関数</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span> <span class="c1"># =&gt; 0</span></code></pre></div>
+
+<p>「剰余関数」により1年の365日は52個ずつの7つのグループに均等に分けられる。もし仮に人の名前をランダムなそれでいて一定である整数に置き換えられるなら、1億人の日本人も均等に分割できるかもしれない。つまり「山田 太郎」から作られる数字が常に一定であり、かつそれが「佐村河内 守」から作られる数字とは異なるようなランダムな数字、そんなものを生み出す関数があれば、どんな名前に対しても安定した結果を得られるに違いない。そんな関数を世間では「ハッシュ関数」と呼んでいる。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="err">ハッシュ関数</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">name</span><span class="p">.</span><span class="nf">hash</span> <span class="c1"># String#hashを使う</span>
+<span class="k">end</span>
+
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"山田 太郎"</span><span class="p">)</span> <span class="c1"># =&gt; 2948999586394291103</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"山田 太郎"</span><span class="p">)</span> <span class="c1"># =&gt; 2948999586394291103</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"佐村河内 守"</span><span class="p">)</span> <span class="c1"># =&gt; 3017522113704884285</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"佐村河内 守"</span><span class="p">)</span> <span class="c1"># =&gt; 3017522113704884285</span></code></pre></div>
+
+<p>苗字種数に倣って名前を30万のグループに分けるならこの値を30万で除した余を、求める「ハッシュ値」とすればいい。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="err">ハッシュ関数</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">30_0000</span><span class="p">)</span>
+  <span class="nb">name</span><span class="p">.</span><span class="nf">hash</span><span class="p">.</span><span class="nf">abs</span> <span class="o">%</span> <span class="n">base</span>
+<span class="k">end</span>
+
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"山田 太郎"</span><span class="p">)</span> <span class="c1"># =&gt; 270422</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"山田 太郎"</span><span class="p">)</span> <span class="c1"># =&gt; 270422</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"佐村河内 守"</span><span class="p">)</span> <span class="c1"># =&gt; 179742</span>
+<span class="err">ハッシュ関数</span><span class="p">(</span><span class="s2">"佐村河内 守"</span><span class="p">)</span> <span class="c1"># =&gt; 179742</span></code></pre></div>
+
+<p>この「ハッシュ関数」から出力される数値は、0から30万の何れかだからこれを直線的に並べられた30万個の区域のインデックスとみなせばいい。つまり「山田 太郎」をこのデータ構造における先頭から270422番目の区域に住まわせ、「佐村河内 守」を179742番目の区域に住まわせる。こうすると「山田 太郎」に辿り着くには名前に「ハッシュ関数」を適用してハッシュ値を得、それが示すインデックスの区域に移動してそこに住んでいる330人の中から彼を見つけ出せばいい。これで彼を見つけるまでのコストは、「ハッシュ関数」を求めるコスト、対象区域のインデックスに移動するコスト、対象区域の330人にシーケンシャルにアクセスするコストとなる。このなかでは明らかに対象区域内でのシーケンシャルアクセスのコストが高い。対象インデックスへの移動コストは相対的に小さいからその数が増えても影響は小さいだろうから、この数つまり「ハッシュ関数」における剰余の基数を30万から300万に増やせば各区域内は33人になってその探索コストは改善する。言い換えれば各区域内の人数を最小に保てれば総コストは小さくなるということがわかる。</p>
+
+<p>何れにしてもこれで探索対象が「山田 太郎」であろうが「佐村河内 守」であろうが「野田 江川富士一二三四五左衛門助太郎」であろうが一定のコストで目的に辿りつけるようになった。めでたしめでたし。</p>
+
+<p>こんな理解であってる？</p>
+
+<hr />
+
+<p>関連記事：</p>
+
+<blockquote>
+  <p><a href="/2014/06/11/secret-in-rubys-hash/" title="RubyのHashの秘密">RubyのHashの秘密</a></p>
+
+  <p><a href="/2014/06/12/fib-in-hash-default/" title="RubyのHashの秘密 その２">RubyのHashの秘密 その２</a></p>
+</blockquote>
+
+<hr />
+
+<p>参考記事：</p>
+
+<blockquote>
+  <p><a href="http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB" title="ハッシュテーブル - Wikipedia">ハッシュテーブル - Wikipedia</a>
+<a href="http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E9%96%A2%E6%95%B0" title="ハッシュ関数 - Wikipedia">ハッシュ関数 - Wikipedia</a></p>
+
+  <p><a href="http://i.loveruby.net/ja/rhg/book/name.html" title="第3章 名前と名前表">第3章 名前と名前表</a></p>
+
+  <p><a href="http://patshaughnessy.net/ruby-under-a-microscope" title="Ruby Under a Microscope - Pat Shaughnessy">Ruby Under a Microscope - Pat Shaughnessy</a></p>
+
+  <p><a href="http://d.hatena.ne.jp/zariganitosh/20090716/1247709137" title="Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた...。">Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた…。</a></p>
+
+  <p><a href="http://ufcpp.net/study/algorithm/col_hash.html" title="ハッシュテーブル (アルゴリズムとデータ構造)">ハッシュテーブル (アルゴリズムとデータ構造)</a></p>
+
+  <p><a href="http://www2.nipponsoft.co.jp/bldoko/" title="姓名分布&amp;姓名ランキング 写録宝夢巣／名前・苗字・名字">姓名分布&amp;姓名ランキング 写録宝夢巣／名前・苗字・名字</a></p>
+
+  <p><a href="http://myoji-yurai.net/" title="名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!">名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!</a></p>
+</blockquote>
+
+
+
+    <div class="ad" id="topAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* foot */
+      google_ad_slot = "7511276945";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+
+    <hr>
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/06/14/hash-table-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのHashの秘密 その３" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" data-text="RubyのHashの秘密 その３" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2014/06/12/fib-in-hash-default" title="RubyのHashの秘密 その２">&larr; Previous</a></li>
+      
+        <li><a href="/">Archive</a></li>
+        <!--<li><a href="/archive.html">Archive</a></li>-->
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'melborne'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span3">
+    <div id="bookAd">
+      <a href="/books/">
+        <!--<img src="/assets/images/2012/start_ruby.jpg" alt="start_ruby" />-->
+        <!--<img src="/assets/images/2012/jekyll_cover.jpg" alt="jekyll" />-->
+        <!--<img src="/assets/images/2012/ruby_parallel_cover.png" alt="ruby_parallel" />-->
+        <!--<img src="/assets/images/2012/js_oop_cover.png" alt="js_oop" />-->
+        <!--<img src="/assets/images/2012/rack_cover.png" alt="rack" />-->
+        <!--<img src="/assets/images/2013/02/ruby_object_cover.png" alt="ruby_object" />-->
+        <!--<img src="/assets/images/2013/03/ruby_trivia_cover.png" alt="ruby_trivia" />-->
+        <img src="/assets/images/books/ruby_pack8.png" alt="ruby_pack8" style="width:200px" />
+      </a>
+      <p id="comment">100円〜で好評発売中！<br/><a href="/books/">M'ELBORNE BOOKS</a></p>
+    </div>
+
+    <hr />
+    
+
+    <ul class="social_button inline">
+      <li id="hatena">
+  <a href="http://b.hatena.ne.jp/entry/http://melborne.github.io/2014/06/14/hash-table-in-ruby/" class="hatena-bookmark-button" data-hatena-bookmark-title="RubyのHashの秘密 その３" data-hatena-bookmark-layout="horizontal" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="30" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+</li>
+
+<li id="twitter">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" data-text="RubyのHashの秘密 その３" data-via="merborne" data-lang="ja" data-size="" data-count="horizontal"></a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li>
+
+<li id="google">
+  <link rel="canonical" href="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" />
+  <g:plusone size="medium"></g:plusone>
+  
+  <script type="text/javascript">
+    window.___gcfg = {lang: 'ja'};
+  
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+</li>
+
+<li id="facebook">
+  <div class="fb-like" data-href="http://melborne.github.io/2014/06/14/hash-table-in-ruby/" data-layout="button_count" data-send="false" data-width="150" data-show-faces="false"></div>
+</li>
+
+<li></li>
+
+
+
+
+    </ul>
+
+    <div class="ad" id="sideAdsense">
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-8790567277062819";
+      /* sidebar */
+      google_ad_slot = "0672114662";
+      google_ad_width = 160;
+      google_ad_height = 600;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/2.1/jp/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/2.1/jp/88x31.png" /></a>  kyoendo 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+
+    <script type="text/javascript">
+      if (location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-288751-18']);
+        _gaq.push(['_trackPageview']);
+  
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      };
+    </script>
+
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="/assets/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="/assets/javascripts/lightbox.js"></script>
+
+    <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+  </body>
+</html>
+

@@ -4,13 +4,105 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-06-12T22:12:09+09:00</updated>
+ <updated>2014-06-14T10:53:58+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>RubyのHashの秘密 その３</title>
+   <link href="http://melborne.github.io/2014/06/14/hash-table-in-ruby"/>
+   <updated>2014-06-14T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/06/14/hash-table-in-ruby</id>
+   <content type="html">
+&lt;p&gt;同姓同名のいない1億人の日本人の中から素早く「山田 太郎」を見つけ出して彼と話をしたい。各人の胸には名札が貼ってあるので、「山田 太郎」の名札の付いた人物を見つけ出せばいい。全国を行脚して片っ端に名札を確認していくという手もあるが、恐ろしく時間が掛かることは想像に難くない。最悪で1億人、平均で5000万人の名札の確認が必要となる。したがって事前に彼ら彼女らをなんらかのかたちに整列させるべきだと認識する。かと言って、こちらが持っている情報は彼ら彼女らの名前（姓と名）しかないから順位付けで整列というのは難しい。そこで姓（苗字）によるグループ化を思いつく。つまり各人の名札を「苗字関数」に通して苗字を得、その苗字のために割り当てられた区域に彼ら彼女らを住まわせるのだ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;苗字関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/\s+/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;苗字関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;山田&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;日本人の苗字は30万種ほどらしいから1億人は30万個のグループに分けられ、各区域には平均330人が住むことになる。この場合「山田 太郎」に辿り着くには、まずは30万の区域の中から「山田」区を見つけ出し、次いで「山田」区の中から「山田 太郎」の名札を持った人物を総当りで探せばいい。「山田」区に辿り着くには平均15万回の区訪問が必要だが、区が見つかればあと平均165回で彼に出会える。&lt;/p&gt;
+
+&lt;p&gt;ところがよく調べてみると全国に「山田」姓の日本人は85万人もいることが分かった。これで彼に辿り着くには平均57万5000回(15万 + 42万5000)の照合が必要となった。一方で、「佐村河内」という姓は全国に40人しかいないそうで、その照合は平均15万回ほどだから姓によってそこに辿り着くまでの時間が相当異なることになる。これは安定的でない。ここに至って「苗字関数」の問題に気付く。この関数がグループを平均に分散しないのだ。&lt;/p&gt;
+
+&lt;p&gt;明日の予定を気にしながら良い方法がないか考えていたら、目の前にあるカレンダーが1年365日を7つの曜日で均等に分割していることに気付いた。年初からの経過日数を曜日の数で割った余り（剰余）を求めれば、すべての日にちは各曜日に紐付けられた0から6の数字の何れかになる。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;day&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;day&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 5&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;224&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;「剰余関数」により1年の365日は52個ずつの7つのグループに均等に分けられる。もし仮に人の名前をランダムなそれでいて一定である整数に置き換えられるなら、1億人の日本人も均等に分割できるかもしれない。つまり「山田 太郎」から作られる数字が常に一定であり、かつそれが「佐村河内 守」から作られる数字とは異なるようなランダムな数字、そんなものを生み出す関数があれば、どんな名前に対しても安定した結果を得られるに違いない。そんな関数を世間では「ハッシュ関数」と呼んでいる。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# String#hashを使う&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2948999586394291103&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2948999586394291103&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 3017522113704884285&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 3017522113704884285&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;苗字種数に倣って名前を30万のグループに分けるならこの値を30万で除した余を、求める「ハッシュ値」とすればいい。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30_0000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;abs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 270422&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 270422&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 179742&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 179742&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;この「ハッシュ関数」から出力される数値は、0から30万の何れかだからこれを直線的に並べられた30万個の区域のインデックスとみなせばいい。つまり「山田 太郎」をこのデータ構造における先頭から270422番目の区域に住まわせ、「佐村河内 守」を179742番目の区域に住まわせる。こうすると「山田 太郎」に辿り着くには名前に「ハッシュ関数」を適用してハッシュ値を得、それが示すインデックスの区域に移動してそこに住んでいる330人の中から彼を見つけ出せばいい。これで彼を見つけるまでのコストは、「ハッシュ関数」を求めるコスト、対象区域のインデックスに移動するコスト、対象区域の330人にシーケンシャルにアクセスするコストとなる。このなかでは明らかに対象区域内でのシーケンシャルアクセスのコストが高い。対象インデックスへの移動コストは相対的に小さいからその数が増えても影響は小さいだろうから、この数つまり「ハッシュ関数」における剰余の基数を30万から300万に増やせば各区域内は33人になってその探索コストは改善する。言い換えれば各区域内の人数を最小に保てれば総コストは小さくなるということがわかる。&lt;/p&gt;
+
+&lt;p&gt;何れにしてもこれで探索対象が「山田 太郎」であろうが「佐村河内 守」であろうが「野田 江川富士一二三四五左衛門助太郎」であろうが一定のコストで目的に辿りつけるようになった。めでたしめでたし。&lt;/p&gt;
+
+&lt;p&gt;こんな理解であってる？&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;関連記事：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;/2014/06/11/secret-in-rubys-hash/&quot; title=&quot;RubyのHashの秘密&quot;&gt;RubyのHashの秘密&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;/2014/06/12/fib-in-hash-default/&quot; title=&quot;RubyのHashの秘密 その２&quot;&gt;RubyのHashの秘密 その２&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;参考記事：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB&quot; title=&quot;ハッシュテーブル - Wikipedia&quot;&gt;ハッシュテーブル - Wikipedia&lt;/a&gt;
+&lt;a href=&quot;http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E9%96%A2%E6%95%B0&quot; title=&quot;ハッシュ関数 - Wikipedia&quot;&gt;ハッシュ関数 - Wikipedia&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://i.loveruby.net/ja/rhg/book/name.html&quot; title=&quot;第3章 名前と名前表&quot;&gt;第3章 名前と名前表&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://patshaughnessy.net/ruby-under-a-microscope&quot; title=&quot;Ruby Under a Microscope - Pat Shaughnessy&quot;&gt;Ruby Under a Microscope - Pat Shaughnessy&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://d.hatena.ne.jp/zariganitosh/20090716/1247709137&quot; title=&quot;Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた...。&quot;&gt;Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた…。&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://ufcpp.net/study/algorithm/col_hash.html&quot; title=&quot;ハッシュテーブル (アルゴリズムとデータ構造)&quot;&gt;ハッシュテーブル (アルゴリズムとデータ構造)&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://www2.nipponsoft.co.jp/bldoko/&quot; title=&quot;姓名分布&amp;amp;姓名ランキング 写録宝夢巣／名前・苗字・名字&quot;&gt;姓名分布&amp;amp;姓名ランキング 写録宝夢巣／名前・苗字・名字&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://myoji-yurai.net/&quot; title=&quot;名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!&quot;&gt;名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>RubyのHashの秘密 その２</title>
@@ -483,50 +575,6 @@ Commands:
   &lt;p&gt;&lt;a href=&quot;/2014/05/01/let-it-fall-in-the-mac-terminal/&quot; title=&quot;Macのターミナルで〇〇が降る&quot;&gt;Macのターミナルで〇〇が降る&lt;/a&gt;&lt;/p&gt;
 
   &lt;p&gt;&lt;a href=&quot;/2014/05/12/letitfall-is-not-letitgo/&quot; title=&quot;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&quot;&gt;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>オレは遂にRubyのチルダの究極の使い方に辿り着いたのだ！</title>
-   <link href="http://melborne.github.io/2014/05/16/emoji-be-easy"/>
-   <updated>2014-05-16T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/05/16/emoji-be-easy</id>
-   <content type="html">
-&lt;p&gt;(追記：2014-5-19) Gem化しました..。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;/2014/05/19/emoji-cheat-sheet-on-terminal/&quot; title=&quot;GitHubで使える絵文字Emojiが何か分からないとき😖（Mac向け）&quot;&gt;GitHubで使える絵文字Emojiが何か分からないとき😖（Mac向け）&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;今度はどう？&lt;/p&gt;
-
-&lt;div&gt;&lt;script src=&quot;https://gist.github.com/902796b58256b077add0.js?file=&quot;&gt;&lt;/script&gt;
-&lt;noscript&gt;&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/noscript&gt;&lt;/div&gt;
-
-&lt;p&gt;emojiの名前リストはターミナルで&lt;code&gt;emoji -l&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;Thanks jugyo!&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/named_emoji&quot; title=&quot;named_emoji&quot;&gt;named_emoji | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;関連記事：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;/2012/04/27/ruby-heredoc-without-leading-whitespace/&quot; title=&quot;チルダがRubyのヒアドキュメントをもっと良くする&quot;&gt;チルダがRubyのヒアドキュメントをもっと良くする&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;/2012/06/30/tilde-makes-curry-better/&quot; title=&quot;チルダがRubyカレーをもっと好きにさせる&quot;&gt;チルダがRubyカレーをもっと好きにさせる&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;/2013/08/07/yet-another-tilde-tips/&quot; title=&quot;チルダでRubyの式埋め込みをもっと便利に!?&quot;&gt;チルダでRubyの式埋め込みをもっと便利に!?&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;/2013/03/04/ruby-trivias-you-should-know-4/&quot; title=&quot;知って得する！５５のRubyのトリビアな記法&quot;&gt;知って得する！５５のRubyのトリビアな記法（53. 単項演算子 ~ (チルダ)）&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 </content>
