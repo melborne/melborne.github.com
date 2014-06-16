@@ -1,7 +1,6 @@
 ---
 layout: post
-title: "RubyのHashの秘密 その３"
-tagline: "ハッシュテーブルの理解"
+title: "RubyのHashの秘密 その３ - ハッシュテーブルの理解"
 description: ""
 category: 
 tags: 
