@@ -4,13 +4,97 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-06-29T17:59:23+09:00</updated>
+ <updated>2014-06-30T09:32:50+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>チリドッグでRubyのヒアドキュメントを良くしよう！</title>
+   <link href="http://melborne.github.io/2014/06/30/better-heredoc-with-tildoc-for-ruby"/>
+   <updated>2014-06-30T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/06/30/better-heredoc-with-tildoc-for-ruby</id>
+   <content type="html">
+&lt;p&gt;プロジェクト本体でヒアドキュメントを使うことはそんなに多くはないんですが、これがテストでは意外と使われるということがわかってきまして。そうすると、どうしてもこの醜さには耐え難いものがあるんです。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;describe&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ATool&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;CLI&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@expected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;
+Hello, Ruby!
+I&#39;m Here with Dog!
+Where are You?
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;    EOS&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Pythonistaでなくともこの飛び出ちゃった感じはちょっとねぇ。&lt;/p&gt;
+
+&lt;p&gt;で、随分以前に先頭空白を除去するコードを&lt;code&gt;String#~&lt;/code&gt;に割り当てるという荒業を考えまして。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;~&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;margin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;scan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^ +/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;min&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^ {&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;margin&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;}/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2012/04/27/ruby-heredoc-without-leading-whitespace/&quot; title=&quot;チルダがRubyのヒアドキュメントをもっと良くする&quot;&gt;チルダがRubyのヒアドキュメントをもっと良くする&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;このコードを&lt;code&gt;spec_helper&lt;/code&gt;当たりに差しておくと、ヒアドキュメントの&lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;の前に&lt;code&gt;~&lt;/code&gt;（チルダ）を入れるだけで、平和がやって来ます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;describe&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ATool&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;CLI&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;before&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@expected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;
+      Hello, Ruby!
+      I&#39;m Here with Dog!
+      Where are You?
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;    EOS&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;で、毎回、先の記事を開いてコードをhelperにコピペするという作業をしていたのですが、それも骨が折れます。&lt;/p&gt;
+
+&lt;p&gt;そんなわけで…。&lt;/p&gt;
+
+&lt;p&gt;またチンピラGemを一つ増やしました。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/tildoc&quot; title=&quot;tildoc&quot;&gt;tildoc&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/tildoc&quot; title=&quot;melborne/tildoc&quot;&gt;melborne/tildoc&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code&gt;tilde + heredoc = tildoc&lt;/code&gt;です😅&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#gemspec&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add_development_dependency&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tildoc&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;とか&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#Gemfile&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:development&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:test&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tildoc&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;とすれば幸せになれるかもしれません。ActiveSupportの&lt;code&gt;String#strip_heredoc&lt;/code&gt;やHomebrewの&lt;code&gt;String#undent&lt;/code&gt;と等価なものですが、&lt;code&gt;EOS&lt;/code&gt;（開始ラベル）の後ろにこれらメソッド名書くのどうなのと思っている人に。&lt;/p&gt;
+
+&lt;p&gt;そういえばこれ前に、Featureリスエストも出してみたんですけど、やっぱり採用には至りませんでした…。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://bugs.ruby-lang.org/issues/6801#change-28490&quot; title=&quot;Feature #6801: String#~ for a here document - ruby-trunk - Ruby Issue Tracking System&quot;&gt;Feature #6801: String#~ for a here document - ruby-trunk - Ruby Issue Tracking System&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>RubyのHashの秘密 その３ - ハッシュテーブルの理解</title>
@@ -458,125 +542,6 @@
 &lt;p&gt;関連記事：&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/2014/05/19/emoji-cheat-sheet-on-terminal/&quot; title=&quot;GitHubで使える絵文字Emojiが何か分からないとき😖（Mac向け）&quot;&gt;GitHubで使える絵文字Emojiが何か分からないとき😖（Mac向け）&lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>GitHubで使える絵文字Emojiが何か分からないとき😖（Mac向け）</title>
-   <link href="http://melborne.github.io/2014/05/19/emoji-cheat-sheet-on-terminal"/>
-   <updated>2014-05-19T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/05/19/emoji-cheat-sheet-on-terminal</id>
-   <content type="html">
-&lt;p&gt;またEmojiネタで恐縮ですが😓、&lt;code&gt;emot&lt;/code&gt;というMacのターミナル💻で絵文字を表示するためのGem💎を作りましたので紹介します😃&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/emot&quot; title=&quot;emot&quot;&gt;emot | RubyGems.org | your community gem host&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/emot&quot; title=&quot;melborne/emot&quot;&gt;melborne/emot&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Web⛅️にある「&lt;a href=&quot;http://www.emoji-cheat-sheet.com/&quot; title=&quot;Emoji cheat sheet for Campfire and GitHub&quot;&gt;Emoji cheat sheet for Campfire and GitHub&lt;/a&gt;」のMacターミナル版ですね。&lt;/p&gt;
-
-&lt;p&gt;Rubyで絵文字を扱うツールには既にGitHub🐙🐱社の「&lt;a href=&quot;https://github.com/github/gemoji&quot; title=&quot;github/gemoji&quot;&gt;gemoji&lt;/a&gt;」というのがあるのですが、これは絵文字imageを含んでいて軽量でなく、とりあえずMacで使えればいいという自分の需要には合わず、またjugyo👶さんによるMacでの使用を前提にした軽量な「&lt;a href=&quot;https://github.com/jugyo/named_emoji&quot; title=&quot;jugyo/named_emoji&quot;&gt;named_emoji&lt;/a&gt;」というのがありましたが対応絵文字が少し少なくまたunicodeも表示したかったので、別途作ることにしました。&lt;/p&gt;
-
-&lt;p&gt;絵文字とその名前の対応表は、gemojiの&lt;code&gt;Emoji#mapping&lt;/code&gt;というメソッドの出力を加工して作りました。&lt;/p&gt;
-
-&lt;h2 id=&quot;emotmac&quot;&gt;EmotをMacターミナルで使う&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;gem install emot&lt;/code&gt;でインストールすると、&lt;code&gt;emot&lt;/code&gt;というコマンドが使えるようになります。サブコマンドを渡さなければhelpが表示されます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;% emot                
-Commands:
-  emot help [COMMAND]  # Describe available commands or one specific command
-  emot icons           # show all emoji icons
-  emot names           # show all available names for emoji
-  emot show [NAME]     # show emoji icon and unicode for NAME
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;emot show&lt;/code&gt;とすると870個の絵文字がその名前とunicodeとともに、ずらっと表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/05/emot01.png&quot; alt=&quot;emot noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;これをインラインで表示したい場合は、–inlineオプションを渡して、&lt;code&gt;emot show -i&lt;/code&gt;とします。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/05/emot02.png&quot; alt=&quot;emot noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;アイコンだけで表示したい場合は、–onlyオプションに&lt;code&gt;icon&lt;/code&gt;を渡して、&lt;code&gt;emot show -o=icon -i&lt;/code&gt;などとするか、&lt;code&gt;emot icons&lt;/code&gt;とします。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/2014/05/emot03.png&quot; alt=&quot;emot noshadow&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;アイコン＋名前、アイコン＋unicodeで表示したい場合は、–onlyオプションに&lt;code&gt;name&lt;/code&gt;または&lt;code&gt;code&lt;/code&gt;を渡します。また、名前だけをずらっと表示したいときは&lt;code&gt;nameonly&lt;/code&gt;をオプションで渡すか、&lt;code&gt;emot names&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;まだカテゴリ別表示などに対応していないので使いづらいです👎 🙅 🙇 &lt;/p&gt;
-
-&lt;h2 id=&quot;emotruby&quot;&gt;EmotをRubyで使う&lt;/h2&gt;
-
-&lt;p&gt;Rubyでは次のような感じで使います。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;emot&#39;&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Emot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;icon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sunflower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 🌻&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Emot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:sunflower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;U+1F33B&quot;&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Emot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# list available emoji with name and unicode.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;symbol&quot;&gt;Symbol#~&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;emot&lt;/code&gt;は余計な機能💩として、Symbolクラスに&lt;code&gt;~&lt;/code&gt;メソッドを勝手に差し込みます😱。その結果、次のような感じで絵文字を含んだ文を簡単に作れるようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;emot&quot;&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:smile&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:beginner&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:shit&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:jack_o_lantern&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&#39;+1&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;I broken_heart you!&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;The pencil is mightier than gun&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;dango is better than sunflower&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;疲れたら beer を飲もう！&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;fish + hocho =&amp;gt; sushi&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:&quot;.fush + .hocho =&amp;gt; sushi&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# escape emoji with prefix dot.&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 😄&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 🔰&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 💩&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 🎃&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 👍&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; I 💔 you!&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; The 📝 is mightier than 🔫&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 🍡 is better than 🌻&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 疲れたら 🍺 を飲もう！&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; 🐟 + 🔪 =&amp;gt; 🍣&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# &amp;gt;&amp;gt; fush + hocho =&amp;gt; 🍣&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;絵文字をエスケープしたいときは、最後の例のように.（ピリオド）を前置します。&lt;/p&gt;
-
-&lt;p&gt;これは前回のネタがスベった🏄 ので、無理やりGemにぶち込みました👈 &lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;/2014/05/16/emoji-be-easy/&quot; title=&quot;オレは遂にRubyのチルダの究極の使い方に辿り着いたのだ！&quot;&gt;オレは遂にRubyのチルダの究極の使い方に辿り着いたのだ！&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;letiffall&quot;&gt;let_if_fallのアップデート&lt;/h2&gt;
-
-&lt;p&gt;当然の流れとして、あのターミナルから物がありのままに降ってくる「&lt;a href=&quot;https://rubygems.org/gems/let_it_fall&quot; title=&quot;let_it_fall&quot;&gt;let_it_fall&lt;/a&gt;」を&lt;code&gt;emot&lt;/code&gt;を使った版にアップデートしましたので、お知らせします。バージョンは0.3.0です。&lt;/p&gt;
-
-&lt;p&gt;その結果、使えるコマンド数は870を超えました🙀。ターミナルで&lt;code&gt;let_it_fall&lt;/code&gt;とだけ打てば使えるコマンドが分かります。まずは、&lt;code&gt;let_it_fall go&lt;/code&gt;として順番に降ってくる、およそ870個の絵文字をぼーっと眺めるのがお薦めです👀 &lt;/p&gt;
-
-&lt;p&gt;もう絵文字ネタは終わりたい..。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;関連記事：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;/2014/05/01/let-it-fall-in-the-mac-terminal/&quot; title=&quot;Macのターミナルで〇〇が降る&quot;&gt;Macのターミナルで〇〇が降る&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;/2014/05/12/letitfall-is-not-letitgo/&quot; title=&quot;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&quot;&gt;(注意)「Let It Fall」は、アナと雪の女王の挿入歌「Let It Go」と何ら関係ございません！&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
 </content>
  </entry>
  
