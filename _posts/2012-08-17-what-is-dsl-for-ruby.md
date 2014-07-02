@@ -313,8 +313,5 @@ IRB on Ruby1.9.3
 
 [SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！](http://melborne.github.com/2011/06/03/Sinatra-DSL-Ruby/ 'SinatraはDSLなんかじゃない、Ruby偽装を使ったマインドコントロールだ！')
 
-----
 
-{{ 4864010471 | amazon_medium_image }}
-{{ 4864010471 | amazon_link }} by {{ 4864010471 | amazon_authors }}
 

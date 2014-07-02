@@ -34,7 +34,7 @@ Macのターミナルを開いて、`gem install let_it_fall`と打ってイン�
 
 終了は`Ctrl-c`です。
 
-    $ let_it_fall money
+    $ let_it_fall moneys
 
 とかすると幸せになれるかもしれません。
 
