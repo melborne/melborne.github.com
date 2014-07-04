@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "GitHubの彼と自分を比べて何になるの？"
-tagline: "Gh-Diffの紹介〜翻訳プロジェクトのために"
+tagline: "gh-diffの紹介〜翻訳プロジェクトのために"
 description: ""
 category: 
 tags: 
@@ -10,7 +10,7 @@ published: true
 ---
 {% include JB/setup %}
 
-過去の自分と今の自分を比べてみてそこに何か変化があったとき、人は生きていることを実感します。UNIXを作った人達は自分たちが生きているということをコンピュータスクリーン上で実感したくて、「[Diff](http://ja.wikipedia.org/wiki/Diff "diff - Wikipedia")」というツールを作りました。`Diff`があれば簡単に一年前の自分と今の自分を比べられるのです。
+過去の自分と今の自分を比べてみてそこに何か変化があったとき、人は生きていることを実感します。UNIXを作った人達は自分たちが生きているということをコンピュータスクリーン上で実感したくて、「[diff](http://ja.wikipedia.org/wiki/Diff "diff - Wikipedia")」というツールを作りました。`diff`があれば簡単に一年前の自分と今の自分を比べられるのです。
 
 {% highlight diff %}
 % diff -u me_in_last_summer.txt me.txt
@@ -26,9 +26,9 @@ published: true
 
 {% endhighlight %}
 
-Diffが吐き出す列をみて、あるときは成長を喜び、あるときは無為に過ごした１年を後悔したものです。
+diffが吐き出す列をみて、あるときは成長を喜び、あるときは無為に過ごした１年を後悔したものです。
 
-しかし時が過ぎ、自分の過去とだけ向き合う平穏な時代は終わりました。人々が常時繋がったソーシャルネットワークの時代が到来したのです。`Diff`は昔と何も変わりませんが、時代の変化によりその使われ方が変化しました。人々は自分の成長を確認するために`Diff`を使うことを止め、ソーシャルネットワークの向こう側にいる他人との比較にこれを利用するようになったのです。
+しかし時が過ぎ、自分の過去とだけ向き合う平穏な時代は終わりました。人々が常時繋がったソーシャルネットワークの時代が到来したのです。`diff`は昔と何も変わりませんが、時代の変化によりその使われ方が変化しました。人々は自分の成長を確認するために`diff`を使うことを止め、ソーシャルネットワークの向こう側にいる他人との比較にこれを利用するようになったのです。
 
 {% highlight diff %}
 % diff -u me.txt inet/linus.txt
@@ -46,25 +46,25 @@ Diffが吐き出す列をみて、あるときは成長を喜び、あるとき�
 +I created Git.
 {% endhighlight %}
 
-Diffが吐き出す列をみて、あるときは勝ち誇り、あるときは辛すぎる現実に目を背けるのです。
+diffが吐き出す列をみて、あるときは勝ち誇り、あるときは辛すぎる現実に目を背けるのです。
 
-それでも私たちはこの過酷な時代を生き抜いていかなければならないのです...Diffという武器を持って..。
+それでも私たちはこの過酷な時代を生き抜いていかなければならないのです...diffという武器を持って..。
 
 ---
 
 そんなわけで...。
 
-GitHub上のファイルとローカルのファイルを簡単に比較できる「Gh-Diff」というツールを作りましたので紹介させてください（どんなわけ）😅
+GitHub上のファイルとローカルのファイルを簡単に比較できる「gh-diff」というツールを作りましたので紹介させてください（どんなわけ）😅
 
-> [Gh-Diff](https://rubygems.org/gems/gh-diff "gh-diff")
+> [gh-diff](https://rubygems.org/gems/gh-diff "gh-diff")
 > 
 > [melborne/gh-diff](https://github.com/melborne/gh-diff "melborne/gh-diff")
 
-恐らく用途は限定的ですが、git管理下にない、またはGitHub上のプロジェクトとは別管理のファイル群と、GitHub上のファイル群とのdiffを取ることができます。後述するように、`Gh-Diff`は原文を組み込んだ翻訳ドキュメントと、オリジナルドキュメントを比較するのに便利なように作られています。
+恐らく用途は限定的ですが、git管理下にない、またはGitHub上のプロジェクトとは別管理のファイル群と、GitHub上のファイル群とのdiffを取ることができます。後述するように、`gh-diff`は原文を組み込んだ翻訳ドキュメントと、オリジナルドキュメントを比較するのに便利なように作られています。
 
 ## 作った経緯
 
-最近、@goshujinさんがホストの「[jekyllrb-ja](https://github.com/jekyllrb-ja/jekyllrb-ja.github.io "jekyllrb-ja/jekyllrb-ja.github.io")」という[Jekyll](http://jekyllrb.com/ "Jekyll")の日本語ドキュメント作成プロジェクトに関わっています。このプロジェクトでは、本家のドキュメントのアップデートにどうやって追随していくかということが現在進行形で問題になっています。その過程でこの問題の一部を解決するためのツールとして、@goshujinさんがRakeタスク（togglate）を作り、僕がそれを改良したThorタスク（jekyllja.thor）を作りました。`Gh-Diff`はjekyllja.thorを汎用化、Gem化したものとして生まれました。
+最近、@goshujinさんがホストの「[jekyllrb-ja](https://github.com/jekyllrb-ja/jekyllrb-ja.github.io "jekyllrb-ja/jekyllrb-ja.github.io")」という[Jekyll](http://jekyllrb.com/ "Jekyll")の日本語ドキュメント作成プロジェクトに関わっています。このプロジェクトでは、本家のドキュメントのアップデートにどうやって追随していくかということが現在進行形で問題になっています。その過程でこの問題の一部を解決するためのツールとして、@goshujinさんがRakeタスク（togglate）を作り、僕がそれを改良したThorタスク（jekyllja.thor）を作りました。`gh-diff`はjekyllja.thorを汎用化、Gem化したものとして生まれました。
 
 
 ## 使い方
@@ -73,7 +73,7 @@ GitHub上のファイルとローカルのファイルを簡単に比較でき�
 
 ---
 
-Gh-Diffには`gh-diff`というターミナルコマンドが付いています。
+gh-diffには`gh-diff`というターミナルコマンドが付いています。
 
 
 {% highlight bash %}
@@ -161,7 +161,7 @@ GitHub APIにはアクセス制限があります。ベーシック認証（user
 
 ## 簡単なチュートリアル
 
-簡単なチュートリアルを通して、`Gh-Diff`の使い方を説明します。以下では、GitHubで管理されている`melborne/tildoc`の`README.md`を取得し、この翻訳版`README.ja.md`を作成します。`gem install gh-diff`でGh-Diffを取得して作業を開始します。
+簡単なチュートリアルを通して、`gh-diff`の使い方を説明します。以下では、GitHubで管理されている`melborne/tildoc`の`README.md`を取得し、この翻訳版`README.ja.md`を作成します。`gem install gh-diff`でgh-diffを取得して作業を開始します。
 
 ### 環境変数の設定
 
@@ -272,7 +272,7 @@ tildoc-ja% tree
 
 ### 翻訳ドキュメントの作成
 
-取得したREADME.mdに基いて、翻訳ドキュメント`README.ja.md`を作ります。ここでは、`Gh-Diff`にも組み込まれている「[togglate](https://rubygems.org/gems/togglate "togglate")」というツールを使います。次のようにします。
+取得したREADME.mdに基いて、翻訳ドキュメント`README.ja.md`を作ります。ここでは、`gh-diff`にも組み込まれている「[togglate](https://rubygems.org/gems/togglate "togglate")」というツールを使います。次のようにします。
 
 {% highlight bash %}
 tildoc-ja% togglate create README.md --translate=to:ja --no-embed-code > README.ja.md
@@ -394,7 +394,7 @@ Base revision: 6147df8378545a4807a2ed73c9e55f8d7204c14c[refs/heads/master]
 翻訳プロジェクトなどで活かしてもらえると、うれしいです。
 
 
-> [Gh-Diff](https://rubygems.org/gems/gh-diff "gh-diff")
+> [gh-diff](https://rubygems.org/gems/gh-diff "gh-diff")
 > 
 > [melborne/gh-diff](https://github.com/melborne/gh-diff "melborne/gh-diff")
 
@@ -408,4 +408,8 @@ Base revision: 6147df8378545a4807a2ed73c9e55f8d7204c14c[refs/heads/master]
 > [素晴らしいオープンソースプロジェクトにおける翻訳者たちの憂鬱とその緩和](http://melborne.github.io/2014/04/01/togglate-now-have-reverse-action/ "素晴らしいオープンソースプロジェクトにおける翻訳者たちの憂鬱とその緩和")
 > 
 > [英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）](http://melborne.github.io/2014/02/17/update-togglate-for-renewed-proposal-to-translation/ "英語圏のオープンソースプロジェクトにおける翻訳ドキュメントの問題点とその解決のための一方策（仕切り直し版）")
+
+---
+
+(追記：2014-7-4) コメントのご指摘を受けて、`Diff`を`diff`に直しました。
 
