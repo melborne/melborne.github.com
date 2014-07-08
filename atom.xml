@@ -4,13 +4,120 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-07-04T16:36:46+09:00</updated>
+ <updated>2014-07-08T10:42:34+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>RubyでObject#dockというのはどうですか？</title>
+   <link href="http://melborne.github.io/2014/07/08/how-about-object-dock-for-ruby"/>
+   <updated>2014-07-08T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/07/08/how-about-object-dock-for-ruby</id>
+   <content type="html">
+&lt;p&gt;Rubyでその必要性は明らかだけれども名前が決まらずに承認されないメソッドというのがあって長く議論が続いているものに「単に&lt;code&gt;self&lt;/code&gt;を返すメソッド」というのがあるよ。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://bugs.ruby-lang.org/issues/6373&quot; title=&quot;Feature #6373: public #self - ruby-trunk - Ruby Issue Tracking System&quot;&gt;Feature #6373: public #self - ruby-trunk - Ruby Issue Tracking System&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/16932711/is-there-a-short-way-to-write-x-x&quot; title=&quot;ruby - Is there a short way to write `{|x| x}`? - Stack Overflow&quot;&gt;ruby - Is there a short way to write &lt;code&gt;{|x| x}&lt;/code&gt;? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;identity&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;で、これの何が嬉しいのかっていうことなんだけど、例えばこう書くとろこを、&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group_by&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {1=&amp;gt;[1, 1], 2=&amp;gt;[2, 2, 2], 3=&amp;gt;[3, 3], 4=&amp;gt;[4], 5=&amp;gt;[5]}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;こう書けるとか。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:identity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {1=&amp;gt;[1, 1], 2=&amp;gt;[2, 2, 2], 3=&amp;gt;[3, 3], 4=&amp;gt;[4], 5=&amp;gt;[5]}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;えっ、これだけ？って感じなんだけど、それじゃ余りにも使いでなさそうってことで、ブロックぐらい取れるようにという案も出てるよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;itself&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;block_given?&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;itself&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_f&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2.5555555555555554&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:itself&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {1=&amp;gt;[1, 1], 2=&amp;gt;[2, 2, 2], 3=&amp;gt;[3, 3], 4=&amp;gt;[4], 5=&amp;gt;[5]}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://bugs.ruby-lang.org/issues/6721&quot; title=&quot;Feature #6721: Object#yield_self - ruby-trunk - Ruby Issue Tracking System&quot;&gt;Feature #6721: Object#yield_self - ruby-trunk - Ruby Issue Tracking System&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;で、その決まらない名前のほうなんだけれども、&lt;code&gt;identity&lt;/code&gt;だとか&lt;code&gt;itself&lt;/code&gt;だとか&lt;code&gt;yourself&lt;/code&gt;だとか&lt;code&gt;the_self&lt;/code&gt;だとか&lt;code&gt;_&lt;/code&gt;だとか&lt;code&gt;it&lt;/code&gt;だとか&lt;code&gt;reference&lt;/code&gt;だとか&lt;code&gt;yield_self&lt;/code&gt;だとか&lt;code&gt;ergo&lt;/code&gt;だとか&lt;code&gt;self&lt;/code&gt;をパブリックにするだとか&lt;code&gt;tap&lt;/code&gt;を拡張するだとかいろんな案が出てるよ。で、matzが&lt;code&gt;itself&lt;/code&gt;かなとか言ってるんだけど。&lt;/p&gt;
+
+&lt;p&gt;でも、個人的にはブロック取るケースのほうが圧倒的に多いと思うから、ブロック取ることを前提にした名前にした方がいいと思うんだけどね。上のブロック取る例で、&lt;code&gt;itself&lt;/code&gt;ってなんかピンと来ないよね。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;で、随分前に自分は&lt;code&gt;Object#do&lt;/code&gt;って名前考えてFeatureリクエストだしたんだけど@n0kadaさんに、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;something.do do end seems messy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;って言われて簡単に玉砕したという歴史があって。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://bugs.ruby-lang.org/issues/6684&quot; title=&quot;Feature #6684: Object#do - ruby-trunk - Ruby Issue Tracking System&quot;&gt;Feature #6684: Object#do - ruby-trunk - Ruby Issue Tracking System&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;まあ、それでもこのときに@knuさんに&lt;code&gt;Object#tap + break&lt;/code&gt;という必殺技を教えてもらって、リクエストの甲斐があったんだけど。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2012/06/13/objectdo/&quot; title=&quot;Object#doメソッドというのはありですか？&quot;&gt;Object#doメソッドというのはありですか？&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;で、懲りずに今回、こんな名前を考えたよ。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;instance_eval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;block_given?&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dock&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2.5555555555555554&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:dock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {1=&amp;gt;[1, 1], 2=&amp;gt;[2, 2, 2], 3=&amp;gt;[3, 3], 4=&amp;gt;[4], 5=&amp;gt;[5]}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;実装は先の&lt;code&gt;itself&lt;/code&gt;のものとほぼ同じなんだけど、selfのコンテキストでブロックを評価する点が異なってるよ。で、&lt;code&gt;dock&lt;/code&gt;って名前なんだけど「船をドックに入れる」の&lt;code&gt;ドック&lt;/code&gt;のことで、ブロックをドックに見立てて船たるselfをそこに入れてゴニョゴニョするというイメージだよ。selfをブロック引数で渡さないほうが、selfがポンとブロックの中に投げ入れられる感じで&lt;code&gt;dock&lt;/code&gt;の名に合ってると思うんだ。ブロックを取らないときはおかしな名前になっちゃうんだけど、どうかな、これそんなに使うのかな？&lt;/p&gt;
+
+&lt;p&gt;まあ、でもちょっと大げさな名前かな…。&lt;/p&gt;
+
+&lt;p&gt;ほんとは&lt;code&gt;Object#do&lt;/code&gt;が慎み深くていいんだけど。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_f&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2.5555555555555554&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_f&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2.5555555555555554&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:do&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; {1=&amp;gt;[1, 1], 2=&amp;gt;[2, 2, 2], 3=&amp;gt;[3, 3], 4=&amp;gt;[4], 5=&amp;gt;[5]}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;みたいに、&lt;code&gt;something.do do...end&lt;/code&gt;を&lt;code&gt;something.do...end&lt;/code&gt;って書けたら、嬉しいんだけどね。&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>GitHubの彼と自分を比べて何になるの？</title>
@@ -856,63 +963,6 @@ Where are You?
 &lt;p&gt;縦書きの区切りは&lt;code&gt;\\&lt;/code&gt;か全角空白で、例のように&lt;code&gt;++&lt;/code&gt;以降は横書きに戻ります。&lt;/p&gt;
 
 &lt;p&gt;まあ逆さ・縦書きブームなんてものはとっくに過ぎ去りましたが、そんなことは気にせずにツイートしてくださいね :)&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>earthquake.gemのプラグイン管理</title>
-   <link href="http://melborne.github.io/2014/06/01/manage-plugins-of-earthquake-gem"/>
-   <updated>2014-06-01T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/06/01/manage-plugins-of-earthquake-gem</id>
-   <content type="html">
-&lt;p&gt;ターミナルに張り付いている人の10人に8人は使ってると言われている「&lt;a href=&quot;https://github.com/jugyo/earthquake&quot; title=&quot;jugyo/earthquake&quot;&gt;earthquake.gem&lt;/a&gt;」ですが、その魅力はプラグインによる拡張にあります。既に沢山のプラグインがgistで公開されていますから、その中から好きなモノを選んで&lt;code&gt;:plugin_install&lt;/code&gt;を実行すれば簡単に機能拡張ができます。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://github.com/jugyo/earthquake/wiki&quot; title=&quot;plugins&quot;&gt;plugins&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code&gt;:plugin_install https://gist.github.com/melborne/ac7a3613ad5c77387b8c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;プラグインの管理&lt;/h2&gt;
-
-&lt;p&gt;使っているプラグインが増えてくるとその管理も大変ですが、milligrammeさんの「&lt;a href=&quot;https://gist.github.com/milligramme/5253047&quot; title=&quot;earthquake.gem pluginを管理する&quot;&gt;manage_plugins&lt;/a&gt;」というプラグインを使えば管理が楽になります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;:manage_plugins  # インストールされているpluginの一覧を表示する
-
-:manage_plugins off emoji.rb  # emoji.rbプラグインを無効にする
-
-:manage_plugins on emoji.rb   # emoji.rbプラグインを有効にする
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;managepluginsfork&quot;&gt;manage_pluginsのFork版&lt;/h2&gt;
-
-&lt;p&gt;manage_pluginsにはエラーが吐かれるなど一部に問題があったので、これを&lt;a href=&quot;https://gist.github.com/melborne/ef108e0270b871cfaeef&quot; title=&quot;manage_plugins.rb&quot;&gt;fork&lt;/a&gt;して修正＆機能追加版を作りました。変更点は次の通りです。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;ol&gt;
-    &lt;li&gt;問題点修正＆リファクタリング&lt;/li&gt;
-    &lt;li&gt;プラグイン指定時にその名前だけでも受け付けるよう変更&lt;/li&gt;
-    &lt;li&gt;プラグインを削除する&lt;code&gt;rm&lt;/code&gt;サブコマンドの追加&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code&gt;:manage_plugins  # インストールされているpluginの一覧を表示する
-
-:manage_plugins off emoji  # emoji.rbプラグインを無効にする
-
-:manage_plugins on emoji   # emoji.rbプラグインを有効にする
-
-:manage_plugins rm emoji   # emoji.rbプラグインを削除する
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;インストールは次のようにします（earthquake ver 1.0.2以上が必要）。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;:plugin_install https://gist.github.com/melborne/ef108e0270b871cfaeef
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これで、一層快適なearthquake.gemライフが送れますね😃&lt;/p&gt;
 
 </content>
  </entry>
