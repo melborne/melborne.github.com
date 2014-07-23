@@ -365,7 +365,7 @@ Background colors
 
 <p>第2引数以下を省略すると色指定がランダムになり、:inverseをしていすると前景色と背景色を入れ替えます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Paint</span><span class="o">[</span><span class="s1">'Ruby'</span><span class="o">]</span> <span class="c1">#=&gt; "\e[37mRuby\e[0m" </span>
+<div class="highlight"><pre><code class="ruby"><span class="err">それが削除されたということを示すために</span> <span class="no">Paint</span><span class="o">[</span><span class="s1">'Ruby'</span><span class="o">]</span> <span class="c1">#=&gt; "\e[37mRuby\e[0m" </span>
  <span class="no">Paint</span><span class="o">[</span><span class="s1">'Ruby'</span><span class="p">,</span> <span class="ss">:inverse</span><span class="o">]</span> <span class="c1">#=&gt; "\e[7mRuby\e[0m"</span></code></pre></div>
 
 <p><img src="http://img.f.hatena.ne.jp/images/fotolife/k/keyesberry/20110721/20110721203131.png" alt="image" /></p>
@@ -407,6 +407,83 @@ Background colors
 <p>なんかスゴイですね！</p>
 
 <p>ご想像のとおりPaintモジュールの内部はメタプログラミングばりばりです:)</p>
+
+<h2 id="colcolor">Colcolor</h2>
+<p>Colcolorはカラム指向の拙作カラーライブラリです。この使い方については2014-7-14に別途記事にしていますが、その一部をここに転載します。</p>
+
+<blockquote>
+  <p><a href="/2014/07/14/yet-another-terminal-color-for-ruby/" title="Yet Another Terminal Color for Ruby: Colcolorの紹介">Yet Another Terminal Color for Ruby: Colcolorの紹介</a></p>
+</blockquote>
+
+<p><code>colcolor</code>が特徴的なのは、他のライブラリが行指向のものであるのに対して、列（カラム）指向である点です。つまり一行におけるホワイトスペースで区切られたカラムを認識し、それ毎に異なるカラーを適用できるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="s2">"Charlie 21 programmer"</span><span class="p">.</span><span class="nf">colco</span><span class="p">(</span><span class="ss">:red</span><span class="p">,</span> <span class="ss">:yellow</span><span class="p">,</span> <span class="ss">:cyan</span><span class="p">)</span> <span class="c1"># =&gt; "\e[31mCharlie\e[0m \e[33m21\e[0m \e[36mprogrammer\e[0m"</span></code></pre></div>
+
+<p>例えば、タブ区切りのリストにおいて、そのカラムごとに色を変えたい場合は、次のように簡単にできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"colcolor"</span>
+
+<span class="n">list</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+Charlie</span><span class="se">\t</span><span class="sh">21</span><span class="se">\t</span><span class="sh">programmer
+Bill</span><span class="se">\t</span><span class="sh">43</span><span class="se">\t</span><span class="sh">doctor
+Liz</span><span class="se">\t</span><span class="sh">18</span><span class="se">\t</span><span class="sh">student
+</span><span class="no">EOS</span>
+
+<span class="n">list</span><span class="p">.</span><span class="nf">each_line</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">line</span><span class="p">.</span><span class="nf">colco</span><span class="p">(</span><span class="ss">:green</span><span class="p">,</span> <span class="ss">:yellow</span><span class="p">,</span> <span class="ss">:blue</span><span class="p">)</span>
+<span class="k">end</span></code></pre></div>
+
+<p>出力です。</p>
+
+<p><img src="/assets/images/2014/07/colco1.png" alt="Alt title noshadow" /></p>
+
+<p>背景色を作りたいときは、<code>:bg_green</code>などとします。</p>
+
+<h3 id="section-2">複数属性の適用</h3>
+
+<p>一つのカラムに対して、前景色と背景色など複数の属性を適用したい場合は、アンダースコア（<code>_</code>）で属性をつなぎます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">list</span><span class="p">.</span><span class="nf">each_line</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">line</span><span class="p">.</span><span class="nf">colco</span><span class="p">(</span><span class="ss">:green</span><span class="p">,</span> <span class="ss">:red_yellow</span><span class="p">,</span> <span class="ss">:blue_underline</span><span class="p">)</span>
+<span class="k">end</span></code></pre></div>
+
+<p>最初の色が前景色、２つ目以降が背景色になります。出力です。</p>
+
+<p><img src="/assets/images/2014/07/colco2.png" alt="Alt title noshadow" /></p>
+
+<p>緑背景に赤文字を点滅させたいときは、<code>:red_green_blink</code>などとします。</p>
+
+<h3 id="section-3">カスタムカラムパターン</h3>
+
+<p>デフォルトではホワイトスペースをカラムの区切りと認識して各色を適用しますが、<code>regexp</code>オプションでこれをカスタマイズできます。</p>
+
+<p>例えば、リストにスペースで区切られた名前と苗字が含まれていて、そこは連続した背景色にしたい場合、次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="sh">
+Charlie Brown</span><span class="se">\t</span><span class="sh">21</span><span class="se">\t</span><span class="sh">programmer
+Bill Clinton</span><span class="se">\t</span><span class="sh">43</span><span class="se">\t</span><span class="sh">doctor
+Liz Taylor</span><span class="se">\t</span><span class="sh">18</span><span class="se">\t</span><span class="sh">student
+</span><span class="no">EOS</span>
+
+<span class="c1"># 不適切な例:</span>
+
+<span class="n">list</span><span class="p">.</span><span class="nf">each_line</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">line</span><span class="p">.</span><span class="nf">colco</span><span class="p">(</span><span class="ss">:bg_green</span><span class="p">,</span> <span class="ss">:bg_green</span><span class="p">,</span> <span class="ss">:yellow</span><span class="p">,</span> <span class="ss">:blue_underline</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span>
+
+<span class="c1"># regexpオプションを使った例:</span>
+
+<span class="n">re</span> <span class="o">=</span> <span class="sr">/^.*?(?=\t)|\S+/</span> <span class="c1"># 最初のタブの前、または空白以外にマッチ</span>
+
+<span class="n">list</span><span class="p">.</span><span class="nf">each_line</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">line</span><span class="p">.</span><span class="nf">colco</span><span class="p">(</span><span class="ss">:bg_green</span><span class="p">,</span> <span class="ss">:yellow</span><span class="p">,</span> <span class="ss">:blue_underline</span><span class="p">,</span> <span class="n">regexp</span><span class="ss">:re</span><span class="p">)</span>
+<span class="k">end</span></code></pre></div>
+
+<p>出力です。</p>
+
+<p><img src="/assets/images/2014/07/colco3.png" alt="Alt title noshadow" /></p>
 
 <h2 id="ircinteractive-colors">IRC(Interactive Colors)</h2>
 <p>最後に上のライブラリを使って、ターミナル上でインタラクティブにカラーチェックができるirc.rbという簡単なツールを作りました。Term-ANSIColorライブラリを使っています。</p>
