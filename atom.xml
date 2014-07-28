@@ -4,13 +4,115 @@
  <title>hp12c</title>
  <link href="http://melborne.github.io/atom.xml" rel="self"/>
  <link href="http://melborne.github.io"/>
- <updated>2014-07-23T10:51:55+09:00</updated>
+ <updated>2014-07-28T10:41:21+09:00</updated>
  <id>http://melborne.github.io</id>
  <author>
    <name>kyoendo</name>
    <email>postagie@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！</title>
+   <link href="http://melborne.github.io/2014/07/28/examples-of-colcolor-cycle-option"/>
+   <updated>2014-07-28T00:00:00+09:00</updated>
+   <id>http://melborne.github.io/2014/07/28/examples-of-colcolor-cycle-option</id>
+   <content type="html">
+&lt;p&gt;先日、カラム指向ターミナルカラーライブラリ「colcolor」というのを公開しまして。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;/2014/07/14/yet-another-terminal-color-for-ruby/&quot; title=&quot;Yet Another Terminal Color for Ruby: Colcolorの紹介&quot;&gt;Yet Another Terminal Color for Ruby: Colcolorの紹介&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/colcolor&quot; title=&quot;colcolor&quot;&gt;colcolor&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;colcolorはStringクラスに&lt;code&gt;colco&lt;/code&gt;というメソッドを挿します。colcoでは引数として複数の色名を受け取って単語区切りで文字を彩色します。こんな感じです。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;colcolor&quot;&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;DATA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each_line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with_index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;colco&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:yellow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;-&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;colco&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;zero?&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;__END__
+lang year designer
+Ruby 1993 Yukihiro Matsumoto
+Lisp 1958 John McCarthy
+C++ 1983 Bjarne Stroustrup&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ターミナル出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/07/colcolor_cycle1.png&quot; alt=&quot;colcolor noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;cycle&quot;&gt;cycleオプション&lt;/h2&gt;
+
+&lt;p&gt;で、この度&lt;code&gt;cycle&lt;/code&gt;オプションをcolcoに渡せるようにしたので、紹介します。&lt;/p&gt;
+
+&lt;p&gt;colcolorでは渡した色数が単語数に対して不足するとき、残りの単語は色付けされないのですが、このcycleオプションを&lt;code&gt;true&lt;/code&gt;にセットすると、与えられた色を残りの単語に対しても繰り返し適用するようになります。こんな感じです。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;colcolor&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;
+A dynamic, open source programming language
+with a focus on simplicity and productivity.
+It has an elegant syntax that is natural to
+read and easy to write.
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;colco&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:yellow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cycle&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ターミナル出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/07/colcolor_cycle2.png&quot; alt=&quot;colcolor noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;赤、緑、青、黄が単語に対して繰り返し適用されている様子がわかります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;regexp&lt;/code&gt;オプションと組み合わせると、少し面白いこともできます。regexpに&lt;code&gt;/./&lt;/code&gt;を渡して色区切りを文字ベースにしてみます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;colcolor&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;
+A dynamic, open source programming language
+with a focus on simplicity and productivity.
+It has an elegant syntax that is natural to
+read and easy to write.
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;EOS&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;colco&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:yellow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cycle&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;regexp&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ターミナル出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/07/colcolor_cycle3.png&quot; alt=&quot;colcolor noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;こんなこともできます。&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;colcolor&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot; &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;colors&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;%i(bg_red bg_yellow)&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;times&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;colco&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;colors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rotate!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cycle&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;regexp&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/)
+end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ターミナル出力です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2014/07/colcolor_cycle4.png&quot; alt=&quot;colcolor noshadow&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;colcolor&lt;/code&gt;をどうぞよろしく！&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;/2014/07/14/yet-another-terminal-color-for-ruby/&quot; title=&quot;Yet Another Terminal Color for Ruby: Colcolorの紹介&quot;&gt;Yet Another Terminal Color for Ruby: Colcolorの紹介&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;https://rubygems.org/gems/colcolor&quot; title=&quot;colcolor&quot;&gt;colcolor&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/colcolor&quot; title=&quot;melborne/colcolor&quot;&gt;melborne/colcolor&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Yet Another Terminal Color for Ruby: Colcolorの紹介</title>
@@ -21,7 +123,7 @@
 &lt;p&gt;巷にはターミナル文字のカラー化を楽にするライブラリが溢れています。僕も以前にその幾つかを紹介した記事を書きました。&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;http://melborne.github.io/2010/11/07/Ruby-ANSI/&quot; title=&quot;RubyでANSIカラーシーケンスを学ぼう！&quot;&gt;RubyでANSIカラーシーケンスを学ぼう！&lt;/a&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;a href=&quot;/2010/11/07/Ruby-ANSI/&quot; title=&quot;RubyでANSIカラーシーケンスを学ぼう！&quot;&gt;RubyでANSIカラーシーケンスを学ぼう！&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;にも拘わらずみんな、人の作ったライブラリが自分のテイストに合わないのか、自分用に、しかし他と似たようなものをまた作って、このリストを更に長くしていくという傾向があるようです。&lt;a href=&quot;https://rubygems.org/search?utf8=%E2%9C%93&amp;amp;query=color&quot; title=&quot;RubyGems.org&quot;&gt;RubyGems.org&lt;/a&gt;で&lt;code&gt;color&lt;/code&gt;を検索してみてください。僕が言っていることが冗談ではないということが分かるでしょう。&lt;/p&gt;
@@ -133,6 +235,17 @@ Liz Taylor&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span 
 
   &lt;p&gt;&lt;a href=&quot;https://github.com/melborne/colcolor&quot; title=&quot;melborne/colcolor&quot;&gt;melborne/colcolor&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;(追記：2014-7-28) &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;colcolor&lt;/code&gt;にcycleオプションを付けました。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http:///2014/07/28/examples-of-colcolor-cycle-option/&quot; title=&quot;カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！&quot;&gt;カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
 </content>
  </entry>
  
@@ -930,98 +1043,6 @@ Where are You?
 
 &lt;blockquote&gt;
   &lt;p&gt;&lt;a href=&quot;https://bugs.ruby-lang.org/issues/6801#change-28490&quot; title=&quot;Feature #6801: String#~ for a here document - ruby-trunk - Ruby Issue Tracking System&quot;&gt;Feature #6801: String#~ for a here document - ruby-trunk - Ruby Issue Tracking System&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>RubyのHashの秘密 その３ - ハッシュテーブルの理解</title>
-   <link href="http://melborne.github.io/2014/06/14/hash-table-in-ruby"/>
-   <updated>2014-06-14T00:00:00+09:00</updated>
-   <id>http://melborne.github.io/2014/06/14/hash-table-in-ruby</id>
-   <content type="html">
-&lt;p&gt;同姓同名のいない1億人の日本人の中から素早く「山田 太郎」を見つけ出して彼と話をしたい。各人の胸には名札が貼ってあるので、「山田 太郎」の名札の付いた人物を見つけ出せばいい。全国を行脚して片っ端に名札を確認していくという手もあるが、恐ろしく時間が掛かることは想像に難くない。最悪で1億人、平均で5000万人の名札の確認が必要となる。したがって事前に彼ら彼女らをなんらかのかたちに整列させるべきだと認識する。かと言って、こちらが持っている情報は彼ら彼女らの名前（姓と名）しかないから順位付けで整列というのは難しい。そこで姓（苗字）によるグループ化を思いつく。つまり各人の名札を「苗字関数」に通して苗字を得、その苗字のために割り当てられた区域に彼ら彼女らを住まわせるのだ。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;苗字関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/\s+/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;苗字関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;山田&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;日本人の苗字は30万種ほどらしいから1億人は30万個のグループに分けられ、各区域には平均330人が住むことになる。この場合「山田 太郎」に辿り着くには、まずは30万の区域の中から「山田」区を見つけ出し、次いで「山田」区の中から「山田 太郎」の名札を持った人物を総当りで探せばいい。「山田」区に辿り着くには平均15万回の区訪問が必要だが、区が見つかればあと平均165回で彼に出会える。&lt;/p&gt;
-
-&lt;p&gt;ところがよく調べてみると全国に「山田」姓の日本人は85万人もいることが分かった。これで彼に辿り着くには平均57万5000回(15万 + 42万5000)の照合が必要となった。一方で、「佐村河内」という姓は全国に40人しかいないそうで、その照合は平均15万回ほどだから姓によってそこに辿り着くまでの時間が相当異なることになる。これは安定的でない。ここに至って「苗字関数」の問題に気付く。この関数がグループを平均に分散しないのだ。&lt;/p&gt;
-
-&lt;p&gt;明日の予定を気にしながら良い方法がないか考えていたら、目の前にあるカレンダーが1年365日を7つの曜日で均等に分割していることに気付いた。年初からの経過日数を曜日の数で割った余り（剰余）を求めれば、すべての日にちは各曜日に紐付けられた0から6の数字の何れかになる。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;day&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;day&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 5&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;剰余関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;224&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;「剰余関数」により1年の365日は52個ずつの7つのグループに均等に分けられる。もし仮に人の名前をランダムなそれでいて一定である整数に置き換えられるなら、1億人の日本人も均等に分割できるかもしれない。つまり「山田 太郎」から作られる数字が常に一定であり、かつそれが「佐村河内 守」から作られる数字とは異なるようなランダムな数字、そんなものを生み出す関数があれば、どんな名前に対しても安定した結果を得られるに違いない。そんな関数を世間では「ハッシュ関数」と呼んでいる。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# String#hashを使う&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2948999586394291103&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2948999586394291103&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 3017522113704884285&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 3017522113704884285&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;苗字種数に倣って名前を30万のグループに分けるならこの値を30万で除した余を、求める「ハッシュ値」とすればいい。&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30_0000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;abs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 270422&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;山田 太郎&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 270422&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 179742&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;ハッシュ関数&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;佐村河内 守&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 179742&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;この「ハッシュ関数」から出力される数値は、0から30万の何れかだからこれを直線的に並べられた30万個の区域のインデックスとみなせばいい。つまり「山田 太郎」をこのデータ構造における先頭から270422番目の区域に住まわせ、「佐村河内 守」を179742番目の区域に住まわせる。こうすると「山田 太郎」に辿り着くには名前に「ハッシュ関数」を適用してハッシュ値を得、それが示すインデックスの区域に移動してそこに住んでいる330人の中から彼を見つけ出せばいい。これで彼を見つけるまでのコストは、「ハッシュ関数」を求めるコスト、対象区域のインデックスに移動するコスト、対象区域の330人にシーケンシャルにアクセスするコストとなる。このなかでは明らかに対象区域内でのシーケンシャルアクセスのコストが高い。対象インデックスへの移動コストは相対的に小さいからその数が増えても影響は小さいだろうから、この数つまり「ハッシュ関数」における剰余の基数を30万から300万に増やせば各区域内は33人になってその探索コストは改善する。言い換えれば各区域内の人数を最小に保てれば総コストは小さくなるということがわかる。&lt;/p&gt;
-
-&lt;p&gt;何れにしてもこれで探索対象が「山田 太郎」であろうが「佐村河内 守」であろうが「野田 江川富士一二三四五左衛門助太郎」であろうが一定のコストで目的に辿りつけるようになった。めでたしめでたし。&lt;/p&gt;
-
-&lt;p&gt;こんな理解であってる？&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;関連記事：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;/2014/06/11/secret-in-rubys-hash/&quot; title=&quot;RubyのHashの秘密&quot;&gt;RubyのHashの秘密&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;/2014/06/12/fib-in-hash-default/&quot; title=&quot;RubyのHashの秘密 その２&quot;&gt;RubyのHashの秘密 その２&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;参考記事：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB&quot; title=&quot;ハッシュテーブル - Wikipedia&quot;&gt;ハッシュテーブル - Wikipedia&lt;/a&gt;
-&lt;a href=&quot;http://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E9%96%A2%E6%95%B0&quot; title=&quot;ハッシュ関数 - Wikipedia&quot;&gt;ハッシュ関数 - Wikipedia&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://i.loveruby.net/ja/rhg/book/name.html&quot; title=&quot;第3章 名前と名前表&quot;&gt;第3章 名前と名前表&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://patshaughnessy.net/ruby-under-a-microscope&quot; title=&quot;Ruby Under a Microscope - Pat Shaughnessy&quot;&gt;Ruby Under a Microscope - Pat Shaughnessy&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://d.hatena.ne.jp/zariganitosh/20090716/1247709137&quot; title=&quot;Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた...。&quot;&gt;Rubyのハッシュテーブルの仕組みを徹底的に理解する - ザリガニが見ていた…。&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://ufcpp.net/study/algorithm/col_hash.html&quot; title=&quot;ハッシュテーブル (アルゴリズムとデータ構造)&quot;&gt;ハッシュテーブル (アルゴリズムとデータ構造)&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://www2.nipponsoft.co.jp/bldoko/&quot; title=&quot;姓名分布&amp;amp;姓名ランキング 写録宝夢巣／名前・苗字・名字&quot;&gt;姓名分布&amp;amp;姓名ランキング 写録宝夢巣／名前・苗字・名字&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;a href=&quot;http://myoji-yurai.net/&quot; title=&quot;名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!&quot;&gt;名字検索No.1／名字由来net｜日本人の名字(苗字)98%以上を掲載!!&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 </content>
