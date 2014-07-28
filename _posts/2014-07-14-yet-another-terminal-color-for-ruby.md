@@ -11,7 +11,7 @@ published: true
 
 巷にはターミナル文字のカラー化を楽にするライブラリが溢れています。僕も以前にその幾つかを紹介した記事を書きました。
 
-> [RubyでANSIカラーシーケンスを学ぼう！](http://melborne.github.io/2010/11/07/Ruby-ANSI/ "RubyでANSIカラーシーケンスを学ぼう！")
+> [RubyでANSIカラーシーケンスを学ぼう！]({{ BASE_PATH }}/2010/11/07/Ruby-ANSI/ "RubyでANSIカラーシーケンスを学ぼう！")
 
 にも拘わらずみんな、人の作ったライブラリが自分のテイストに合わないのか、自分用に、しかし他と似たようなものをまた作って、このリストを更に長くしていくという傾向があるようです。[RubyGems.org](https://rubygems.org/search?utf8=%E2%9C%93&query=color "RubyGems.org")で`color`を検索してみてください。僕が言っていることが冗談ではないということが分かるでしょう。
 
@@ -134,3 +134,12 @@ end
 > [colcolor](https://rubygems.org/gems/colcolor "colcolor")
 > 
 > [melborne/colcolor](https://github.com/melborne/colcolor "melborne/colcolor")
+
+---
+
+(追記：2014-7-28) 
+
+`colcolor`にcycleオプションを付けました。
+
+> [カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！](http://{{ BASE_PATH }}/2014/07/28/examples-of-colcolor-cycle-option/ "カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！")
+
