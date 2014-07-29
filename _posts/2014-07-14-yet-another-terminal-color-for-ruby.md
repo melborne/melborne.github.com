@@ -141,5 +141,5 @@ end
 
 `colcolor`にcycleオプションを付けました。
 
-> [カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！](http://{{ BASE_PATH }}/2014/07/28/examples-of-colcolor-cycle-option/ "カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！")
+> [カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！]({{ BASE_PATH }}/2014/07/28/examples-of-colcolor-cycle-option/ "カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！")
 
