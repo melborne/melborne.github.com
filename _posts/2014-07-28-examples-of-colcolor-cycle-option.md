@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "カラム指向ターミナルカラーライブラリ「colcolor」にcycleオプションを付けました！"
+title: "カラム指向ターミナルカラーライブラリ「colcolor」にcyclicオプションを付けました！"
 description: ""
 category: 
 tags: 
@@ -36,11 +36,11 @@ C++ 1983 Bjarne Stroustrup
 
 ![colcolor noshadow]({{ BASE_PATH }}/assets/images/2014/07/colcolor_cycle1.png)
 
-## cycleオプション
+## cyclicオプション
 
-で、この度`cycle`オプションをcolcoに渡せるようにしたので、紹介します。
+で、この度`cyclic`オプションをcolcoに渡せるようにしたので、紹介します。
 
-colcolorでは渡した色数が単語数に対して不足するとき、残りの単語は色付けされないのですが、このcycleオプションを`true`にセットすると、与えられた色を残りの単語に対しても繰り返し適用するようになります。こんな感じです。
+colcolorでは渡した色数が単語数に対して不足するとき、残りの単語は色付けされないのですが、このcyclicオプションを`true`にセットすると、与えられた色を残りの単語に対しても繰り返し適用するようになります。こんな感じです。
 
 {% highlight ruby %}
 require "colcolor"
@@ -52,7 +52,7 @@ It has an elegant syntax that is natural to
 read and easy to write.
 EOS
 
-puts text.colco(:red, :green, :blue, :yellow, cycle:true)
+puts text.colco(:red, :green, :blue, :yellow, cyclic:true)
 {% endhighlight %}
 
 ターミナル出力です。
@@ -73,7 +73,7 @@ It has an elegant syntax that is natural to
 read and easy to write.
 EOS
 
-puts text.colco(:red, :green, :blue, :yellow, cycle:true, regexp:/./)
+puts text.colco(:red, :green, :blue, :yellow, cyclic:true, regexp:/./)
 {% endhighlight %}
 
 ターミナル出力です。
@@ -90,7 +90,7 @@ line = " " * 50
 colors = %i(bg_red bg_yellow)
 
 10.times do
-  puts line.colco(*colors.rotate!, cycle:true, regexp:/../)
+  puts line.colco(*colors.rotate!, cyclic:true, regexp:/../)
 end
 {% endhighlight %}
 
@@ -106,3 +106,6 @@ end
 >
 >[melborne/colcolor](https://github.com/melborne/colcolor "melborne/colcolor")
 
+---
+
+(追記：2014-7-30) オプション名を"cycle"から"cyclic"に変更しました（version 0.0.5）。
