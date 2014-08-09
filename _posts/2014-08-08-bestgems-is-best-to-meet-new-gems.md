@@ -161,13 +161,13 @@ require 'bestgems'
 
 client = Bestgems.client
 
-client.total_downloads(:rack) # => [{:date=>"2014-08-06", :total_downloads=>48365953}, {:date=>"2014-08-05", :total_downloads=>48305390}, {:date=>"2014-08-04", :total_downloads=>48246069}, {:date=>"2014-08-03", :total_downloads=>48203248}, {:date=>"2014-08-02", :total_downloads=>48172608}, ... ]
+client.total_downloads(:rack) # => {"2014-08-08"=>48484297, "2014-08-07"=>48426620, "2014-08-06"=>48365953, "2014-08-05"=>48305390, "2014-08-04"=>48246069, "2014-08-03"=>48203248, ... }
 
-client.daily_downloads(:rack) # => [{:date=>"2014-08-06", :daily_downloads=>60563}, {:date=>"2014-08-05", :daily_downloads=>59321}, {:date=>"2014-08-04", :daily_downloads=>42821}, {:date=>"2014-08-03", :daily_downloads=>30640}, ... ]
+client.daily_downloads(:rack) # => {"2014-08-08"=>57677, "2014-08-07"=>60667, "2014-08-06"=>60563, "2014-08-05"=>59321, "2014-08-04"=>42821, "2014-08-03"=>30640, ... }
 
-client.total_ranking(:rack) # => [{:date=>"2014-08-06", :total_ranking=>2}, {:date=>"2014-08-05", :total_ranking=>2}, {:date=>"2014-08-04", :total_ranking=>2}, {:date=>"2014-08-03", :total_ranking=>2}, {:date=>"2014-08-02", :total_ranking=>2}, ... ]
+client.total_ranking(:rack) # => {"2014-08-08"=>2, "2014-08-07"=>2, "2014-08-06"=>2, "2014-08-05"=>2, "2014-08-04"=>2, "2014-08-03"=>2, "2014-08-02"=>2, "2014-08-01"=>2, "2014-07-31"=>2, ... }
 
-client.daily_ranking(:rack) # => [{:date=>"2014-08-06", :daily_ranking=>6}, {:date=>"2014-08-05", :daily_ranking=>7}, {:date=>"2014-08-04", :daily_ranking=>4}, {:date=>"2014-08-03", :daily_ranking=>3}, {:date=>"2014-08-02", :daily_ranking=>3}, ... ]
+client.daily_ranking(:rack) # => {"2014-08-08"=>6, "2014-08-07"=>6, "2014-08-06"=>6, "2014-08-05"=>7, "2014-08-04"=>4, "2014-08-03"=>3, "2014-08-02"=>3, "2014-08-01"=>6, "2014-07-31"=>6, ... }
 {% endhighlight %}
 
 
@@ -193,6 +193,11 @@ client.daily_ranking(:rack) # => [{:date=>"2014-08-06", :daily_ranking=>6}, {:da
 
 
 下から５番目...orz
+
+---
+
+(追記：2014-8-9) bestgems gemの仕様変更に伴い記述（コード）を変更しました。
+
 
 {% footnotes %}
 {% fn 実のところBestGems.orgのAPIはtwitter上での@xmisaoさんと僕とのやりとりで生まれたのでした。https://twitter.com/merborne/status/488681089586585600 %}
