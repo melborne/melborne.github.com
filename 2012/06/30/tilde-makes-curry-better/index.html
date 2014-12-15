@@ -182,13 +182,13 @@
     
 <p><code>Proc#curry</code>は関数（正確にはProcオブジェクト）をカリー化するためのメソッドです。「<strong>カリー化</strong>」とは、複数の引数を取る関数に対して、一度にその一部ずつ引数を取れるようにすることです。関数に一部の引数を渡すことを部分適用といいます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}.</span><span class="nf">curry</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109ae00 (lambda)&gt;</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}.</span><span class="nf">curry</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109ae00 (lambda)&gt;</span>
 
-<span class="n">multi_by2</span> <span class="o">=</span> <span class="n">multi</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109a928 (lambda)&gt;</span>
-<span class="n">multi_by5</span> <span class="o">=</span> <span class="n">multi</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109a478 (lambda)&gt;</span>
+<span class="n">multi_by2</span> <span class="o">=</span> <span class="n">multi</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109a928 (lambda)&gt;</span>
+<span class="n">multi_by5</span> <span class="o">=</span> <span class="n">multi</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># =&gt; #&lt;Proc:0x0000010109a478 (lambda)&gt;</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</span>
-<span class="o">[*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by5</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span></code></pre></div>
+<span class="p">[</span><span class="o">*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</span>
+<span class="p">[</span><span class="o">*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">multi_by5</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]</span></code></pre></div>
 
 <p>この例ではカリー化したmultiオブジェクトに2を部分適用して<code>multi_by2</code>を、5を部分適用して<code>multi_by5</code>をそれぞれ生成しています。つまり関数をカリー化すると、一つの関数から複数の関数を生成できるようになるのです。ステキです。DRYです。</p>
 
@@ -196,7 +196,7 @@
 
 <p>そこでせめてこの呼び出しの抵抗感を少なくして、Rubyにおけるカリー化を促進するために、<code>Proc#~</code>を考えてみましたよ！</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Proc</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Proc</span>
   <span class="k">alias</span> <span class="ss">:~</span> <span class="ss">:curry</span>
 <span class="k">end</span></code></pre></div>
 
@@ -206,23 +206,23 @@
 
 <p>これにより先のmultiは次のように書けます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">~-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">multi</span> <span class="o">=</span> <span class="o">~-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="p">}</span></code></pre></div>
 
 <p>これでRubyでも関数がもともとカリー化されていたように見えますね！</p>
 
 <p>最後に、Proc#~を使ったFizzBuzzの例を。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">fizzbuzzize</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">fizzbuzzize</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
   <span class="n">mod_zero</span> <span class="o">=</span> <span class="o">~-&gt;</span><span class="n">base</span><span class="p">,</span><span class="n">n</span><span class="p">{</span> <span class="n">n</span><span class="p">.</span><span class="nf">%</span><span class="p">(</span><span class="n">base</span><span class="p">).</span><span class="nf">zero?</span> <span class="p">}</span>
   <span class="k">case</span> <span class="n">i</span>
-  <span class="k">when</span> <span class="n">mod_zero</span><span class="o">[</span><span class="mi">15</span><span class="o">]</span> <span class="k">then</span> <span class="s1">'FizzBuzz'</span>
-  <span class="k">when</span> <span class="n">mod_zero</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span>  <span class="k">then</span> <span class="s1">'Fizz'</span>
-  <span class="k">when</span> <span class="n">mod_zero</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span>  <span class="k">then</span> <span class="s1">'Buzz'</span>
+  <span class="k">when</span> <span class="n">mod_zero</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="k">then</span> <span class="s1">'FizzBuzz'</span>
+  <span class="k">when</span> <span class="n">mod_zero</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="k">then</span> <span class="s1">'Fizz'</span>
+  <span class="k">when</span> <span class="n">mod_zero</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>  <span class="k">then</span> <span class="s1">'Buzz'</span>
   <span class="k">else</span> <span class="n">i</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="o">[*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">100</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">fizzbuzzize</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz", 16, 17, "Fizz", 19, "Buzz", "Fizz", 22, 23, "Fizz", "Buzz", 26, "Fizz", 28, 29, "FizzBuzz", 31, 32, "Fizz", 34, "Buzz", "Fizz", 37, 38, "Fizz", "Buzz", 41, "Fizz", 43, 44, "FizzBuzz", 46, 47, "Fizz", 49, "Buzz", "Fizz", 52, 53, "Fizz", "Buzz", 56, "Fizz", 58, 59, "FizzBuzz", 61, 62, "Fizz", 64, "Buzz", "Fizz", 67, 68, "Fizz", "Buzz", 71, "Fizz", 73, 74, "FizzBuzz", 76, 77, "Fizz", 79, "Buzz", "Fizz", 82, 83, "Fizz", "Buzz", 86, "Fizz", 88, 89, "FizzBuzz", 91, 92, "Fizz", 94, "Buzz", "Fizz", 97, 98, "Fizz", "Buzz"]</span></code></pre></div>
+<span class="p">[</span><span class="o">*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">100</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">fizzbuzzize</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz", 16, 17, "Fizz", 19, "Buzz", "Fizz", 22, 23, "Fizz", "Buzz", 26, "Fizz", 28, 29, "FizzBuzz", 31, 32, "Fizz", 34, "Buzz", "Fizz", 37, 38, "Fizz", "Buzz", 41, "Fizz", 43, 44, "FizzBuzz", 46, 47, "Fizz", 49, "Buzz", "Fizz", 52, 53, "Fizz", "Buzz", 56, "Fizz", 58, 59, "FizzBuzz", 61, 62, "Fizz", 64, "Buzz", "Fizz", 67, 68, "Fizz", "Buzz", 71, "Fizz", 73, 74, "FizzBuzz", 76, 77, "Fizz", 79, "Buzz", "Fizz", 82, 83, "Fizz", "Buzz", 86, "Fizz", 88, 89, "FizzBuzz", 91, 92, "Fizz", 94, "Buzz", "Fizz", 97, 98, "Fizz", "Buzz"]</span></code></pre></div>
 
 <p>Melborne the Sticker of Tilde</p>
 

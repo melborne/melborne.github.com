@@ -228,7 +228,7 @@
 <h2 id="section-1">データの前処理</h2>
 <p>まずは、先のantlaboさんのサイトから<code>city_location_utf8.csv</code>を取得します。このデータは以下のようなtab separated valueになってます<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。</p>
 
-<div class="highlight"><pre><code class="text">id	pref	name	lat	lon
+<div class="highlight"><pre><code class="language-text" data-lang="text">id	pref	name	lat	lon
 673	三重県	いなべ市	35.16079322	136.5017665
 796	三重県	亀山市	34.87762199	136.38172496
 977	三重県	伊勢市	34.47547466	136.72519867
@@ -241,9 +241,9 @@
 
 <p>いつものようにこのデータを直接Gvizに渡してもいいんですが、今回は一手間掛けてCityオブジェクトを作りそれを渡すようにしてみます。<code>city.rb</code>というファイルを作ってCityクラスを作り、このデータに基いてCityオブジェクトを生成します。こんな感じです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="k">class</span> <span class="nc">City</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:pref</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:lat</span><span class="p">,</span> <span class="ss">:lon</span><span class="p">)</span>
-  <span class="vc">@@cities</span> <span class="o">=</span> <span class="o">[]</span>
+  <span class="vc">@@cities</span> <span class="o">=</span> <span class="p">[]</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="k">def</span> <span class="nf">cities</span>
       <span class="vc">@@cities</span>
@@ -260,7 +260,7 @@
 
 <p>では、CSVライブラリを使ってデータを読み出し、Cityオブジェクトを生成しましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
 
 <span class="n">tsv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="s1">'city_location_utf8.csv'</span><span class="p">,</span> <span class="n">col_sep</span><span class="ss">:"</span><span class="se">\t</span><span class="ss">"</span><span class="p">)</span>
 
@@ -275,7 +275,7 @@
 
 <p>Graphvizで絶対位置を指定するときは値を正規化する必要があり、そのために緯度経度のレンジ（最小値-最大値）を使いますので、Cityクラスにこれらの値を保持させましょう。<code>City.lat_range</code>, <code>City.lon_range</code>を定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">City</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:pref</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:lat</span><span class="p">,</span> <span class="ss">:lon</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">City</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:pref</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:lat</span><span class="p">,</span> <span class="ss">:lon</span><span class="p">)</span>
   <span class="vc">@@lat_range</span> <span class="o">=</span> <span class="vc">@@lon_range</span> <span class="o">=</span> <span class="kp">nil</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="k">def</span> <span class="nf">lat_range</span>
@@ -296,7 +296,7 @@
 
 <p>更に、都道府県別に色を付けたいので、都道府県の色情報をCityクラスに持たせます。色付けには前回同様<code>Colorable</code> gemを使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"colorable"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"colorable"</span>
 
 <span class="k">class</span> <span class="nc">City</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:pref</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:lat</span><span class="p">,</span> <span class="ss">:lon</span><span class="p">)</span>
   <span class="vc">@@pref_colors</span> <span class="o">=</span> <span class="kp">nil</span>
@@ -305,7 +305,7 @@
       <span class="vc">@@pref_colors</span> <span class="o">||=</span> <span class="k">begin</span>
         <span class="n">c</span> <span class="o">=</span> <span class="no">Colorable</span><span class="o">::</span><span class="no">Color</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:alice_blue</span><span class="p">)</span>
         <span class="n">prefs</span> <span class="o">=</span> <span class="vc">@@cities</span><span class="p">.</span><span class="nf">uniq</span> <span class="p">{</span> <span class="o">|</span><span class="n">city</span><span class="o">|</span> <span class="n">city</span><span class="p">.</span><span class="nf">pref</span> <span class="p">}.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:pref</span><span class="p">)</span>
-        <span class="no">Hash</span><span class="o">[</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">pr</span><span class="o">|</span> <span class="o">[</span><span class="n">pr</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">.</span><span class="nf">next</span><span class="o">]</span> <span class="p">}</span> <span class="o">]</span>
+        <span class="no">Hash</span><span class="p">[</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">pr</span><span class="o">|</span> <span class="p">[</span><span class="n">pr</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">.</span><span class="nf">next</span><span class="p">]</span> <span class="p">}</span> <span class="p">]</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
@@ -316,14 +316,14 @@
 <h2 id="section-2">日本地図の描画</h2>
 <p>さて、下準備ができました。gvizを使って日本地図を描画します。<code>graph.ru</code>ファイルを作って次のようなコードを書きます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">"./city"</span>
 
 <span class="n">global</span> <span class="n">layout</span><span class="ss">:'neato'</span><span class="p">,</span> <span class="n">label</span><span class="ss">:'Map of Japan'</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">16</span>
 <span class="n">nodes</span> <span class="n">shape</span><span class="ss">:'circle'</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span><span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span>
 <span class="no">City</span><span class="p">.</span><span class="nf">cities</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
-  <span class="nb">name</span> <span class="o">=</span> <span class="o">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">name</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-  <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="o">[</span><span class="n">c</span><span class="p">.</span><span class="nf">lat</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">lon</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="o">[</span><span class="no">City</span><span class="p">.</span><span class="nf">lat_range</span><span class="p">,</span> <span class="no">City</span><span class="p">.</span><span class="nf">lon_range</span><span class="o">]</span><span class="p">)</span>
+  <span class="nb">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">name</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+  <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">.</span><span class="nf">lat</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">lon</span><span class="p">].</span><span class="nf">zip</span><span class="p">([</span><span class="no">City</span><span class="p">.</span><span class="nf">lat_range</span><span class="p">,</span> <span class="no">City</span><span class="p">.</span><span class="nf">lon_range</span><span class="p">])</span>
                            <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="p">,</span> <span class="n">range</span><span class="o">|</span> <span class="n">val</span><span class="p">.</span><span class="nf">norm</span><span class="p">(</span><span class="n">range</span><span class="p">,</span> <span class="mi">100</span><span class="p">.</span><span class="nf">.</span><span class="mi">10000</span><span class="p">)</span> <span class="p">}</span>
   <span class="n">node</span> <span class="n">c</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">to_id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:name</span><span class="p">,</span> <span class="n">pos</span><span class="ss">:"</span><span class="si">#{</span><span class="n">lon</span><span class="si">}</span><span class="ss">,</span><span class="si">#{</span><span class="n">lat</span><span class="si">}</span><span class="ss">!"</span>
 <span class="k">end</span>
@@ -334,7 +334,7 @@
 
 <p>ターミナルでgvizコマンドを実行し、graphvizで生成された画像を開きます。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>gviz
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>gviz
 <span class="gp">% </span>open japan.dot</code></pre></div>
 
 <p>さあ、出力です。</p>
@@ -349,16 +349,16 @@
 
 <p>前回同様、仕上げに色を付けます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># encoding: UTF-8</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: UTF-8</span>
 <span class="nb">require</span> <span class="s2">"./city"</span>
 
 <span class="n">global</span> <span class="n">layout</span><span class="ss">:'neato'</span><span class="p">,</span> <span class="n">label</span><span class="ss">:'Map of Japan'</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">16</span>
 <span class="n">nodes</span> <span class="n">shape</span><span class="ss">:'circle'</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span><span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span>
 <span class="no">City</span><span class="p">.</span><span class="nf">cities</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
-  <span class="nb">name</span> <span class="o">=</span> <span class="o">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">name</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-  <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="o">[</span><span class="n">c</span><span class="p">.</span><span class="nf">lat</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">lon</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="o">[</span><span class="no">City</span><span class="p">.</span><span class="nf">lat_range</span><span class="p">,</span> <span class="no">City</span><span class="p">.</span><span class="nf">lon_range</span><span class="o">]</span><span class="p">)</span>
+  <span class="nb">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">name</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+  <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">.</span><span class="nf">lat</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="nf">lon</span><span class="p">].</span><span class="nf">zip</span><span class="p">([</span><span class="no">City</span><span class="p">.</span><span class="nf">lat_range</span><span class="p">,</span> <span class="no">City</span><span class="p">.</span><span class="nf">lon_range</span><span class="p">])</span>
                            <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="p">,</span> <span class="n">range</span><span class="o">|</span> <span class="n">val</span><span class="p">.</span><span class="nf">norm</span><span class="p">(</span><span class="n">range</span><span class="p">,</span> <span class="mi">100</span><span class="p">.</span><span class="nf">.</span><span class="mi">10000</span><span class="p">)</span> <span class="p">}</span>
-<span class="o">+</span>  <span class="n">color</span> <span class="o">=</span> <span class="no">City</span><span class="p">.</span><span class="nf">pref_colors</span><span class="o">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="o">]</span>
+<span class="o">+</span>  <span class="n">color</span> <span class="o">=</span> <span class="no">City</span><span class="p">.</span><span class="nf">pref_colors</span><span class="p">[</span><span class="n">c</span><span class="p">.</span><span class="nf">pref</span><span class="p">]</span>
 <span class="o">+</span>  <span class="n">fcolor</span> <span class="o">=</span> <span class="n">color</span><span class="p">.</span><span class="nf">dark?</span> <span class="p">?</span> <span class="s1">'white'</span> <span class="p">:</span> <span class="s1">'black'</span>
 <span class="o">+</span>  <span class="n">node</span> <span class="n">c</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">to_id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:name</span><span class="p">,</span> <span class="n">pos</span><span class="ss">:"</span><span class="si">#{</span><span class="n">lon</span><span class="si">}</span><span class="ss">,</span><span class="si">#{</span><span class="n">lat</span><span class="si">}</span><span class="ss">!"</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:"</span><span class="si">#{</span><span class="n">color</span><span class="p">.</span><span class="nf">hex</span><span class="si">}</span><span class="ss">aa"</span><span class="p">,</span> <span class="n">fontcolor</span><span class="ss">:fcolor</span>
 <span class="k">end</span>

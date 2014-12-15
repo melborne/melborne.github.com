@@ -186,7 +186,7 @@
 
 <p>Rubyにはリストに都合の良いArrayクラスが組込みであったが、ツリーに都合の良いものはないので自分でクラスを定義しよう。ツリーはラベルを持ったノードを連結したものとして表現できるので、この連結の機能をもったNodeクラスを定義することでツリーを表現しよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="kp">attr_reader</span> <span class="ss">:label</span><span class="p">,</span> <span class="ss">:subtrees</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">*</span><span class="n">subtrees</span><span class="p">)</span>
     <span class="vi">@label</span> <span class="o">=</span> <span class="n">label</span>
@@ -201,7 +201,7 @@
 
 <p>例えば、</p>
 
-<div class="highlight"><pre><code class="bash">1 o
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">1 o
             ／ ＼
           ／     ＼
         ／         ＼
@@ -213,10 +213,10 @@
 
 <p>というツリーはこのNodeクラスを使って以下のように表現できる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> 
-            <span class="n">node</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span>
-            <span class="n">node</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="o">[</span><span class="mi">4</span><span class="o">]]</span>
-            <span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> 
+            <span class="n">node</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">node</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+            <span class="p">]</span>
 <span class="c1"># &gt;&gt; #&lt;Node:0x0a431c @label=1, @subtrees=[#&lt;Node:0x0a4420 @label=2, @subtrees=[]&gt;, #&lt;Node:0x0a4358 @label=3, @subtrees=[#&lt;Node:0x0a4394 @label=4, @subtrees=[]&gt;]&gt;]&gt;</span></code></pre></div>
 
 <p>つまりノード１は２つのノード２，３をサブノードとしてもち、ノード３はノード４をサブノードとしてもっている。nodeの第２引数は省略できこの場合subtreesの値は[ ]になる。</p>
@@ -227,15 +227,15 @@
 
 <p>ここでツリーとリストは別のクラスなので、それぞれのクラスの上にred_treeを定義する必要がある。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="k">def</span> <span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">[</span><span class="n">label</span><span class="p">,</span> <span class="n">subtrees</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">f</span><span class="p">[</span><span class="n">label</span><span class="p">,</span> <span class="n">subtrees</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">class</span> <span class="nc">Array</span>
   <span class="k">def</span> <span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
-    <span class="n">g</span><span class="o">[</span><span class="n">head</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">tail</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">g</span><span class="p">[</span><span class="n">head</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">tail</span><span class="p">.</span><span class="nf">red_tree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -243,9 +243,9 @@
 
 <p>次の段階に進む前にArrayクラスに定義した有用なメソッド群をNodeクラスにも定義したい。ここではNodeクラスに同じものを用意するのではなく、Arrayクラスのそれらのメソッドをモジュールに抽出してNodeクラスでも使えるようにしよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Functional</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Functional</span>
   <span class="k">def</span> <span class="nf">cons</span>
-    <span class="o">-&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">+</span> <span class="n">ls</span> <span class="p">}</span>
+    <span class="o">-&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">ls</span> <span class="p">}</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">append</span>
     <span class="o">-&gt;</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span><span class="n">se</span><span class="o">=</span><span class="nb">self</span><span class="p">){</span> <span class="n">ls</span><span class="p">.</span><span class="nf">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="n">se</span> <span class="p">}</span>
@@ -258,7 +258,7 @@
   <span class="k">end</span>
   
   <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">)</span>
-    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">f</span><span class="o">[</span><span class="n">g</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="n">y</span><span class="o">]</span> <span class="p">}</span>
+    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">f</span><span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">y</span><span class="p">]</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">class</span> <span class="nc">Array</span>
@@ -270,37 +270,37 @@
 
 <p>準備ができたので、まずツリーのラベルの数値をすべて足すsum_treeを定義しよう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="k">def</span> <span class="nf">sum_tree</span>
     <span class="n">red_tree</span> <span class="n">add</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span>
   <span class="k">end</span>
 <span class="k">end</span>
-<span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">node</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">,</span>
-            <span class="n">node</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="o">[</span><span class="mi">4</span><span class="o">]]</span>
-           <span class="o">]</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">node</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">node</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">node</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+           <span class="p">]</span>
 <span class="n">tree</span><span class="p">.</span><span class="nf">sum_tree</span> <span class="c1"># =&gt; 10</span></code></pre></div>
 
 <p>ツリーのlabel全体のリストは以下のように定義できる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="k">def</span> <span class="nf">labels</span>
-    <span class="n">red_tree</span> <span class="n">cons</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> <span class="o">[]</span>
+    <span class="n">red_tree</span> <span class="n">cons</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> <span class="p">[]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="n">tree</span><span class="p">.</span><span class="nf">labels</span> <span class="c1"># =&gt; [1, 2, 3, 4]</span></code></pre></div>
 
 <p>最後にリストのmapと類似したメソッドつまり関数fをツリーのすべてのラベルに適用するメソッドmap_treeを定義する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="k">def</span> <span class="nf">map_tree</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="n">red_tree</span> <span class="n">compose</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="n">cons</span><span class="p">,</span> <span class="o">[]</span>
+    <span class="n">red_tree</span> <span class="n">compose</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="n">cons</span><span class="p">,</span> <span class="p">[]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p>map_treeを使えば、たとえばラベルの数値を倍にするメソッドを定義できる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Node</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Node</span>
   <span class="k">def</span> <span class="nf">double_all</span>
     <span class="n">map_tree</span> <span class="n">double</span>
   <span class="k">end</span>

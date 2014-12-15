@@ -181,7 +181,7 @@
 
     <p>さてもう改良点はないでしょうか。スクリプト全体をもう一度みてみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
    <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
      <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}.</span><span class="nf">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
    <span class="k">end</span>
@@ -198,12 +198,12 @@
  
    <span class="kp">private</span>
    <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
-     <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}.</span><span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
+     <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}.</span><span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="p">}</span>
    <span class="k">end</span>
  <span class="k">end</span>
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="p">.</span><span class="nf">read</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
- <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
  <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="p">.</span><span class="nf">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
 <p>3行目が思いの外すっきりしたので、1行目のメソッドチェーンが気になりだしました。ちょっと病的な感覚かもしれません。でも楽しいRubyの学習のために先に進みます。</p>
@@ -217,21 +217,21 @@
 
 <p>こういう場合はそのオブジェクト専用の名無しクラスにメソッドを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">ARGF</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">ARGF</span>
    <span class="k">def</span> <span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
      <span class="n">read</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
    <span class="k">end</span>
  <span class="k">end</span>
  
  <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="p">.</span><span class="nf">take_words</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
- <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
  <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="p">.</span><span class="nf">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span></code></pre></div>
 
 <p>この場合クラスに名前を与えずに、オブジェクトを«で接ぎ木します。この無名クラスはSingletonクラスまたは特異クラスなどと呼ばれます。</p>
 
 <p>クラスを定義しない別の書き方もあります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">ARGF</span><span class="o">.</span><span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nc">ARGF</span><span class="o">.</span><span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
    <span class="n">read</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
  <span class="k">end</span></code></pre></div>
 
@@ -239,8 +239,8 @@
 
 <p>take_wordsには正規表現を渡せるようにしてます。先頭がx,y,zで始まる単語のみを対象に最頻出ワード30をリストしてみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="p">.</span><span class="nf">take_words</span><span class="p">(</span><span class="sr">/[xyz][a-z]+/</span><span class="p">)</span>
- <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="p">.</span><span class="nf">take_words</span><span class="p">(</span><span class="sr">/[xyz][a-z]+/</span><span class="p">)</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
  <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="p">.</span><span class="nf">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
  
  <span class="c1">#&gt; [["you", 2071], ["zabeth", 636], ["your", 597], ["ys", 556], ["ying", 322], ["years", 226], ["yes", 214], ["ything", 176], ["ydia", 172], ["yet", 163], ["young", 144], ["xt", 143], ["ye", 137], ["year", 124], ["yself", 108], ["zzy", 97], ["yed", 82], ["ybody", 77], ["ylon", 75], ["zed", 67], ["ze", 64], ["yourself", 60], ["xpected", 58], ["yton", 58], ["yphon", 55], ["xactly", 54], ["yond", 54], ["xed", 52], ["yright", 48], ["yone", 45]]</span></code></pre></div>
@@ -253,14 +253,14 @@
 
 <p>ここまで来るともう止まりません。はっきり言って2行目も気になります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span></code></pre></div>
 
 <h2 id="version15">Version15</h2>
 <p>しかも頻出ワード辞書というのは汎用性がありそうです。make_freq_dicメソッドとしてArrayに定義しましょう。ええこれは明らかに行き過ぎです。Arrayに定義されるべきメソッドは、あらゆる種類の配列で使われうるメソッドのみを定義すべきです。でももうわたしにも止められないのです！</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Array</span>
    <span class="k">def</span> <span class="nf">make_freq_dic</span>
-     <span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+     <span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
    <span class="k">end</span>
  <span class="k">end</span>
  

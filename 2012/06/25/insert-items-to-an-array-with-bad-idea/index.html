@@ -183,34 +183,34 @@
 <h2 id="section">配列の最後にアイテムを追加する</h2>
 <p>Rubyで配列の最後にアイテムを追加するときは通常、<code>Array#&lt;&lt;</code>, <code>Array#push</code>を使いますよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">list</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="n">list</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4]</span>
 <span class="n">list</span> <span class="c1"># =&gt; [1, 2, 3, 4]</span></code></pre></div>
 
 <p>これは元の配列を改変する破壊的代入です。しかし、元の配列を破壊せずにアイテムを追加した新たな配列を得たい、というときもあります。その場合は、<code>Array#+</code>を使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span>
-<span class="n">list2</span> <span class="o">=</span> <span class="n">list</span> <span class="o">+</span> <span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">list2</span> <span class="o">=</span> <span class="n">list</span> <span class="o">+</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="n">list</span> <span class="c1"># =&gt; [1, 2]</span></code></pre></div>
 
 <p>でも追加要素を<code>[]</code>で括らなければいけないのが、ちょっとイケてないですよね。できれば、次のように関数型言語風に結合したい。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">list2</span> <span class="o">=</span> <span class="n">list</span> <span class="o">+</span> <span class="mi">3</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="n">list3</span> <span class="o">=</span> <span class="n">list2</span> <span class="o">+</span> <span class="ss">:a</span> <span class="c1"># =&gt; [1, 2, 3, :a]</span>
 <span class="n">list</span> <span class="c1"># =&gt; [1, 2]</span></code></pre></div>
 
 <p>これはもちろん、<code>Array#+</code>を再定義することで可能になりますが、次のような方法でも実現できます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="k">return</span> <span class="o">[</span><span class="nb">self</span><span class="o">]</span> <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="ss">:to_ary</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">self</span><span class="p">]</span> <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="ss">:to_ary</span>
     <span class="k">super</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span>
+<span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">list2</span> <span class="o">=</span> <span class="n">list</span> <span class="o">+</span> <span class="mi">3</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="n">list3</span> <span class="o">=</span> <span class="n">list2</span> <span class="o">+</span> <span class="ss">:a</span> <span class="c1"># =&gt; [1, 2, 3, :a]</span>
 <span class="n">list</span> <span class="c1"># =&gt; [1, 2]</span></code></pre></div>
@@ -219,21 +219,21 @@
 
 <p>もう少し凝って、<code>[self]</code>の前に<code>self.to_a</code>を呼ぶようにすると、HashやStructのオブジェクトを配列展開して結合させることもできます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="k">case</span> <span class="nb">name</span>
     <span class="k">when</span> <span class="ss">:to_ary</span> <span class="k">then</span> <span class="nb">self</span><span class="p">.</span><span class="nf">to_a</span>
-    <span class="k">when</span> <span class="ss">:to_a</span>   <span class="k">then</span> <span class="o">[</span><span class="nb">self</span><span class="o">]</span>
+    <span class="k">when</span> <span class="ss">:to_a</span>   <span class="k">then</span> <span class="p">[</span><span class="nb">self</span><span class="p">]</span>
     <span class="k">else</span> <span class="k">super</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span>
+<span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">list</span> <span class="o">+</span> <span class="p">{</span><span class="ss">:a</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}</span> <span class="c1"># =&gt; [1, 2, [:a, 1]]</span>
 
 <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">)</span>
-<span class="n">charlie</span> <span class="o">=</span> <span class="no">Person</span><span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="o">]</span>
+<span class="n">charlie</span> <span class="o">=</span> <span class="no">Person</span><span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
 <span class="n">list</span> <span class="o">+</span> <span class="n">charlie</span> <span class="c1"># =&gt; [1, 2, "Charlie", 12]</span>
 
 <span class="n">m</span> <span class="o">=</span> <span class="s2">"2012June23"</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sr">/(\d+)(\D+)(\d+)/</span><span class="p">)</span>
@@ -241,19 +241,19 @@
 
 <p>これらの方法の利点は、配列に対してどのように結合されるかの決定権を、そのオブジェクトに留保できる点にあります。オブジェクトがその決定権を行使したい場合は<code>to_ary</code>を定義すればいいです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Person</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
     <span class="vi">@name</span><span class="p">,</span> <span class="vi">@age</span><span class="p">,</span> <span class="vi">@job</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">job</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">to_ary</span>
-    <span class="o">[</span><span class="s2">"</span><span class="si">#@name</span><span class="s2">/</span><span class="si">#@age</span><span class="s2">/</span><span class="si">#@job</span><span class="s2">"</span><span class="o">]</span>
+    <span class="p">[</span><span class="s2">"</span><span class="si">#@name</span><span class="s2">/</span><span class="si">#@age</span><span class="s2">/</span><span class="si">#@job</span><span class="s2">"</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
 <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span>
-<span class="o">[]</span> <span class="o">+</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span> <span class="c1"># =&gt; ["Charlie/12/programmer", "Bob/29/teacher"]</span></code></pre></div>
+<span class="p">[]</span> <span class="o">+</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span> <span class="c1"># =&gt; ["Charlie/12/programmer", "Bob/29/teacher"]</span></code></pre></div>
 
 <p><code>Array#+</code>を再定義するとその決定権が奪われてしまいます。</p>
 
@@ -265,72 +265,72 @@
 
 <p>配列の「先頭に」アイテムを追加した新たな配列を返したい、ってときもありますよね。普通、こうします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
-<span class="n">list2</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">list2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="n">list</span> <span class="c1"># =&gt; [2, 3]</span></code></pre></div>
 
 <p>やっぱり、<code>[]</code>が、イケてない。できればこうしたい。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="mi">1</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [2.0, 2, 3]</span></code></pre></div>
 
 <p>でも実際には、次のようなエラーが返ります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># ~&gt; -:14:in `+': Array can't be coerced into Fixnum (TypeError)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># ~&gt; -:14:in `+': Array can't be coerced into Fixnum (TypeError)</span></code></pre></div>
 
 <p>Fixnum#+に渡されたArrayは型変換できない、と言っています。で、Arrayに次のようなcoerceメソッドを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Array</span>
   <span class="k">def</span> <span class="nf">coerce</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-    <span class="o">[</span><span class="nb">Array</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="nb">self</span><span class="o">]</span>
+    <span class="p">[</span><span class="no">Array</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="nb">self</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
 <p>すると..</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="mi">1</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [1, 2, 3]</span>
 <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [2.0, 2, 3]</span></code></pre></div>
 
 <p>coerceでother（ここでは数値）をKernel.Arrayで型変換しています。こうすれば、Array#+が呼ばれてlistとの結合が可能になるのです。へぇ〜という感じですが、残念ながらこの手法は、coerceが適用できる数値クラス（Numericのサブクラス）にしか使えません（泣）</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="p">]</span>
 <span class="s1">'hello'</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; </span>
 <span class="c1"># ~&gt; -:9:in `+': can't convert Array into String (TypeError)</span></code></pre></div>
 
 <p>とりあえずモンキーパッチでStringに対応します..</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">alias</span> <span class="ss">:__plust__</span> <span class="p">:</span><span class="o">+</span>
   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-    <span class="k">return</span> <span class="o">[</span><span class="nb">self</span><span class="o">]</span> <span class="o">+</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="nb">Array</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">self</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">Array</span><span class="p">)</span>
     <span class="k">super</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="o">]</span>
+<span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'of'</span><span class="p">,</span> <span class="s1">'ruby'</span><span class="p">]</span>
 <span class="s1">'hello'</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; ["hello", "world", "of", "ruby"]</span></code></pre></div>
 
 <p>そしてまた、<code>Object#method_missing</code>にご登場いただいて、<code>+</code>を未定義のオブジェクトにも対応します（懲りてない^ ^;）…</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="k">case</span> <span class="nb">name</span>
-    <span class="k">when</span> <span class="ss">:to_ary</span> <span class="k">then</span> <span class="o">[</span><span class="nb">self</span><span class="o">]</span>
+    <span class="k">when</span> <span class="ss">:to_ary</span> <span class="k">then</span> <span class="p">[</span><span class="nb">self</span><span class="p">]</span>
     <span class="k">when</span> <span class="p">:</span><span class="o">+</span> <span class="k">then</span> <span class="nb">self</span><span class="p">.</span><span class="nf">to_ary</span> <span class="o">+</span> <span class="n">args</span><span class="p">.</span><span class="nf">first</span>
     <span class="k">else</span> <span class="k">super</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="ss">:abc</span> <span class="o">+</span> <span class="n">list</span> <span class="c1"># =&gt; [:abc, 1, 2]</span>
 
 <span class="n">p1</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
 <span class="n">p2</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="ss">:teacher</span><span class="p">)</span>
-<span class="o">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; ["Charlie/12/programmer", "Bob/29/teacher"]</span>
-<span class="o">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="o">]</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="n">m</span> <span class="p">}</span> <span class="c1"># =&gt; ["Bob/29/teacher", "Charlie/12/programmer"]</span></code></pre></div>
+<span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">].</span><span class="nf">inject</span><span class="p">([])</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">m</span> <span class="o">+</span> <span class="n">x</span> <span class="p">}</span> <span class="c1"># =&gt; ["Charlie/12/programmer", "Bob/29/teacher"]</span>
+<span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">].</span><span class="nf">inject</span><span class="p">([])</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="n">m</span> <span class="p">}</span> <span class="c1"># =&gt; ["Bob/29/teacher", "Charlie/12/programmer"]</span></code></pre></div>
 
 <p>「素直に<code>[]</code>付けろよ」というブコメが聞こえてきたので、そろそろこの投稿を終了させて頂きます m(__)m</p>
 

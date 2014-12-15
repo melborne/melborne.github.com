@@ -200,7 +200,7 @@
 
 <h4 id="accesslog">access_log</h4>
 
-<div class="highlight"><pre><code class="text">80.101.90.180 - - [02/Jun/2009:15:11:51 -0400] "GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1" 200 4898
+<div class="highlight"><pre><code class="language-text" data-lang="text">80.101.90.180 - - [02/Jun/2009:15:11:51 -0400] "GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1" 200 4898
 80.101.90.180 - - [02/Jun/2009:15:11:52 -0400] "GET /images/mplogo-white.jpg HTTP/1.1" 200 9350
 80.101.90.180 - - [02/Jun/2009:15:11:52 -0400] "GET /css/style.css HTTP/1.1" 200 2816
 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326 "http://www.example.com/start.html" "Mozilla/4.08 [en] (Win98; I ;Nav)"
@@ -211,7 +211,7 @@
 <h2 id="tsv">TSVへの変換</h2>
 <p>上記方針に従って、スペース区切りをタブ区切りへ変換するメソッドを書いてみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
   <span class="n">combined_re</span> <span class="o">=</span> <span class="sr">/\[.*?\]|".*?"/</span>
   <span class="n">irregular</span> <span class="o">=</span> <span class="s2">"&lt;__IRREGULAR__&gt;"</span>
   <span class="n">log</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="n">combined_re</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">irregular</span><span class="p">)</span> <span class="p">}</span>
@@ -222,7 +222,7 @@
 
 <p>これを上記アクセスログに適用してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'access_log'</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'access_log'</span><span class="p">)</span>
 
 <span class="n">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="c1"># =&gt; "80.101.90.180\t-\t-\t[02/Jun/2009:15:11:51 -0400]\t\"GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\"\t200\t4898\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\"GET /images/mplogo-white.jpg HTTP/1.1\"\t200\t9350\n80.101.90.180\t-\t-\t[02/Jun/2009:15:11:52 -0400]\t\"GET /css/style.css HTTP/1.1\"\t200\t2816\n127.0.0.1\t-\tfrank\t[10/Oct/2000:13:55:36 -0700]\t\"GET /apache_pb.gif HTTP/1.0\"\t200\t2326\t\"http://www.example.com/start.html\"\t\"Mozilla/4.08 [en] (Win98; I ;Nav)\"\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\"GET / HTTP/1.1\"\t200\t854\t\"-\"\t\"Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\"\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\"GET /style.css HTTP/1.1\"\t200\t102\t\"http://www.geekpage.jp/\"\t\"Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\"\n10.2.3.4\t-\t-\t[18/Apr/2005:00:10:47 +0900]\t\"GET /img/title.png HTTP/1.1\"\t304\t-\t\"http://www.geekpage.jp/\"\t\"Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\""</span></code></pre></div>
 
@@ -231,7 +231,7 @@
 <h2 id="tsv-1">TSVへの変換</h2>
 <p>次に、TSVからLTSVへの変換をするメソッドを書きます。ここでは標準添付ライブラリ<code>csv</code>を使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"csv"</span>
 
 <span class="no">LABELS</span> <span class="o">=</span> <span class="sx">%w(host ident user time req status size referer ua)</span>
 
@@ -253,7 +253,7 @@
 
 <p>上で生成したTSVに適用してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'access_log'</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">log</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'access_log'</span><span class="p">)</span>
 <span class="n">tsv</span> <span class="o">=</span> <span class="n">to_tsv</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
 
 <span class="n">ltsv</span> <span class="o">=</span> <span class="n">to_ltsv</span><span class="p">(</span><span class="n">tsv</span><span class="p">)</span> <span class="c1"># =&gt; "host:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:51 -0400]\treq:GET /network/email/clients/outlook/using-scanost-repairs.php HTTP/1.1\tstatus:200\tsize:4898\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /images/mplogo-white.jpg HTTP/1.1\tstatus:200\tsize:9350\treferer:\tua:\nhost:80.101.90.180\tident:-\tuser:-\ttime:[02/Jun/2009:15:11:52 -0400]\treq:GET /css/style.css HTTP/1.1\tstatus:200\tsize:2816\treferer:\tua:\nhost:127.0.0.1\tident:-\tuser:frank\ttime:[10/Oct/2000:13:55:36 -0700]\treq:GET /apache_pb.gif HTTP/1.0\tstatus:200\tsize:2326\treferer:http://www.example.com/start.html\tua:Mozilla/4.08 [en] (Win98; I ;Nav)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET / HTTP/1.1\tstatus:200\tsize:854\treferer:-\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /style.css HTTP/1.1\tstatus:200\tsize:102\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)\nhost:10.2.3.4\tident:-\tuser:-\ttime:[18/Apr/2005:00:10:47 +0900]\treq:GET /img/title.png HTTP/1.1\tstatus:304\tsize:-\treferer:http://www.geekpage.jp/\tua:Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)"</span></code></pre></div>

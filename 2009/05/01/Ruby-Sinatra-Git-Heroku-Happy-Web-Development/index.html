@@ -181,7 +181,7 @@
 
     <p>mycal.rbに戻ってもう少し機能を増やします。日表示のための以下のコードを追加します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
    <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">to_i</span> <span class="p">}</span>
    <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">)</span>
    <span class="vi">@message</span> <span class="o">=</span> <span class="s1">'Webカレンダー完成予定日'</span>
@@ -197,13 +197,13 @@
 
 <p>Webサーバを起動します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="sx">% ruby </span><span class="n">mycal</span><span class="p">.</span><span class="nf">rb</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">mycal</span><span class="o">%</span> <span class="n">ruby</span> <span class="n">mycal</span><span class="p">.</span><span class="nf">rb</span></code></pre></div>
 
 <p>http://localhost:4567/1993/2/24にアクセスして、1993年2月24日の頁が表示されるか確認します。</p>
 
 <p>頁のカレンダーにおいて、対象の日の色付けを行うためタグを挿入します。メッセージもグレードアップします。先のコードを以下のように修正します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">get</span> <span class="s1">'/:year/:mon/:day'</span> <span class="k">do</span> <span class="o">|*</span><span class="n">ymd</span><span class="o">|</span>
    <span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">,</span> <span class="vi">@day</span> <span class="o">=</span> <span class="n">ymd</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="p">.</span><span class="nf">to_i</span> <span class="p">}</span>
    <span class="vi">@dcal</span> <span class="o">=</span> <span class="n">cal</span><span class="p">(</span><span class="vi">@year</span><span class="p">,</span> <span class="vi">@mon</span><span class="p">).</span><span class="nf">sub</span><span class="p">(</span><span class="sr">/\s</span><span class="si">#{</span><span class="vi">@day</span><span class="si">}</span><span class="sr">(?=\D)/</span><span class="p">,</span> <span class="s1">'&lt;span id="target"&gt;\0&lt;/span&gt;'</span><span class="p">)</span>
    <span class="vi">@message</span> <span class="o">=</span> <span class="s1">'Webカレンダー完成予定日'</span>
@@ -217,7 +217,7 @@
 
 <p>表示形式が頁によって異なっているので、divで要素を識別できるようにテンプレートを修正します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="cp">__END__
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="cp">__END__
  @@layout
  &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
@@ -265,7 +265,7 @@
 
 <p>年のカレンダーにおいて月単位でのデータ処理を実現するため、各月のカレンダーを生成し個別のdivで管理するようにします。helpersを以下のように修正します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">helpers</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">helpers</span> <span class="k">do</span>
    <span class="k">def</span> <span class="nf">cal</span><span class="p">(</span><span class="o">*</span><span class="n">date</span><span class="p">)</span>
      <span class="n">year</span><span class="p">,</span> <span class="n">mon</span> <span class="o">=</span> <span class="n">date</span>
      <span class="n">cal</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mon</span>
@@ -290,7 +290,7 @@
 
 <p>今日の日付にタグを付けます。calメソッドのelse節を次のようにします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
    <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">"&lt;div class='mon_cal id='mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;"</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
    <span class="c1">#make today tag</span>
    <span class="n">today</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>
@@ -302,7 +302,7 @@
 
 <p>更に各日付に該当頁のリンクタグを挿入します。else節に追加します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">12</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="o">|</span>
    <span class="n">monthly_cal</span> <span class="o">=</span> <span class="s2">"&lt;div class='mon_cal id='mon_</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&gt;"</span> <span class="o">+</span> <span class="n">calendar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
    <span class="c1">#make days link</span>
    <span class="n">monthly_cal</span><span class="p">.</span><span class="nf">gsub!</span><span class="p">(</span><span class="sr">/(\s([1-3]?[0-9](?=\D)))/</span><span class="p">)</span> <span class="k">do</span>
@@ -318,7 +318,7 @@
 
 <p>最後にテンプレートに以下のスタイルを挿入して完成です。</p>
 
-<div class="highlight"><pre><code class="css"><span class="nt">__END__</span>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nt">__END__</span>
  <span class="o">@</span><span class="k">@layout</span>
  <span class="err">&lt;!</span><span class="n">DOCTYPE</span> <span class="n">html</span> <span class="n">PUBLIC</span> <span class="s1">"-//W3C//DTD XHTML 1.1//EN"</span>
    <span class="s1">"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"</span><span class="err">&gt;</span>
@@ -367,9 +367,9 @@
 
 <p>カレンダーが完成したのでcommitしてHerokuにpushします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">mycal</span><span class="sx">% git </span><span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">"second commit"</span>
- <span class="n">mycal</span><span class="sx">% git </span><span class="n">push</span> <span class="n">heroku</span>
- <span class="n">mycal</span><span class="sx">% heroku </span><span class="nb">open</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">"second commit"</span>
+ <span class="n">mycal</span><span class="o">%</span> <span class="n">git</span> <span class="n">push</span> <span class="n">heroku</span>
+ <span class="n">mycal</span><span class="o">%</span> <span class="n">heroku</span> <span class="nb">open</span></code></pre></div>
 
 <p>以下のようなカレンダーがブラウザに表示されたら成功です。</p>
 

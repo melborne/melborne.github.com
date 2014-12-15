@@ -201,34 +201,34 @@
 <h2 id="enumerableeachwithobject">1. Enumerable#each_with_object</h2>
 <p>Enumerable#mapではブロックの代わりに&amp;付きのシンボルを渡す技が知られているよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">langs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="p">]</span>
 <span class="n">langs</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">)</span> <span class="c1"># =&gt; ["Ruby", "Python", "Lisp", "Haskell"]</span></code></pre></div>
 
 <p>だけど、この技は引数をとるようなメソッドには使えないという問題があるよ。で、これに不満があって、引数をとれるmappというメソッドを前に書いたんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">mapp</span><span class="p">(</span><span class="n">op</span><span class="o">=</span><span class="kp">nil</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="n">op</span> <span class="p">?</span> <span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">op</span><span class="p">.</span><span class="nf">intern</span><span class="p">.</span><span class="nf">to_proc</span><span class="o">[</span><span class="n">e</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">]</span><span class="p">}</span> <span class="p">:</span> <span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="n">op</span> <span class="p">?</span> <span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">op</span><span class="p">.</span><span class="nf">intern</span><span class="p">.</span><span class="nf">to_proc</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">]}</span> <span class="p">:</span> <span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="o">]</span>
+<span class="n">langs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="p">]</span>
 <span class="n">langs</span><span class="p">.</span><span class="nf">mapp</span><span class="p">(:</span><span class="o">+</span><span class="p">,</span> <span class="s1">'ist'</span><span class="p">)</span> <span class="c1"># =&gt; ["Rubyist", "Pythonist", "Lispist", "Haskellist"]</span>
-<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">mapp</span><span class="p">(:</span><span class="o">+</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">mapp</span><span class="p">(:</span><span class="o">+</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
 <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">5</span><span class="p">).</span><span class="nf">mapp</span><span class="p">(</span><span class="ss">:**</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
-<span class="o">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="o">]]</span><span class="p">.</span><span class="nf">mapp</span><span class="p">(</span><span class="ss">:last</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
+<span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]].</span><span class="nf">mapp</span><span class="p">(</span><span class="ss">:last</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
 
 <p><a href="http://melborne.github.com/2012/02/11/Ruby-Enumerable-map/" title="RubyのEnumerable#mapをもっと便利にしたいよ">RubyのEnumerable#mapをもっと便利にしたいよ</a></p>
 
 <p>でも、同等のことは<code>each_with_object</code>でできるんだね。最近、知ったんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">langs</span><span class="p">.</span><span class="nf">each_with_object</span><span class="p">(</span><span class="s1">'ist'</span><span class="p">).</span><span class="nf">tap</span><span class="p">{</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="nb">p</span> <span class="n">_</span><span class="p">.</span><span class="nf">to_a</span><span class="p">}.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; ["rubyist", "pythonist", "lispist", "haskellist"]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">langs</span><span class="p">.</span><span class="nf">each_with_object</span><span class="p">(</span><span class="s1">'ist'</span><span class="p">).</span><span class="nf">tap</span><span class="p">{</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="nb">p</span> <span class="n">_</span><span class="p">.</span><span class="nf">to_a</span><span class="p">}.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; ["rubyist", "pythonist", "lispist", "haskellist"]</span>
 
 <span class="c1"># &gt;&gt; [["ruby", "ist"], ["python", "ist"], ["lisp", "ist"], ["haskell", "ist"]]</span>
 
-<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">each_with_object</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">each_with_object</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
 <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">5</span><span class="p">).</span><span class="nf">each_with_object</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:**</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
-<span class="o">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="o">]]</span><span class="p">.</span><span class="nf">each_with_object</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
+<span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]].</span><span class="nf">each_with_object</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
 
 <p>tapで取ったeach_with_objectの返り値を見れば、挙動が理解できるよね。</p>
 
@@ -236,42 +236,42 @@
 
 <p><code>with</code>としてみようか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Enumerable</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:alias_method</span><span class="p">,</span> <span class="ss">:with</span><span class="p">,</span> <span class="ss">:each_with_object</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Enumerable</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:alias_method</span><span class="p">,</span> <span class="ss">:with</span><span class="p">,</span> <span class="ss">:each_with_object</span><span class="p">)</span>
 
-<span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="o">]</span>
+<span class="n">langs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ruby"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"lisp"</span><span class="p">,</span> <span class="s2">"haskell"</span><span class="p">]</span>
 <span class="n">langs</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="s1">'ist'</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; ["rubyist", "pythonist", "lispist", "haskellist"]</span>
 
-<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">with</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="p">:</span><span class="o">+</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
 <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">5</span><span class="p">).</span><span class="nf">with</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:**</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
-<span class="o">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="o">]]</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
+<span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]].</span><span class="nf">with</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">)</span> <span class="c1"># =&gt; [[3, 4], [7, 8], [11, 12]]</span></code></pre></div>
 
 <p>なんかよくない？</p>
 
 <h2 id="floatinfinity">2. Float::INFINITY</h2>
 <p>任意の数列を作りたい、けど、その大きさは事前に決めたくない、ってときあるよね。ここで思いつくのは<code>Enumerator</code>だよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span> <span class="n">i</span><span class="o">+=</span><span class="mi">1</span> <span class="p">}</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span> <span class="n">i</span><span class="o">+=</span><span class="mi">1</span> <span class="p">}</span> <span class="p">}</span>
 
 <span class="n">sequence</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
 <span class="mi">100</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">sequence</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]</span></code></pre></div>
 
 <p>でも<code>Enumerator</code>を使わなくても、似たようなことは無限大定数の<code>Float::INFINITY</code>でできるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="nb">Float</span><span class="o">::</span><span class="no">INFINITY</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="no">Float</span><span class="o">::</span><span class="no">INFINITY</span>
 <span class="n">sequence</span><span class="p">.</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
 <span class="n">seq</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">.</span><span class="nf">to_enum</span>
 <span class="mi">100</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">seq</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]</span></code></pre></div>
 
 <p>Infinityはゼロ除算で取れるから、次のように書いてもいいよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
 
 <span class="mi">1</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">5</span><span class="p">).</span><span class="nf">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [1.0, 2.5, 4.0, 5.5, 7.0, 8.5, 10.0, 11.5, 13.0, 14.5, 16.0, 17.5, 19.0, 20.5, 22.0, 23.5, 25.0, 26.5, 28.0, 29.5]</span></code></pre></div>
 
 <h2 id="enumerablegrep">3. Enumerable#grep</h2>
 <p>caseにおける同値判定は再定義可能な<code>===</code>でされるよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">temp</span> <span class="o">=</span> <span class="mi">85</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">temp</span> <span class="o">=</span> <span class="mi">85</span>
 <span class="n">status</span> <span class="o">=</span>
   <span class="k">case</span> <span class="n">temp</span>
   <span class="k">when</span> <span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">40</span><span class="p">;</span>   <span class="ss">:low</span>
@@ -287,7 +287,7 @@
 <span class="n">klass</span> <span class="o">=</span>
   <span class="k">case</span> <span class="n">t</span>
   <span class="k">when</span> <span class="no">String</span><span class="p">;</span> <span class="s1">'no good'</span>
-  <span class="k">when</span> <span class="nb">Array</span><span class="p">;</span>  <span class="s1">'no no'</span>
+  <span class="k">when</span> <span class="no">Array</span><span class="p">;</span>  <span class="s1">'no no'</span>
   <span class="k">when</span> <span class="no">Trivia</span><span class="p">;</span> <span class="s1">'Yes! Trivia!'</span>
   <span class="k">end</span>
 <span class="n">klass</span> <span class="c1"># =&gt; "Yes! Trivia!"</span>
@@ -306,14 +306,14 @@
 
 <p>実は<code>Enumerable#grep</code>におけるパターンマッチも===で判定されるんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">numbers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">5</span><span class="p">).</span><span class="nf">to_a</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">numbers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">5</span><span class="p">).</span><span class="nf">to_a</span> <span class="c1"># =&gt; [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]</span>
 <span class="n">numbers</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="mi">20</span><span class="p">.</span><span class="nf">.</span><span class="mi">50</span><span class="p">)</span> <span class="c1"># =&gt; [20, 25, 30, 35, 40, 45, 50]</span>
 
-<span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">,</span> <span class="n">t5</span> <span class="o">=</span> <span class="s1">'trivia'</span><span class="p">,</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="o">[</span><span class="ss">:trivia</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="n">trivia</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">,</span> <span class="n">t5</span> <span class="o">=</span> <span class="s1">'trivia'</span><span class="p">,</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="p">[</span><span class="ss">:trivia</span><span class="p">],</span> <span class="p">{</span><span class="n">trivia</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
 
-<span class="o">[</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">,</span> <span class="n">t5</span><span class="o">]</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="no">Trivia</span><span class="p">)</span> <span class="c1"># =&gt; [#&lt;Trivia:0x000001008613b0&gt;, #&lt;Trivia:0x000001008610e0&gt;]</span>
+<span class="p">[</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">,</span> <span class="n">t5</span><span class="p">].</span><span class="nf">grep</span><span class="p">(</span><span class="no">Trivia</span><span class="p">)</span> <span class="c1"># =&gt; [#&lt;Trivia:0x000001008613b0&gt;, #&lt;Trivia:0x000001008610e0&gt;]</span>
 
-<span class="n">lacky</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="s2">"</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="o">[-</span><span class="mi">1</span><span class="o">]==</span><span class="s1">'7'</span> <span class="p">}</span>
+<span class="n">lacky</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">n</span><span class="p">{</span> <span class="s2">"</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">'7'</span> <span class="p">}</span>
 <span class="n">numbers</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1000</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="n">numbers</span><span class="p">.</span><span class="nf">grep</span><span class="p">(</span><span class="n">lacky</span><span class="p">)</span> <span class="c1"># =&gt; [7, 37, 67, 97, 127, 157, 187, 217, 247, 277, 307, 337, 367, 397, 427, 457, 487, 517, 547, 577, 607, 637, 667, 697, 727, 757, 787, 817, 847, 877, 907, 937, 967, 997]</span></code></pre></div>
@@ -321,7 +321,7 @@
 <h2 id="stringgsub">4. String#gsub</h2>
 <p>文字列の中に現れる部分文字列の繰り返し回数を数えたい、というときがあるよ。普通、<code>String#scan</code>を使うと思うんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">DATA</span><span class="p">.</span><span class="nf">read</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">).</span><span class="nf">count</span> <span class="c1"># =&gt; 48</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">DATA</span><span class="p">.</span><span class="nf">read</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">).</span><span class="nf">count</span> <span class="c1"># =&gt; 48</span>
 
 <span class="cp">__END__
 You say "Yes", I say "No".
@@ -361,7 +361,7 @@ Hela, heba, helloa. Hela, heba, helloa. Hela, heba, helloa.</span></code></pre><
 
 <p>でも<code>String#gsub</code>はブロックを渡さないとEnumeratorを返すから、同じことができるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">DATA</span><span class="p">.</span><span class="nf">read</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">).</span><span class="nf">count</span> <span class="c1"># =&gt; 48</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">DATA</span><span class="p">.</span><span class="nf">read</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">).</span><span class="nf">count</span> <span class="c1"># =&gt; 48</span>
 
 <span class="cp">__END__
 You say "Yes", I say "No".
@@ -373,20 +373,20 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <h2 id="nil">5. 変数のnil初期化</h2>
 <p>多数の変数を<code>nil</code>で初期化したいときってある？そんなときはこうするのかな？</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="o">[</span><span class="kp">nil</span><span class="o">]</span> <span class="o">*</span> <span class="mi">10</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="p">[</span><span class="kp">nil</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
 
-<span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]</span></code></pre></div>
+<span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">].</span><span class="nf">map</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]</span></code></pre></div>
 
 <p>でも、多重代入で対応する値がない場合はnilが入るから、これは次で足りるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="kp">nil</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="kp">nil</span>
 
-<span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]</span></code></pre></div>
+<span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">].</span><span class="nf">map</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]</span></code></pre></div>
 
 <h2 id="section">6. クラスメソッド定義</h2>
 <p>クラスやモジュールのメソッドを定義するときは、普通次のようにするよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Calc</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Calc</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="k">def</span> <span class="nf">&gt;&gt;</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
       <span class="nb">eval</span> <span class="n">exp</span>
@@ -399,7 +399,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <p>外側のクラス定義を<code>Class.new</code>や<code>Module.new</code>で行えば、次のような書き方もできるんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">Calc</span> <span class="o">=</span> <span class="no">Class</span><span class="p">.</span><span class="nf">new</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">Calc</span> <span class="o">=</span> <span class="no">Class</span><span class="p">.</span><span class="nf">new</span>
   <span class="k">def</span> <span class="nf">&gt;&gt;</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
     <span class="nb">eval</span> <span class="n">exp</span>
   <span class="k">end</span>
@@ -413,7 +413,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <h2 id="true-false-nil">7. true, false, nil</h2>
 <p>Rubyが取り扱うデータはすべてオブジェクトで、Rubyの世界では数字も、クラスも、そして<code>true</code>, <code>false</code>, <code>nil</code>もすべてオブジェクトってこと、知ってるよね。だから当然、これらはメソッドを持っていて、後からメソッドを追加することもできるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">true</span><span class="o">.</span><span class="nf">true?</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nc">true</span><span class="o">.</span><span class="nf">true?</span>
   <span class="s1">'Beleive me. you are true.'</span>
 <span class="k">end</span>
 
@@ -433,19 +433,19 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <p><code>nil</code>にもメソッド定義してみるよ。<code>===</code>メソッドを定義してcaseで使おう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nc">nil</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nc">nil</span><span class="o">.</span><span class="nf">===</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
   <span class="n">other</span><span class="p">.</span><span class="nf">nil?</span> <span class="o">||</span> <span class="n">other</span><span class="p">.</span><span class="nf">empty?</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">proceed</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-  <span class="nb">Array</span><span class="p">(</span><span class="n">obj</span><span class="p">).</span><span class="nf">join</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">//</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'*'</span><span class="p">)</span>
+  <span class="no">Array</span><span class="p">(</span><span class="n">obj</span><span class="p">).</span><span class="nf">join</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">//</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">'*'</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">full</span> <span class="o">=</span> <span class="s2">"I'm full."</span>
 <span class="n">empty</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="n">_nil_</span> <span class="o">=</span> <span class="kp">nil</span>
 
-<span class="n">objects</span> <span class="o">=</span> <span class="o">[</span><span class="n">full</span><span class="p">,</span> <span class="n">empty</span><span class="p">,</span> <span class="n">_nil_</span><span class="p">,</span> <span class="sx">%w(I am full)</span><span class="p">,</span> <span class="o">[]</span><span class="p">,</span> <span class="p">{</span><span class="ss">:hello</span> <span class="o">=&gt;</span> <span class="s1">'world'</span><span class="p">},</span> <span class="p">{}</span><span class="o">]</span>
+<span class="n">objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">full</span><span class="p">,</span> <span class="n">empty</span><span class="p">,</span> <span class="n">_nil_</span><span class="p">,</span> <span class="sx">%w(I am full)</span><span class="p">,</span> <span class="p">[],</span> <span class="p">{</span><span class="ss">:hello</span> <span class="o">=&gt;</span> <span class="s1">'world'</span><span class="p">},</span> <span class="p">{}]</span>
 
 <span class="k">for</span> <span class="n">obj</span> <span class="k">in</span> <span class="n">objects</span>
   <span class="k">case</span> <span class="n">obj</span>
@@ -468,7 +468,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <h2 id="ruby">8. Rubyのキーワード</h2>
 <p>Rubyのキーワードは予約語じゃないから、それが明示的な文脈で使われる限り、メソッド名などにも使えるんだ。ここでは<code>case</code>, <code>if</code>, <code>for</code>をTriviaクラスに定義してみるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Trivia</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Trivia</span>
   <span class="k">def</span> <span class="nf">case</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
     <span class="k">case</span> <span class="nb">self</span>
     <span class="k">when</span> <span class="n">klass</span><span class="p">;</span> <span class="s1">'You are my sunshine.'</span>
@@ -492,17 +492,17 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
 
 <span class="n">t</span><span class="p">.</span><span class="nf">case</span><span class="p">(</span><span class="no">Trivia</span><span class="p">)</span> <span class="c1"># =&gt; "You are my sunshine."</span>
-<span class="n">t</span><span class="p">.</span><span class="nf">case</span><span class="p">(</span><span class="nb">Array</span><span class="p">)</span> <span class="c1"># =&gt; "No, you are Alien for me"</span>
+<span class="n">t</span><span class="p">.</span><span class="nf">case</span><span class="p">(</span><span class="no">Array</span><span class="p">)</span> <span class="c1"># =&gt; "No, you are Alien for me"</span>
 
 <span class="n">t</span><span class="p">.</span><span class="nf">if</span><span class="p">(</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'my name is charlie'</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="n">str</span><span class="p">.</span><span class="nf">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; "MY NAME IS CHARLIE"</span>
 <span class="n">t</span><span class="p">.</span><span class="nf">if</span><span class="p">(</span><span class="kp">false</span><span class="p">,</span> <span class="s1">'my name is charlie'</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="n">str</span><span class="p">.</span><span class="nf">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; "eilrahc si eman ym"</span>
 
-<span class="n">t</span><span class="p">.</span><span class="nf">for</span><span class="p">(</span><span class="o">[*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></code></pre></div>
+<span class="n">t</span><span class="p">.</span><span class="nf">for</span><span class="p">([</span><span class="o">*</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">])</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span></code></pre></div>
 
 <h2 id="yaml">9. YAMLタグ指定</h2>
 <p>ユーザデータなどのプログラムに書き込みたくないデータをRubyで扱うには、<code>yamlライブラリ</code>が便利だよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"yaml"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"yaml"</span>
 
 <span class="n">langs</span> <span class="o">=</span> <span class="no">YAML</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="no">DATA</span><span class="p">)</span>
 <span class="nb">puts</span> <span class="n">langs</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">lang</span><span class="o">|</span> <span class="s2">"My favorite language is "</span> <span class="o">+</span> <span class="n">lang</span> <span class="p">}</span>
@@ -519,11 +519,11 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <p>ここで<code>!ruby/</code>ではじまるタグを使えば、その文字列に対するクラス指定ができるけど、<code>!ruby/object:&lt;クラス名&gt;</code>というタグを使えば、独自クラスの指定もできるんだ。LanguageクラスのオブジェクトとしてYAMLデータを読みだしてみるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"yaml"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"yaml"</span>
 <span class="k">class</span> <span class="nc">Language</span>
   <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:born</span><span class="p">,</span> <span class="ss">:designer</span>
   <span class="k">def</span> <span class="nf">profile</span>
-    <span class="o">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">born</span><span class="p">,</span> <span class="n">designer</span><span class="o">]</span> <span class="o">*</span> <span class="s1">'-'</span>
+    <span class="p">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">born</span><span class="p">,</span> <span class="n">designer</span><span class="p">]</span> <span class="o">*</span> <span class="s1">'-'</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -553,7 +553,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <h2 id="section-1">10. 単項演算子 ~ (チルダ)</h2>
 <p>単項演算子<code>~</code>は実はメソッドだけど、これはどこで定義されているか知ってる？そう、<code>Fixnum</code>と<code>Bignum</code>でNOT演算をするために用意されてるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">~</span><span class="mi">1</span> <span class="c1"># =&gt; -2</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="o">~</span><span class="mi">1</span> <span class="c1"># =&gt; -2</span>
 <span class="o">~</span><span class="mi">2</span> <span class="c1"># =&gt; -3</span>
 <span class="o">~</span><span class="mi">3</span> <span class="c1"># =&gt; -4</span>
 <span class="o">~</span><span class="mi">7</span> <span class="c1"># =&gt; -8</span>
@@ -570,7 +570,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <p>それからもう一つ、<code>Regexp</code>にも定義されているよ。これはgetsからの入力を受ける変数<code>$_</code>とのパターンマッチをするためのものなんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="vg">$_</span> <span class="o">=</span> <span class="s1">'Ruby is a dynamic, open source programming language with a focus on simplicity and productivity.'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="vg">$_</span> <span class="o">=</span> <span class="s1">'Ruby is a dynamic, open source programming language with a focus on simplicity and productivity.'</span>
 
 <span class="n">pos</span> <span class="o">=</span> <span class="o">~</span> <span class="sr">/\w{8,}/</span>
 <span class="nb">puts</span> <span class="s2">"8+long-word `</span><span class="si">#{</span><span class="vg">$&amp;</span><span class="si">}</span><span class="s2">` appeared at </span><span class="si">#{</span><span class="n">pos</span><span class="si">}</span><span class="s2">"</span>
@@ -579,7 +579,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <p>単項演算子がユニークなのは、レシーバーがメソッドの後ろに来る、ってことだよ。こんなユニークで使い勝手のいいメソッドはどんどん定義するべきだよね。結合強度も強いからメソッドチェーン上も問題ないし。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">~</span>
     <span class="n">reverse</span>
   <span class="k">end</span>
@@ -610,7 +610,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 
 <span class="o">~</span><span class="ss">:Hello</span> <span class="c1"># =&gt; :hELLO</span>
 
-<span class="o">~[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]</span> <span class="c1"># =&gt; [4, 3, 2, 1]</span>
+<span class="o">~</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c1"># =&gt; [4, 3, 2, 1]</span>
 
 <span class="o">~</span><span class="p">{</span><span class="ss">ruby: </span><span class="mi">1</span><span class="p">,</span> <span class="ss">lisp: </span><span class="mi">2</span><span class="p">}</span> <span class="c1"># =&gt; {1=&gt;:ruby, 2=&gt;:lisp}</span></code></pre></div>
 
@@ -619,7 +619,7 @@ You say "Goodbye" and I say "Hello, hello, hello".
 <h2 id="section-2">11. マルチバイトメソッド</h2>
 <p>1.9からメソッド名などにマルチバイト文字を使えるようになったけど、あまり活用事例を見ないよね。それじゃRubyが可哀想なので、ここで例を示して布教するよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="err">©</span><span class="p">(</span><span class="nb">name</span><span class="o">=</span><span class="s1">'anonymous'</span><span class="p">)</span>
     <span class="nb">self</span> <span class="o">+</span> <span class="s2">" - Copyright © </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">year</span><span class="si">}</span><span class="s2"> All rights reserved. -"</span>
   <span class="k">end</span>
@@ -656,22 +656,22 @@ Ruby is about Language!
 
 <p><code>Numeric</code>には通貨メソッドを追加してみるよ。ここでは<code>def_method</code>というメソッド定義メソッドを作って、クラスをオープンする手間を省いてるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">def_method</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">body</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">def_method</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">body</span><span class="p">)</span>
   <span class="n">blk</span> <span class="o">=</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="n">body</span> <span class="p">:</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">: not implemented yet."</span> <span class="p">}</span>
   <span class="n">klass</span><span class="p">.</span><span class="nf">class_eval</span> <span class="p">{</span> <span class="n">define_method</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">blk</span><span class="p">)</span> <span class="p">}</span>
 <span class="k">end</span>
 
-<span class="n">currencies</span> <span class="o">=</span> <span class="sx">%w(¥ € £ $)</span><span class="p">.</span><span class="nf">zip</span> <span class="o">[</span><span class="ss">:JPY</span><span class="p">,</span> <span class="ss">:EUR</span><span class="p">,</span> <span class="ss">:GBP</span><span class="p">,</span> <span class="ss">:USD</span><span class="o">]</span>
+<span class="n">currencies</span> <span class="o">=</span> <span class="sx">%w(¥ € £ $)</span><span class="p">.</span><span class="nf">zip</span> <span class="p">[</span><span class="ss">:JPY</span><span class="p">,</span> <span class="ss">:EUR</span><span class="p">,</span> <span class="ss">:GBP</span><span class="p">,</span> <span class="ss">:USD</span><span class="p">]</span>
 <span class="n">currencies</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">cur</span><span class="p">,</span> <span class="n">sym</span><span class="o">|</span>
   <span class="n">def_method</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="no">Numeric</span><span class="p">)</span> <span class="k">do</span>
     <span class="n">int</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="no">Exchange</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">sym</span><span class="p">).</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span>
-    <span class="n">dec</span> <span class="o">=</span> <span class="n">dec</span> <span class="p">?</span> <span class="s2">".</span><span class="si">#{</span><span class="n">dec</span><span class="o">[</span><span class="sr">/.{1,2}/</span><span class="o">]</span><span class="si">}</span><span class="s2">"</span> <span class="p">:</span> <span class="s1">''</span>
+    <span class="n">dec</span> <span class="o">=</span> <span class="n">dec</span> <span class="p">?</span> <span class="s2">".</span><span class="si">#{</span><span class="n">dec</span><span class="p">[</span><span class="sr">/.{1,2}/</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="p">:</span> <span class="s1">''</span>
     <span class="n">cur</span> <span class="o">+</span> <span class="n">int</span><span class="p">.</span><span class="nf">reverse</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/.{1,3}/</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s1">','</span><span class="p">).</span><span class="nf">reverse</span> <span class="o">+</span> <span class="n">dec</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">Exchange</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">_for_</span><span class="p">)</span>
-  <span class="n">num</span> <span class="o">*</span> <span class="p">{</span><span class="no">USD</span><span class="p">:</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="no">JPY</span><span class="p">:</span><span class="mi">81</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="no">EUR</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">76</span><span class="p">,</span> <span class="no">GBP</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">62</span><span class="p">}</span><span class="o">[</span><span class="n">_for_</span><span class="o">]</span>
+  <span class="n">num</span> <span class="o">*</span> <span class="p">{</span><span class="no">USD</span><span class="p">:</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="no">JPY</span><span class="p">:</span><span class="mi">81</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="no">EUR</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">76</span><span class="p">,</span> <span class="no">GBP</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">62</span><span class="p">}[</span><span class="n">_for_</span><span class="p">]</span>
 <span class="k">end</span>
 
 <span class="mi">123</span><span class="o">.</span><span class="mi">45</span><span class="o">.</span><span class="err">¥</span> <span class="c1"># =&gt; "¥10,036.48"</span>
@@ -686,8 +686,8 @@ Ruby is about Language!
 <h2 id="section-3">12. 秘伝メソッド</h2>
 <p>上で見たようにRubyではキーワードや記号文字をメソッド名に使えるけど、使えないものもあるよ。例えば、<code>.</code>, <code>,</code>, <code>@</code>, <code>=</code>, <code>(</code>, <code>#</code>, <code>$</code> なんかはメソッド名には使えないよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="o">.</span>
-<span class="k">end</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="p">.</span>
+<span class="nf">end</span>
 <span class="c1"># ~&gt; -:1: syntax error, unexpected '.'</span>
 
 <span class="k">def</span> <span class="p">,</span>
@@ -716,7 +716,7 @@ Ruby is about Language!
 
 <p>と、普通思うよ。けど、実はこれらも<code>define_method</code>を使えば、定義できるんだよ。先のdef_methodを使ってこれらのメソッドを定義してみるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">def_method</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">body</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">def_method</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">body</span><span class="p">)</span>
   <span class="n">blk</span> <span class="o">=</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="n">body</span> <span class="p">:</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">: not implemented yet."</span> <span class="p">}</span>
   <span class="n">klass</span><span class="p">.</span><span class="nf">class_eval</span> <span class="p">{</span> <span class="n">define_method</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">blk</span><span class="p">)</span> <span class="p">}</span>
 <span class="k">end</span>
@@ -725,7 +725,7 @@ Ruby is about Language!
   
 <span class="k">end</span>
 
-<span class="nb">methods</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">","</span><span class="p">,</span> <span class="s2">"@"</span><span class="p">,</span> <span class="s2">"="</span><span class="p">,</span> <span class="s2">"("</span><span class="p">,</span> <span class="s2">"#"</span><span class="p">,</span> <span class="s2">"$"</span><span class="o">]</span>
+<span class="nb">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">","</span><span class="p">,</span> <span class="s2">"@"</span><span class="p">,</span> <span class="s2">"="</span><span class="p">,</span> <span class="s2">"("</span><span class="p">,</span> <span class="s2">"#"</span><span class="p">,</span> <span class="s2">"$"</span><span class="p">]</span>
 <span class="nb">methods</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">meth</span><span class="o">|</span> <span class="n">def_method</span> <span class="n">meth</span><span class="p">,</span> <span class="no">Trivia</span> <span class="p">}</span>
 
 <span class="no">Trivia</span><span class="p">.</span><span class="nf">public_instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="c1"># =&gt; [:".", :",", :"@", :"=", :"(", :"#", :"$"]</span></code></pre></div>
@@ -738,7 +738,7 @@ Ruby is about Language!
 
 <p>呼び出しができないんだよ ^ ^;</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
 
 <span class="n">t</span><span class="p">.</span><span class="nf">.</span> <span class="c1"># =&gt; </span>
 <span class="n">t</span><span class="p">.</span><span class="nf">,</span> <span class="c1"># =&gt; </span>
@@ -767,7 +767,7 @@ Ruby is about Language!
 
 <p>ただ、<code>Object#send</code>や<code>Method#call</code>を使って呼び出す、という手段はあるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="p">.</span><span class="nf">new</span>
 
 <span class="n">t</span><span class="p">.</span><span class="nf">send</span> <span class="s1">'.'</span> <span class="c1"># =&gt; ".: not implemented yet."</span>
 <span class="n">t</span><span class="p">.</span><span class="nf">method</span><span class="p">(</span><span class="s1">','</span><span class="p">).</span><span class="nf">call</span> <span class="c1"># =&gt; ",: not implemented yet."</span>

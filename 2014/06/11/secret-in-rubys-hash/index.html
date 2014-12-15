@@ -184,13 +184,13 @@
 
 <p>まずはHashに<code>HashSecret</code>というモジュールを挿すよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Hash</span><span class="p">.</span><span class="nf">include</span> <span class="no">HashSecret</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Hash</span><span class="p">.</span><span class="nf">include</span> <span class="no">HashSecret</span></code></pre></div>
 
 <p>このHashは普通のHashのように使えるんだけど、そこに機密情報をセットするための<code>Hash#secret=</code>というメソッドを追加するんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'Charlie'</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:job</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'Programmer'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Charlie'</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:job</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Programmer'</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer"}</span>
 
@@ -198,7 +198,7 @@
 
 <p>で、ここからがミソなんだけれども、セットされた機密情報はHashを走査しても見えないんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span><span class="p">.</span><span class="nf">secret</span> <span class="o">=</span> <span class="s1">'My-password123'</span> <span class="c1"># 機密情報をセット！</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span><span class="p">.</span><span class="nf">secret</span> <span class="o">=</span> <span class="s1">'My-password123'</span> <span class="c1"># 機密情報をセット！</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer"}</span>
 
@@ -208,28 +208,28 @@
 
 <p>でも、<code>secret</code>キーを使えばアクセスできる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="c1"># =&gt; "My-password123"</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="c1"># =&gt; "My-password123"</span></code></pre></div>
 
 <p>複数の機密情報を扱いたい場合は、<code>Hash#secret=</code>に配列やハッシュをセットすればいいんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># 配列で機密情報を管理！</span>
-<span class="n">h</span><span class="p">.</span><span class="nf">secret</span> <span class="o">=</span> <span class="o">[]</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'My-password123'</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'charlie@secret.com'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># 配列で機密情報を管理！</span>
+<span class="n">h</span><span class="p">.</span><span class="nf">secret</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'My-password123'</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'charlie@secret.com'</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer"}</span>
 
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="c1"># =&gt; ["My-password123", "charlie@secret.com"]</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="c1"># =&gt; ["My-password123", "charlie@secret.com"]</span>
 
 <span class="c1"># ハッシュで機密情報を管理！</span>
 <span class="n">h</span><span class="p">.</span><span class="nf">secret</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">][</span><span class="ss">:credit</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'123-456-789-012'</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'charlie@secret.com'</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">][</span><span class="ss">:credit</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'123-456-789-012'</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">][</span><span class="ss">:email</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'charlie@secret.com'</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer"}</span>
 
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">][</span><span class="ss">:credit</span><span class="o">]</span> <span class="c1"># =&gt; "123-456-789-012"</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span> <span class="c1"># =&gt; "charlie@secret.com"</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">][</span><span class="ss">:credit</span><span class="p">]</span> <span class="c1"># =&gt; "123-456-789-012"</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">][</span><span class="ss">:email</span><span class="p">]</span> <span class="c1"># =&gt; "charlie@secret.com"</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer"}</span></code></pre></div>
 
@@ -243,9 +243,9 @@
 
 <p>そんなときは<code>secret</code>キーに別の値をセットして隠蔽すればいいんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'Nothing here'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Nothing here'</span>
 
-<span class="n">h</span><span class="o">[</span><span class="ss">:secret</span><span class="o">]</span> <span class="c1"># =&gt; "Nothing here"</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="c1"># =&gt; "Nothing here"</span>
 
 <span class="n">h</span> <span class="c1"># =&gt; {:name=&gt;"Charlie", :job=&gt;"Programmer", :secret=&gt;"Nothing here"}</span></code></pre></div>
 
@@ -275,7 +275,7 @@
 
 <p>さあ、試してみるよ！</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span><span class="o">[</span><span class="ss">:sekai_no_owari</span><span class="o">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span><span class="p">[</span><span class="ss">:sekai_no_owari</span><span class="p">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span></code></pre></div>
 
 <p>ほら、読めた！</p>
 
@@ -310,7 +310,7 @@
 <br />
 <br /></p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">HashSecret</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">HashSecret</span>
   <span class="k">def</span> <span class="nf">secret</span><span class="o">=</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="nb">self</span><span class="p">.</span><span class="nf">default</span><span class="o">=</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
   <span class="k">end</span>
@@ -318,10 +318,10 @@
 
 <p><code>Hash#default=</code>の別名かよ！</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">h</span><span class="o">[</span><span class="ss">:foo</span><span class="o">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:bar</span><span class="o">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
-<span class="n">h</span><span class="o">[</span><span class="ss">:blah_blah_blah</span><span class="o">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
-<span class="n">h</span><span class="o">[</span><span class="s2">"秘密のコード教えて"</span><span class="o">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">h</span><span class="p">[</span><span class="ss">:foo</span><span class="p">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:bar</span><span class="p">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
+<span class="n">h</span><span class="p">[</span><span class="ss">:blah_blah_blah</span><span class="p">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span>
+<span class="n">h</span><span class="p">[</span><span class="s2">"秘密のコード教えて"</span><span class="p">]</span> <span class="c1"># =&gt; {:credit=&gt;"123-456-789-012", :email=&gt;"charlie@secret.com"}</span></code></pre></div>
 
 <p>機密情報のブロードキャストみたいな。</p>
 

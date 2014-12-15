@@ -182,7 +182,7 @@
     
 <p>Rubyにはシングルトンメソッドと呼ばれる機能があります。これは、特定のオブジェクトにだけ実装されるメソッドのことです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:job</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">charlie</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
@@ -206,7 +206,7 @@
 
 <p>しかしRubyの世界はミンコフスキー時空であり、そこには「空間」の次元に加え「時間」の次元が存在します。そして、残念ながらシングルトンメソッドではこの時間つまり「名前時間」を限定することができないのです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="c1"># =&gt; 2014-03-15 14:12:15 +0900</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="c1"># =&gt; 2014-03-15 14:12:15 +0900</span>
 <span class="n">charlie</span><span class="p">.</span><span class="nf">passcode</span> <span class="c1"># =&gt; "22360679"</span>
 
 <span class="no">Time</span><span class="p">.</span><span class="nf">now</span> <span class="c1"># =&gt; 2015-03-15 14:12:15 +0900</span>
@@ -228,7 +228,7 @@
 
 <p>実装です。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">CoreExt</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">CoreExt</span>
   <span class="n">refine</span> <span class="no">String</span> <span class="k">do</span>
     <span class="k">def</span> <span class="nf">~</span>
       <span class="n">margin</span> <span class="o">=</span> <span class="nb">scan</span><span class="p">(</span><span class="sr">/^ +/</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:size</span><span class="p">).</span><span class="nf">min</span>
@@ -245,7 +245,7 @@
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">mission</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-    <span class="n">mission_template</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span>
+    <span class="n">mission_template</span> <span class="ss">name: </span><span class="nb">name</span><span class="p">,</span>
       <span class="ss">status: </span><span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span><span class="sh">
         昨夜、プロジェクトX内において
         NullObjectモジュールなる不審物を発見。
@@ -280,7 +280,7 @@
 
 <p>やってみましょう。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>irb
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>irb
 <span class="gp">&gt; </span>require <span class="s1">'./mission_impossible'</span>
 <span class="gp">=&gt; </span><span class="nb">true</span>
 <span class="gp">&gt; </span>mi <span class="o">=</span> MissionImpossible.new
@@ -311,7 +311,7 @@ NullObjectモジュールなる不審物を発見。
 
 <p>そこで<code>OneTime</code>モジュールで制約を掛けます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="o">+</span> <span class="nb">require</span> <span class="s2">"./onetime"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="o">+</span> <span class="nb">require</span> <span class="s2">"./onetime"</span>
 
 <span class="k">module</span> <span class="nn">CoreExt</span>
   <span class="n">refine</span> <span class="no">String</span> <span class="k">do</span>
@@ -331,7 +331,7 @@ NullObjectモジュールなる不審物を発見。
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">mission</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-    <span class="n">mission_template</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span>
+    <span class="n">mission_template</span> <span class="ss">name: </span><span class="nb">name</span><span class="p">,</span>
       <span class="ss">status: </span><span class="o">~&lt;&lt;-</span><span class="no">ST</span><span class="p">,</span><span class="sh">
         昨夜、プロジェクトX内において
         NullObjectモジュールなる不審物を発見。
@@ -367,7 +367,7 @@ NullObjectモジュールなる不審物を発見。
 
 <p>さて、<code>mission</code>メソッドを２度続けて呼んでみます。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>irb
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>irb
 <span class="gp">&gt; </span>require <span class="s1">'./mission_impossible'</span>
 <span class="gp">=&gt; </span><span class="nb">true</span>
 <span class="gp">&gt; </span>mi <span class="o">=</span> MissionImpossible.new

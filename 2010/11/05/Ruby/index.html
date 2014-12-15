@@ -181,7 +181,7 @@
 
     <p>RubyのMathモジュールには数学関数が定義されていて、それらは以下のようにモジュール・メソッドとして呼び出す使い方と、クラスにモジュールをインクルードして関数的に呼び出す使い方の、２種類の使い方ができるようになっています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Math</span><span class="p">.</span><span class="nf">sqrt</span> <span class="mi">4</span> <span class="c1"># =&gt; 2.0</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Math</span><span class="p">.</span><span class="nf">sqrt</span> <span class="mi">4</span> <span class="c1"># =&gt; 2.0</span>
 <span class="no">Math</span><span class="p">.</span><span class="nf">atan2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; 0.785398163397448</span>
 <span class="kp">include</span> <span class="no">Math</span>
 <span class="n">sqrt</span> <span class="mi">4</span> <span class="c1"># =&gt; 2.0</span>
@@ -189,13 +189,13 @@
 
 <p>一方でこれらのメソッドはインクルードした場合、オブジェクトを指定するメソッド形式での呼び出しができないようにされています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Object</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">sqrt</span> <span class="mi">4</span> <span class="c1"># =&gt; private method `sqrt' called for #&lt;Object:0x1a414&gt; (NoMethodError)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Object</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">sqrt</span> <span class="mi">4</span> <span class="c1"># =&gt; private method `sqrt' called for #&lt;Object:0x1a414&gt; (NoMethodError)</span></code></pre></div>
 
 <p>このような形式で定義されたメソッドを、Rubyでは「モジュール関数」と呼んでいます。モジュール関数はその利用の態様に応じて使い方を選べるので、その利便性を高めます。</p>
 
 <p>早々自分でもモジュール関数redを備えたColorモジュールを定義してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">red</span>
     <span class="ss">:red</span>
   <span class="k">end</span>
@@ -213,7 +213,7 @@
 
 <p>モジュール・メソッドはSingletonクラスを使って定義してもいいですね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="k">def</span> <span class="nf">red</span>
       <span class="ss">:red</span>
@@ -235,7 +235,7 @@
 
 <p>そう、ＤＲＹ原則に反しているのです。同じコードの繰り返しはその保守性を下げるのでいけません。改善しましょう。singletonクラスにColorモジュールをインクルードすることによって、コードの重複を回避します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="kp">include</span> <span class="no">Color</span>
   <span class="k">end</span>
@@ -251,7 +251,7 @@
 
 <p>残念ながらredの可視性がprivateにされているので、Colorオブジェクトからredを呼び出せないようです。Singletonクラスへのインクルードはextendと等価ですから、extendも試してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="kp">extend</span> <span class="nb">self</span>
   <span class="kp">private</span>
   <span class="k">def</span> <span class="nf">red</span>
@@ -267,7 +267,7 @@
 
 <p>苦肉の策を考えました。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
     <span class="kp">include</span> <span class="no">Color</span>
     <span class="k">def</span> <span class="nf">Red</span>
@@ -288,7 +288,7 @@
 
 <p>あるいはsendを使って…</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="kp">extend</span> <span class="nb">self</span>
   <span class="kp">private</span>
   <span class="k">def</span> <span class="nf">red</span>
@@ -306,7 +306,7 @@
 
 <p>Colorモジュールにmod_funcというモジュール・メソッドを定義して、その引数としてインスタンス・メソッドを渡すと、それを自動でモジュール関数にしてくれるよう実装してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">mod_func</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
     <span class="kp">extend</span> <span class="nb">self</span>
     <span class="kp">private</span> <span class="n">meth</span>
@@ -325,7 +325,7 @@
 
 <p>今度はdefine_methodを使ってモジュール・メソッドredを別に定義してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">mod_func</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
     <span class="kp">extend</span> <span class="nb">self</span>
     <span class="p">(</span><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span><span class="p">).</span><span class="nf">module_eval</span> <span class="k">do</span>
@@ -357,7 +357,7 @@
 
 <p>mod_funcはモジュールにおいて汎用的に使えるので、これをColorモジュールだけの機能としておくのはもったいないです。Moduleクラスに移しましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Module</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Module</span>
   <span class="k">def</span> <span class="nf">mod_func</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
     <span class="kp">extend</span> <span class="nb">self</span>
     <span class="p">(</span><span class="k">class</span><span class="o">&lt;&lt;</span><span class="nb">self</span><span class="p">;</span><span class="nb">self</span> <span class="k">end</span><span class="p">).</span><span class="nf">module_eval</span> <span class="k">do</span>
@@ -384,7 +384,7 @@
 
 <p>ええ、もちろんRubyはユーザにこんな手間を強いることはありません。Rubyにはモジュール関数を作るために、Module#module_functionというメソッドが用意されています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="k">def</span> <span class="nf">red</span>
     <span class="ss">:red</span>
   <span class="k">end</span>
@@ -397,7 +397,7 @@
 
 <p>module_functionが引数を取らない場合、それ以降に定義されたメソッドがモジュール関数の対象になります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Color</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Color</span>
   <span class="kp">module_function</span>
   <span class="k">def</span> <span class="nf">red</span>
     <span class="ss">:red</span>

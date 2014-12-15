@@ -185,7 +185,7 @@
 
 <p>要するにスペース区切りの数字列を数字が連続する場合にその箇所をハイフンにする、という話だよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="s2">"1 2 3"</span> <span class="o">=&gt;</span> <span class="s2">"1-3."</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="s2">"1 2 3"</span> <span class="o">=&gt;</span> <span class="s2">"1-3."</span>
 <span class="s2">"1 2 3 5 7 8"</span> <span class="o">=&gt;</span> <span class="s2">"1-3, 5, 7-8."</span>
 <span class="s2">"1 3 4 5 7"</span> <span class="o">=&gt;</span> <span class="s2">"1, 3-5, 7."</span></code></pre></div>
 
@@ -193,28 +193,28 @@
 
 <p>まず数字文字列を数字の配列に変換するよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str</span> <span class="o">=</span> <span class="s2">"1 3 4 5 7"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">str</span> <span class="o">=</span> <span class="s2">"1 3 4 5 7"</span>
 <span class="n">nums</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/\d+/</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">)</span> <span class="c1"># =&gt; [1, 3, 4, 5, 7]</span></code></pre></div>
 
 <p>次にこれを配列のインデックスに対応付けて配置し直すよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="n">arr</span> <span class="p">}</span> <span class="c1"># =&gt; [1, nil, 3, 4, 5, nil, 7]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">inject</span><span class="p">([])</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">arr</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="n">arr</span> <span class="p">}</span> <span class="c1"># =&gt; [1, nil, 3, 4, 5, nil, 7]</span></code></pre></div>
 
 <p>これで数字が連続しないところにはnilが入るよ。</p>
 
 <p>次にnilのところで配列を分けるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="nf">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="nf">nil?</span> <span class="o">||</span> <span class="kp">nil</span> <span class="p">}.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [[true, [1]], [true, [3, 4, 5]], [true, [7]]]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="nf">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="nf">nil?</span> <span class="o">||</span> <span class="kp">nil</span> <span class="p">}.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [[true, [1]], [true, [3, 4, 5]], [true, [7]]]</span></code></pre></div>
 
 <p>Enumerable#chunkを使うよ。そのブロックでは要素がnilの場合はnilを返すようにして、その要素を捨てるよ。</p>
 
 <p>次に各要素の長さに応じた加工を施して文字列にするよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">gr</span><span class="o">|</span> <span class="n">gr</span><span class="p">.</span><span class="nf">size</span><span class="o">&gt;</span><span class="mi">1</span> <span class="p">?</span> <span class="s2">"</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">first</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">last</span><span class="si">}</span><span class="s2">"</span> <span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">first</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span> <span class="c1"># =&gt; ["1", "3-5", "7"]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">gr</span><span class="o">|</span> <span class="n">gr</span><span class="p">.</span><span class="nf">size</span><span class="o">&gt;</span><span class="mi">1</span> <span class="p">?</span> <span class="s2">"</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">first</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">last</span><span class="si">}</span><span class="s2">"</span> <span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">gr</span><span class="p">.</span><span class="nf">first</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span> <span class="c1"># =&gt; ["1", "3-5", "7"]</span></code></pre></div>
 
 <p>最後にこれをつないで完成だよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="c1"># =&gt; "1, 3-5, 7."</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="c1"># =&gt; "1, 3-5, 7."</span></code></pre></div>
 
 <p>まとめると次のようになるよ。</p>
 
@@ -253,11 +253,11 @@ end
 <p>id:smilerubyさんから
 Enumerable#slice_beforeを使った例を頂いたので、併せて載せておくよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">hyphenize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">hyphenize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
  <span class="n">nums</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/\d+/</span><span class="p">).</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">).</span><span class="nf">sort</span>
  <span class="n">nums</span><span class="p">.</span><span class="nf">slice_before</span><span class="p">(</span><span class="ss">num: </span><span class="n">nums</span><span class="p">.</span><span class="nf">first</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="p">,</span> <span class="n">prev</span><span class="o">|</span>
-   <span class="n">prev</span><span class="o">[</span><span class="ss">:num</span><span class="o">]</span><span class="p">,</span> <span class="n">prevprev</span> <span class="o">=</span> <span class="n">e</span><span class="p">,</span> <span class="n">prev</span><span class="o">[</span><span class="ss">:num</span><span class="o">]</span>
-   <span class="n">prevprev</span><span class="p">.</span><span class="nf">succ</span> <span class="o">!=</span> <span class="n">prev</span><span class="o">[</span><span class="ss">:num</span><span class="o">]</span>
+   <span class="n">prev</span><span class="p">[</span><span class="ss">:num</span><span class="p">],</span> <span class="n">prevprev</span> <span class="o">=</span> <span class="n">e</span><span class="p">,</span> <span class="n">prev</span><span class="p">[</span><span class="ss">:num</span><span class="p">]</span>
+   <span class="n">prevprev</span><span class="p">.</span><span class="nf">succ</span> <span class="o">!=</span> <span class="n">prev</span><span class="p">[</span><span class="ss">:num</span><span class="p">]</span>
  <span class="p">}.</span><span class="nf">map</span><span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">minmax</span><span class="p">.</span><span class="nf">uniq</span> <span class="o">*</span> <span class="s1">'-'</span> <span class="p">}</span> <span class="o">*</span> <span class="s1">', '</span> <span class="o">+</span> <span class="s1">'.'</span>
 <span class="k">end</span>
 <span class="n">hyphenize</span><span class="p">(</span><span class="s2">"1 3 4 5 7"</span><span class="p">)</span> <span class="c1"># =&gt; "1, 3-5, 7."</span></code></pre></div>

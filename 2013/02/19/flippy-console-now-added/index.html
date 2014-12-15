@@ -188,7 +188,7 @@
 
 <p>このgemにはflippyコマンドが付いていて、ターミナルで簡単に反転文字が作れるようになっているのでした。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>flippy Hello, world!
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>flippy Hello, world!
 ¡plɹoʍ ‘olləH</code></pre></div>
 
 <p>で、今回これをもう少し拡張して、専用コンソールで反転文字を打てる<code>flippy console</code>というのを追加しましたので、お知らせしますね。flippy consoleはflippyコマンドに<code>--console</code>オプションを付加することで起動することができます。</p>
@@ -212,14 +212,14 @@
 
 <p>次のような感じで使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"termios"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"termios"</span>
 
 <span class="vg">$stdin</span><span class="p">.</span><span class="nf">extend</span> <span class="no">Termios</span>
 
 <span class="k">begin</span>
   <span class="n">term_preset</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="p">.</span><span class="nf">tcgetattr</span>
   <span class="n">term</span> <span class="o">=</span> <span class="n">term_preset</span><span class="p">.</span><span class="nf">dup</span>
-  <span class="o">[</span><span class="no">Termios</span><span class="o">::</span><span class="no">ICANON</span><span class="p">,</span> <span class="no">Termios</span><span class="o">::</span><span class="no">ECHO</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">flag</span><span class="o">|</span> <span class="n">term</span><span class="p">.</span><span class="nf">lflag</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">flag</span> <span class="p">}</span>
+  <span class="p">[</span><span class="no">Termios</span><span class="o">::</span><span class="no">ICANON</span><span class="p">,</span> <span class="no">Termios</span><span class="o">::</span><span class="no">ECHO</span><span class="p">].</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">flag</span><span class="o">|</span> <span class="n">term</span><span class="p">.</span><span class="nf">lflag</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">flag</span> <span class="p">}</span>
   <span class="vg">$stdin</span><span class="p">.</span><span class="nf">tcsetattr</span><span class="p">(</span><span class="no">Termios</span><span class="o">::</span><span class="no">TCSANOW</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
 
   <span class="c1"># ターミナルを使う</span>
@@ -240,7 +240,7 @@
 <h2 id="section">エスケープシーケンス</h2>
 <p>flippy consoleではカーソルの移動を制御する必要があります。カーソルの制御には標準添付ライブラリの<code>curses</code>がありますが、簡単な制御ならエスケープシーケンスで行うことができます。flippyでは今ひとつ上手くできてないですが。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[5;10H"</span>  <span class="c1"># カーソルをスクリーンの5行10列に移動</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[5;10H"</span>  <span class="c1"># カーソルをスクリーンの5行10列に移動</span>
 <span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1A"</span>     <span class="c1"># カーソルを一つ上に移動</span>
 <span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1B"</span>     <span class="c1"># カーソルを一つ下に移動</span>
 <span class="nb">print</span> <span class="s2">"</span><span class="se">\e</span><span class="s2">[1C"</span>     <span class="c1"># カーソルを一つ前に移動</span>

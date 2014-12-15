@@ -200,7 +200,7 @@ i+j    3  5  5  7  7  7  11</p>
 その合計が素数であるものを選択し
 選択されたペアからそれに合計を加えたセット(i, j, i+j)を作る</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span>
     <span class="o">`</span><span class="p">()</span>
     <span class="p">(</span><span class="nb">map</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span>
        <span class="p">(</span><span class="nb">map</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">j</span><span class="p">)</span> <span class="p">(</span><span class="nb">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))</span>
@@ -218,7 +218,7 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
 <p>次にその和が素数であるものを見つける手続きprime_sum?と
 結果のセットを作る手続きmake_pair_sumを書く</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">prime_sum?</span> <span class="nv">pair</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">prime_sum?</span> <span class="nv">pair</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">prime?</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">pair</span><span class="p">)</span> <span class="p">(</span><span class="nb">cadr</span> <span class="nv">pair</span><span class="p">))))</span>
  
     
@@ -227,7 +227,7 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
 
 <p>これらを繋いで目的の手続きprime_sum_pairsが得られる</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">prime_sum_pairs</span> <span class="nv">n</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">prime_sum_pairs</span> <span class="nv">n</span><span class="p">)</span>
     <span class="p">(</span><span class="nb">map</span> <span class="nv">make_pair_sum</span>
        <span class="p">(</span><span class="nf">filter</span> <span class="nv">prime_sum?</span>
           <span class="p">(</span><span class="nf">flatmap</span>
@@ -242,13 +242,13 @@ enumerate_interval 1 (- i 1)で1からi-1の整数jを生成し
 <p>なおここではmapとappendによるaccumulateの手続きを
 flatmap手続きとして抽象化している</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">flatmap</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">flatmap</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">append</span> <span class="o">`</span><span class="p">()</span> <span class="p">(</span><span class="nb">map</span> <span class="nv">proc</span> <span class="nv">seq</span><span class="p">)))</span></code></pre></div>
 
 <h2 id="ruby">Ruby版素数列</h2>
 <p>同じことをRubyでもやってみる</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">flatmap</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">flatmap</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
    <span class="n">accumulate</span><span class="p">(</span><span class="ss">:append</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="nb">proc</span><span class="p">,</span> <span class="n">seq</span><span class="p">))</span>
  <span class="k">end</span>
  
@@ -278,8 +278,8 @@ flatmap手続きとして抽象化している</p>
 <p>Arrayクラスの各種メソッドを使えば
 もう少しRubyらしくなる</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-   <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="n">n</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">]</span> <span class="p">}</span> <span class="p">}.</span><span class="nf">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+   <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="n">n</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="p">}</span> <span class="p">}.</span><span class="nf">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
  <span class="k">end</span>
  <span class="n">pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1], [3, 1], [3, 2], [4, 1], [4, 2], [4, 3], [5, 1], [5, 2], [5, 3], [5, 4], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5]]</span>
  
@@ -292,7 +292,7 @@ flatmap手続きとして抽象化している</p>
  <span class="k">end</span>
  
  <span class="k">def</span> <span class="nf">prime_sum_pairs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-   <span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">pair</span><span class="o">|</span> <span class="n">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">?</span> <span class="n">arr</span> <span class="o">&lt;&lt;</span> <span class="n">make_list</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">:</span> <span class="n">arr</span><span class="p">}</span>
+   <span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">).</span><span class="nf">inject</span><span class="p">([])</span> <span class="p">{</span> <span class="o">|</span><span class="n">arr</span><span class="p">,</span> <span class="n">pair</span><span class="o">|</span> <span class="n">prime_sum?</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">?</span> <span class="n">arr</span> <span class="o">&lt;&lt;</span> <span class="n">make_list</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="p">:</span> <span class="n">arr</span><span class="p">}</span>
  <span class="k">end</span>
  
  <span class="n">prime_sum_pairs</span> <span class="mi">6</span> <span class="c1"># =&gt; [[2, 1, 3], [3, 2, 5], [4, 1, 5], [4, 3, 7], [5, 2, 7], [6, 1, 7], [6, 5, 11]]</span></code></pre></div>
@@ -302,7 +302,7 @@ flatmap手続きとして抽象化している</p>
 先のflatmap手続きを使って
 集合Sのすべての順列を求めてみよう</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">permutations</span> <span class="nv">s</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">permutations</span> <span class="nv">s</span><span class="p">)</span>
     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">null?</span> <span class="nv">s</span><span class="p">)</span>
        <span class="p">(</span><span class="nb">list</span> <span class="o">`</span><span class="p">())</span>
        <span class="p">(</span><span class="nf">flatmap</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">x</span><span class="p">)</span>
@@ -319,14 +319,14 @@ flatmap手続きとして抽象化している</p>
 
 <p>要素xを除く手続きは以下のようになる</p>
 
-<div class="highlight"><pre><code class="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">remove</span> <span class="nv">item</span> <span class="nv">seq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">remove</span> <span class="nv">item</span> <span class="nv">seq</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">filter</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">x</span> <span class="nv">item</span><span class="p">)))</span>
        <span class="nv">seq</span><span class="p">))</span></code></pre></div>
 
 <h2 id="ruby-1">Ruby版順列</h2>
 <p>Rubyでもpermutationsを書いてみる</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">map</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="n">cons</span> <span class="n">x</span><span class="p">,</span> <span class="nb">p</span> <span class="p">},</span> <span class="n">permutations</span><span class="p">(</span><span class="n">remove</span> <span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="p">}</span>
    <span class="k">if</span> <span class="n">s</span><span class="p">.</span><span class="nf">nil?</span>
      <span class="n">list</span> <span class="kp">nil</span>
@@ -343,7 +343,7 @@ flatmap手続きとして抽象化している</p>
 
 <p>RubyのArrayクラスにはpermutationというメソッドが既にある</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">List</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="nf">permutation</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">List</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">permutation</span><span class="p">.</span><span class="nf">to_a</span> <span class="c1"># =&gt; [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]</span></code></pre></div>
 
 <p><a href="http://www.amazon.co.jp/計算機プログラムの構造と解釈-ジェラルド・ジェイ-サスマン/dp/489471163X?SubscriptionId=06WK2XPKDH9TJJ979P02&amp;tag=keyesblog05-22&amp;linkCode=xm2&amp;camp=2025&amp;creative=165953&amp;creativeASIN=489471163X"><img class="amazon" src="http://ecx.images-amazon.com/images/I/51ZSMEJ9Y2L.jpg" /></a></p>
 

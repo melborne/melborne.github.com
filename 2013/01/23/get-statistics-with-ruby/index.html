@@ -186,7 +186,7 @@
   <p>５人のプレイヤー（Alice, Bob, Jimmy, Kent, Ross）が二種類のゲーム（gameA, gameB）をそれぞれ３回ずつプレイした結果のデータ<strong>data</strong>がある。</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span><span class="sh">
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">data</span> <span class="o">=&lt;&lt;</span><span class="no">EOS</span><span class="sh">
 player gameA gameB
 Bob    20    56
 Ross   68    33
@@ -209,7 +209,7 @@ Jimmy  11    87
   <p>結果を集計し以下の標準出力を得よ（totalで降順）。</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby game_score.rb
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby game_score.rb
 player  gameA gameB total
 Alice   230   203   433
 Jimmy   124   206   330
@@ -228,28 +228,28 @@ Bob     110   147   257</code></pre></div>
 <h3 id="step1-">Step1. ヘッダーとスコアを分離し配列で管理する</h3>
 <p>まあ普通に。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">lines</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:split</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">scores</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">lines</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:split</span><span class="p">)</span>
 <span class="n">headers</span> <span class="c1"># =&gt; ["player", "gameA", "gameB"]</span>
 <span class="n">scores</span> <span class="c1"># =&gt; [["Bob", "20", "56"], ["Ross", "68", "33"], ["Bob", "78", "55"], ["Kent", "90", "15"], ["Alice", "84", "79"], ["Ross", "10", "15"], ["Jimmy", "80", "31"], ["Bob", "12", "36"], ["Kent", "88", "43"], ["Kent", "12", "33"], ["Alice", "90", "32"], ["Ross", "67", "77"], ["Alice", "56", "92"], ["Jimmy", "33", "88"], ["Jimmy", "11", "87"]]</span></code></pre></div>
 
 <h3 id="step2-">Step2. プレイヤー毎に集計する</h3>
 <p>Enumerable#group_byを使う。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">scores</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {"Bob"=&gt;[["Bob", "20", "56"], ["Bob", "78", "55"], ["Bob", "12", "36"]], "Ross"=&gt;[["Ross", "68", "33"], ["Ross", "10", "15"], ["Ross", "67", "77"]], "Kent"=&gt;[["Kent", "90", "15"], ["Kent", "88", "43"], ["Kent", "12", "33"]], "Alice"=&gt;[["Alice", "84", "79"], ["Alice", "90", "32"], ["Alice", "56", "92"]], "Jimmy"=&gt;[["Jimmy", "80", "31"], ["Jimmy", "33", "88"], ["Jimmy", "11", "87"]]}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">scores_by_player</span> <span class="o">=</span> <span class="n">scores</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:first</span><span class="p">)</span> <span class="c1"># =&gt; {"Bob"=&gt;[["Bob", "20", "56"], ["Bob", "78", "55"], ["Bob", "12", "36"]], "Ross"=&gt;[["Ross", "68", "33"], ["Ross", "10", "15"], ["Ross", "67", "77"]], "Kent"=&gt;[["Kent", "90", "15"], ["Kent", "88", "43"], ["Kent", "12", "33"]], "Alice"=&gt;[["Alice", "84", "79"], ["Alice", "90", "32"], ["Alice", "56", "92"]], "Jimmy"=&gt;[["Jimmy", "80", "31"], ["Jimmy", "33", "88"], ["Jimmy", "11", "87"]]}</span></code></pre></div>
 
 <h3 id="step3-">Step3. プレイヤー毎のデータを計算する</h3>
 <p>Array#transposeがいいんじゃないかと。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">player</span><span class="p">,</span> <span class="n">values</span><span class="o">|</span>
-  <span class="n">ab</span> <span class="o">=</span> <span class="n">values</span><span class="p">.</span><span class="nf">transpose</span><span class="o">[</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="p">}</span>
-  <span class="o">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">stat</span> <span class="o">=</span> <span class="n">scores_by_player</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">player</span><span class="p">,</span> <span class="n">values</span><span class="o">|</span>
+  <span class="n">ab</span> <span class="o">=</span> <span class="n">values</span><span class="p">.</span><span class="nf">transpose</span><span class="p">[</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_i</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="p">}</span>
+  <span class="p">[</span><span class="n">player</span><span class="p">,</span> <span class="o">*</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)]</span>
 <span class="k">end</span>
 
 <span class="n">stat</span> <span class="c1"># =&gt; [["Bob", 110, 147, 257], ["Ross", 145, 125, 270], ["Kent", 190, 91, 281], ["Alice", 230, 203, 433], ["Jimmy", 124, 206, 330]]</span></code></pre></div>
 
 <h3 id="step4-">Step4. 結果を標準出力する</h3>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total"</span> <span class="o">%</span> <span class="n">headers</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">puts</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">%s</span><span class="se">\t</span><span class="s2">total"</span> <span class="o">%</span> <span class="n">headers</span>
 <span class="nb">puts</span> <span class="n">stat</span><span class="p">.</span><span class="nf">sort_by</span><span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="o">-</span><span class="n">s</span><span class="p">.</span><span class="nf">last</span> <span class="p">}.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d</span><span class="se">\t</span><span class="s2">%d"</span> <span class="o">%</span> <span class="n">line</span> <span class="p">}</span>
 
 <span class="c1"># &gt;&gt; player gameA gameB total</span>

@@ -202,7 +202,7 @@
 
 <p>そうしたら今度はJRubyでどうなるのかも見てみたくなったのでJRubyをインストールしてやってみることにした。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rbenv install jruby-1.7.4
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rbenv install jruby-1.7.4
 <span class="gp">% </span>rbenv <span class="nb">local </span>jruby-1.7.4
 <span class="gp">% </span>ruby -v
 jruby 1.7.4 <span class="o">(</span>1.9.3p392<span class="o">)</span> 2013-05-16 2390d3b on Java HotSpot<span class="o">(</span>TM<span class="o">)</span> 64-Bit Server VM 1.6.0_51-b11-456-11M4508 <span class="o">[</span>darwin-x86_64]
@@ -210,7 +210,7 @@ jruby 1.7.4 <span class="o">(</span>1.9.3p392<span class="o">)</span> 2013-05-16
 
 <p>例外クラスとモジュールを除いたRubyのクラスツリーをJRubyで書いてみる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># ruby_tree.rb</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># ruby_tree.rb</span>
  <span class="nb">require</span> <span class="s1">'gviz'</span>
  
  <span class="n">classes</span> <span class="o">=</span> <span class="no">ObjectSpace</span><span class="p">.</span><span class="nf">each_object</span><span class="p">(</span><span class="no">Class</span><span class="p">)</span>
@@ -223,10 +223,10 @@ jruby 1.7.4 <span class="o">(</span>1.9.3p392<span class="o">)</span> 2013-05-16
    <span class="n">classes</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">klass</span><span class="o">|</span>
      <span class="n">tree</span><span class="p">,</span> <span class="n">mods</span> <span class="o">=</span> <span class="n">klass</span><span class="p">.</span><span class="nf">ancestors</span><span class="p">.</span><span class="nf">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">anc</span><span class="o">|</span> <span class="n">anc</span><span class="p">.</span><span class="nf">is_a?</span> <span class="no">Class</span> <span class="p">}</span>
                        <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">_</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="p">.</span><span class="nf">reverse</span> <span class="p">}</span>
-     <span class="k">next</span> <span class="k">if</span> <span class="n">tree</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="no">Exception</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">tree</span><span class="o">[-</span><span class="mi">1</span><span class="o">]</span> <span class="o">!=</span> <span class="no">Exception</span>
-     <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="nf">map</span><span class="p">.</span><span class="nf">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="o">]</span> <span class="p">}</span>
+     <span class="k">next</span> <span class="k">if</span> <span class="n">tree</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="no">Exception</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">tree</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="no">Exception</span>
+     <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="p">.</span><span class="nf">map</span><span class="p">.</span><span class="nf">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="p">}</span>
      <span class="n">tree</span><span class="p">.</span><span class="nf">each_cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ai</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">bi</span><span class="p">)</span><span class="o">|</span>
-       <span class="n">a_id</span><span class="p">,</span> <span class="n">b_id</span> <span class="o">=</span> <span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">]</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_id</span><span class="p">)</span>
+       <span class="n">a_id</span><span class="p">,</span> <span class="n">b_id</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">].</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_id</span><span class="p">)</span>
        <span class="n">route</span> <span class="n">a_id</span> <span class="o">=&gt;</span> <span class="n">b_id</span>
        <span class="n">node</span> <span class="n">a_id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:a</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span><span class="mi">7</span><span class="o">-</span><span class="n">ai</span><span class="p">,</span> <span class="n">fillcolor</span><span class="p">:</span><span class="mi">7</span><span class="o">-</span><span class="n">ai</span>
        <span class="n">node</span> <span class="n">b_id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:b</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span><span class="mi">7</span><span class="o">-</span><span class="n">bi</span><span class="p">,</span> <span class="n">fillcolor</span><span class="p">:</span><span class="mi">7</span><span class="o">-</span><span class="n">bi</span>
@@ -238,7 +238,7 @@ jruby 1.7.4 <span class="o">(</span>1.9.3p392<span class="o">)</span> 2013-05-16
 
 <p>ファイルを実行して生成されたpngを開いてみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_tree.rb
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_tree.rb
 <span class="gp">% </span>open ruby_tree.png</code></pre></div>
 
 <p><br /></p>

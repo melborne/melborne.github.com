@@ -184,7 +184,7 @@
 <h2 id="section">オブジェクトの別名</h2>
 <p>Rubyの変数はオブジェクトの参照にすぎないから、オブジェクトに別名を付けるのは簡単だ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a_friend</span> <span class="o">=</span> <span class="s1">'Charlie'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">a_friend</span> <span class="o">=</span> <span class="s1">'Charlie'</span>
 <span class="n">a_coworker</span> <span class="o">=</span> <span class="n">a_friend</span>
 <span class="n">database</span> <span class="o">=</span> <span class="no">DataBase</span><span class="p">.</span><span class="nf">new</span>
 <span class="n">source</span> <span class="o">=</span> <span class="n">database</span></code></pre></div>
@@ -193,25 +193,25 @@
 
 <p>でも、Rubyではメソッドはオブジェクトではないから、Pythonのようにメソッドを変数に代入することはできない。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">methodA</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">methodA</span>
   <span class="ss">:method_is_A</span>
 <span class="k">end</span>
 <span class="n">a_method</span> <span class="o">=</span> <span class="n">methodA</span> <span class="c1"># =&gt; :method_is_A</span></code></pre></div>
 
 <p>一見、代入が問題なく行われているように見えるけれども、変数a_methodに代入されているのはmethodAメソッドの実行結果に過ぎない。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">a_method</span><span class="p">.</span><span class="nf">class</span> <span class="c1"># =&gt; Symbol</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">a_method</span><span class="p">.</span><span class="nf">class</span> <span class="c1"># =&gt; Symbol</span></code></pre></div>
 
 <h2 id="section-1">メソッドの別名</h2>
 <p>ではどうすればメソッドに別名を付けられるのか。</p>
 
 <p>いくつかの方法があってその代表的な方法はaliasキーワードを使う方法だ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
-  <span class="p">(</span><span class="o">[</span><span class="s2">"Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", Yes, "</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
+  <span class="p">([</span><span class="s2">"Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="p">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", Yes, "</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="k">alias</span> <span class="ss">:by_alias</span> <span class="ss">:base</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>      <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>  <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
 
@@ -219,34 +219,34 @@
 
 <p>別名を付けるにはModule#alias_methodを利用する方法もある。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Base</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Base</span>
   <span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="ss">:base</span>
 <span class="k">end</span>
 <span class="kp">include</span> <span class="no">Base</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
 
 <p>alias_methodはModuleクラスのプライベート・インスタンスメソッドなので、モジュールの文脈で呼ぶ必要がある。aliasと異なり引数に文字列を受け取ることができ、そこに式を置くこともできる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="n">today</span><span class="p">.</span><span class="nf">sunny?</span> <span class="k">then</span> <span class="s1">'base'</span> <span class="k">else</span> <span class="s1">'base2'</span> <span class="k">end</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">alias_method</span> <span class="ss">:by_alias_method</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="n">today</span><span class="p">.</span><span class="nf">sunny?</span> <span class="k">then</span> <span class="s1">'base'</span> <span class="k">else</span> <span class="s1">'base2'</span> <span class="k">end</span><span class="p">)</span></code></pre></div>
 
 <p>またメソッド定義により別名を付ける方法がある。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
   <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>  <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
 
 <p>受け取った引数をオリジナルのメソッドに委譲する形だ。</p>
 
 <p>またメソッドをオブジェクト化して別名を付ける方法もある。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">by_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span> <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">by_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span> <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">by_method_obj</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:base</span><span class="p">)</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
-<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>     <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
-<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span> <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">by_lambda</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span>     <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
+<span class="n">by_method_obj</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span> <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
 
 <p>１つはKernel#lambdaを使ってメソッドをProcオブジェクトにして変数に代入する方法。１つはObject#methodを使ってメソッドをMethodオブジェクトにして変数に代入する方法だ。</p>
 
@@ -254,8 +254,8 @@
 
 <p>このように複数の別名定義方法があるけれど、注意しなければいけないことが１つある。それはベースのメソッドが再定義されたときの挙動が異なるという点だ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
-  <span class="p">(</span><span class="o">[</span><span class="s2">"Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", Yes, "</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
+  <span class="p">([</span><span class="s2">"Great </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="p">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", Yes, "</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="k">alias</span> <span class="ss">:by_alias</span> <span class="ss">:base</span>
 <span class="k">module</span> <span class="nn">Base</span>
@@ -267,23 +267,23 @@
 <span class="k">end</span>
 <span class="n">by_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span> <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">by_method_obj</span> <span class="o">=</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:base</span><span class="p">)</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>            <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>        <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>       <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
-<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>       <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
-<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>   <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
+<span class="n">by_lambda</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span>       <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
+<span class="n">by_method_obj</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span>   <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
-  <span class="p">(</span><span class="o">[</span><span class="s2">"Poor </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="o">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", No, "</span><span class="p">)</span>
+  <span class="p">([</span><span class="s2">"Poor </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!"</span><span class="p">]</span> <span class="o">*</span> <span class="n">rep</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="s2">", No, "</span><span class="p">)</span>
 <span class="k">end</span>
-<span class="n">parms</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="n">parms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Charlie'</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">base</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>            <span class="c1"># =&gt; "Poor Charlie!, No, Poor Charlie!"</span>
 <span class="n">by_alias</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>        <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_alias_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span> <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span>
 <span class="n">by_method</span><span class="p">(</span><span class="o">*</span><span class="n">parms</span><span class="p">)</span>       <span class="c1"># =&gt; "Poor Charlie!, No, Poor Charlie!"</span>
-<span class="n">by_lambda</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>       <span class="c1"># =&gt; "Poor Charlie!, No, Poor Charlie!"</span>
-<span class="n">by_method_obj</span><span class="o">[*</span><span class="n">parms</span><span class="o">]</span>   <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
+<span class="n">by_lambda</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span>       <span class="c1"># =&gt; "Poor Charlie!, No, Poor Charlie!"</span>
+<span class="n">by_method_obj</span><span class="p">[</span><span class="o">*</span><span class="n">parms</span><span class="p">]</span>   <span class="c1"># =&gt; "Great Charlie!, Yes, Great Charlie!"</span></code></pre></div>
 
 <p>このコードの結果で分かるように、alias alias_method Methodオブジェクトを使った別名定義では元のメソッドが実行される。つまり、これらの別名定義ではそのコンテキストを共有できない。従って元のメソッドが定義されたコンテキストを共有したい場合は、メソッド再定義かProcオブジェクトによる別名の方法を利用する必要がある。</p>
 

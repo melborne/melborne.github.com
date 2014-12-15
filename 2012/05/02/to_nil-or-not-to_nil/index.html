@@ -185,7 +185,7 @@
 
 <p>例えば次のようなコードがあります。ここでの関心はprocess_userメソッドです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">some_process</span>
     <span class="s2">"Process_completed for %s"</span> <span class="o">%</span> <span class="nb">self</span>
   <span class="k">end</span>
@@ -208,7 +208,7 @@
 
 <p>そして<code>unless修飾子</code>を使ってこんな風にリファクタします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="s1">'anonymous'</span> <span class="k">unless</span> <span class="vi">@user</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -221,7 +221,7 @@
 
 <p>いえいえ、<code>OR演算子</code>の短絡を利用して、こんな風にリファクタします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="vi">@user</span> <span class="o">||</span> <span class="s1">'anonymous'</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -234,7 +234,7 @@
 
 <p>いやいや、自己代入演算子でこんな風にリファクタします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">||=</span> <span class="s1">'anonymous'</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -249,7 +249,7 @@
 
 <p>@userが<code>nil</code>でなく<code>空文字</code>を受ける場合はどうでしょう。<code>String#empty?</code>を使った最初のコードは次のようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">empty?</span>
     <span class="vi">@user</span> <span class="o">=</span> <span class="s1">'anonymous'</span>
   <span class="k">end</span>
@@ -264,7 +264,7 @@
 
 <p>ムズムズするので、<code>if修飾子</code>を使ってリファクタします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="s1">'anonymous'</span> <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">empty?</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -277,7 +277,7 @@
 
 <p>まだムズムズするので、<code>OR演算子</code>を使ってリファクタします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="o">!</span><span class="vi">@user</span><span class="p">.</span><span class="nf">empty?</span> <span class="o">||</span> <span class="s1">'anonymous'</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -295,7 +295,7 @@
 <h2 id="section">それが問題だ</h2>
 <p>そこでこんな対策を考えました。空文字のときはnilを返しそうでないときはselfを返す<code>String#to_nil</code>を定義するのです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">to_nil</span>
     <span class="nb">self</span> <span class="k">unless</span> <span class="n">empty?</span>
   <span class="k">end</span>
@@ -303,7 +303,7 @@
 
 <p>そしてString#empty?の代わりに使います。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||</span> <span class="s1">'anonymous'</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -316,7 +316,7 @@
 
 <p>良いアイディアだと思ったのですが、そんなものはRails界隈でとうの昔にありました。そう、<code>Object#presence</code>です。Railsを知らない人は困ります &gt; 私^ ^;</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"active_support/all"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"active_support/all"</span>
 
 <span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">presence</span> <span class="o">||</span> <span class="s1">'anonymous'</span>
@@ -331,7 +331,7 @@
 
 <p>因みに実装は次のとおりです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">presence</span>
     <span class="nb">self</span> <span class="k">if</span> <span class="n">present?</span>
   <span class="k">end</span>
@@ -347,7 +347,7 @@
 
 <p>これに倣って、私のString#to_nilも<code>Object#to_nil</code>に昇格させます。こんな感じでしょうか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">to_nil</span>
     <span class="nb">self</span> <span class="k">if</span> <span class="nb">respond_to?</span><span class="p">(</span><span class="ss">:empty?</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">empty?</span>
   <span class="k">end</span>
@@ -357,7 +357,7 @@
 
 <p>nilのときのように自己代入させたいです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">process_user</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">process_user</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="s1">'anonymous'</span>
   <span class="vi">@user</span><span class="p">.</span><span class="nf">some_process</span>
 <span class="k">end</span>
@@ -372,7 +372,7 @@
 
 <p>当然エラーになります。でも<code>to_nil=</code>が無いと言っていますので、これを定義してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">to_nil</span>
     <span class="nb">self</span> <span class="k">if</span> <span class="nb">respond_to?</span><span class="p">(</span><span class="ss">:empty?</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">empty?</span>
   <span class="k">end</span>
@@ -397,12 +397,12 @@
 
 <p>他のオブジェクトに対しても試してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">hash1</span><span class="p">,</span> <span class="n">hash2</span><span class="p">,</span> <span class="n">nil1</span> <span class="o">=</span> <span class="s1">'hello'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="o">[]</span><span class="p">,</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="mi">2</span><span class="p">},</span> <span class="p">{},</span> <span class="kp">nil</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">hash1</span><span class="p">,</span> <span class="n">hash2</span><span class="p">,</span> <span class="n">nil1</span> <span class="o">=</span> <span class="s1">'hello'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[],</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="mi">2</span><span class="p">},</span> <span class="p">{},</span> <span class="kp">nil</span>
 
 <span class="n">str1</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="s1">'default'</span>
 <span class="n">str2</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="s1">'default'</span>
-<span class="n">arr1</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="o">[</span><span class="ss">:default</span><span class="o">]</span>
-<span class="n">arr2</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="o">[</span><span class="ss">:default</span><span class="o">]</span>
+<span class="n">arr1</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="p">[</span><span class="ss">:default</span><span class="p">]</span>
+<span class="n">arr2</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="p">[</span><span class="ss">:default</span><span class="p">]</span>
 <span class="n">hash1</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="p">{</span><span class="ss">default: </span><span class="mi">1</span><span class="p">}</span>
 <span class="n">hash2</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="p">{</span><span class="ss">default: </span><span class="mi">1</span><span class="p">}</span>
 <span class="n">nil1</span><span class="p">.</span><span class="nf">to_nil</span> <span class="o">||=</span> <span class="s1">'default'</span>

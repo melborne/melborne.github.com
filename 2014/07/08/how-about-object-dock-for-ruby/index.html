@@ -188,7 +188,7 @@
   <p><a href="http://stackoverflow.com/questions/16932711/is-there-a-short-way-to-write-x-x" title="ruby - Is there a short way to write `{|x| x}`? - Stack Overflow">ruby - Is there a short way to write <code>{|x| x}</code>? - Stack Overflow</a></p>
 </blockquote>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">identity</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -196,17 +196,17 @@
 
 <p>で、これの何が嬉しいのかっていうことなんだけど、例えばこう書くとろこを、</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 
 <span class="n">nums</span><span class="p">.</span><span class="nf">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="p">}</span> <span class="c1"># =&gt; {1=&gt;[1, 1], 2=&gt;[2, 2, 2], 3=&gt;[3, 3], 4=&gt;[4], 5=&gt;[5]}</span></code></pre></div>
 
 <p>こう書けるとか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:identity</span><span class="p">)</span> <span class="c1"># =&gt; {1=&gt;[1, 1], 2=&gt;[2, 2, 2], 3=&gt;[3, 3], 4=&gt;[4], 5=&gt;[5]}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">group_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:identity</span><span class="p">)</span> <span class="c1"># =&gt; {1=&gt;[1, 1], 2=&gt;[2, 2, 2], 3=&gt;[3, 3], 4=&gt;[4], 5=&gt;[5]}</span></code></pre></div>
 
 <p>えっ、これだけ？って感じなんだけど、それじゃ余りにも使いでなさそうってことで、ブロックぐらい取れるようにという案も出てるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">itself</span>
     <span class="k">if</span> <span class="nb">block_given?</span>
       <span class="k">yield</span> <span class="nb">self</span>
@@ -216,7 +216,7 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">nums</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 
 <span class="n">nums</span><span class="p">.</span><span class="nf">itself</span> <span class="p">{</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="p">.</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">s</span><span class="p">.</span><span class="nf">size</span><span class="p">.</span><span class="nf">to_f</span>  <span class="p">}</span> <span class="c1"># =&gt; 2.5555555555555554</span>
 
@@ -253,7 +253,7 @@
 
 <p>で、懲りずに今回、こんな名前を考えたよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Object</span>
   <span class="k">def</span> <span class="nf">dock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">instance_eval</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="nb">block_given?</span>
     <span class="nb">self</span>
@@ -270,7 +270,7 @@
 
 <p>ほんとは<code>Object#do</code>が慎み深くていいんだけど。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">do</span> <span class="p">{</span> <span class="n">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">size</span><span class="p">.</span><span class="nf">to_f</span> <span class="p">}</span> <span class="c1"># =&gt; 2.5555555555555554</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">nums</span><span class="p">.</span><span class="nf">do</span> <span class="p">{</span> <span class="n">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">size</span><span class="p">.</span><span class="nf">to_f</span> <span class="p">}</span> <span class="c1"># =&gt; 2.5555555555555554</span>
 
 <span class="n">nums</span><span class="p">.</span><span class="nf">do</span> <span class="n">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span> <span class="o">/</span> <span class="n">size</span><span class="p">.</span><span class="nf">to_f</span> <span class="k">end</span> <span class="c1"># =&gt; 2.5555555555555554</span>
 

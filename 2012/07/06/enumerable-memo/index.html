@@ -221,7 +221,7 @@
 
 <p>さすがに君のような人にはみんな付き合いきれないよね。で、当然にRubyもそうだったんだけど、世の中変わったんだね。2.0からは、そんな君のワガママにもRubyは答えてくれるようになるんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"enumerable/lazy"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"enumerable/lazy"</span>
 
 <span class="n">all_magazine</span> <span class="o">=</span> <span class="s1">'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'</span>
 
@@ -237,7 +237,7 @@
 
 <p>サンプルにあった例も置いておくね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'prime'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'prime'</span>
 
 <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">lazy</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span> <span class="p">}</span>
           <span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="p">.</span><span class="nf">prime?</span> <span class="p">}</span>
@@ -245,7 +245,7 @@
           
 <span class="c1"># =&gt; [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601, 2917, 3137, 4357, 5477, 7057, 8101, 8837, 12101, 13457, 14401, 15377, 15877, 16901, 17957, 21317, 22501, 24337, 25601, 28901, 30977, 32401, 33857, 41617, 42437, 44101, 50177, 52901, 55697, 57601, 62501, 65537, 67601, 69697, 72901, 78401, 80657, 90001, 93637, 98597, 106277, 115601, 122501, 147457, 148997, 156817, 160001, 164837, 176401, 184901, 190097, 193601, 197137, 215297, 217157, 220901, 224677, 240101, 246017, 287297, 295937, 309137, 324901, 331777, 341057, 352837, 401957, 404497, 414737, 417317, 427717, 454277, 462401, 470597, 476101, 484417, 490001, 495617, 509797, 512657, 547601, 562501, 577601, 583697, 608401, 614657, 665857, 682277, 739601]</span></code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
 
 <span class="n">date_range</span> <span class="o">=</span> <span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2011</span><span class="p">).</span><span class="nf">.</span><span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">9999</span><span class="p">)</span>
 <span class="nb">puts</span> <span class="n">date_range</span><span class="p">.</span><span class="nf">lazy</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">d</span><span class="p">.</span><span class="nf">day</span> <span class="o">==</span> <span class="mi">13</span> <span class="n">and</span> <span class="n">d</span><span class="p">.</span><span class="nf">friday?</span> <span class="p">}.</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">to_a</span>  
@@ -267,7 +267,7 @@
 
 <p>実装は次のとおりだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">memo</span>
     <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="k">yield</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
   <span class="k">end</span>
@@ -275,7 +275,7 @@
 
 <p><code>memo</code>はブロックを取るんだけど、ブロックの処理の結果をその第１引数に畳み込むイメージで使うんだ。<code>memo</code>を使うと、先の例は次のように書けるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">all_magazine</span> <span class="o">=</span> <span class="s1">'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">all_magazine</span> <span class="o">=</span> <span class="s1">'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'</span>
 
 <span class="p">(</span><span class="s1">'A'</span><span class="p">.</span><span class="nf">.</span><span class="n">all_magazine</span><span class="p">).</span><span class="nf">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="k">if</span> <span class="n">w</span><span class="p">.</span><span class="nf">match</span> <span class="s1">'AKB'</span> <span class="p">}</span>
                    <span class="p">.</span><span class="nf">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="s1">'AKB'</span><span class="p">,</span> <span class="s1">'*\048*'</span><span class="p">)</span> <span class="p">}.</span><span class="nf">take</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
@@ -284,7 +284,7 @@
 
 <p>つまり、ブロックの中でifを使えばselectになって、unlessを使えばrejectになって、条件分岐がなければmapになる、ってことだね。だからmemoを使ってselect, reject, mapを定義するなら次のようになるよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Enumerable</span>
   <span class="k">def</span> <span class="nf">sel</span>
     <span class="n">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="k">if</span> <span class="k">yield</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
@@ -304,14 +304,14 @@
 
 <p>残りの２つの例でmemoを使ったものも示すよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'prime'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'prime'</span>
 
 <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">memo</span> <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span> <span class="p">}</span>
           <span class="p">.</span><span class="nf">memo</span> <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="k">if</span> <span class="n">n</span><span class="p">.</span><span class="nf">prime?</span> <span class="p">}.</span><span class="nf">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
           
 <span class="c1"># =&gt; [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601, 2917, 3137, 4357, 5477, 7057, 8101, 8837, 12101, 13457, 14401, 15377, 15877, 16901, 17957, 21317, 22501, 24337, 25601, 28901, 30977, 32401, 33857, 41617, 42437, 44101, 50177, 52901, 55697, 57601, 62501, 65537, 67601, 69697, 72901, 78401, 80657, 90001, 93637, 98597, 106277, 115601, 122501, 147457, 148997, 156817, 160001, 164837, 176401, 184901, 190097, 193601, 197137, 215297, 217157, 220901, 224677, 240101, 246017, 287297, 295937, 309137, 324901, 331777, 341057, 352837, 401957, 404497, 414737, 417317, 427717, 454277, 462401, 470597, 476101, 484417, 490001, 495617, 509797, 512657, 547601, 562501, 577601, 583697, 608401, 614657, 665857, 682277, 739601]</span></code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
 
 <span class="n">date_range</span> <span class="o">=</span> <span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2011</span><span class="p">).</span><span class="nf">.</span><span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">9999</span><span class="p">)</span>
 <span class="nb">puts</span> <span class="n">date_range</span><span class="p">.</span><span class="nf">memo</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">d</span> <span class="k">if</span> <span class="n">d</span><span class="p">.</span><span class="nf">day</span> <span class="o">==</span> <span class="mi">13</span> <span class="n">and</span> <span class="n">d</span><span class="p">.</span><span class="nf">friday?</span> <span class="p">}.</span><span class="nf">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -332,7 +332,7 @@
 <hr />
 <p>(追記：2012-07-25) yharaさんの<a href="https://github.com/yhara/enumerable-lazy/" title="yhara/enumerable-lazy · GitHub">yhara/enumerable-lazy · GitHub</a>をよく見たら、Enumerable::Lazy.newには既に上に書いたmemoの仕組みが用意してあって、しかも2.0.0-devを試してみたら、Enumerable#lazyが既にブロックを渡せるようになっていました。従って、何の苦もなく次のようにできるのでした。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="s1">'A'</span><span class="p">.</span><span class="nf">.</span><span class="n">all_magazine</span><span class="p">).</span><span class="nf">lazy</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="k">if</span> <span class="n">w</span><span class="p">.</span><span class="nf">match</span> <span class="s1">'AKB'</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="s1">'A'</span><span class="p">.</span><span class="nf">.</span><span class="n">all_magazine</span><span class="p">).</span><span class="nf">lazy</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="o">|</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="k">if</span> <span class="n">w</span><span class="p">.</span><span class="nf">match</span> <span class="s1">'AKB'</span> <span class="p">}</span></code></pre></div>
 
 <p>すばらしい！</p>
 

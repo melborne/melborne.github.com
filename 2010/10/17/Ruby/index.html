@@ -181,12 +181,12 @@
 
     <p>文字列中のパターンを探し出すメソッドとして、RubyにはString#indexが用意されています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">text</span> <span class="o">=</span> <span class="s2">"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">text</span> <span class="o">=</span> <span class="s2">"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."</span>
 <span class="n">text</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="s2">"velit"</span><span class="p">)</span> <span class="c1"># =&gt; 285</span></code></pre></div>
 
 <p>またRubyの標準ライブラリにはStringScannerクラスがあるので、これを使って以下のようにインデックスを求めることもできます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"strscan"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"strscan"</span>
 <span class="n">text</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 <span class="n">text</span><span class="p">.</span><span class="nf">skip_until</span><span class="p">(</span><span class="sr">/.?(?=</span><span class="si">#{</span><span class="no">Regexp</span><span class="p">.</span><span class="nf">escape</span><span class="p">(</span><span class="s2">"velit"</span><span class="p">)</span><span class="si">}</span><span class="sr">)/</span><span class="p">)</span> <span class="c1"># =&gt; 285</span></code></pre></div>
 
@@ -205,7 +205,7 @@
 
 <p>これをRubyのStringクラスに実装してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">power_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span>
@@ -216,7 +216,7 @@
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="n">pattern</span><span class="p">.</span><span class="nf">each_char</span><span class="p">.</span><span class="nf">with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">chr</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span>
-      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">chr</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">chr</span> <span class="o">==</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">]</span>
     <span class="k">end</span>
     <span class="n">pos</span>
   <span class="k">end</span>
@@ -226,7 +226,7 @@
 
 <p>StringScannerクラスを使ったcompareメソッドの例も示しておきます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">compare_with_scanner</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">compare_with_scanner</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="n">str</span> <span class="o">=</span> <span class="no">StringScanner</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
     <span class="n">str</span><span class="p">.</span><span class="nf">pos</span> <span class="o">=</span> <span class="n">pos</span>
     <span class="n">pattern</span><span class="p">.</span><span class="nf">each_char</span> <span class="k">do</span> <span class="o">|</span><span class="n">chr</span><span class="o">|</span>
@@ -252,7 +252,7 @@
 
 <p>Rubyで実装してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">bm_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span>
@@ -262,15 +262,15 @@
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">bm_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="p">(</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nf">downto</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-        <span class="n">shift</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="o">]</span><span class="p">.</span><span class="nf">bm_shift</span><span class="p">(</span><span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span><span class="p">)</span> <span class="o">||</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="p">].</span><span class="nf">bm_shift</span><span class="p">(</span><span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">])</span> <span class="o">||</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">shift</span>
       <span class="k">end</span>
     <span class="k">end</span>
     <span class="n">pos</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">bm_shift</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span>
-    <span class="n">length</span><span class="p">.</span><span class="nf">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">pos</span><span class="o">|</span> <span class="k">return</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[-</span><span class="mi">1</span><span class="o">-</span><span class="n">pos</span><span class="o">]</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span>
+    <span class="n">length</span><span class="p">.</span><span class="nf">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">pos</span><span class="o">|</span> <span class="k">return</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="n">chr</span> <span class="p">}</span>
     <span class="kp">nil</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
@@ -293,7 +293,7 @@
 
 <p>Rubyで実装してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">kmp_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
     <span class="n">pos</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
     <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span>
@@ -303,9 +303,9 @@
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">kmp_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">from</span><span class="p">)</span>
     <span class="p">(</span><span class="n">from</span><span class="p">.</span><span class="nf">.</span><span class="p">(</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+      <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">shift</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="o">]</span><span class="p">.</span><span class="nf">count_sequence</span>
+        <span class="n">shift</span><span class="p">,</span> <span class="n">from</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">i</span><span class="p">].</span><span class="nf">count_sequence</span>
         <span class="k">if</span> <span class="n">shift</span>
           <span class="k">return</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">from</span>
         <span class="k">else</span>
@@ -318,10 +318,10 @@
   <span class="k">def</span> <span class="nf">count_sequence</span>
     <span class="n">shift</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">until</span> <span class="n">shift</span> <span class="o">&gt;=</span> <span class="n">length</span>
-      <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">shift</span><span class="o">]</span> 
+      <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">self</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> 
         <span class="n">match</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">until</span> <span class="n">shift</span><span class="o">+</span><span class="n">match</span> <span class="o">&gt;=</span> <span class="n">length</span>
-          <span class="nb">self</span><span class="o">[</span><span class="n">match</span><span class="o">]</span> <span class="o">==</span> <span class="nb">self</span><span class="o">[</span><span class="n">shift</span><span class="o">+</span><span class="n">match</span><span class="o">]</span> <span class="p">?</span> <span class="n">match</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">:</span> <span class="k">break</span>
+          <span class="nb">self</span><span class="p">[</span><span class="n">match</span><span class="p">]</span> <span class="o">==</span> <span class="nb">self</span><span class="p">[</span><span class="n">shift</span><span class="o">+</span><span class="n">match</span><span class="p">]</span> <span class="p">?</span> <span class="n">match</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">:</span> <span class="k">break</span>
         <span class="k">end</span>
         <span class="k">return</span> <span class="n">length</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">match</span>
       <span class="k">end</span>
@@ -346,22 +346,22 @@
 
 <p>Rubyで実装してみましょう。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">ngi_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">index_table</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">[</span><span class="n">pattern</span><span class="o">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">n</span><span class="o">]]</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">index_table</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">n</span><span class="p">]]</span>
     <span class="k">until</span> <span class="n">indices</span><span class="p">.</span><span class="nf">empty?</span>
       <span class="n">match</span> <span class="o">=</span> <span class="n">ngi_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">indices</span><span class="p">.</span><span class="nf">shift</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">index_table</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span> <span class="p">}</span>
-    <span class="nb">self</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">//</span><span class="p">).</span><span class="nf">each_cons</span><span class="p">(</span><span class="n">n</span><span class="p">).</span><span class="nf">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">q</span><span class="o">[</span><span class="n">chr</span><span class="p">.</span><span class="nf">join</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="p">}</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">}</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">//</span><span class="p">).</span><span class="nf">each_cons</span><span class="p">(</span><span class="n">n</span><span class="p">).</span><span class="nf">with_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">chr</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">q</span><span class="p">[</span><span class="n">chr</span><span class="p">.</span><span class="nf">join</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="p">}</span>
     <span class="n">q</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">ngi_compare</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">end</span>
     <span class="n">pos</span>
   <span class="k">end</span>
@@ -383,26 +383,26 @@
 
 <p>Rubyで実装してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">String</span>
   <span class="k">def</span> <span class="nf">rk_search</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">h_self</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">pattern</span><span class="p">.</span><span class="nf">length</span><span class="o">]</span><span class="p">.</span><span class="nf">rhash</span>
+    <span class="n">h_self</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">pattern</span><span class="p">.</span><span class="nf">length</span><span class="p">].</span><span class="nf">rhash</span>
     <span class="n">h_pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="nf">rhash</span>
     <span class="k">until</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">-</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span>
       <span class="n">match</span><span class="p">,</span> <span class="n">h_self</span> <span class="o">=</span> <span class="n">hash_compare</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">h_pattern</span><span class="p">,</span> <span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">pos</span><span class="o">+</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="o">]</span> <span class="o">==</span> <span class="n">pattern</span>
+      <span class="k">return</span> <span class="n">match</span> <span class="k">if</span> <span class="n">match</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">pos</span><span class="o">+</span><span class="n">pattern</span><span class="p">.</span><span class="nf">length</span><span class="p">]</span> <span class="o">==</span> <span class="n">pattern</span>
       <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">rhash</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-    <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">length</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">mem</span> <span class="o">+</span> <span class="nb">self</span><span class="o">[</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="nf">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">length</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="n">mem</span> <span class="o">+</span> <span class="nb">self</span><span class="p">[</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">].</span><span class="nf">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">hash_compare</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">h_pattern</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
-    <span class="n">h_self</span> <span class="o">==</span> <span class="n">h_pattern</span> <span class="p">?</span> <span class="n">pos</span> <span class="p">:</span> <span class="o">[</span><span class="kp">nil</span><span class="p">,</span> <span class="n">next_hash</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">h_self</span> <span class="o">==</span> <span class="n">h_pattern</span> <span class="p">?</span> <span class="n">pos</span> <span class="p">:</span> <span class="p">[</span><span class="kp">nil</span><span class="p">,</span> <span class="n">next_hash</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">)]</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">next_hash</span><span class="p">(</span><span class="n">h_self</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">]</span>
-    <span class="p">(</span><span class="n">h_self</span> <span class="o">-</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span><span class="p">.</span><span class="nf">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="nb">self</span><span class="o">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="o">]</span><span class="p">.</span><span class="nf">ord</span>
+    <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="p">]</span>
+    <span class="p">(</span><span class="n">h_self</span> <span class="o">-</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="p">].</span><span class="nf">ord</span><span class="o">*</span><span class="n">base</span><span class="o">**</span><span class="p">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="n">base</span> <span class="o">+</span> <span class="nb">self</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="n">len</span><span class="p">].</span><span class="nf">ord</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
@@ -411,12 +411,12 @@
 <h2 id="section-3">テスト</h2>
 <p>これらのアルゴリズムをテストしてみます。各メソッドにクラス変数を挟んで照合回数を計算し、同時に各実行時間も求めます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="vc">@@time</span> <span class="o">=</span> <span class="o">[]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="vc">@@time</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">class</span> <span class="nc">TestSearchs</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">TestCase</span>
   <span class="k">def</span> <span class="nf">setup</span>
     <span class="vi">@text</span> <span class="o">=</span> <span class="s2">"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ABC ABCDAB ABCDABCDABDE susususususumsu abcdefgabcdefghijabcdefghijk axacacdae sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&amp;"</span> <span class="o">*</span> <span class="mi">100</span>
-    <span class="vi">@words</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"Lorem"</span><span class="p">,</span> <span class="s2">"sum"</span><span class="p">,</span> <span class="s2">"fugiat"</span><span class="p">,</span> <span class="s2">"ut aliquip"</span><span class="p">,</span> <span class="s2">"&amp;"</span><span class="p">,</span> <span class="s2">"t, c"</span><span class="p">,</span> <span class="s2">" m"</span><span class="p">,</span> <span class="s2">"o "</span><span class="p">,</span> <span class="s2">"ABCDABD"</span><span class="p">,</span> <span class="s2">"acac"</span><span class="o">]</span>
-    <span class="vi">@nowords</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"hello"</span><span class="p">,</span> <span class="s2">"ipsumd"</span><span class="p">,</span> <span class="s2">"Velit"</span><span class="p">,</span> <span class="s2">"&amp;."</span><span class="p">,</span> <span class="s2">"t D"</span><span class="p">,</span> <span class="s2">"veniam,,"</span><span class="p">,</span> <span class="s2">"abcdefghijkabcdefghijk"</span><span class="o">]</span>
+    <span class="vi">@words</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Lorem"</span><span class="p">,</span> <span class="s2">"sum"</span><span class="p">,</span> <span class="s2">"fugiat"</span><span class="p">,</span> <span class="s2">"ut aliquip"</span><span class="p">,</span> <span class="s2">"&amp;"</span><span class="p">,</span> <span class="s2">"t, c"</span><span class="p">,</span> <span class="s2">" m"</span><span class="p">,</span> <span class="s2">"o "</span><span class="p">,</span> <span class="s2">"ABCDABD"</span><span class="p">,</span> <span class="s2">"acac"</span><span class="p">]</span>
+    <span class="vi">@nowords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"hello"</span><span class="p">,</span> <span class="s2">"ipsumd"</span><span class="p">,</span> <span class="s2">"Velit"</span><span class="p">,</span> <span class="s2">"&amp;."</span><span class="p">,</span> <span class="s2">"t D"</span><span class="p">,</span> <span class="s2">"veniam,,"</span><span class="p">,</span> <span class="s2">"abcdefghijkabcdefghijk"</span><span class="p">]</span>
     <span class="vi">@st</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nf">teardown</span>
@@ -471,19 +471,19 @@
     <span class="n">class_variable_set</span><span class="p">(</span><span class="s2">"@@</span><span class="si">#{</span><span class="vg">$`</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="nb">name</span> <span class="o">=~</span> <span class="sr">/_search$/</span>
   <span class="k">end</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">counter</span>
-    <span class="nb">class_variables</span><span class="p">.</span><span class="nf">sort</span><span class="p">.</span><span class="nf">inject</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">cv</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">cv</span><span class="o">[</span><span class="sr">/\w+/</span><span class="o">]]</span> <span class="o">=</span> <span class="n">class_variable_get</span><span class="p">(</span><span class="n">cv</span><span class="p">);</span> <span class="n">h</span> <span class="p">}</span>
+    <span class="nb">class_variables</span><span class="p">.</span><span class="nf">sort</span><span class="p">.</span><span class="nf">inject</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="n">cv</span><span class="o">|</span> <span class="n">h</span><span class="p">[</span><span class="n">cv</span><span class="p">[</span><span class="sr">/\w+/</span><span class="p">]]</span> <span class="o">=</span> <span class="n">class_variable_get</span><span class="p">(</span><span class="n">cv</span><span class="p">);</span> <span class="n">h</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">END</span><span class="p">{</span><span class="k">END</span><span class="p">{</span>
   <span class="n">res</span> <span class="o">=</span> <span class="no">String</span><span class="p">.</span><span class="nf">counter</span>
   <span class="n">res</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> 
-    <span class="nb">print</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%8d times(%.4f) %.4f sec</span><span class="se">\n</span><span class="s2">"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">res</span><span class="o">[</span><span class="s2">"power"</span><span class="o">]</span><span class="p">,</span> <span class="vc">@@time</span><span class="p">.</span><span class="nf">shift</span><span class="o">]</span>
+    <span class="nb">print</span> <span class="s2">"%s</span><span class="se">\t</span><span class="s2">%8d times(%.4f) %.4f sec</span><span class="se">\n</span><span class="s2">"</span> <span class="o">%</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="s2">"power"</span><span class="p">],</span> <span class="vc">@@time</span><span class="p">.</span><span class="nf">shift</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="p">}}</span></code></pre></div>
 
 <p>結果は以下の通りです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Loaded</span> <span class="n">suite</span> <span class="sr">/Users/</span><span class="n">keyes</span><span class="o">/</span><span class="no">Dropbox</span><span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">searchs</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Loaded</span> <span class="n">suite</span> <span class="sr">/Users/</span><span class="n">keyes</span><span class="o">/</span><span class="no">Dropbox</span><span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">searchs</span>
 <span class="no">Started</span>
 <span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">.</span><span class="o">.</span> 
 <span class="no">Finished</span> <span class="k">in</span> <span class="mi">16</span><span class="o">.</span><span class="mi">116971</span> <span class="n">seconds</span><span class="o">.</span>

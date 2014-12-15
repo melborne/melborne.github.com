@@ -187,7 +187,7 @@
 <h2 id="section">逆ポーランド記法</h2>
 <p>逆ポーランド記法では演算子が数字の後にきます。</p>
 
-<div class="highlight"><pre><code class="bash">3 4 + <span class="c"># =&gt; 7</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">3 4 + <span class="c"># =&gt; 7</span>
 3 4 + 5 <span class="k">*</span> <span class="c"># =&gt; 35</span></code></pre></div>
 
 <p>この演算をプログラムで実現するには、（１）数式を構成するトークンを先頭からスタックに入れていき、（２）演算子が出てきたところで、前の2つの数字を取り出して演算を実行し、（３）結果をスタックに戻す、という操作を繰り返せばいいです。</p>
@@ -195,13 +195,13 @@
 <h2 id="ruby">Rubyのコード</h2>
 <p>RPNクラスを用意し、そのクラスメソッドrunで引数に渡した計算式を含む文字列に対する演算を実行するようにしましょう。次のようなイメージです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5 *"</span><span class="p">)</span> <span class="c1"># =&gt; 35</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">RPN</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s2">"3 4 + 5 *"</span><span class="p">)</span> <span class="c1"># =&gt; 35</span></code></pre></div>
 
 <p>受け取った文字列をトークンに分割し、injectのブロック内でcaseで処理を切り分けます。まずは四則演算に対応して。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">RPN</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">RPN</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
+    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">([])</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
       <span class="k">case</span> <span class="n">token</span>
       <span class="k">when</span> <span class="sr">/^[-+*\/]$/</span>
         <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>
@@ -229,9 +229,9 @@
 
 <p>べき乗(**)、log(ln)、sumにも対応します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">RPN</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">RPN</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
+    <span class="n">tokenize</span><span class="p">(</span><span class="n">exp</span><span class="p">).</span><span class="nf">inject</span><span class="p">([])</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">token</span><span class="o">|</span>
       <span class="k">case</span> <span class="n">token</span>
       <span class="k">when</span> <span class="sr">/^[-+\/]|\*{1,2}$/</span>
         <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">m</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">inject</span><span class="p">(</span><span class="vg">$&amp;</span><span class="p">)</span>

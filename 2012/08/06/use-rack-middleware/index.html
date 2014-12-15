@@ -194,32 +194,32 @@
 
 <p>前回作った、なんちゃってWebフレームワーク「draque」を継続して使います。<code>config.ru</code>が少し長くなったので、Webアプリの本体を別ファイル<code>draque.rb</code>に移します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1">#draque.rb</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#draque.rb</span>
 <span class="k">module</span> <span class="nn">Draque</span>
   <span class="vc">@@routes</span> <span class="o">=</span> <span class="p">{</span> <span class="n">get</span><span class="p">:{}</span> <span class="p">}</span>
 
   <span class="k">def</span> <span class="nf">draque</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">'PATH_INFO'</span><span class="o">]</span>
-    <span class="k">if</span> <span class="n">res</span> <span class="o">=</span> <span class="vc">@@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">'PATH_INFO'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="o">=</span> <span class="vc">@@routes</span><span class="p">[</span><span class="ss">:get</span><span class="p">][</span><span class="n">path</span><span class="p">]</span>
       <span class="n">res</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="k">else</span>
-      <span class="o">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="o">]</span>
+      <span class="p">[</span> <span class="mi">404</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">not_found</span> <span class="p">]</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="vc">@@routes</span><span class="o">[</span><span class="ss">:get</span><span class="o">][</span><span class="n">path</span><span class="o">]</span> <span class="o">=</span> <span class="n">blk</span>
+    <span class="vc">@@routes</span><span class="p">[</span><span class="ss">:get</span><span class="p">][</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">blk</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="no">Object</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">Draque</span><span class="p">)</span>
 
 <span class="n">get</span> <span class="s1">'/draque'</span> <span class="k">do</span>
-  <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="o">]</span>
+  <span class="p">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">draque_body</span> <span class="p">]</span>
 <span class="k">end</span>
 
 <span class="n">get</span> <span class="s1">'/'</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
-  <span class="o">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">]</span>
+  <span class="p">[</span> <span class="mi">200</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="p">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">headers</span>
@@ -227,21 +227,21 @@
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">top_body</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-  <span class="o">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="o">]</span> <span class="o">+</span>
-  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="o">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">]</span> <span class="p">}</span>
+  <span class="p">[</span><span class="s2">"&lt;h1&gt;Welcome to the World of Draque!!&lt;/h1&gt;"</span><span class="p">]</span> <span class="o">+</span>
+  <span class="n">env</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">"&lt;p&gt;%s =&gt; %s&lt;/p&gt;"</span> <span class="o">%</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="p">}</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">draque_body</span>
-  <span class="o">[</span><span class="s2">"&lt;img src='http://www.dqx.jp/storage/img/top/main_visual.png'&gt;"</span><span class="o">]</span>
+  <span class="p">[</span><span class="s2">"&lt;img src='http://www.dqx.jp/storage/img/top/main_visual.png'&gt;"</span><span class="p">]</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="nf">not_found</span>
-  <span class="o">[</span><span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026'&gt;"</span><span class="p">,</span> <span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026'&gt;"</span><span class="o">]</span>
+  <span class="p">[</span><span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1329921026'&gt;"</span><span class="p">,</span> <span class="s2">"&lt;img src='https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1329921026'&gt;"</span><span class="p">]</span>
 <span class="k">end</span></code></pre></div>
 
 <p><code>config.ru</code>は次のようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
@@ -250,7 +250,7 @@
 
 <p>さて早速、<code>use</code>の呪文を試してみます。<code>config.ru</code>にuseを追加します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="n">use</span>
@@ -259,13 +259,13 @@
 
 <p><code>rackup</code>します。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 ~/.rbenv/.../rack/builder.rb:77:in <span class="sb">`</span>use<span class="s1">': wrong number of arguments (0 for 1) (ArgumentError)
         from config.ru:4:in `block in &lt;main&gt;'</span></code></pre></div>
 
 <p>引数が足りないと言われました。おそらくmiddlewareを渡すものと思われます。しかしmiddlewareが何なのかわからないので、例によってまずは<code>1</code>を渡してrackupしてみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="n">use</span> <span class="mi">1</span>
@@ -274,12 +274,12 @@
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 ~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>block <span class="k">in </span>use<span class="s1">': undefined method `new'</span> <span class="k">for </span>1:Fixnum <span class="o">(</span>NoMethodError<span class="o">)</span></code></pre></div>
 
 <p>1にはnewメソッドが無いと言われました。これでクラスが期待されている、つまり<strong>middlewareはクラスである</strong>ということが分かりました<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>。それでは、差し当たりUpDownというクラスを作って渡してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -292,12 +292,12 @@
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 ~/.rbenv/.../rack/builder.rb:82:in <span class="sb">`</span>initialize<span class="s1">': wrong number of arguments(1 for 0) (ArgumentError)</span></code></pre></div>
 
 <p>今度はinitializeの引数が足りないと言われました。では１引数のinitializeを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -312,7 +312,7 @@
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 <span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 <span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
 <span class="gp">&gt;&gt; </span>Listening on 0.0.0.0:9292, CTRL+C to stop</code></pre></div>
@@ -321,12 +321,12 @@
 
 <p>Browserでhttp://localhost:9292 にアクセスしてみます。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">&gt;&gt; </span>Listening on 0.0.0.0:9292, CTRL+C to stop
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt;&gt; </span>Listening on 0.0.0.0:9292, CTRL+C to stop
 NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' for #&lt;UpDown:0x00000101053fc8&gt;</span></code></pre></div>
 
 <p>UpDownオブジェクトに<code>call</code>メソッドがないと言われました。では、UpDown#callを定義してみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -345,14 +345,14 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>今度はどうでしょう。</p>
 
-<div class="highlight"><pre><code class="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ArgumentError: wrong number of arguments <span class="o">(</span>1 <span class="k">for </span>0<span class="o">)</span>
         config.ru:10:in <span class="sb">`</span>call<span class="s1">'</span></code></pre></div>
 
 <p>引数がないと言われました。ん？</p>
 
 <p>では引数を付けてみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -371,13 +371,13 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">Rack::Lint::LintError: Status must be &gt;<span class="o">=</span>100 seen as integer</code></pre></div>
 
 <p>Statusは100以上の数でなければならないとのRack::Lint::LintErrorが吐かれました。これって…</p>
 
 <p>いつかきた道..ですよね？</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -394,9 +394,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn't (got NilClass as headers)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">Rack::Lint::LintError: headers object should respond to <span class="c">#each, but doesn't (got NilClass as headers)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -413,9 +413,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="bash">Rack::Lint::LintError: No Content-Type header found</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">Rack::Lint::LintError: No Content-Type header found</code></pre></div>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -432,14 +432,14 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">!! Unexpected error <span class="k">while </span>processing request: Response body must respond to each
 127.0.0.1 - - <span class="o">[</span>05/Aug/2012 18:03:10] <span class="s2">"GET / HTTP/1.1"</span> 200 - 0.0010</code></pre></div>
 
 <p>ほら！</p>
 
 <p>第３返り値に#eachできるボディでしたね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -470,7 +470,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>そう言えばinitializeに渡した引数、あれは何でしょうね。<code>p</code>してみましょうか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -489,7 +489,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 <span class="c">#&lt;Method: Rack::Builder(Draque)#draque&gt;</span>
 <span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 <span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
@@ -501,7 +501,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>そうすると、UpDown#callの中でdraqueをcallすれば、draqueがレンダリングされますか？やってみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -527,7 +527,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 <h2 id="middleware">middlewareを書く</h2>
 <p>現状middleware <code>UpDown</code>は、何もしないダメウェアですが、callのところでゴニョゴニョすれば何かできると想像できます。やってみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -537,7 +537,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -577,7 +577,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>さて、もう一つmiddlewareを書いてみます。名前をFireとします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -587,7 +587,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -598,8 +598,8 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">"&lt;/div&gt;"</span><span class="o">]</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;/div&gt;"</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -619,7 +619,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>さて、ここで気になることが一つあります。Fireに渡されたappはWebアプリなのでしょうか、それとも…。<code>p</code>で見てみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -630,7 +630,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -642,8 +642,8 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">"&lt;/div&gt;"</span><span class="o">]</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;/div&gt;"</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -655,7 +655,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 <span class="s2">"#&lt;Method: Rack::Builder(Draque)#draque&gt; in UpDown"</span>
 <span class="gp">"#&lt;UpDown:0x000001008ee738&gt; </span><span class="k">in </span>Fire<span class="s2">"
 &gt;&gt; Thin web server (v1.3.1 codename Triple Espresso)
@@ -694,7 +694,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>対象文字列を指定する方法が必要になります。ところがFireオブジェクトはRackが生成するので、そのチャンスは一見なさそうです。仕方がないので、試しにuseに渡して、initializeで受けるようにしてみます。<code>p</code>で出力を見ます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Fire</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Fire</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
     <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
     <span class="nb">p</span> <span class="n">pattern</span>
@@ -702,8 +702,8 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">"&lt;/div&gt;"</span><span class="o">]</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;/div&gt;"</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -713,7 +713,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>どうでしょうか。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 <span class="s2">"hello"</span>
 <span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
 <span class="gp">&gt;&gt; </span>Maximum connections <span class="nb">set </span>to 1024
@@ -721,7 +721,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>受け渡しができているようです。ついでにブロックもイケるか見てみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Fire</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Fire</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
     <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
     <span class="nb">p</span> <span class="n">pattern</span>
@@ -730,8 +730,8 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">new_body</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="o">[</span><span class="s2">"&lt;/div&gt;"</span><span class="o">]</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;div style='background-color:red'&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;/div&gt;"</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -743,7 +743,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <span class="n">run</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:draque</span><span class="p">)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>rackup
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>rackup
 <span class="s2">"hello"</span>
 <span class="s2">"hello from a block!"</span>
 <span class="gp">&gt;&gt; </span>Thin web server <span class="o">(</span>v1.3.1 codename Triple Espresso<span class="o">)</span>
@@ -754,7 +754,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
 <p>では、新しいFireを実装します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># config.ru</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config.ru</span>
 <span class="nb">require</span> <span class="s2">"./draque"</span>
 
 <span class="k">class</span> <span class="nc">UpDown</span>
@@ -764,7 +764,7 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
 
   <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span><span class="p">.</span><span class="nf">reverse</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
@@ -778,9 +778,9 @@ NoMethodError: undefined method <span class="sb">`</span>call<span class="s1">' 
     <span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="vi">@app</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
     <span class="n">replace</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">pat</span><span class="p">{</span> <span class="s2">"&lt;em style='background-color:red'&gt;</span><span class="si">#{</span><span class="n">pat</span><span class="si">}</span><span class="s2">&lt;/em&gt;"</span> <span class="p">}</span>
-    <span class="n">new_body</span> <span class="o">=</span> <span class="n">body</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">part</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">part</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="vi">@pattern</span><span class="p">)</span> <span class="p">{</span> <span class="n">replace</span><span class="o">[</span><span class="vg">$&amp;</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="n">body</span><span class="p">.</span><span class="nf">inject</span><span class="p">([])</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="p">,</span> <span class="n">part</span><span class="o">|</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">part</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="vi">@pattern</span><span class="p">)</span> <span class="p">{</span> <span class="n">replace</span><span class="p">[</span><span class="vg">$&amp;</span><span class="p">]</span> <span class="p">}</span> <span class="p">}</span>
     
-    <span class="o">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">status</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">new_body</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span>
 

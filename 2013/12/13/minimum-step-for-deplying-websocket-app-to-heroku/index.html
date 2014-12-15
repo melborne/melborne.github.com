@@ -411,7 +411,7 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 
 <p>backend.rbはRackのミドルウェアとして構成されています。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># backend.rb</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># backend.rb</span>
 <span class="nb">require</span> <span class="s1">'faye/websocket'</span>
 <span class="nb">require</span> <span class="s1">'json'</span>
 
@@ -420,7 +420,7 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
     <span class="nc">KEEPALIVE_TIME</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
       <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
-      <span class="vi">@clients</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="vi">@clients</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -428,7 +428,7 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
         <span class="n">ws</span> <span class="o">=</span> <span class="no">Faye</span><span class="o">::</span><span class="no">WebSocket</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="ss">ping: </span><span class="no">KEEPALIVE_TIME</span><span class="p">)</span>
         
         <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:open</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:open</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="o">]</span>
+          <span class="nb">p</span> <span class="p">[</span><span class="ss">:open</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="p">]</span>
           <span class="vi">@clients</span> <span class="o">&lt;&lt;</span> <span class="n">ws</span>
           <span class="n">ws</span><span class="p">.</span><span class="nf">send</span><span class="p">({</span> <span class="ss">you: </span><span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span> <span class="p">}.</span><span class="nf">to_json</span><span class="p">)</span>
           <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
@@ -437,12 +437,12 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
         <span class="k">end</span>
 
         <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:message</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:message</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">data</span><span class="o">]</span>
+          <span class="nb">p</span> <span class="p">[</span><span class="ss">:message</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">data</span><span class="p">]</span>
           <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span> <span class="n">client</span><span class="p">.</span><span class="nf">send</span> <span class="n">event</span><span class="p">.</span><span class="nf">data</span> <span class="p">}</span>
         <span class="k">end</span>
 
         <span class="n">ws</span><span class="p">.</span><span class="nf">on</span> <span class="ss">:close</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
-          <span class="nb">p</span> <span class="o">[</span><span class="ss">:close</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">code</span><span class="o">]</span>
+          <span class="nb">p</span> <span class="p">[</span><span class="ss">:close</span><span class="p">,</span> <span class="n">ws</span><span class="p">.</span><span class="nf">object_id</span><span class="p">,</span> <span class="n">event</span><span class="p">.</span><span class="nf">code</span><span class="p">]</span>
           <span class="vi">@clients</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
           <span class="vi">@clients</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">client</span><span class="o">|</span>
             <span class="n">client</span><span class="p">.</span><span class="nf">send</span><span class="p">({</span> <span class="ss">count: </span><span class="vi">@clients</span><span class="p">.</span><span class="nf">size</span> <span class="p">}.</span><span class="nf">to_json</span><span class="p">)</span>
@@ -461,8 +461,8 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 
 <p>次に、<code>application.js</code>のコードを見ます。</p>
 
-<div class="highlight"><pre><code class="javascript"><span class="c1">// application.js
-</span><span class="kd">function</span> <span class="nx">counterRefresh</span> <span class="p">(</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// application.js</span>
+<span class="kd">function</span> <span class="nx">counterRefresh</span> <span class="p">(</span><span class="nx">count</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">$</span><span class="p">(</span><span class="s2">"#user-counter"</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">count</span><span class="p">);</span>
 <span class="p">}</span>
 

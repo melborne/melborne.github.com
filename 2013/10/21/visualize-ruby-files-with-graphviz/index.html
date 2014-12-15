@@ -214,7 +214,7 @@
 
 <p>まずはファイルを表現するFクラスを定義する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># dir.rb</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># dir.rb</span>
 <span class="k">class</span> <span class="nc">F</span>
   <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:path</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
@@ -227,17 +227,17 @@
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="nb">puts</span> <span class="n">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a.txt'</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="no">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'a.txt'</span><span class="p">)</span>
 <span class="c1"># &gt;&gt; F: a.txt</span></code></pre></div>
 
 <p>次にFクラスを継承してディレクトリを表現するDクラスを定義する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1"># dir.rb</span>
-<span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="n">F</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># dir.rb</span>
+<span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="no">F</span>
   <span class="kp">attr_reader</span> <span class="ss">:entries</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
     <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-    <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="vi">@entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -252,24 +252,24 @@
   
   <span class="kp">private</span>
   <span class="k">def</span> <span class="nf">build</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="p">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)]</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">ent</span><span class="o">|</span>
       <span class="nb">self</span> <span class="o">&lt;&lt;</span> <span class="k">begin</span>
-        <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">:</span> <span class="n">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+        <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">:</span> <span class="no">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="k">if</span> <span class="kp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
-  <span class="nb">puts</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">end</span></code></pre></div>
 
 <p><code>@entries</code>はそのディレクトリ内のエントリのリストを保持する。エントリのリストは<code>D#build</code>で初期化時に生成する。#buildにおいてDir.[]でリストを求め、個々にFile.directory?を使ってディレクトリかファイルかを判断する。その結果に応じてDオブジェクトまたはFオブジェクトを生成し@entriesに入れる。ここでDオブジェクトの生成はまた#buildを呼ぶので、ディレクトリが無くなるまでこれは再帰的に繰り返されることとなる。</p>
 
 <p>以下のようなディレクトリ構造を作って試してみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>tree A
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>tree A
 A
 ├── a
 ├── b
@@ -285,32 +285,32 @@ A
 
 <p>実行する。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby dir.rb A
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby dir.rb A
 D: A <span class="o">=</span>&gt; <span class="o">[</span>F: a, F: b, F: c, D: d <span class="o">=</span>&gt; <span class="o">[</span>F: e, F: f, D: g <span class="o">=</span>&gt; <span class="o">[</span>F: h, F: i]]]</code></pre></div>
 
 <p>ディレクトリが入れ子で表現されている。いいようだ。</p>
 
 <p><code>D#each</code>も定義する。Gvizで扱いやすいように#eachは対象ディレクトリに含まれるファイルだけでなく、その下位の全ファイルをトラバースできるよう実装する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="n">F</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="no">F</span>
 
   <span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span>
       <span class="n">blk</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">D</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
 <span class="k">end</span>
 
 <span class="k">if</span> <span class="kp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
-  <span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
   <span class="n">d</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">e</span> <span class="p">}</span>
 <span class="k">end</span></code></pre></div>
 
 <p>ちょっと分かりづらいコードだが、entriesに含まれるものがディレクトリの場合には再帰的に#eachを読んで渡されたブロックを実行できるようにしている。この出力は次のようになる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby dir.rb A
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby dir.rb A
 F: a
 F: b
 F: c
@@ -325,11 +325,11 @@ F: i</code></pre></div>
 
 <p>下準備ができたのでGvizを使ってディレクトリ構造を描画してみる。描画用コードを書く。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="c1">#ruby_dir.rb</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#ruby_dir.rb</span>
 <span class="nb">require</span> <span class="s1">'gviz'</span>
 <span class="nb">require</span> <span class="s1">'./dir'</span>
 
-<span class="n">root</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]||</span><span class="s1">'.'</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s1">'.'</span><span class="p">)</span>
 
 <span class="n">rid</span> <span class="o">=</span> <span class="n">root</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span>
 <span class="n">ent_ids</span> <span class="o">=</span> <span class="n">root</span><span class="p">.</span><span class="nf">entries</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span> <span class="p">}</span>
@@ -341,11 +341,11 @@ F: i</code></pre></div>
   <span class="n">root</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span>
     <span class="k">case</span> <span class="n">f</span>
-    <span class="k">when</span> <span class="n">D</span>
+    <span class="k">when</span> <span class="no">D</span>
       <span class="n">ent_ids</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">entries</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span> <span class="p">}</span>
       <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">ent_ids</span>                 <span class="c1"># エッジの作成</span>
       <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:f</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="n">shape</span><span class="ss">:'box'</span>  <span class="c1"># ディレクトリノードの作成</span>
-    <span class="k">when</span> <span class="n">F</span>
+    <span class="k">when</span> <span class="no">F</span>
       <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:f</span><span class="p">.</span><span class="nf">name</span>               <span class="c1"># ファイルノードの作成</span>
     <span class="k">end</span>
   <span class="k">end</span>
@@ -357,7 +357,7 @@ F: i</code></pre></div>
 
 <p>ファイルを実行して生成されたpngを開く。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb A
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb A
 <span class="gp">% </span>open ruby_dir.png</code></pre></div>
 
 <p><img src="/assets/images/2013/10/ruby_dir1.png" alt="ruby_dir noshadow" /></p>
@@ -366,7 +366,7 @@ F: i</code></pre></div>
 
 <p>F#levelを導入してファイルの階層レベルを表現する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">F</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">F</span>
 <span class="o">+</span> <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">:level</span>
 <span class="o">+</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="vi">@name</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">basename</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
@@ -379,11 +379,11 @@ F: i</code></pre></div>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="n">F</span>
+<span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="no">F</span>
   <span class="kp">attr_reader</span> <span class="ss">:entries</span>
 <span class="o">+</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="o">+</span>   <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-    <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="vi">@entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -395,7 +395,7 @@ F: i</code></pre></div>
   <span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span>
       <span class="n">blk</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">D</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -405,26 +405,26 @@ F: i</code></pre></div>
   
   <span class="kp">private</span>
   <span class="k">def</span> <span class="nf">build</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="p">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)]</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">ent</span><span class="o">|</span>
       <span class="nb">self</span> <span class="o">&lt;&lt;</span> <span class="k">begin</span>
-<span class="o">+</span>       <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="n">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">+</span>       <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="no">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="k">if</span> <span class="kp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
-  <span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]||</span><span class="s1">'.'</span><span class="p">)</span>
-  <span class="n">d</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="nb">puts</span> <span class="o">[</span><span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="nf">level</span><span class="o">]</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s1">'.'</span><span class="p">)</span>
+  <span class="n">d</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="nb">puts</span> <span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="nf">level</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span> <span class="p">}</span>
 <span class="k">end</span></code></pre></div>
 
 <p>色付けのためのコードを足す。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'gviz'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'gviz'</span>
  <span class="nb">require</span> <span class="s1">'./dir'</span>
  
- <span class="n">root</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]||</span><span class="s1">'.'</span><span class="p">)</span>
+ <span class="n">root</span> <span class="o">=</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s1">'.'</span><span class="p">)</span>
  
  <span class="n">rid</span> <span class="o">=</span> <span class="n">root</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span>
  <span class="n">ent_ids</span> <span class="o">=</span> <span class="n">root</span><span class="p">.</span><span class="nf">entries</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span> <span class="p">}</span>
@@ -442,11 +442,11 @@ F: i</code></pre></div>
 <span class="o">+</span>    <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">1</span> 
 <span class="o">+</span>    <span class="n">fc</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">?</span> <span class="s1">'black'</span> <span class="p">:</span> <span class="s1">'white'</span>
      <span class="k">case</span> <span class="n">f</span>
-     <span class="k">when</span> <span class="n">D</span>
+     <span class="k">when</span> <span class="no">D</span>
        <span class="n">ent_ids</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">entries</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">path</span><span class="p">.</span><span class="nf">to_id</span> <span class="p">}</span>
        <span class="n">route</span> <span class="nb">id</span> <span class="o">=&gt;</span> <span class="n">ent_ids</span>
 <span class="o">+</span>      <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:f</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="n">shape</span><span class="ss">:'box'</span><span class="p">,</span> <span class="n">color</span><span class="ss">:c</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:c</span><span class="p">,</span> <span class="n">fontcolor</span><span class="ss">:fc</span>
-     <span class="k">when</span> <span class="n">F</span>
+     <span class="k">when</span> <span class="no">F</span>
 <span class="o">+</span>      <span class="n">node</span> <span class="nb">id</span><span class="p">,</span> <span class="n">label</span><span class="ss">:f</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="n">color</span><span class="ss">:c</span><span class="p">,</span> <span class="n">fillcolor</span><span class="ss">:c</span><span class="p">,</span> <span class="n">fontcolor</span><span class="ss">:fc</span>
      <span class="k">end</span>
    <span class="k">end</span>
@@ -462,7 +462,7 @@ F: i</code></pre></div>
 
 <p>さて、やっと下準備ができたのでRubyのソースのパスを渡してみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0/</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0/</code></pre></div>
 
 <p>417268x923pixel、25MBの巨大なpngができた。dotは扱えるがpngは巨大すぎて扱えない。</p>
 
@@ -473,7 +473,7 @@ F: i</code></pre></div>
 
 <p>Ruby全体のファイル数を数えてみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>tree ruby-2.0.0-p0
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>tree ruby-2.0.0-p0
 ruby-2.0.0-p0
 ├── BSDL
 ├── COPYING
@@ -492,11 +492,11 @@ ruby-2.0.0-p0
 
 <p>トラバースするディレクトリ階層を限定できるよう<code>depth</code>の概念を入れる。Dクラスを修正する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="n">F</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">D</span> <span class="o">&lt;</span> <span class="no">F</span>
   <span class="kp">attr_reader</span> <span class="ss">:entries</span>
-<span class="o">+</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="p">.</span><span class="nf">to_i</span><span class="p">)</span>
+<span class="o">+</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="no">Float</span><span class="o">::</span><span class="no">MAX</span><span class="p">.</span><span class="nf">to_i</span><span class="p">)</span>
     <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-    <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="vi">@entries</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="o">+</span>   <span class="n">build</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;=</span> <span class="mi">1</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -508,7 +508,7 @@ ruby-2.0.0-p0
   <span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span>
       <span class="n">blk</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+      <span class="n">e</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">D</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -518,10 +518,10 @@ ruby-2.0.0-p0
   
   <span class="kp">private</span>
   <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)</span><span class="o">]</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="no">Dir</span><span class="p">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)]</span>
     <span class="n">entries</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">ent</span><span class="o">|</span>
       <span class="nb">self</span> <span class="o">&lt;&lt;</span> <span class="k">begin</span>
-<span class="o">+</span>       <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="n">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">+</span>       <span class="no">File</span><span class="p">.</span><span class="nf">directory?</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span> <span class="p">?</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="no">F</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
@@ -529,17 +529,17 @@ ruby-2.0.0-p0
 
 <p>ruby_dir.rbのほうでは第2引数でdepthを取れるよう修正する。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">root</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]||</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o">]||</span><span class="nb">Float</span><span class="o">::</span><span class="no">MAX</span><span class="p">).</span><span class="nf">to_i</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">root</span> <span class="o">=</span> <span class="no">D</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="no">ARGV</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">||</span><span class="no">Float</span><span class="o">::</span><span class="no">MAX</span><span class="p">).</span><span class="nf">to_i</span><span class="p">)</span></code></pre></div>
 
 <p><code>depth=3</code>くらいでやってみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 3</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 3</code></pre></div>
 
 <p>378663x347pixel、13MBの巨大なpngができた。巨大すぎて扱えない。</p>
 
 <p>今度は描画レイアウトを前回同様<code>fdp</code>に変えて<code>depth=2</code>で試してみる。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Graph</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Graph</span> <span class="k">do</span>
 <span class="o">+</span> <span class="n">global</span> <span class="n">layout</span><span class="ss">:'fdp'</span>
   <span class="n">nodes</span> <span class="n">colorscheme</span><span class="ss">:'rdpu9'</span><span class="p">,</span> <span class="n">style</span><span class="ss">:'filled'</span>
 
@@ -547,7 +547,7 @@ ruby-2.0.0-p0
 
 <p>実行して開く。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 2
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 2
 <span class="gp">% </span>open ruby_dir.png</code></pre></div>
 
 <p>…なかなか開かないけど…開く。</p>
@@ -557,7 +557,7 @@ ruby-2.0.0-p0
 
 <p>キレイだが相当拡大しないと依然細部が見えないので、トップレベルだけで描画してみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 1
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0 1
 <span class="gp">% </span>open ruby_dir.png</code></pre></div>
 
 <p>これくらいなら拡大すればWeb上でも細部が見える。</p>
@@ -567,7 +567,7 @@ ruby-2.0.0-p0
 
 <p>この絵の中に以下のファイルが含まれている。これでも相当な数だ。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ls ruby-2.0.0-p0
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ls ruby-2.0.0-p0
 BSDL             encdb.h          nacl             sprintf.c
 COPYING          encoding.c       newline.c        st.c
 COPYING.ja       enum.c           node.c           strftime.c
@@ -616,7 +616,7 @@ enc              missing          spec
 
 <p>今度は<code>lib</code>ディレクトリ内を階層を限定しないで描画してみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0/lib
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0/lib
 <span class="gp">% </span>open ruby_dir.png</code></pre></div>
 
 <p><a href="/assets/images/2013/10/ruby_dir9.png" rel="lightbox" title="ruby_dir"><img src="/assets/images/2013/10/ruby_dir9.png" alt="alt noshadow" /></a>
@@ -624,7 +624,7 @@ enc              missing          spec
 
 <p>libの中だけでも64 directories, 639 filesが含まれている。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>tree ruby-2.0.0-p0/lib
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>tree ruby-2.0.0-p0/lib
 ruby-2.0.0-p0/lib
 ├── English.rb
 ├── abbrev.rb
@@ -646,7 +646,7 @@ ruby-2.0.0-p0/lib
 
 <p>でここまできてSVGという手があるのを思い出す。<code>save</code>で:pngに代えて:svgを渡してやってみる。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">% </span>ruby ruby_dir.rb ruby-2.0.0-p0
 <span class="gp">% </span>open ruby_dir.svg</code></pre></div>
 
 <p>成功！</p>

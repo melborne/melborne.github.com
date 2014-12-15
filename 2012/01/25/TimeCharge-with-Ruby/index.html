@@ -201,7 +201,7 @@
 
 <p>そうなるとやっぱりテキストファイルに単純なフォーマットで記録するのがいいです。例えばこんな感じで。</p>
 
-<div class="highlight"><pre><code class="bash">&lt;案件名&gt;
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">&lt;案件名&gt;
   &lt;開始日時&gt; - &lt;終了日時&gt;
   &lt;開始日時&gt; - &lt;終了日時&gt;
   &lt;開始日時&gt; - &lt;終了日時&gt;
@@ -214,14 +214,14 @@
 
 <p>日時の入力は面倒ですが、私はVimを使うので.vimrcに以下を追加して省力化します。</p>
 
-<div class="highlight"><pre><code class="bash"><span class="s2">" insert timestamp
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="s2">" insert timestamp
 map &lt;D-F2&gt; &lt;ESC&gt;:r !date&lt;CR&gt;</span></code></pre></div>
 
 <p>これでcmd+F2で日時が打てるようになります。</p>
 
 <p>こんなイメージです。</p>
 
-<div class="highlight"><pre><code class="bash">AA123
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">AA123
   Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012
   Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012
   Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012
@@ -241,7 +241,7 @@ Project-XYZ
 
 <p>次のような出力が見やすくていいですね。</p>
 
-<div class="highlight"><pre><code class="bash">AA123
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">AA123
   Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012
   Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012
   Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012
@@ -268,12 +268,12 @@ Project-XYZ
 <h2 id="section-2">ファイルを案件ごとに分ける</h2>
 <p>split_by_projectメソッドを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">split_by_project</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">time_pattern</span><span class="o">=</span><span class="sr">/JST/</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">split_by_project</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">time_pattern</span><span class="o">=</span><span class="sr">/JST/</span><span class="p">)</span>
   <span class="n">lines</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:chomp</span><span class="p">)</span>
        <span class="p">.</span><span class="nf">reject</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:empty?</span><span class="p">)</span>
        <span class="p">.</span><span class="nf">chunk</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="o">!</span><span class="n">line</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="n">time_pattern</span><span class="p">)</span> <span class="p">}</span>
        <span class="p">.</span><span class="nf">each_slice</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-       <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">names</span><span class="p">),</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">timelines</span><span class="p">)</span><span class="o">|</span>  <span class="o">[</span><span class="n">names</span><span class="p">.</span><span class="nf">last</span><span class="p">,</span> <span class="n">timelines</span><span class="o">]</span> <span class="p">}</span>
+       <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">names</span><span class="p">),</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">timelines</span><span class="p">)</span><span class="o">|</span>  <span class="p">[</span><span class="n">names</span><span class="p">.</span><span class="nf">last</span><span class="p">,</span> <span class="n">timelines</span><span class="p">]</span> <span class="p">}</span>
 <span class="k">end</span></code></pre></div>
 
 <p>このメソッドは読み込んだファイルの各行に対し、改行を除去し(chomp)、空行を除去し(empty?)、日時の行の前後で行分割し(chunk)、案件名と日時行をセットとし(each_slice(2))、最後に、案件名と日時行の配列を返します(map)。</p>
@@ -282,18 +282,18 @@ Project-XYZ
 
 <p>出力は次のようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">split_by_project</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span> <span class="c1"># =&gt; [["AA123", [" Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012", " Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012", " Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012", " Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012", " Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012", " Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012", " Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012"]], ["Project-XYZ", [" Sat Feb 11 08:57:36 JST 2012 - Sat Feb 11 11:00:00 JST 2012", " Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012", " Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012", " Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012", " Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012"]]]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">split_by_project</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span> <span class="c1"># =&gt; [["AA123", [" Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012", " Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012", " Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012", " Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012", " Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012", " Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012", " Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012"]], ["Project-XYZ", [" Sat Feb 11 08:57:36 JST 2012 - Sat Feb 11 11:00:00 JST 2012", " Sat Feb 11 18:11:36 JST 2012 - Sat Feb 11 19:00:00 JST 2012", " Sun Feb 12 08:33:36 JST 2012 - Sun Feb 12 10:47:47 JST 2012", " Sat Feb 13 12:44:14 JST 2012 - Sat Feb 13 18:30:17 JST 2012", " Sat Feb 13 22:24:24 JST 2012 - Sat Feb 14 01:50:07 JST 2012"]]]</span></code></pre></div>
 
 <h2 id="section-3">日時のラインをパースして日にちごとの時間に集計する</h2>
 <p>次にparse_and_arrange_timelinesメソッドを定義します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'date'</span>
 <span class="k">def</span> <span class="nf">parse_and_arrange_timelines</span><span class="p">(</span><span class="n">timelines</span><span class="p">,</span> <span class="n">spliters</span><span class="o">=</span><span class="sx">%w(- =&gt;)</span><span class="p">)</span>
   <span class="n">timelines</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
            <span class="n">from</span><span class="p">,</span> <span class="n">to</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">/\s*</span><span class="si">#{</span><span class="n">spliters</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'|'</span><span class="p">)</span><span class="si">}</span><span class="sr">\s*/</span><span class="p">)</span>
                           <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span> <span class="no">DateTime</span><span class="p">.</span><span class="nf">parse</span> <span class="n">str</span> <span class="p">}</span>
-           <span class="o">[</span><span class="n">from</span><span class="p">.</span><span class="nf">to_date</span><span class="p">.</span><span class="nf">to_s</span><span class="p">,</span> <span class="n">to</span><span class="o">-</span><span class="n">from</span><span class="o">]</span>
-  <span class="p">}.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lap</span><span class="p">)</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">date</span><span class="o">]</span> <span class="o">+=</span> <span class="n">lap</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
+           <span class="p">[</span><span class="n">from</span><span class="p">.</span><span class="nf">to_date</span><span class="p">.</span><span class="nf">to_s</span><span class="p">,</span> <span class="n">to</span><span class="o">-</span><span class="n">from</span><span class="p">]</span>
+  <span class="p">}.</span><span class="nf">inject</span><span class="p">(</span><span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lap</span><span class="p">)</span><span class="o">|</span> <span class="n">h</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">+=</span> <span class="n">lap</span><span class="p">;</span> <span class="n">h</span> <span class="p">}</span>
 <span class="k">end</span></code></pre></div>
 
 <p>このメソッドは、split_by_projectで生成された日時行を開始日時と終了日時に分けて(split)、DateTimeオブジェクトに変換し(DateTime.parse)、日付のラベルと経過時間の配列とし(map)、さらに、日付ごとの経過時間に集計します(inject)。</p>
@@ -302,7 +302,7 @@ Project-XYZ
 
 <p>出力は次のようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">timelines</span> <span class="o">=</span> <span class="n">split_by_project</span><span class="p">(</span><span class="no">DATA</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="c1"># =&gt; ["  Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012", "  Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012", "  Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012", "  Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012", "  Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012", "  Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012", "  Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012"]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">timelines</span> <span class="o">=</span> <span class="n">split_by_project</span><span class="p">(</span><span class="no">DATA</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># =&gt; ["  Sat Jan 21 08:57:36 JST 2012 - Sat Jan 21 12:00:00 JST 2012", "  Sat Jan 21 14:24:14 JST 2012 - Sat Jan 21 15:10:17 JST 2012", "  Sun Jan 22 07:33:36 JST 2012 - Sun Jan 22 10:47:47 JST 2012", "  Sun Jan 22 14:22:24 JST 2012 - Sun Jan 22 18:39:39 JST 2012", "  Tue Jan 24 10:13:54 JST 2012 - Tue Jan 24 12:07:55 JST 2012", "  Tue Jan 24 13:08:44 JST 2012 - Tue Jan 24 15:19:13 JST 2012", "  Tue Jan 24 16:38:05 JST 2012 - Tue Jan 24 18:15:15 JST 2012"]</span>
 <span class="n">parse_and_arrange_timelines</span><span class="p">(</span><span class="n">timelines</span><span class="p">)</span> <span class="c1"># =&gt; {"2012-01-21"=&gt;(1523/9600), "2012-01-22"=&gt;(13543/43200), "2012-01-24"=&gt;(205/864)}</span></code></pre></div>
 
 <p>経過時間はRationalで表されています。</p>
@@ -310,21 +310,21 @@ Project-XYZ
 <h2 id="section-4">フォーマットを用意して集計データを出力する</h2>
 <p>最後に、出力用のフォーマットメソッドformat_forを用意します。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">"term/ansicolor"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s2">"term/ansicolor"</span>
  <span class="k">def</span> <span class="nf">format_for</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">times_by_date</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-   <span class="n">times</span> <span class="o">=</span> <span class="n">times_by_date</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">date</span><span class="p">,</span> <span class="n">fractime</span><span class="o">|</span> <span class="o">[</span><span class="n">date</span><span class="p">,</span> <span class="n">frac2time</span><span class="p">(</span><span class="n">fractime</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span>
+   <span class="n">times</span> <span class="o">=</span> <span class="n">times_by_date</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">date</span><span class="p">,</span> <span class="n">fractime</span><span class="o">|</span> <span class="p">[</span><span class="n">date</span><span class="p">,</span> <span class="n">frac2time</span><span class="p">(</span><span class="n">fractime</span><span class="p">)]</span> <span class="p">}</span>
    <span class="n">total</span> <span class="o">=</span> <span class="n">frac2time</span> <span class="n">times_by_date</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:last</span><span class="p">).</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span>
-   <span class="o">[</span>
+   <span class="p">[</span>
      <span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">:"</span><span class="p">.</span><span class="nf">cyan</span><span class="p">,</span>
      <span class="n">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">date</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">time</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">rjust</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="p">}.</span><span class="nf">sort</span><span class="p">,</span>
      <span class="s2">"Total: </span><span class="si">#{</span><span class="n">total</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">rjust</span><span class="p">(</span><span class="n">w</span><span class="p">).</span><span class="nf">magenta</span><span class="p">,</span>
      <span class="s2">"-"</span><span class="o">*</span><span class="n">w</span>
-   <span class="o">]</span>
+   <span class="p">]</span>
  <span class="k">end</span>
- <span class="k">def</span> <span class="nf">frac2time</span><span class="p">(</span><span class="n">fractime</span><span class="p">,</span> <span class="n">opt</span><span class="o">=[</span><span class="ss">:h</span><span class="p">,</span><span class="ss">:m</span><span class="o">]</span><span class="p">)</span>
-   <span class="n">label</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:h</span><span class="p">,</span> <span class="ss">:m</span><span class="p">,</span> <span class="ss">:s</span><span class="p">,</span> <span class="ss">:f</span><span class="o">]</span>
+ <span class="k">def</span> <span class="nf">frac2time</span><span class="p">(</span><span class="n">fractime</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="p">[</span><span class="ss">:h</span><span class="p">,</span><span class="ss">:m</span><span class="p">])</span>
+   <span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="ss">:h</span><span class="p">,</span> <span class="ss">:m</span><span class="p">,</span> <span class="ss">:s</span><span class="p">,</span> <span class="ss">:f</span><span class="p">]</span>
    <span class="n">hmsf</span> <span class="o">=</span> <span class="no">Date</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:day_fraction_to_time</span><span class="p">,</span> <span class="n">fractime</span><span class="p">)</span>
-   <span class="no">Hash</span><span class="o">[</span><span class="n">label</span><span class="p">.</span><span class="nf">zip</span> <span class="n">hmsf</span><span class="o">]</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">opt</span><span class="p">.</span><span class="nf">include?</span> <span class="n">k</span> <span class="p">}</span>
+   <span class="no">Hash</span><span class="p">[</span><span class="n">label</span><span class="p">.</span><span class="nf">zip</span> <span class="n">hmsf</span><span class="p">].</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span> <span class="n">opt</span><span class="p">.</span><span class="nf">include?</span> <span class="n">k</span> <span class="p">}</span>
                        <span class="p">.</span><span class="nf">values</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="nb">format</span> <span class="s2">"%02d"</span><span class="p">,</span> <span class="n">v</span> <span class="p">}.</span><span class="nf">join</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span>
  <span class="k">end</span></code></pre></div>
 

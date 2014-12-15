@@ -184,25 +184,25 @@
 
 <p>適当な初期値から連続する番号のリストを作りたいです。Rangeを配列展開するのが簡単そうです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span> <span class="c1"># 初期値</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span> <span class="c1"># 初期値</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># リストの長さ</span>
 
 <span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="o">.</span><span class="p">(</span><span class="n">st</span><span class="o">+</span><span class="n">n</span><span class="p">)).</span><span class="nf">to_a</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span>
 
 <span class="c1"># または</span>
 
-<span class="o">[*</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="o">.</span><span class="p">(</span><span class="n">st</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">]</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span></code></pre></div>
+<span class="p">[</span><span class="o">*</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="o">.</span><span class="p">(</span><span class="n">st</span><span class="o">+</span><span class="n">n</span><span class="p">)]</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span></code></pre></div>
 
 <p><code>Fixnum#next</code>は次の数を返すので、これを使ってもできそうです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span> <span class="c1"># 初期値</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span> <span class="c1"># 初期値</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># リストの長さ</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]</span></code></pre></div>
 
 <p>でも、<code>st = st.next</code>がやな感じです。しかも数字が１つずれてるし。ちょっと工夫が必要です。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">tap</span> <span class="p">{</span> <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="p">}</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span></code></pre></div>
@@ -213,7 +213,7 @@
 
 <p>そう、<code>Enumerator</code>ですね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
 <span class="n">st</span> <span class="o">=</span> <span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">to_enum</span>
 <span class="n">st</span> <span class="c1"># =&gt; #&lt;Enumerator: 37..Infinity:each&gt;</span>
 
@@ -223,7 +223,7 @@
 
 <p>Enumeratorを使う利点は、事前にその生成個数を決めなくていい点と、初期状態を復元できる点です。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="mi">37</span>
 <span class="n">st</span> <span class="o">=</span> <span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">).</span><span class="nf">to_enum</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]</span>
@@ -246,7 +246,7 @@
 
 <p>先の例と同様に、文字列で、適当な初期値から連続する番号のリストを作りたいです。まずはRangeの配列展開で。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
 <span class="n">ed</span> <span class="o">=</span> <span class="s2">"abc66"</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
@@ -254,13 +254,13 @@
 
 <span class="c1"># または</span>
 
-<span class="o">[*</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="n">ed</span><span class="o">]</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
+<span class="p">[</span><span class="o">*</span><span class="n">st</span><span class="p">.</span><span class="nf">.</span><span class="n">ed</span><span class="p">]</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
 
 <p>nから最後の番号を作るのが面倒なので、手抜きしました。</p>
 
 <p>Stringも#nextを持っているので、同じようにやってみます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">tap</span> <span class="p">{</span> <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc37", "abc38", "abc39", "abc40", "abc41", "abc42", "abc43", "abc44", "abc45", "abc46", "abc47", "abc48", "abc49", "abc50", "abc51", "abc52", "abc53", "abc54", "abc55", "abc56", "abc57", "abc58", "abc59", "abc60", "abc61", "abc62", "abc63", "abc64", "abc65", "abc66"]</span></code></pre></div>
@@ -269,7 +269,7 @@
 
 <p>と、ここでStringにはFixnumにはない、<code>String#next!</code>（破壊的メソッド）があるのを思い出しました。これ使ってもう少しマシにできますか。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">next!</span> <span class="p">}</span> <span class="c1"># =&gt; ["abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67", "abc67"]</span></code></pre></div>
@@ -284,7 +284,7 @@
 
 <p>そんなわけで、文字列でも、効率的できれいなコードを書くために、エニュメレータに頼りたくなるという訳です。ところが、結果はこうです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span><span class="p">.</span><span class="nf">to_enum</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">st</span> <span class="o">=</span> <span class="s2">"abc37"</span><span class="p">.</span><span class="nf">to_enum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 
 <span class="n">n</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">st</span><span class="p">.</span><span class="nf">next</span> <span class="p">}</span> <span class="c1"># =&gt; </span>
@@ -295,7 +295,7 @@
 
 <p>そこで、分別のないモンキーパッチャーの出番です！</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">EnuString</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">EnuString</span>
   <span class="k">def</span> <span class="nf">to_enum</span>
     <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span>
       <span class="n">myself</span> <span class="o">=</span> <span class="nb">self</span>

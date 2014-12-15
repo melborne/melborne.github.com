@@ -181,9 +181,9 @@
 
     <p>Rubyでメソッドチェーンの途中経過を覗き見るには、Kernel#tapが便利だよね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
         <span class="p">.</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
-        <span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="sx">% 2 </span><span class="o">==</span> <span class="mi">0</span> <span class="p">}.</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
+        <span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}.</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
         <span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="p">}.</span><span class="nf">tap</span><span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">x</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
  
  <span class="c1"># &gt;&gt; 1..10</span>
@@ -195,8 +195,8 @@
 
 <p>それならいっそのこと、それらのメソッドがselfを返すようにして、しかも引数を取らないときにはselfが引数になるようにしたら、もっと簡単になるんじゃないかと思ったんだ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Kernel</span>
-   <span class="o">[</span><span class="ss">:p</span><span class="p">,</span> <span class="ss">:puts</span><span class="o">]</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">module</span> <span class="nn">Kernel</span>
+   <span class="p">[</span><span class="ss">:p</span><span class="p">,</span> <span class="ss">:puts</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
      <span class="k">alias</span> <span class="ss">:"__</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="ss">__"</span> <span class="ss">:"</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="ss">"</span>
      <span class="n">define_method</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">obj</span><span class="o">=</span><span class="nb">self</span><span class="o">|</span>
        <span class="nb">instance_eval</span> <span class="s2">"__</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">__(obj)"</span>
@@ -207,7 +207,7 @@
 
 <p>こうしておけば先の例は次のように書けるんだよ。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">p</span><span class="p">.</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">p</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="sx">% 2 </span><span class="o">==</span> <span class="mi">0</span> <span class="p">}.</span><span class="nf">p</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="p">}.</span><span class="nf">p</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span><span class="p">).</span><span class="nf">p</span><span class="p">.</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">p</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}.</span><span class="nf">p</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="p">}.</span><span class="nf">p</span>
  
  <span class="c1"># &gt;&gt; 1..10</span>
  <span class="c1"># &gt;&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
@@ -218,7 +218,7 @@
 
 <p>他の例も示しておくね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="sx">%w(google twitter facebook)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">).</span><span class="nf">puts</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:upcase</span><span class="p">)</span> <span class="c1"># =&gt; ["GOOGLE", "TWITTER", "FACEBOOK"]</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="sx">%w(google twitter facebook)</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">).</span><span class="nf">puts</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:upcase</span><span class="p">)</span> <span class="c1"># =&gt; ["GOOGLE", "TWITTER", "FACEBOOK"]</span>
  
  <span class="c1"># &gt;&gt; Google</span>
  <span class="c1"># &gt;&gt; Twitter</span>
@@ -242,13 +242,13 @@
  
  <span class="k">class</span> <span class="nc">Array</span>
    <span class="k">def</span> <span class="nf">to_h</span>
-     <span class="no">Hash</span><span class="o">[</span><span class="nb">self</span><span class="o">]</span>
+     <span class="no">Hash</span><span class="p">[</span><span class="nb">self</span><span class="p">]</span>
    <span class="k">end</span>
  <span class="k">end</span>
  
- <span class="o">[</span><span class="ss">:GOOG</span><span class="p">,</span><span class="ss">:YHOO</span><span class="p">,</span><span class="ss">:MSFT</span><span class="o">]</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="o">[</span><span class="s1">'google'</span><span class="p">,</span><span class="s1">'yahoo'</span><span class="p">,</span><span class="s1">'microsoft'</span><span class="o">]</span><span class="p">).</span><span class="nf">p</span>
+ <span class="p">[</span><span class="ss">:GOOG</span><span class="p">,</span><span class="ss">:YHOO</span><span class="p">,</span><span class="ss">:MSFT</span><span class="p">].</span><span class="nf">zip</span><span class="p">([</span><span class="s1">'google'</span><span class="p">,</span><span class="s1">'yahoo'</span><span class="p">,</span><span class="s1">'microsoft'</span><span class="p">]).</span><span class="nf">p</span>
                     <span class="p">.</span><span class="nf">to_h</span><span class="p">.</span><span class="nf">p</span>
-                    <span class="p">.</span><span class="nf">each_with_object</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">),</span> <span class="n">h</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="s2">"www.</span><span class="si">#{</span><span class="n">v</span><span class="si">}</span><span class="s2">.com"</span> <span class="p">}.</span><span class="nf">p</span>
+                    <span class="p">.</span><span class="nf">each_with_object</span><span class="p">({})</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">),</span> <span class="n">h</span><span class="o">|</span> <span class="n">h</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"www.</span><span class="si">#{</span><span class="n">v</span><span class="si">}</span><span class="s2">.com"</span> <span class="p">}.</span><span class="nf">p</span>
  
  <span class="c1"># &gt;&gt; [[:GOOG, "google"], [:YHOO, "yahoo"], [:MSFT, "microsoft"]]</span>
  <span class="c1"># &gt;&gt; {:GOOG=&gt;"google", :YHOO=&gt;"yahoo", :MSFT=&gt;"microsoft"}</span>

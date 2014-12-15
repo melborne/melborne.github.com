@@ -215,21 +215,21 @@
 <h2 id="section-2">出力イメージ</h2>
 <p>最初に、最終的な出力をイメージします。OptimalPathクラスを用意して設定条件を渡し、solveメソッドを実行すると最短経路が出力される、そんなイメージでいきます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="n">op</span> <span class="o">=</span> <span class="no">OptimalPath</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">nrt_to_tokyo</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">op</span> <span class="o">=</span> <span class="no">OptimalPath</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">nrt_to_tokyo</span><span class="p">)</span>
 <span class="n">op</span><span class="p">.</span><span class="nf">solve</span> <span class="c1"># =&gt; [(B, 10), (C, 30), (A, 5), (C, 20), (B, 2), (B, 8)]</span></code></pre></div>
 
 <p>出力の<code>[(B, 10), (C, 30)...]</code>というのは、「Bを10分走って、Cを30分走って..」という感じです。</p>
 
 <p>渡される設定条件は、injectで処理しやすいように道路セグメントをグループ化して渡します。このグループをsectionとします。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="no">Section</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:c</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Section</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:c</span><span class="p">)</span>
 
 <span class="n">nrt_to_tokyo</span> <span class="o">=</span> 
-  <span class="o">[</span> <span class="o">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="o">]</span><span class="p">,</span>
-    <span class="o">[</span> <span class="mi">5</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">20</span><span class="o">]</span><span class="p">,</span>
-    <span class="o">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">25</span><span class="o">]</span><span class="p">,</span>
-    <span class="o">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span>
-   <span class="o">]</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">|</span> <span class="no">Section</span><span class="o">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">]</span> <span class="p">}</span>
+  <span class="p">[</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">],</span>
+    <span class="p">[</span> <span class="mi">5</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">20</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">25</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+   <span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="o">|</span> <span class="no">Section</span><span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">]</span> <span class="p">}</span>
 
 <span class="n">nrt_to_tokyo</span> <span class="c1"># =&gt; [#&lt;struct Section a=50, b=10, c=30&gt;, #&lt;struct Section a=5, b=90, c=20&gt;, #&lt;struct Section a=40, b=2, c=25&gt;, #&lt;struct Section a=10, b=8, c=0&gt;]</span>
 
@@ -239,17 +239,17 @@
 <h2 id="optimalpath">OptimalPath</h2>
 <p>OptimalPathクラスを実装します。設定条件road_systemを受け取って、solveメソッドで最適経路を出力するのでしたね。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">road_system</span><span class="p">)</span>
     <span class="vi">@road_system</span> <span class="o">=</span> <span class="n">road_system</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">solve</span>
     <span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span> <span class="o">=</span>
-      <span class="vi">@road_system</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[</span><span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="o">]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">),</span> <span class="n">section</span><span class="o">|</span>
+      <span class="vi">@road_system</span><span class="p">.</span><span class="nf">inject</span><span class="p">([</span><span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">])</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">),</span> <span class="n">section</span><span class="o">|</span>
         <span class="n">road_step</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
       <span class="k">end</span>
-    <span class="o">[</span><span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span><span class="o">]</span><span class="p">.</span><span class="nf">min_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:length</span><span class="p">)</span>
+    <span class="p">[</span><span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span><span class="p">].</span><span class="nf">min_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:length</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">road_step</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
@@ -261,7 +261,7 @@
 <h2 id="segment">Segmentクラス</h2>
 <p>road_stepの実装は後にして、次にSegmentクラスを実装します。Segmentクラスは個々の道路セグメントを表すクラスです。各SegmentオブジェクトはA~Cのラベル（label）と通過時間（length）を持ちます。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
   <span class="k">class</span> <span class="nc">Segment</span>
     <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">[]</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
       <span class="kp">new</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
@@ -277,8 +277,8 @@
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="n">seg_a10</span> <span class="o">=</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span> <span class="c1"># =&gt; (A, 10)</span>
-  <span class="n">seg_c30</span> <span class="o">=</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="o">]</span> <span class="c1"># =&gt; (C, 30)</span>
+  <span class="n">seg_a10</span> <span class="o">=</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:A</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="c1"># =&gt; (A, 10)</span>
+  <span class="n">seg_c30</span> <span class="o">=</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span> <span class="c1"># =&gt; (C, 30)</span>
   <span class="n">seg_a10</span><span class="p">.</span><span class="nf">length</span> <span class="c1"># =&gt; 10</span>
   <span class="n">seg_c30</span><span class="p">.</span><span class="nf">length</span> <span class="c1"># =&gt; 30</span>
 <span class="k">end</span></code></pre></div>
@@ -288,10 +288,10 @@
 <h2 id="path">Pathクラス</h2>
 <p>次に、最適経路を管理するためのPathクラスを実装します。Pathクラスは、複数のSegmentオブジェクト管理する配列のようなクラスです。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
   <span class="k">class</span> <span class="nc">Path</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">segment</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-      <span class="vi">@path</span> <span class="o">=</span> <span class="n">segment</span> <span class="p">?</span> <span class="n">segment</span> <span class="p">:</span> <span class="o">[]</span>
+      <span class="vi">@path</span> <span class="o">=</span> <span class="n">segment</span> <span class="p">?</span> <span class="n">segment</span> <span class="p">:</span> <span class="p">[]</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
@@ -309,7 +309,7 @@
 
   <span class="n">path</span> <span class="o">=</span> <span class="no">Path</span><span class="p">.</span><span class="nf">new</span>
   <span class="n">path</span><span class="p">.</span><span class="nf">length</span> <span class="c1"># =&gt; 0</span>
-  <span class="n">path1</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="o">[</span><span class="no">Segment</span><span class="o">[</span><span class="ss">:B</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
+  <span class="n">path1</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="no">Segment</span><span class="p">[</span><span class="ss">:B</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:C</span><span class="p">,</span> <span class="mi">30</span><span class="p">]]</span>
   <span class="n">path1</span><span class="p">.</span><span class="nf">length</span> <span class="c1"># =&gt; 40</span>
 <span class="k">end</span></code></pre></div>
 
@@ -318,29 +318,29 @@
 <h2 id="roadstep">road_stepの実装</h2>
 <p>さて下準備ができたので、OptimalPathクラスに戻って、実装のコアであるroad_stepメソッドを実装します。先に示したようにroad_stepは、solveメソッドのinject内において、各セクションを受け取ってそのセクションまでの２つの最適経路を計算して返します。実装は次にようになります。</p>
 
-<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">OptimalPath</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">road_system</span><span class="p">)</span>
     <span class="vi">@road_system</span> <span class="o">=</span> <span class="n">road_system</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">solve</span>
     <span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span> <span class="o">=</span>
-      <span class="vi">@road_system</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="o">[</span><span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="o">]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">),</span> <span class="n">section</span><span class="o">|</span>
+      <span class="vi">@road_system</span><span class="p">.</span><span class="nf">inject</span><span class="p">([</span><span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">,</span> <span class="no">Path</span><span class="p">.</span><span class="nf">new</span><span class="p">])</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">),</span> <span class="n">section</span><span class="o">|</span>
         <span class="n">road_step</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
       <span class="k">end</span>
-    <span class="o">[</span><span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span><span class="o">]</span><span class="p">.</span><span class="nf">min_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:length</span><span class="p">)</span>
+    <span class="p">[</span><span class="n">bestA</span><span class="p">,</span> <span class="n">bestB</span><span class="p">].</span><span class="nf">min_by</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:length</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">road_step</span><span class="p">(</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">section</span><span class="p">.</span><span class="nf">values</span>
-    <span class="n">candidatesA</span> <span class="o">=</span> <span class="o">[</span> <span class="n">pathA</span> <span class="o">+</span> <span class="o">[</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="n">a</span><span class="o">]</span> <span class="o">]</span><span class="p">,</span> 
-                    <span class="n">pathB</span> <span class="o">+</span> <span class="o">[</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:B</span><span class="p">,</span> <span class="n">b</span><span class="o">]</span><span class="p">,</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="n">c</span><span class="o">]</span> <span class="o">]]</span>
-    <span class="n">candidatesB</span> <span class="o">=</span> <span class="o">[</span> <span class="n">pathB</span> <span class="o">+</span> <span class="o">[</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:B</span><span class="p">,</span> <span class="n">b</span><span class="o">]</span> <span class="o">]</span><span class="p">,</span>
-                    <span class="n">pathA</span> <span class="o">+</span> <span class="o">[</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="n">a</span><span class="o">]</span><span class="p">,</span> <span class="no">Segment</span><span class="o">[</span><span class="ss">:C</span><span class="p">,</span> <span class="n">c</span><span class="o">]</span> <span class="o">]]</span>
+    <span class="n">candidatesA</span> <span class="o">=</span> <span class="p">[</span> <span class="n">pathA</span> <span class="o">+</span> <span class="p">[</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:A</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span> <span class="p">],</span> 
+                    <span class="n">pathB</span> <span class="o">+</span> <span class="p">[</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:B</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:C</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="p">]]</span>
+    <span class="n">candidatesB</span> <span class="o">=</span> <span class="p">[</span> <span class="n">pathB</span> <span class="o">+</span> <span class="p">[</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:B</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="p">],</span>
+                    <span class="n">pathA</span> <span class="o">+</span> <span class="p">[</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:A</span><span class="p">,</span> <span class="n">a</span><span class="p">],</span> <span class="no">Segment</span><span class="p">[</span><span class="ss">:C</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="p">]]</span>
     
     <span class="n">pathA</span> <span class="o">=</span> <span class="n">candidatesA</span><span class="p">.</span><span class="nf">min_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span> <span class="n">path</span><span class="p">.</span><span class="nf">length</span> <span class="p">}</span>
     <span class="n">pathB</span> <span class="o">=</span> <span class="n">candidatesB</span><span class="p">.</span><span class="nf">min_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span> <span class="n">path</span><span class="p">.</span><span class="nf">length</span> <span class="p">}</span>
-    <span class="o">[</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="o">]</span>
+    <span class="p">[</span><span class="n">pathA</span><span class="p">,</span> <span class="n">pathB</span><span class="p">]</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre></div>
 
